@@ -1,5 +1,4 @@
 import React from 'react';
-import Router from 'next/router'
 import Link from 'next/link'
 
 export default () => (
@@ -15,7 +14,7 @@ export default () => (
           <Link href="/Organizer"><a>Organizers page</a></Link>
         </li>
         <li>
-          <Link href="/Typers"><a>Typers page</a></Link>
+          <Link href="/Typer"><a>Typers page</a></Link>
         </li>
       </ul>
     </div>
