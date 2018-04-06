@@ -1,60 +1,77 @@
 import React from 'react';
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+
 import TopNavBar from './organizer/TopNavbar'
 import ItemService from '../services/ItemService'
 import QueryCreator from './organizer/QueryCreator'
-
-const wrapper = {
-  display: "flex",
-  justifyContent: "space-between"
-};
-const leftPanel = {
-  position: "relative",
-  overflow: "visible",
-  width: 290,
-  height: "95.5vh",
-  minHeight: 500,
-  padding: 20,
-  float: "left",
-  backgroundColor: "#fbfbfb",
-  textAlign: "center"
-};
+import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
+import style from './organizer/Organizer.css'
 
 export default class Organizer extends React.Component {
 
-  state = {activists: [], currFilters: []};
+state = {activists: [], currFilters: []};
 
-  componentDidMount() {
-    ItemService.getAcivists()
-        .then(activists =>
-            this.setState({activists}));
-    ItemService.getCurrFilters()
-        .then(currFilters =>
-            this.setState({currFilters}));
-  }
+componentDidMount() {
+	ItemService.getAcivists()
+		.then(activists =>
+				this.setState({activists}));
+	ItemService.getCurrFilters()
+		.then(currFilters =>
+				this.setState({currFilters}));
+}
 
-  render() {
-    const itemChilds = this.state.activists.map(activist =>
-        <li key={activist._id}>
-          <span>{activist.name}</span>
-        </li>);
+render() {
+	const itemChilds = this.state.activists.map(activist =>
+		<tr key={activist._id} style={style['list-table-row']}>
+			<td style={style['list-table-field']}>{activist.firstname}</td>
+			<td style={style['list-table-field']}>{activist.lastname}</td>
+			<td style={style['list-table-field']}>{activist.city}</td>
+			<td style={style['list-table-field']}>{activist.phone}</td>
+			<td style={style['list-table-field']}>{activist.email}</td>
+		</tr>);
 
-    return (
-        <div>
-          <TopNavBar></TopNavBar>
-          <div style={wrapper}>
-            {/*<TopNavBar></TopNavBar>*/}
-            <div className={"leftPanel"} style={leftPanel}>
-              <QueryCreator currFilters={this.state.currFilters}></QueryCreator>
-            </div>
-            <div>
-              <ul>
-                {itemChilds}
-              </ul>
-            </div>
-          </div>
-        </div>
-    )
-  }
+	return (
+		<div>
+			<link
+				href='http://fonts.googleapis.com/css?family=Cabin'
+				rel='stylesheet'
+				type='text/css'
+			></link>
+			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
+			<div style={style.wrapper}>
+				<div style={style.leftPanel}>
+					<QueryCreator currFilters={this.state.currFilters}></QueryCreator>
+				</div>
+				<div style={style['main-panel']}>
+					<QueryResultsActionMenu></QueryResultsActionMenu>
+					<div style={style['results-wrap']}>
+						<table style={style['list-table']}>
+							<thead>
+								<tr style={style['list-table-header']}>
+									<th style={style['list-table-header-field']}><FontAwesomeIcon icon="user"></FontAwesomeIcon> First Name</th>
+									<th style={style['list-table-header-field']}><FontAwesomeIcon icon="user"></FontAwesomeIcon> Last Name</th>
+									<th style={style['list-table-header-field']}><FontAwesomeIcon icon="building"></FontAwesomeIcon> Lives In</th>
+									<th style={style['list-table-header-field']}><FontAwesomeIcon icon="phone"></FontAwesomeIcon> Phone</th>
+									<th style={style['list-table-header-field']}><FontAwesomeIcon icon="envelope-open"></FontAwesomeIcon> Email</th>
+								</tr>
+							</thead>
+							<tbody>
+								{itemChilds}
+							</tbody>
+						</table>
+						<br></br>
+						<label style={style['select-all-checkbox']}>
+							<input style={{"opacity":0, "position":"absolute"}} type="checkbox"></input>
+							<div style={style['checkbox']}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
+							SELECT ALL
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
 
 }
 
