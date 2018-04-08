@@ -1,26 +1,36 @@
 export default {
-	"wrapper": {
+	"pageWrap":{
+		"height":"100vh",
 		"display": "flex",
-		"justifyContent": "space-between",
-		"fontFamily": "Cabin, sans-serif",
+		"flexDirection": "column",
 		"backgroundImage": "linear-gradient(180deg, #eaeaea, #eaeaea)"
 	},
+	"wrapper": {
+		"display": "flex",
+		"flexDirection": "row",
+		"height": "calc(100% - 55px)"
+	},
 	"leftPanel": {
-		"position": "relative",
-		"overflow": "visible",
-		"width": 290,
-		"minHeight": 500,
-		"padding": 20,
-		"float": "left",
+		"width": "20%",
+		"padding": "2%",
+		"boxSizing": "border-box",
 		"backgroundColor": "#fbfbfb",
 		"textAlign": "center"
 	},
 	"main-panel": {
-		"display": "block",
-		"width": "100%"
+		"width": "80%",
+		"display": "flex",
+		"flexDirection": "column",
+		"boxSizing": "border-box",
+		"borderLeft": "1px solid #BFBFBF"
 	},
 	"results-wrap": {
-		"padding": "20px"
+		"overflow": "auto",
+		"padding": "2.5%",
+		"position": "relative"
+	},
+	"query-results": {
+		"width": "95%"
 	},
 	"list-table":{
 		"width": "100%",

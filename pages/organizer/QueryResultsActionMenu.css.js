@@ -6,9 +6,7 @@ export default {
 		"display": "flex",
 		"height": "50px",
 		"flex": "0 0 auto",
-		"borderStyle": "solid",
-		"borderWidth": "1px",
-		"borderColor": "rgba(86, 95, 108, .3)",
+		"borderBottom": "1px solid #BFBFBF",
 		"backgroundImage": "-webkit-linear-gradient(270deg, #f6f6f6, #f6f6f6)",
 		"backgroundImage": "linear-gradient(180deg, #f6f6f6, #f6f6f6)"
 	},
