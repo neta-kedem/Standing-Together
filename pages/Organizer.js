@@ -10,7 +10,7 @@ import style from './organizer/Organizer.css'
 
 export default class Organizer extends React.Component {
 
-state = {activists: [], currFilters: []};
+state = {activists: [], currFilters: [], allSelected: false};
 
 componentDidMount() {
 	ItemService.getAcivists()
@@ -21,9 +21,27 @@ componentDidMount() {
 				this.setState({currFilters}));
 }
 
+toggleAllActivistsSelection() {
+	const activists = this.state.activists.slice();
+	for (var i=0; i<activists.length; i++)
+	{
+		activists[i].selected = !this.state.allSelected;
+	}
+	this.setState({activists: activists, allSelected: !this.state.allSelected});
+}
+
+toggleActivistSelection(i) {
+	const activists = this.state.activists.slice();
+	activists[i].selected = !activists[i].selected;
+	this.setState({activists: activists});
+}
+
 render() {
-	const itemChilds = this.state.activists.map(activist =>
-		<tr key={activist._id} style={style['list-table-row']}>
+	const itemChilds = this.state.activists.map((activist, i) =>
+		<tr key={activist._id} style={style['list-table-row']} onClick={() => this.toggleActivistSelection(i)}>
+			{/*the ... is a weird things that spreads the content of an array, thus allowing arrayy concatanation.
+			I used it where multiple styles should have been applied to a single dom*/}
+			<td style={{...style['list-row-selection-indicator'], ...(activist.selected?style['selected-table-row']:{})}}> </td>
 			<td style={style['list-table-field']}>{activist.firstname}</td>
 			<td style={style['list-table-field']}>{activist.lastname}</td>
 			<td style={style['list-table-field']}>{activist.city}</td>
@@ -58,6 +76,7 @@ render() {
 							<table style={style['list-table']}>
 								<thead>
 									<tr style={style['list-table-header']}>
+										<th> </th>
 										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="user"></FontAwesomeIcon> First Name</th>
 										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="user"></FontAwesomeIcon> Last Name</th>
 										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="building"></FontAwesomeIcon> Lives In</th>
@@ -70,11 +89,10 @@ render() {
 								</tbody>
 							</table>
 							<br></br>
-							<label style={style['select-all-checkbox']}>
-								<input style={{"opacity":0, "position":"absolute"}} type="checkbox"></input>
-								<div style={style['checkbox']}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
+							<div style={style['select-all-checkbox']} onClick={() => this.toggleAllActivistsSelection()}>
+								<div style={{...style['checkbox'],...(this.state.allSelected?style['checkbox-checked']:{})}}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
 								SELECT ALL
-							</label>
+							</div>
 						</div>
 					</div>
 				</div>

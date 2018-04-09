@@ -53,9 +53,17 @@ export default {
 	"list-table-row":{
 		"backgroundColor":"#f7f5f6"
 	},
+	"selected-table-row":{
+		"backgroundColor":"#FF4C94"
+	},
 	"list-table-field":{
 		"border":"1px solid rgb(202, 200, 199)",
 		"padding":"5px",
+		"color": "rgb(103, 111, 117)"
+	},
+	"list-row-selection-indicator":{
+		"border":"1px solid rgb(202, 200, 199)",
+		"padding":"2px",
 		"color": "rgb(103, 111, 117)"
 	},
 	"select-all-checkbox":{
@@ -66,5 +74,8 @@ export default {
 		"display": "inline-block",
 		"marginRight": "10px",
 		"color": "rgba(86, 95, 108, .7)"
-	}
+	},
+	"checkbox-checked":{
+		"color": "#FF4C94"
+	},
 }
