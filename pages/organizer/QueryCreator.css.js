@@ -6,7 +6,8 @@ export default {
     "flexDirection": "column"
   },
   "filterIcon": {
-    "width": "30px"
+    "width": "30px",
+    "height": "22px"
   },
   "query": {
     "display": "flex",
