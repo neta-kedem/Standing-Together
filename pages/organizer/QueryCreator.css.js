@@ -1,5 +1,5 @@
 export default {
-  "wrapper": {
+  "query-wizard-wrapper": {
     "minWidth": "150px",
     "height": "100%",
     "display": "flex",

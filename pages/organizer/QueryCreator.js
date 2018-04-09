@@ -18,7 +18,7 @@ class QueryCreator extends React.Component {
                 </div>
         });
         return(
-            <section style={{height: "100%"}}>
+            <section style={{overflow: "auto", height: "100%"}}>
                 <div style={style.wrapper}>
                     {conditions}
                 </div>
