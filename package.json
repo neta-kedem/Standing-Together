@@ -1,10 +1,10 @@
 {
   "name": "StanfingTogether",
-  "license" : "GPL-3.0",
+  "license": "GPL-3.0",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next build && next start"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.5",

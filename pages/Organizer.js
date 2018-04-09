@@ -1,6 +1,7 @@
 import React from 'react';
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import Meta from '../lib/meta';
 
 import TopNavBar from './organizer/TopNavbar'
 import ItemService from '../services/ItemService'
@@ -48,22 +49,15 @@ render() {
 			<td style={style['list-table-field']}>{activist.phone}</td>
 			<td style={style['list-table-field']}>{activist.email}</td>
 		</tr>);
-	const stylesheet = `
-				body{
-					margin: 0;
-					font-family: Cabin, sans-serif;
-				}
-				`;
+
 	return (
 		<div style={style["pageWrap"]}>
+			<Meta/>
 			<link
 				href='http://fonts.googleapis.com/css?family=Cabin'
 				rel='stylesheet'
 				type='text/css'
 			></link>
-			<style>
-				{stylesheet}
-			</style>
 			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
 			<div style={style.wrapper}>
 				<div style={style.leftPanel}>

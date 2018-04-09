@@ -38,7 +38,7 @@ export default {
 		"fontSize":"20px"
 	},
 	"list-table-header":{
-		"padding-left": "5px",
+		"paddingLeft": "5px",
 		"color": "rgb(128, 134, 138)",
 		"fontWeight": "700",
 		"fontSize":"18px",

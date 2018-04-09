@@ -1,6 +1,6 @@
 import React from 'react';
-import style from './typer/Typers.css'
-import style2 from './typer/ContactInput.css';
+// import style from './typer/Typers.css'
+// import style2 from './typer/ContactInput.css';
 
 
 export default class App extends React.Component {

@@ -1,8 +1,10 @@
 import React from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
+import Meta from '../lib/meta';
 
 export default () => (
     <div>
+      <Meta/>
       <link
           href='http://fonts.googleapis.com/css?family=Cabin'
           rel='stylesheet'

@@ -1,4 +1,5 @@
 import React from 'react';
+import Meta from '../lib/meta';
 import HeaderBar from './typer/HeaderBar'
 import TableRow from './typer/TableRow'
 import TitleRow from './typer/TitleRow'
@@ -44,7 +45,7 @@ export default class Typer extends React.Component {
   myFunction = () => {
     this.props.updateItem(this.state)
   };
-  
+
   handleChangeEvent = (value, cell, index) => {
     let newState = this.state.data.slice(0);
     newState[cell][index] = value;
@@ -57,10 +58,10 @@ export default class Typer extends React.Component {
     }
   };
 
-
   render() {
     return (
         <div>
+          <Meta/>
           <HeaderBar></HeaderBar>
           <section style={styles.section}>
             <div style={styles.rightpanel}>
@@ -68,7 +69,7 @@ export default class Typer extends React.Component {
                   <TitleRow></TitleRow>
                   <table style={styles.info_table}>
                      <tbody style={styles.row}>
-                     {this.state.data.map((person, i) => <TableRow key={i} data={person} num={i} 
+                     {this.state.data.map((person, i) => <TableRow key={i} data={person} num={i}
                      handleChangeEvent={this.handleChangeEvent} handleKeyPress={this._handleKeyPress}/>)}
                      </tbody>
                   </table>
@@ -84,7 +85,7 @@ export default class Typer extends React.Component {
             </div>
           </section>
         </div>
-          
+
     )
   }
 

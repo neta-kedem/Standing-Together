@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import ReactDataGrid from 'react-data-grid';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import CreateReactClass from 'create-react-class';
-import '../Typers.css.js';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import ReactDOM from 'react-dom';
+import React from 'react';
+// import ReactDataGrid from 'react-data-grid';
+// import ReactTable from 'react-table';
+// import 'react-table/react-table.css';
+// import CreateReactClass from 'create-react-class';
+// import '../Typers.css.js';
+// import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+// import ReactDOM from 'react-dom';
 
 
    export default class App extends React.Component {
