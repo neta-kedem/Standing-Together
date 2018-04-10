@@ -19,10 +19,10 @@ export default class TableRow extends React.Component {
               this.props.handleChangeEvent(e.target.value, this.props.num, 2)
             }}/></td>
             <td><input style={styles.input_Style} type="text" defaultValue={this.props.data.lname} onChange={(e) => {
-              this.props.handleChangeEvent(e.target.value, this.props.num, 2)
+              this.props.handleChangeEvent(e.target.value, this.props.num, 3)
             }}/></td>
             <td><input style={styles.input_Style} type="text" defaultValue={this.props.data.fname} onChange={(e) => {
-              this.props.handleChangeEvent(e.target.value, this.props.num, 2)
+              this.props.handleChangeEvent(e.target.value, this.props.num, 4)
             }}/></td>
           </tr>
       );

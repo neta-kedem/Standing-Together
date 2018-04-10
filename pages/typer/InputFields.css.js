@@ -39,7 +39,7 @@ export default  {
         "borderColor": "rgba(86, 95, 108, .3)",
         "outline": "none",
         "fontWeight": "bold",
-        "width": "150px",
+        "width": "200px",
         "height": "35px"
       },
       "email_width":{

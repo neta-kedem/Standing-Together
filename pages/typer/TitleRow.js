@@ -14,23 +14,23 @@ export default class TitleRow extends React.Component {
       return (
         <div style={styles.row_title}>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>מייל</h4>
+                <h4 style={styles.heading_hb}>מייל/البريد الإلكتروني</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="envelope-open"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>טלפון</h4>
+                <h4 style={styles.heading_hb}>טלפון/رقم الهاتف</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="phone"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>עיר</h4>
+                <h4 style={styles.heading_hb}>עיר/البلد</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="building"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>שם משפחה</h4>
+                <h4 style={styles.heading_hb}>שם משפחה/اسم العائلة</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="user"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>שם</h4>
+                <h4 style={styles.heading_hb}>שם/الاسم</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="user"></FontAwesomeIcon></div>
             </div>
       </div>

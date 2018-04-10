@@ -35,12 +35,16 @@ export default {
     "WebkitBoxPack": "center",
     "WebkitJustifyContent": "center",
     "MsFlexPack": "center",
+    "borderCollapse": "collapse",
     "justifyContent": "center"
   },
   "info_table" : {
-  "display": "flex",
-  "padding": "0",
-  "justifyContent": "center"
+    "width": "100%",
+		"borderCollapse": "collapse",
+		"fontSize":"20px",
+    "display": "flex",
+    "padding": "0",
+    "justifyContent": "center"
   },
   "selectall": {
     "display": "flex",
@@ -56,10 +60,10 @@ export default {
     "paddingLeft": "5px",
     "color": "rgba(86, 95, 108, .7)",
     "fontWeight": "700",
-    "font-size": "18px",
-    "line-height": "24px",
-    "textTransform": "uppercase",
-    "fontFamily": "Cabin, sans-serif"
+    //"fontSize": "18px",
+    "lineHeight": "24px",
+    "textTransform": "uppercase"
+    //"fontFamily": "Cabin, sans-serif"
   },
   "awsome_low": {
     "display": "inline",
@@ -77,13 +81,14 @@ export default {
     "color": "rgba(86, 95, 108, .7)"
   },
   "addfilter_copy": {
+    "cursor": "pointer",
     "display": "block",
     "width": "215px",
     "height": "40px",
     "marginTop": "15px",
     "marginRight": "20px",
     "marginLeft": "20px",
-    "paddingTop": "10px",
+    "paddingTop": "20px",
     "borderStyle": "solid",
     "borderWidth": "1px",
     "borderColor": "rgba(86, 95, 108, .3)",

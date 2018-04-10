@@ -13,7 +13,7 @@ export default  {
         "MsFlexPack": "center",
         "justifyContent": "center",
         "display": "flex",
-        "width": "150px",
+        "width": "200px",
         "height": "35px"
       },
       "heading_hb": {

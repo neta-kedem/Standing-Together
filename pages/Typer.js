@@ -62,6 +62,11 @@ export default class Typer extends React.Component {
     return (
         <div>
           <Meta/>
+          <link
+			      	href='http://fonts.googleapis.com/css?family=Cabin'
+				      rel='stylesheet'
+				      type='text/css'
+			    ></link>
           <HeaderBar></HeaderBar>
           <section style={styles.section}>
             <div style={styles.rightpanel}>
