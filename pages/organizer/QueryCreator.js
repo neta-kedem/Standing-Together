@@ -5,8 +5,8 @@ import style from './QueryCreator.css'
 // icons
 let orIcon, andIcon;
 if('production' === process.env.NODE_ENV) {
-  orIcon = require('static/OR.png');
-  andIcon = require('static/AND.png');
+  orIcon = require('/static/OR.png');
+  andIcon = require('/static/AND.png');
 } else {
   orIcon = require('../../static/OR.png');
   andIcon = require('../../static/AND.png');
