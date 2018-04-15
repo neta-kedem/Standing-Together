@@ -21,7 +21,6 @@ export default class App extends React.Component {
     var mail = document.getElementById("mail").value;
     var city = document.getElementById("city").value;
     var phone = document.getElementById("phNo").value;
-    console.log(fname);
     var item = {
       "fname": fname,
       "lname": lname,
@@ -32,7 +31,6 @@ export default class App extends React.Component {
     this.setState((prevState, props) => ({
       data: [...prevState.data, item]
     }));
-    console.log(this.state.data);
   };
 
   myFunction = () => {
@@ -185,7 +183,6 @@ class TableRow extends React.Component {
   render() {
     return (
         <tr>
-          {console.log(this.props.data)}
           <td className="constW"><input type="text" value={this.props.data.fname} onChange={(e) => {
             this.props.handleChangeEvent(e.target.value, this.props.num, 0)
           }}/></td>

@@ -63,7 +63,7 @@ export default class Typer extends React.Component {
         <div>
           <Meta/>
           <link
-			      	href='http://fonts.googleapis.com/css?family=Cabin'
+			      	href='https://fonts.googleapis.com/css?family=Cabin'
 				      rel='stylesheet'
 				      type='text/css'
 			    ></link>

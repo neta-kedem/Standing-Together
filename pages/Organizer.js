@@ -49,7 +49,7 @@ render() {
 	return (
 		<div style={style["pageWrap"]}>
 			<link
-				href='http://fonts.googleapis.com/css?family=Cabin'
+				href='https://fonts.googleapis.com/css?family=Cabin'
 				rel='stylesheet'
 				type='text/css'
 			></link>
