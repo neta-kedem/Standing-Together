@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next build && next start"
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "next build"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.5",
