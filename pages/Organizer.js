@@ -6,6 +6,7 @@ import Meta from '../lib/meta';
 import TopNavBar from './organizer/TopNavbar'
 import ItemService from '../services/ItemService'
 import QueryCreator from './organizer/QueryCreator'
+import SelectableTable from './organizer/SelectableTable'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
 
@@ -38,26 +39,23 @@ toggleActivistSelection(i) {
 }
 
 render() {
-	const itemChilds = this.state.activists.map((activist, i) =>
-		<tr key={activist._id} style={style['list-table-row']} onClick={() => this.toggleActivistSelection(i)}>
-			{/*the ... is a weird things that spreads the content of an array, thus allowing arrayy concatanation.
-			I used it where multiple styles should have been applied to a single dom*/}
-			<td style={{...style['list-row-selection-indicator'], ...(activist.selected?style['selected-table-row']:{})}}> </td>
-			<td style={style['list-table-field']}>{activist.firstname}</td>
-			<td style={style['list-table-field']}>{activist.lastname}</td>
-			<td style={style['list-table-field']}>{activist.city}</td>
-			<td style={style['list-table-field']}>{activist.phone}</td>
-			<td style={style['list-table-field']}>{activist.email}</td>
-		</tr>);
 
+	const stylesheet = `
+				body{
+					margin: 0;
+					font-family: Cabin, sans-serif;
+				}
+				`;
 	return (
 		<div style={style["pageWrap"]}>
-			<Meta/>
 			<link
 				href='http://fonts.googleapis.com/css?family=Cabin'
 				rel='stylesheet'
 				type='text/css'
 			></link>
+			<style>
+				{stylesheet}
+			</style>
 			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
 			<div style={style.wrapper}>
 				<div style={style.leftPanel}>
@@ -67,26 +65,13 @@ render() {
 					<QueryResultsActionMenu></QueryResultsActionMenu>
 					<div style={style['results-wrap']}>
 						<div style={style['query-results']}>
-							<table style={style['list-table']}>
-								<thead>
-									<tr style={style['list-table-header']}>
-										<th> </th>
-										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="user"></FontAwesomeIcon> First Name</th>
-										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="user"></FontAwesomeIcon> Last Name</th>
-										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="building"></FontAwesomeIcon> Lives In</th>
-										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="phone"></FontAwesomeIcon> Phone</th>
-										<th style={style['list-table-header-field']}><FontAwesomeIcon icon="envelope-open"></FontAwesomeIcon> Email</th>
-									</tr>
-								</thead>
-								<tbody>
-									{itemChilds}
-								</tbody>
-							</table>
-							<br></br>
-							<div style={style['select-all-checkbox']} onClick={() => this.toggleAllActivistsSelection()}>
-								<div style={{...style['checkbox'],...(this.state.allSelected?style['checkbox-checked']:{})}}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
-								SELECT ALL
-							</div>
+							<SelectableTable rows={this.state.activists} header={[
+								{title: "First Name", key: "firstname", icon:"user"},
+								{title: "Last Name", key: "lastname", icon:"user"},
+								{title: "Lives In", key: "city", icon:"building"},
+								{title: "Phone", key: "phone", icon:"phone"},
+								{title: "Email", key: "email", icon:"envelope-open"}
+							]}></SelectableTable>
 						</div>
 					</div>
 				</div>
