@@ -2,6 +2,8 @@ import React from 'react';
 import style from './SelectableTable.css'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen);
 
 export default class SelectableTable extends React.Component {
 	constructor(props) {

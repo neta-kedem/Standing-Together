@@ -3,8 +3,8 @@ import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Meta from '../lib/meta';
 
-import TopNavBar from './organizer/TopNavbar'
 import ItemService from '../services/ItemService'
+import TopNavBar from './organizer/TopNavbar'
 import QueryCreator from './organizer/QueryCreator'
 import SelectableTable from './organizer/SelectableTable'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
@@ -23,39 +23,10 @@ componentDidMount() {
 				this.setState({currFilters}));
 }
 
-toggleAllActivistsSelection() {
-	const activists = this.state.activists.slice();
-	for (var i=0; i<activists.length; i++)
-	{
-		activists[i].selected = !this.state.allSelected;
-	}
-	this.setState({activists: activists, allSelected: !this.state.allSelected});
-}
-
-toggleActivistSelection(i) {
-	const activists = this.state.activists.slice();
-	activists[i].selected = !activists[i].selected;
-	this.setState({activists: activists});
-}
-
 render() {
-
-	const stylesheet = `
-				body{
-					margin: 0;
-					font-family: Cabin, sans-serif;
-				}
-				`;
 	return (
 		<div style={style["pageWrap"]}>
-			<link
-				href='https://fonts.googleapis.com/css?family=Cabin'
-				rel='stylesheet'
-				type='text/css'
-			></link>
-			<style>
-				{stylesheet}
-			</style>
+			<Meta/>
 			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
 			<div style={style.wrapper}>
 				<div style={style.leftPanel}>

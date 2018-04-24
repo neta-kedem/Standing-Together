@@ -25,7 +25,7 @@ export default {
 	"width": "80px",
 	"height": "100%",
 	"margin": "0px 15px",
-	"backgroundImage": "url(../../static/logo.png)",
+	"backgroundImage": "url(../../static/Logo.svg)",
 	"backgroundPosition": "0px 50%",
 	"backgroundSize": "contain",
 	"backgroundRepeat": "no-repeat"
