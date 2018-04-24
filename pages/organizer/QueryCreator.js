@@ -3,9 +3,8 @@ import SingleCondition from './SingleCondition';
 import style from './QueryCreator.css'
 
 // icons
-let orIcon, andIcon;
-orIcon = require('../../static/or.png');
-andIcon = require('../../static/and.png');
+const orIcon = require('../../static/or.png');
+const andIcon = require('../../static/and.png');
 
 class QueryCreator extends React.Component {
 
