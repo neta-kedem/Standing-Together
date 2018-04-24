@@ -4,27 +4,19 @@ module.exports = {
     config.node = {
       fs: 'empty'
     }
-
-    return config
-  }
-}
-
-module.exports = {
-  webpack: config => {
     config.module.rules.push({
       test: /\.(png|jpg|gif)$/,
       use: [
         {
           loader: 'file-loader',
-          options: {}
+          options: {
+            name: '../../static/[name].[ext]'
+          }
         }
       ]
     })
+//   useFileSystemPublicRoutes: false
 
     return config
   }
 }
-
-// module.exports = {
-//   useFileSystemPublicRoutes: false
-// }
