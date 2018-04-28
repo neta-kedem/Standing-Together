@@ -1,9 +1,13 @@
 import React from 'react';
 import style from './SelectableTable.css'
+
+import TextValue from './FieldTypes/TextValue'
+import ToggleSwitch from './FieldTypes/ToggleSwitch'
+
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen);
+import {faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck);
 
 export default class SelectableTable extends React.Component {
 	constructor(props) {
@@ -39,13 +43,26 @@ export default class SelectableTable extends React.Component {
 		this.setState({rows: rows});
 	}
 
+	cellConstructor(type, val, onChangeFunction) {
+		switch(type) {
+			case 'text':
+				return <TextValue value={val} handleChange={onChangeFunction}/>;
+			case 'toggle':
+			{
+				return <ToggleSwitch value={val} handleChange={onChangeFunction}/>;
+			}
+			default:
+				return <TextValue value={val} handleChange={onChangeFunction}/>;
+		}
+	}
+
 	render() {
 		const tableHeader = 
 			<tr style={style['list-table-header']}>
 				<td style={style['list-row-selection-indicator']}> </td>
 				{this.state.header.map((field, i) =>
 				<th key={i} style={style['list-table-header-field']}>
-					<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>
+					{field.icon!=""?<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>:''}
 					{" "+field.title}
 				</th>)}
 			</tr>;
@@ -55,7 +72,9 @@ export default class SelectableTable extends React.Component {
 					<td style={{...style['list-row-selection-indicator'], ...(row.selected?style['selected-table-row']:{})}}> </td>
 					{
 						this.state.header.map((field, j) =>
-							<td key={j} style={style['list-table-field']}>{row[field["key"]]}</td>
+							<td key={j} style={style['list-table-field']} title={row[field["key"]]+""}>
+								{this.cellConstructor(field["type"], row[field["key"]], function(value){field["handleChange"](i, value)},)}
+							</td>
 						)
 					}
 				</tr>);
