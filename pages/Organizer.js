@@ -4,15 +4,19 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Meta from '../lib/meta';
 
 import ItemService from '../services/ItemService'
+
+import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import TopNavBar from './organizer/TopNavbar'
 import QueryCreator from './organizer/QueryCreator'
-import SelectableTable from './organizer/SelectableTable'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
 
 export default class Organizer extends React.Component {
+constructor(props) {
+	super(props);
+	this.state = {activists: [], currFilters: [], allSelected: false};
+}
 
-state = {activists: [], currFilters: [], allSelected: false};
 
 componentDidMount() {
 	ItemService.getAcivists()
@@ -21,6 +25,10 @@ componentDidMount() {
 	ItemService.getCurrFilters()
 		.then(currFilters =>
 				this.setState({currFilters}));
+}
+handleActivistCallerStatusChange(activistIndex, status){
+	this.state.activists[activistIndex].isCaller=status;
+	ItemService.toggleUserCallerStatus(this.state.activists[activistIndex]._id, status);
 }
 
 render() {
@@ -37,11 +45,13 @@ render() {
 					<div style={style['results-wrap']}>
 						<div style={style['query-results']}>
 							<SelectableTable rows={this.state.activists} header={[
-								{title: "First Name", key: "firstname", icon:"user"},
-								{title: "Last Name", key: "lastname", icon:"user"},
-								{title: "Lives In", key: "city", icon:"building"},
-								{title: "Phone", key: "phone", icon:"phone"},
-								{title: "Email", key: "email", icon:"envelope-open"}
+								{title: "Name", key: "name", icon:"user", type:"text"},
+								{title: "Lives In", key: "city", icon:"building", type:"text"},
+								{title: "Phone", key: "phone", icon:"phone", type:"text"},
+								{title: "Email", key: "email", icon:"envelope-open", type:"text"},
+								{title: "Last Seen", key: "lastSeen", icon:"calendar", type:"text"},
+								{title: "Last Event", key: "lastEvent", icon:"calendar-check", type:"text"},
+								{title: "Call?", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
 							]}></SelectableTable>
 						</div>
 					</div>

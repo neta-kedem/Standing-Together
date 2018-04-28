@@ -18,9 +18,22 @@ function getCurrFilters() {
 }
 
 function getAcivists() {
-	if(!verifyToken())
+	if(false&&!verifyToken())
 	{
 		return delay([], 10);
+	}
+	const activists = mockUsers;
+	for(var i=0; i<activists.length; i++){
+		if(activists[i]["attendedEvents"]&&activists[i]["attendedEvents"].length)
+		{
+			console.log(activists[i]["attendedEvents"].length)
+			activists[i].lastEvent=activists[i].attendedEvents[activists[i].attendedEvents.length-1].title;
+			activists[i].lastSeen=activists[i].attendedEvents[activists[i].attendedEvents.length-1].date;
+		}
+		activists[i]["name"] = activists[i]["firstname"] + " " + activists[i]["lastname"];
+		delete activists[i]["attendedEvents"];
+		delete activists[i]["firstname"];
+		delete activists[i]["lastname"];
 	}
     return delay(mockUsers, 10);
 }
@@ -63,6 +76,17 @@ function getUserByEmail(email){
 	}
 	return delay(true, 10);
 }
+function toggleUserCallerStatus(id, status){
+	for(var i=0; i<mockUsers.length; i++)
+	{
+		if(mockUsers[i]._id===id)
+		{
+			mockUsers[i].isCaller=status;
+			return delay(true, 10);
+		}
+	}
+	return delay(false, 10);
+}
 function login(code, phone, email){
 	let foundUser=false;
 	let token = "";
@@ -98,5 +122,6 @@ export default {
     getCurrFilters,
 	getUserByEmail,
 	getUserByPhone,
-	login
+	login,
+	toggleUserCallerStatus
 }

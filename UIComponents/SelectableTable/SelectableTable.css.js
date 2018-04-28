@@ -2,12 +2,12 @@ export default {
 	"list-table":{
 		"width": "100%",
 		"borderCollapse": "collapse",
-		"fontSize":"20px"
+		"fontSize":"16px"
 	},
 	"list-table-header":{
 		"color": "rgb(128, 134, 138)",
 		"fontWeight": "700",
-		"fontSize":"18px",
+		"fontSize":"14px",
 		"margin": "0 auto",
 		"width": "100%",
 		"textAlign": "left",
