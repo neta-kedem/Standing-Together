@@ -50,6 +50,8 @@ render() {
 								{title: "Lives In", key: "city", icon:"building", type:"text"},
 								{title: "Phone", key: "phone", icon:"phone", type:"text"},
 								{title: "Email", key: "email", icon:"envelope-open", type:"text"},
+								{title: "Last Seen", key: "lastSeen", icon:"calendar", type:"text"},
+								{title: "Last Event", key: "lastEvent", icon:"calendar-check", type:"text"},
 								{title: "Call?", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
 							]}></SelectableTable>
 						</div>
