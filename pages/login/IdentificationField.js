@@ -28,7 +28,6 @@ export default class IdentificationField extends React.Component {
 		};
 	}
 	handleKeyPress = (event) => {
-		console.log(event.key);
 		if(event.key == 'Enter'){
 			this.handlePost();
 		}
