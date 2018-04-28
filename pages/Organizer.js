@@ -45,8 +45,7 @@ render() {
 					<div style={style['results-wrap']}>
 						<div style={style['query-results']}>
 							<SelectableTable rows={this.state.activists} header={[
-								{title: "First Name", key: "firstname", icon:"user", type:"text"},
-								{title: "Last Name", key: "lastname", icon:"user", type:"text"},
+								{title: "Name", key: "name", icon:"user", type:"text"},
 								{title: "Lives In", key: "city", icon:"building", type:"text"},
 								{title: "Phone", key: "phone", icon:"phone", type:"text"},
 								{title: "Email", key: "email", icon:"envelope-open", type:"text"},

@@ -30,6 +30,10 @@ function getAcivists() {
 			activists[i].lastEvent=activists[i].attendedEvents[activists[i].attendedEvents.length-1].title;
 			activists[i].lastSeen=activists[i].attendedEvents[activists[i].attendedEvents.length-1].date;
 		}
+		activists[i]["name"] = activists[i]["firstname"] + " " + activists[i]["lastname"];
+		delete activists[i]["attendedEvents"];
+		delete activists[i]["firstname"];
+		delete activists[i]["lastname"];
 	}
     return delay(mockUsers, 10);
 }
