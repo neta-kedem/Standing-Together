@@ -18,7 +18,7 @@ function getCurrFilters() {
 }
 
 function getAcivists() {
-	if(!verifyToken())
+	if(false&&!verifyToken())
 	{
 		return delay([], 10);
 	}
@@ -63,6 +63,19 @@ function getUserByEmail(email){
 	}
 	return delay(true, 10);
 }
+function toggleUserCallerStatus(id, status){
+	for(var i=0; i<mockUsers.length; i++)
+	{
+		if(mockUsers[i]._id===id)
+		{
+			mockUsers[i].isCaller=status;
+			console.log("HEEERE");
+			console.log(status);
+			return delay(true, 10);
+		}
+	}
+	return delay(false, 10);
+}
 function login(code, phone, email){
 	let foundUser=false;
 	let token = "";
@@ -98,5 +111,6 @@ export default {
     getCurrFilters,
 	getUserByEmail,
 	getUserByPhone,
-	login
+	login,
+	toggleUserCallerStatus
 }
