@@ -4,6 +4,7 @@ export default  {
         "display": "flex",
         "height": "55px",
         "justifyContent": "center",
+        "width": "100%",
         "backgroundColor": "#90278e"
     },
     "logo": {
@@ -59,7 +60,29 @@ export default  {
         "position": "absolute",
         "top": "0px",
         "right": "0px",
-        "marginTop": "10px"
+        "marginTop": "0px",
+        "fontSize": "10px"
+      },
+      "cloud":{
+        "display": "inline-block",
+        "fontFamily": "Rubik, sans-serif",
+        "color": "#fbfbfb",
+        "fontSize": "18px",
+        "fontWeight": "400",
+        "paddingRight": "10px",
+        "paddingTop": "5px",
+        "textAlign": "center"
+      },
+      "cloud-icon":{
+        "display": "inline-block",
+        "fontFamily": "Rubik, sans-serif",
+        "color": "#fbfbfb",
+        "fontSize": "27px",
+        "fontWeight": "400",
+        "paddingRight": "10px",
+        "paddingBottom": "7px",
+        "cursor": "pointer",
+        "textAlign": "center"
       }
   }
   

@@ -39,12 +39,12 @@ export default {
     "justifyContent": "center"
   },
   "info_table" : {
-    "width": "100%",
-		"borderCollapse": "collapse",
-		"fontSize":"20px",
     "display": "flex",
     "padding": "0",
-    "justifyContent": "center"
+    "justifyContent": "center",
+    "width": "100%",
+		"borderCollapse": "collapse",
+		"fontSize":"16px"
   },
   "selectall": {
     "display": "flex",
@@ -66,20 +66,37 @@ export default {
     //"fontFamily": "Cabin, sans-serif"
   },
   "awsome_low": {
-    "display": "inline",
-    "WebkitBoxFlex": "0",
-    "WebkitFlex": "0 0 auto",
-    "MsFlex": "0 0 auto",
-    "flex": "0 0 auto",
-    "fontFamily": "'Fa solid 900', sans-serif",
-    "color": "rgba(86, 95, 108, .9)",
-    "fontSize": "14px",
-    "fontWeight": "600",
-    "textAlign": "center",
-    "paddingTop": "2px",
-    "paddingLeft": "9px",
-    "color": "rgba(86, 95, 108, .7)"
+    "textAlign": "right",
+        "display": "inline",
+        "WebkitBoxFlex": "0",
+        "WebkitFlex": "0 0 auto",
+        "MsFlex": "0 0 auto",
+        "flex": "0 0 auto",
+        "fontFamily": "'Fa solid 900', sans-serif",
+        "color": "rgba(86, 95, 108, .9)",
+        "fontSize": "14px",
+        "fontWeight": "600",
+        "paddingTop": "6px",
+        "paddingLeft": "9px",
+        "justifyContent": "right",
+        "color": "rgba(86, 95, 108, .7)"
   },
+  "save-btn": {
+      "position": "absolute",
+      "textAlign": "right",
+      "fontFamily": "'Fa solid 900', sans-serif",
+      "color": "rgba(86, 95, 108, .9)",
+      "fontSize": "14px",
+      "justifyContent": "right",
+      "right": "230px",
+      "paddingTop": "10px",
+      "cursor": "pointer"
+  },
+  "save-div": {
+    "textAlign": "right",
+    "justifyContent": "right",
+    "top": "0px"
+},
   "addfilter_copy": {
     "cursor": "pointer",
     "display": "block",

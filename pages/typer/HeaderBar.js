@@ -1,5 +1,9 @@
 import React from 'react';
 import styles from './HeaderBar.css'
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faCloudUploadAlt } from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faCloudUploadAlt);
 
 export default class HeaderBar extends React.Component {
     render() {
@@ -7,7 +11,7 @@ export default class HeaderBar extends React.Component {
             <nav style={styles.wrapper}>
                 <div style={styles.logo}></div>
                 <div style={styles.shortcutblock_copy}>
-                    <div style={styles.shortcut_ar}>العربية</div>
+                    {/*<div style={styles.shortcut_ar}>العربية</div>*/}
                 </div>
                 <div style={styles.shortcutblock}>
                     <div style={styles.shortcut_hb}>26.02.2018</div>
@@ -18,9 +22,10 @@ export default class HeaderBar extends React.Component {
                 <div style={styles.shortcutblock}>
                     <div style={styles.shortcut_hb}>שם המארגן</div>
                 </div>
-                <h2 style={styles.heading_3}>
-                  <a href="/">Home</a>
-                </h2>
+                <div style={styles.heading_3}>
+                    <div style={styles.cloud}>שלח<br/>ارسل</div>
+                    <FontAwesomeIcon icon="cloud-upload-alt" style={styles['cloud-icon']}/>
+                </div>
             </nav>
         )
     }

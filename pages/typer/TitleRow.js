@@ -13,24 +13,24 @@ export default class TitleRow extends React.Component {
     render() {
       return (
         <div style={styles.row_title}>
-            <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>מייל/البريد الإلكتروني</h4>
+            <div style={styles['rtl-email']}>
+                <h4 style={styles.heading_hb}>אימייל<br/>البريد الإلكتروني</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="envelope-open"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>טלפון/رقم الهاتف</h4>
+                <h4 style={styles.heading_hb}>טלפון<br/>رقم الهاتف</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="phone"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>עיר/البلد</h4>
+                <h4 style={styles.heading_hb}>עיר<br/>البلد</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="building"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>שם משפחה/اسم العائلة</h4>
+                <h4 style={styles.heading_hb}>שם משפחה<br/>اسم العائلة</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="user"></FontAwesomeIcon></div>
             </div>
             <div style={styles.rtl}>
-                <h4 style={styles.heading_hb}>שם/الاسم</h4>
+                <h4 style={styles.heading_hb}>שם פרטי<br/>الاسم الشخصي</h4>
                 <div style={styles.awsome_hb_low}><FontAwesomeIcon icon="user"></FontAwesomeIcon></div>
             </div>
       </div>

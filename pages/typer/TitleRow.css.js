@@ -13,16 +13,27 @@ export default  {
         "MsFlexPack": "center",
         "justifyContent": "center",
         "display": "flex",
-        "width": "200px",
-        "height": "35px"
+        "width": "150px",
+        "height": "45px"
+      },
+      "rtl-email": {
+        "WebkitBoxPack": "center",
+        "WebkitJustifyContent": "center",
+        "MsFlexPack": "center",
+        "justifyContent": "center",
+        "display": "flex",
+        "width": "170px",
+        "height": "45px"
       },
       "heading_hb": {
+        "textAlign": "center",
+        "justifyContent": "center",
         "paddingLeft": "5px",
         "marginTop" : "0px",
-        "fontFamily": "Rubik, sans-serif",
+        "fontFamily": "Cabin, sans-serif",
         "color": "rgba(86, 95, 108, .7)",
-        "fontSize": "20px",
-        "fontWeight": "500"
+        "fontSize": "15px",
+        "fontWeight": "bold"
       },
       "awsome_hb_low": {
         "display": "inline",
@@ -35,7 +46,7 @@ export default  {
         "WebkitFlex": "0 0 auto",
         "MsFlex": "0 0 auto",
         "flex": "0 0 auto",
-        "fontFamily": "'Fa solid 900', sans-serif",
+        "fontFamily": "Cabin, sans-serif",
         "color": "rgba(86, 95, 108, .9)",
         "fontSize": "14px",
         "fontWeight": "600",
