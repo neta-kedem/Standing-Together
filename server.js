@@ -14,7 +14,7 @@ app.prepare().then(() => {
   // mongoose.connect(MONGODB_URI);
   // const db = mongoose.connection;
   // db.on('error', console.error.bind(console, 'connection error:'));
-  // db.once('open').then(...)
+  // db.once('open').then(...query...)
 
   createServer((req, res) => {
     // This tells it to parse the query portion of the URL.
