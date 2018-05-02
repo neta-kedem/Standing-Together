@@ -21,7 +21,7 @@ export default class ToggleSwitch extends React.Component {
 						display: inline-block;
 						cursor: pointer;
 					}
-					
+
 					.bar1, .bar2, .bar3 {
 						width: 25.5px;
 						height: 4px;
@@ -39,15 +39,15 @@ export default class ToggleSwitch extends React.Component {
 						transform: Scale(1, 1);
 						transition: 0.4s 0.4s;
 					}
-					
+
 					.change .bar1 {
 						transform: rotate(45deg);
 					}
-					
+
 					.change .bar2 {
 						transform: Scale(0, 1);
 					}
-					
+
 					.change .bar3 {
 						transform: rotate(-45deg);
 					}
@@ -65,7 +65,7 @@ export default class ToggleSwitch extends React.Component {
 					}
 				`}
 				</style>
-				<div dir="ltr" className={"hamburger " + (this.state.isOpen ? 'change' : '')} onClick={()=>this.handleMenuToggle().bind(this)}>
+				<div dir="ltr" className={"hamburger " + (this.state.isOpen ? 'change' : '')} onClick={this.handleMenuToggle.bind(this)}>
 					<div className="bar1"></div>
 					<div className="bar2"></div>
 					<div className="bar3"></div>
