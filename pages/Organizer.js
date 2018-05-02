@@ -6,6 +6,8 @@ import Meta from '../lib/meta';
 import ItemService from '../services/ItemService'
 
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
+import MultiSelect from '../UIComponents/MultiSelect/MultiSelect'
+import HamburgerMenu from '../UIComponents/HamburgerMenu/HamburgerMenu'
 import TopNavBar from './organizer/TopNavbar'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
@@ -14,9 +16,17 @@ import style from './organizer/Organizer.css'
 export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
-	this.state = {activists: [], currFilters: [], allSelected: false};
+	this.state = {activists: [], currFilters: [], allSelected: false,
+	tableFields:[
+		{title: "Name", visibility: true, key: "name", icon:"user", type:"text"},
+		{title: "Lives In",  visibility: true, key: "city", icon:"building", type:"text"},
+		{title: "Phone",  visibility: true, key: "phone", icon:"phone", type:"text"},
+		{title: "Email",  visibility: true, key: "email", icon:"envelope-open", type:"text"},
+		{title: "Last Seen",  visibility: false, key: "lastSeen", icon:"calendar", type:"text"},
+		{title: "Last Event",  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
+		{title: "Call?",  visibility: true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
+	]};
 }
-
 
 componentDidMount() {
 	ItemService.getAcivists()
@@ -27,11 +37,23 @@ componentDidMount() {
 				this.setState({currFilters}));
 }
 handleActivistCallerStatusChange(activistIndex, status){
-	this.state.activists[activistIndex].isCaller=status;
+	const activists = this.state.activists.slice();
+	activists[activistIndex].isCaller=status;
+	this.setState(activists: activists);
 	ItemService.toggleUserCallerStatus(this.state.activists[activistIndex]._id, status);
 }
-
+handleFieldDisplayToggle(fieldIndex, status){
+	const tableFields = this.state.tableFields.slice();
+	tableFields[fieldIndex].visibility=status;
+	this.setState(tableFields: tableFields);
+}
 render() {
+	const tableFields = <MultiSelect
+		values={this.state.tableFields}
+		label='title'
+		selection='visibility'
+		handleChange={this.handleFieldDisplayToggle.bind(this)}/>;
+
 	return (
 		<div style={style["pageWrap"]}>
 			<Meta/>
@@ -43,16 +65,9 @@ render() {
 				<div style={style['main-panel']}>
 					<QueryResultsActionMenu></QueryResultsActionMenu>
 					<div style={style['results-wrap']}>
+						<HamburgerMenu content={tableFields}/>
 						<div style={style['query-results']}>
-							<SelectableTable rows={this.state.activists} header={[
-								{title: "Name", key: "name", icon:"user", type:"text"},
-								{title: "Lives In", key: "city", icon:"building", type:"text"},
-								{title: "Phone", key: "phone", icon:"phone", type:"text"},
-								{title: "Email", key: "email", icon:"envelope-open", type:"text"},
-								{title: "Last Seen", key: "lastSeen", icon:"calendar", type:"text"},
-								{title: "Last Event", key: "lastEvent", icon:"calendar-check", type:"text"},
-								{title: "Call?", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
-							]}></SelectableTable>
+							<SelectableTable rows={this.state.activists} header={this.state.tableFields}></SelectableTable>
 						</div>
 					</div>
 				</div>
