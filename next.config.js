@@ -6,6 +6,7 @@ if('production' === process.env.NODE_ENV) {
 }
 
 module.exports = {
+  useFileSystemPublicRoutes:false,
   webpack: (config) => {
     // Fixes npm packages that depend on `fs` module
     config.node = {
@@ -20,7 +21,6 @@ module.exports = {
         }
       ]
     });
-//   useFileSystemPublicRoutes: false
 
     return config
   }

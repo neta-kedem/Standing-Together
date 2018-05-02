@@ -5,11 +5,6 @@ import Meta from '../lib/meta';
 export default () => (
     <div>
       <Meta/>
-      <link
-          href='http://fonts.googleapis.com/css?family=Cabin'
-          rel='stylesheet'
-          type='text/css'
-      ></link>
       <h1>Choose page to work on</h1>
       <ul>
         <li>

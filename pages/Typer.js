@@ -77,11 +77,6 @@ export default class Typer extends React.Component {
     return (
         <div>
           <Meta/>
-          <link
-			      	href='https://fonts.googleapis.com/css?family=Cabin'
-				      rel='stylesheet'
-				      type='text/css'
-			    ></link>
           <HeaderBar></HeaderBar>
           <section style={styles.section}>
             <div style={styles.rightpanel}>
@@ -93,11 +88,11 @@ export default class Typer extends React.Component {
                   </div>
                   <br/>
                   <br/>
-                  
+
                   <table style={styles.info_table}>
                      <tbody style={styles.row}>
                      {
-                       this.state.data.map((person, i) => 
+                       this.state.data.map((person, i) =>
                        <div>
                          <FontAwesomeIcon onClick ={this.deleteRow.bind(this,i)}  key={i+0.1} id="delete" icon="trash-alt" style={styles['save-btn']}/>
                          <TableRow key={i} data={person} num={i}
@@ -109,7 +104,7 @@ export default class Typer extends React.Component {
                       <h4 style={styles.heading}>select all</h4>
                  </div>
                  <div style={styles.input_fields}>
-                <div style={styles.addfilter_copy}>שלח למסד הנתונים</div> 
+                <div style={styles.addfilter_copy}>שלח למסד הנתונים</div>
                 </div>*/}
              </content>
             </div>
