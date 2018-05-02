@@ -59,9 +59,9 @@ export default class SelectableTable extends React.Component {
 	render() {
 		const tableHeader = 
 			<tr style={style['list-table-header']}>
-				<td style={style['list-row-selection-indicator']}> </td>
+				<th style={style['list-row-selection-indicator']}> </th>
 				{this.state.header.map((field, i) =>
-				<th key={i} style={style['list-table-header-field']}>
+				<th key={i} style={{...style['list-table-header-field'], ...(!field.visibility?{'display':'none'}:'')}}>
 					{field.icon!=""?<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>:''}
 					{" "+field.title}
 				</th>)}
@@ -72,7 +72,7 @@ export default class SelectableTable extends React.Component {
 					<td style={{...style['list-row-selection-indicator'], ...(row.selected?style['selected-table-row']:{})}}> </td>
 					{
 						this.state.header.map((field, j) =>
-							<td key={j} style={style['list-table-field']} title={row[field["key"]]+""}>
+							<td key={j} style={{...style['list-table-field'], ...(!field.visibility?{'display':'none'}:''), ...(field.width?{'width':field.width}:{})}} title={row[field["key"]]+""}>
 								{this.cellConstructor(field["type"], row[field["key"]], function(value){field["handleChange"](i, value)},)}
 							</td>
 						)
