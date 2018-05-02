@@ -8,8 +8,7 @@ export default class ToggleSwitch extends React.Component {
 			isOpen: false
 		};
 	}
-	handleMenuToggle()
-	{
+	handleMenuToggle() {
 		this.setState({isOpen: !this.state.isOpen});
 	}
 	render() {
