@@ -39,13 +39,13 @@ componentDidMount() {
 handleActivistCallerStatusChange(activistIndex, status){
 	const activists = this.state.activists.slice();
 	activists[activistIndex].isCaller=status;
-	this.setState(activists: activists);
+	this.setState({activists: activists});
 	ItemService.toggleUserCallerStatus(this.state.activists[activistIndex]._id, status);
 }
 handleFieldDisplayToggle(fieldIndex, status){
 	const tableFields = this.state.tableFields.slice();
 	tableFields[fieldIndex].visibility=status;
-	this.setState(tableFields: tableFields);
+	this.setState({tableFields: tableFields});
 }
 render() {
 	const tableFields = <MultiSelect
