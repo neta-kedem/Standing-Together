@@ -14,21 +14,21 @@ export default class InputRow extends React.Component {
       return (
         <table style={styles.info_table}>
           <tbody style={styles.row}>
-             <tr style={{...styles['list-table-row'],...styles['list-table-field']}}>
+             <tr style={{...styles['list-table-row'],...styles['list-table-field'],...styles['right-to-left']}}>
                 <td style={styles['td-style']}> 
-                    <input style={styles['list-email-field']} type="text" defaultValue="" id="mail"/>
+                    <input style={styles['list-email-field']} type="text" tabIndex={5} defaultValue="" id="mail" onKeyPress={this.props.handleKeyPress}/>
                 </td>
                 <td style={styles['td-style']}> 
-                    <input style={styles['list-table-field']} type="text" defaultValue="" id="phNo"/>
+                    <input style={styles['list-table-field']} type="text" tabIndex={4} defaultValue="" id="phNo" onKeyPress={this.props.handleKeyPress}/>
                 </td>
                 <td style={styles['td-style']}> 
-                    <input style={styles['list-table-field']} type="text" defaultValue="" id="city"/>
+                    <input style={styles['list-table-field']} type="text" tabIndex={3} defaultValue="" id="city" onKeyPress={this.props.handleKeyPress}/>
                 </td>
                 <td style={styles['td-style']}> 
-                    <input style={styles['list-table-field']} type="text" defaultValue="" id="lastName"/>
+                    <input style={styles['list-table-field']} type="text" tabIndex={2} defaultValue="" id="lastName" onKeyPress={this.props.handleKeyPress}/>
                 </td>
                 <td style={styles['td-style']}> 
-                    <input style={styles['list-table-field']} type="text" defaultValue="" id="firstName"/>
+                    <input style={styles['list-table-field']} type="text" tabIndex={1} defaultValue="" id="firstName" onKeyPress={this.props.handleKeyPress}/>
                 </td>
              </tr>
           </tbody>

@@ -1,6 +1,5 @@
 export default {
   "content": {
-    "width": "100%",
     "height": "100%",
     "padding": "20px",
     "WebkitBoxFlex": "1",
@@ -14,10 +13,8 @@ export default {
   },
   "rightpanel": {
     "display": "flex",
-    "height": "95.5vh",
-    "maxWidth": "100vw",
-    "minHeight": "500px",
-    "minWidth": "500px",
+    "height": "100%",
+    "minHeight": "600px",
     "float": "none",
     "WebkitBoxOrient": "vertical",
     "WebkitBoxDirection": "normal",
@@ -27,8 +24,7 @@ export default {
   },
   "section": {
     "width": "100%",
-    "height": "100%",
-    "minHeight": "1080px"
+    "height": "100%"
   },
   "row" : {
     "display": "block",

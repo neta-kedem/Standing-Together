@@ -84,7 +84,7 @@ export default class Typer extends React.Component {
                   <TitleRow></TitleRow>
                   <div style={styles['save-div']}>
                     <span onClick ={this.addRow}><FontAwesomeIcon id = "save" icon="save" style={styles['save-btn']}/></span>
-                    <InputRow></InputRow>
+                    <InputRow handleKeyPress={this._handleKeyPress}></InputRow>
                   </div>
                   <br/>
                   <br/>

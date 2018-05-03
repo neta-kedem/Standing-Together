@@ -87,5 +87,9 @@ export default  {
     "td-style":{
         "padding": "0 0 0 0",
         "border":"0.1px solid rgb(202, 200, 199)"
+    },
+    "right-to-left": {
+      "flexDirection": "row-reverse",
+      "-webkit-flex-direction": "row-reverse"
     }
 }
