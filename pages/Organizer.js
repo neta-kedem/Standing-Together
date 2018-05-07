@@ -55,18 +55,19 @@ render() {
 		handleChange={this.handleFieldDisplayToggle.bind(this)}/>;
 
 	return (
-		<div style={style["pageWrap"]}>
+		<div className="page-wrap">
 			<Meta/>
+			<style jsx global>{style}</style>
 			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
-			<div style={style.wrapper}>
-				<div style={style.leftPanel}>
+			<div className="wrapper">
+				<div className="left-panel">
 					<QueryCreator currFilters={this.state.currFilters}></QueryCreator>
 				</div>
-				<div style={style['main-panel']}>
+				<div className="main-panel">
 					<QueryResultsActionMenu></QueryResultsActionMenu>
-					<div style={style['results-wrap']}>
+					<div className="results-wrap">
 						<HamburgerMenu content={tableFields}/>
-						<div style={style['query-results']}>
+						<div className="query-results">
 							<SelectableTable rows={this.state.activists} header={this.state.tableFields}></SelectableTable>
 						</div>
 					</div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './SelectableTable.css'
+import stylesheet from './SelectableTable.css'
 
 import TextValue from './FieldTypes/TextValue'
 import ToggleSwitch from './FieldTypes/ToggleSwitch'
@@ -58,21 +58,21 @@ export default class SelectableTable extends React.Component {
 
 	render() {
 		const tableHeader = 
-			<tr style={style['list-table-header']}>
-				<th style={style['list-row-selection-indicator']}> </th>
+			<tr className='list-table-header'>
+				<th className='list-row-selection-indicator'> </th>
 				{this.state.header.map((field, i) =>
-				<th key={i} style={{...style['list-table-header-field'], ...(!field.visibility?{'display':'none'}:'')}}>
+				<th key={i} className='list-table-header-field' style={{'display':!field.visibility?'none':'auto'}, {'width':(field.width?field.width:'auto')}}>
 					{field.icon!=""?<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>:''}
 					{" "+field.title}
 				</th>)}
 			</tr>;
 		const rows =
 			this.state['rows'].map((row, i) =>
-				<tr key={i} style={{...style['list-table-row'],...style['list-table-field']}} onClick={() => this.toggleRowSelection(i)}>
-					<td style={{...style['list-row-selection-indicator'], ...(row.selected?style['selected-table-row']:{})}}> </td>
+				<tr key={i} className='list-table-row list-table-field' onClick={() => this.toggleRowSelection(i)}>
+					<td className={'list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
 					{
 						this.state.header.map((field, j) =>
-							<td key={j} style={{...style['list-table-field'], ...(!field.visibility?{'display':'none'}:''), ...(field.width?{'width':field.width}:{})}} title={row[field["key"]]+""}>
+							<td key={j} className='list-table-field' style={{'display':!field.visibility?'none':'auto'}, {'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
 								{this.cellConstructor(field["type"], row[field["key"]], function(value){field["handleChange"](i, value)},)}
 							</td>
 						)
@@ -80,7 +80,8 @@ export default class SelectableTable extends React.Component {
 				</tr>);
 		return (
 			<div>
-				<table style={style['list-table']}>
+				<style jsx global>{stylesheet}</style>
+				<table className={'list-table'}>
 					<thead>
 						{tableHeader}
 					</thead>
@@ -89,11 +90,11 @@ export default class SelectableTable extends React.Component {
 					</tbody>
 				</table>
 				<br></br>
-				<div style={style['select-all-checkbox']} onClick={() => this.toggleAllRowsSelection()}>
-					<div style={{...style['checkbox'],...(this.state.allSelected?style['checkbox-checked']:{})}}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
+				<div className='select-all-checkbox' onClick={() => this.toggleAllRowsSelection()}>
+					<div className={'checkbox '+(this.state.allSelected?'checkbox-checked':'')}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
 					SELECT ALL
 				</div>
 			</div>
-		)
+		);
 	}
 }
