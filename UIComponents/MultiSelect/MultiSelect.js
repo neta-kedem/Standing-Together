@@ -27,9 +27,6 @@ export default class ToggleSwitch extends React.Component {
 				</div>);
 		return (
 			<div>
-				<style jsx global>
-				{``}
-				</style>
 				{options}
 			</div>
 		)
