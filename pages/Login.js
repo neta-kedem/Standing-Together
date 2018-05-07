@@ -5,7 +5,7 @@ import Meta from '../lib/meta';
 import ItemService from '../services/ItemService';
 import IdentificationField from './login/IdentificationField';
 import CodeInput from './login/CodeInput';
-import style from './login/Login.css';
+import stylesheet from './login/Login.css';
 
 export default class Login extends React.Component {
 
@@ -58,34 +58,6 @@ verifyLoginCode(code)
 }
 
 render() {
-	const stylesheet = `
-		:root {
-			--field-placeholder-color: #777F89; 
-		}
-		body{
-			margin: 0;
-			font-family: Cabin, sans-serif !important;
-			color: white;
-			background-color: #90278e;
-			direction: rtl;
-			text-align: right;
-		}
-		input{
-			font-family: Cabin, sans-serif !important;
-		}
-		::placeholder {
-			color: var(--field-placeholder-color);
-			direction: rtl;
-		}
-		:-ms-input-placeholder {
-			color: var(--field-placeholder-color);
-			direction: rtl;
-		}
-		::-ms-input-placeholder {
-			color: var(--field-placeholder-color);
-			direction: rtl;
-		}
-		`;
 	const dictionary = {
 		"he":{
 			"smsAuthentication":"אימות באמצעות SMS",
@@ -118,19 +90,17 @@ render() {
 	const loginCode =
 		<div>
 			<br/>
-			<div style={style['code-input-title']}>
+			<div className='code-input-title'>
 				{vocabulary.inputCode+" "+this.state.indetificationMethod}
 			</div>
 			<br/>
 			<CodeInput verificationFunction={this.verifyLoginCode.bind(this)}/>
 		</div>;
 	return (
-		<div style={style['login-page-wrap']} dir="rtl">
+		<div className='login-page-wrap' dir="rtl">
 			<Meta/>
-			<style>
-				{stylesheet}
-			</style>
-			<img src="../static/Logo.svg" style={style['logo']}></img>
+			<style jsx global>{stylesheet}</style>
+			<img src="../static/Logo.svg" className='logo'></img>
 			{this.state.codeSent?loginCode:identification}
 		</div>
 	)
