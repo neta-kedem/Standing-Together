@@ -3,7 +3,7 @@
     [
       "next/babel",
       {
-        "styled-jsx": { "optimizeForSpeed": false }
+        "styled-jsx": { "optimizeForSpeed": true }
       }
     ]
   ]
