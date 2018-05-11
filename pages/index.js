@@ -13,6 +13,9 @@ export default () => (
         <li>
           <Link href="/Typer"><a>Typers page</a></Link>
         </li>
+        <li>
+          <Link href="/Caller"><a>Callers page</a></Link>
+        </li>
       </ul>
     </div>
 )
