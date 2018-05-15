@@ -1,10 +1,20 @@
 export default  {
-    "left-panel":{
+    "right-panel":{
         "float": "right",
         "width": "50%",
         "height": "100%",
+        "justifyContent": "center",
+        "textAlign": "center",
         "backgroundImage": "linear-gradient(180deg, #eaeaea, #eaeaea)"
     },
+    "left-panel":{
+      "float": "left",
+      "width": "50%",
+      "height": "100%",
+      "justifyContent": "center",
+      "textAlign": "center",
+      "backgroundImage": "linear-gradient(180deg, #eaeaea, #eaeaea)"
+  },
     "info_table" : {
         "display": "flex",
         "padding": "50px",
@@ -20,7 +30,10 @@ export default  {
         "WebkitJustifyContent": "center",
         "MsFlexPack": "center",
         "borderCollapse": "collapse",
-        "justifyContent": "center"
+        "justifyContent": "center",
+        "textAlign": "right",
+        "float":"rigth",
+        "dir": "rtl"
       },
       "row1" : {
         "display": "block",
@@ -43,11 +56,45 @@ export default  {
 		"textAlign": "left",
 	},
 	"list-table-header-field":{
-		"paddingRight": "60px",
+		"paddingRight": "85px",
 		"paddingBottom": "10px"
     },
     "list-row-selection-indicator":{
 		"width": "0px"
-	}
+  },
+  "chevron-style":{
+      "fontFamily": "'Fa solid 900', sans-serif",
+      "color": "rgba(86, 95, 108, .9)",
+      "paddingRight": "6em",
+      "cursor": "pointer"
+  },
+  "query":{
+    "display": "inline-flex",
+    "paddingRight": "7.5em",
+    "paddingTop": "1em",
+    "fontFamily": "'Fa solid 900', sans-serif",
+      "color": "rgba(86, 95, 108, .9)"
+  },
+  "space":{
+    "paddingTop": "50px"
+  },
+  "talking-scenario":{
+    "overflowY": "scroll",
+    "height": "30em",
+    "width":"40em",
+    "resize": "none" ,
+    "backgroundColor":"white",
+     "position": "relative",
+      "top": "15%",
+      "left": "5%",
+      "outline": "none",
+      "textAlign": "right",
+      "fontFamily": "'Fa solid 900', sans-serif",
+      "color": "rgba(86, 95, 108, .9)",
+      "fontWeight": "600",
+       "fontSize":"14px",
+       "border": "0",
+     "margin": "auto"
+  }
   }
   
