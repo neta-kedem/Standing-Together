@@ -36,18 +36,22 @@ export default class ToggleSwitch extends React.Component {
 						right: 0;
 						bottom: 0;
 						border-radius: 3px;
-						background-color: #ccc;
+						box-sizing: border-box;
+						border: 1px solid #888;
+						background-color: #fff;
 						-webkit-transition: .4s;
 						transition: .4s;
 					}
 					
 					.slider:before {
 						position: absolute;
+						top: -1px;
+						left: -1px;
 						content: "";
 						height: 1.5em;
 						width: 1.5em;
 						border-radius: 3px;
-						background-color: white;
+						background-color: #888;
 						-webkit-transition: .4s;
 						transition: .4s;
 					}
