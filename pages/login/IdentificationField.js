@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './IdentificationField.css';
+import stylesheet from './IdentificationField.css';
 
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -35,11 +35,14 @@ export default class IdentificationField extends React.Component {
 	
 	render() {
 		return (
-			<div style={style['credentials-field-wrap']}>
-				<input onChange={(event)=>this.syncStateToInput(event)} onKeyPress={this.handleKeyPress} dir={this.state.dir} style={style['login-button']} type={this.state.inputType} autoFocus minLength={this.state.minLength} maxLength={this.state.maxLength} style={style['credentials-field']} placeholder={this.state.placeholder}></input>
-				<div style={{...style['login-button-wrap'], ...(this.state.validationFunction(this.state.value)?style['valid-input']:style['invalid-input'])}}>
-					<div onClick={this.handlePost.bind(this)} style={style['login-button']}>
-						<FontAwesomeIcon style={style['login-button-icon']} icon="paper-plane"/>
+			<div>
+				<style jsx>{stylesheet}</style>
+				<div className='credentials-field-wrap'>	
+					<input onChange={(event)=>this.syncStateToInput(event)} onKeyPress={this.handleKeyPress} dir={this.state.dir} type={this.state.inputType} autoFocus minLength={this.state.minLength} maxLength={this.state.maxLength} className='credentials-field' placeholder={this.state.placeholder}></input>
+					<div className={'login-button-wrap '+(this.state.validationFunction(this.state.value)?'valid-input ':'invalid-input ')}>
+						<div onClick={this.handlePost.bind(this)} className='login-button'>
+							<FontAwesomeIcon className='login-button-icon' icon="paper-plane"/>
+						</div>
 					</div>
 				</div>
 			</div>
