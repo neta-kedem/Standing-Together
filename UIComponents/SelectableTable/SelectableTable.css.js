@@ -6,7 +6,7 @@ export default css`
 		font-size:16px;
 	}
 	.list-table-header{
-		color: rgb(128, 134, 138);
+		color: #90959e;
 		font-weight: 700;
 		font-size:14px;
 		margin: 0 auto;
@@ -18,7 +18,7 @@ export default css`
 		padding-bottom: 10px;
 	}
 	.list-table-row{
-		background-color:#f7f5f6;
+		background-color:#fff;
 	}
 	.selected-table-row{
 		background-color:#FF4C94;

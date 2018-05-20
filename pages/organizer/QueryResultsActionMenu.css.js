@@ -6,9 +6,7 @@ export default {
 		"display": "flex",
 		"height": "50px",
 		"flex": "0 0 auto",
-		"borderBottom": "1px solid #BFBFBF",
-		"backgroundImage": "-webkit-linear-gradient(270deg, #f6f6f6, #f6f6f6)",
-		"backgroundImage": "linear-gradient(180deg, #f6f6f6, #f6f6f6)"
+		"backgroundColor": "#fbfbfb",
 	},
 	"results-count": {
 		"display": "inline-block",
@@ -22,9 +20,6 @@ export default {
 	"action-button": {
 		"margin": "7.5px 10px",
 		"padding": "6px 12px 0px 10px",
-		"border": "1px solid #d6d6d6",
-		"borderRadius": "5px",
-		"backgroundColor": "#fdfdfd",
 		"color": "rgb(100, 109, 114)",
 		"fontSize": "20px",
 		"fontWeight": "500",
