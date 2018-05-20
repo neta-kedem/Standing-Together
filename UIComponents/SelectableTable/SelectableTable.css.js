@@ -17,16 +17,23 @@ export default css`
 		padding: 5px;
 		padding-bottom: 10px;
 	}
+	.list-table-header-field.hidden{
+		display: none;
+	}
 	.list-table-row{
 		background-color:#fff;
+		white-space: nowrap;
 	}
 	.selected-table-row{
 		background-color:#FF4C94;
 	}
 	.list-table-field{
 		border:1px solid rgb(202, 200, 199);
-		padding:5px;
+		height: 1.5em;
 		color: rgb(103, 111, 117);
+	}
+	.list-table-field.hidden{
+		display: none;
 	}
 	.list-row-selection-indicator{
 		width: 0px;

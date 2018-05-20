@@ -3,7 +3,6 @@ export default {
 		"position": "relative",
 		"display": "flex",
 		"height": "55px",
-		"justifyContent": "center",
 		"backgroundColor": "#90278e"
 	},
 	"saved-views": {
@@ -16,11 +15,9 @@ export default {
 	},
 	"saved-views-wrap": {
 		"overflowX": "auto",
-		"whiteSpace": "nowrap",
-		"textAlign": "center"
+		"whiteSpace": "nowrap"
 	},
 	"logo": {
-	"position": "absolute",
 	"left": "0px",
 	"width": "80px",
 	"height": "100%",

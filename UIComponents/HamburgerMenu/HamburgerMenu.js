@@ -13,9 +13,12 @@ export default class ToggleSwitch extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className="menu-wrapper">
 				<style jsx global>
 				{`
+					.menu-wrapper{
+						position: relative;
+					}
 					.hamburger {
 						display: inline-block;
 						cursor: pointer;
@@ -52,12 +55,15 @@ export default class ToggleSwitch extends React.Component {
 					}
 					.menu-content{
 						display:none;
-						background-color: rgb(247, 245, 246);
+						background-color: #fff;
 						color: rgb(100, 109, 114);
 						position: absolute;
+						width: 10vw;
+						right: 0;
 						padding: 1em;
-						border: 1px solid rgb(100, 109, 114);
-						box-shadow: 5px 5px 20px rgb(100, 109, 114);
+						border: 1px solid #ccc;
+						z-index: 1000;
+						text-align: left;
 					}
 					.menu-content.open{
 						display: block;

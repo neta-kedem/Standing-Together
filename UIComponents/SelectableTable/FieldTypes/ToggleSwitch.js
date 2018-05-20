@@ -15,13 +15,16 @@ export default class ToggleSwitch extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className="switch-wrap">
 				<style jsx global>{`
+					.switch-wrap{
+						height:100%;
+					}
 					.switch {
 						position: relative;
 						display: inline-block;
 						width: 3em;
-						height: 1.5em;
+						height: 100%;
 					}
 					
 					.switch input {
