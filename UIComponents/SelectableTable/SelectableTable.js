@@ -61,7 +61,7 @@ export default class SelectableTable extends React.Component {
 			<tr className='list-table-header'>
 				<th className='list-row-selection-indicator'> </th>
 				{this.state.header.map((field, i) =>
-				<th key={i} className='list-table-header-field' style={{'display':!field.visibility?'none':'auto'}, {'width':(field.width?field.width:'auto')}}>
+				<th key={i} className={'list-table-header-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}}>
 					{field.icon!=""?<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>:''}
 					{" "+field.title}
 				</th>)}
@@ -72,7 +72,7 @@ export default class SelectableTable extends React.Component {
 					<td className={'list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
 					{
 						this.state.header.map((field, j) =>
-							<td key={j} className='list-table-field' style={{'display':!field.visibility?'none':'auto'}, {'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
+							<td key={j} className={'list-table-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
 								{this.cellConstructor(field["type"], row[field["key"]], function(value){field["handleChange"](i, value)},)}
 							</td>
 						)
