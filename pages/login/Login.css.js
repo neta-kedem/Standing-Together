@@ -24,9 +24,6 @@ export default css`
 		direction: rtl;
 		text-align: right;
 	}
-	input{
-		font-family: Cabin, sans-serif !important;
-	}
 	::placeholder {
 		color: var(--field-placeholder-color);
 		direction: rtl;
