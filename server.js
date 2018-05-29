@@ -1,6 +1,8 @@
 const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
+const express = require('express');
+const router = express.Router();
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
@@ -11,13 +13,37 @@ const mongoose = require('mongoose');
 mongoose.Promise = Promise;
 
 app.prepare().then(() => {
+	const server = express();
+
+	// CUSTOM ROUTES GO HERE
+	server.get('/Organizer', (req, res) => {
+		return app.render(req, res, '/Organizer', req.query);
+	});
+	server.get('/Typer', (req, res) => {
+		return app.render(req, res, '/Typer', req.query);
+	});
+	server.get('/Login', (req, res) => {
+		return app.render(req, res, '/Login', req.query);
+	});
+	server.get('/EventCreation', (req, res) => {
+		return app.render(req, res, '/EventCreation', req.query);
+	});
+	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
+	server.get('*', (req, res) => {
+		return handle(req, res);
+	});
+	const port = process.env.PORT || 3000;
+
+	server.listen(port, err => {
+		if (err) throw err;
+		console.log(`> Ready on port ${port}...`);
+	});
   // use this to query the db
   // mongoose.connect(MONGODB_URI);
   // const db = mongoose.connection;
   // db.on('error', console.error.bind(console, 'connection error:'));
   // db.once('open').then(...query...)
-
-  createServer((req, res) => {
+  /*createServer((req, res) => {
     // This tells it to parse the query portion of the URL.
     const parsedUrl = parse(req.url, true);
 
@@ -38,5 +64,5 @@ app.prepare().then(() => {
   }).listen(port, err => {
     if (err) throw err;
     console.log('> Ready on http://localhost:3000');
-  })
+  })*/
 });
