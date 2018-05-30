@@ -83,7 +83,7 @@ render() {
             </tr>;
     let selectedName = (this.state.activits[this.state.selectedRow]).fname;
 	return (
-		<div style={{'height':'100vh','fontWeight':'540'}}>
+		<div style={{'height':'100vh','fontWeight':'540'}}>{/*,"fontFamily": "'Rubik (Hebrew)','Cairo (Arabic)', sans-serif"*/}
             <style jsx global>{`
 					/* width */
                     ::-webkit-scrollbar {
@@ -103,6 +103,14 @@ render() {
                     /* Handle on hover */
                     ::-webkit-scrollbar-thumb:hover {
                         background: rgba(86, 95, 108, .9); 
+                    }
+
+                    :lang(heb){
+                        font-family: 'Rubik', sans-serif;
+                    }
+
+                    :lang(ar){
+                        font-family: 'Cairo', sans-serif;
                     }
 				`}
 				</style>

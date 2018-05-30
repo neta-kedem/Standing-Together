@@ -2,6 +2,7 @@ export default {
   "content": {
     "height": "100%",
     "padding": "20px",
+    "paddingTop": "40px",
     "WebkitBoxFlex": "1",
     "WebkitFlex": "1",
     "MsFlex": "1",
@@ -84,13 +85,14 @@ export default {
       "color": "rgba(86, 95, 108, .9)",
       "fontSize": "14px",
       "justifyContent": "right",
-      "right": "230px",
+      "right": "255px",
       "paddingTop": "10px",
       "cursor": "pointer"
   },
   "save-div": {
     "textAlign": "right",
     "justifyContent": "right",
+    "paddingBottom": "10px",
     "top": "0px"
 },
   "addfilter_copy": {

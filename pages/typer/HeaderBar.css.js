@@ -25,7 +25,7 @@ export default  {
       },
       "shortcut": {
         "display": "inline-block",
-        "padding": "17px 20px",
+
         "color": "#fbfbfb",
         "fontSize": "21px",
         "fontWeight": "400",
@@ -33,10 +33,17 @@ export default  {
       },
       "shortcut_hb": {
         "display": "inline-block",
-        "padding": "17px 20px",
-        "fontFamily": "Rubik, sans-serif",
+        "padding": "8px 20px",
         "color": "#fbfbfb",
-        "fontSize": "21px",
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "textAlign": "center"
+      },
+      "date": {
+        "display": "inline-block",
+        "padding": "18px 20px",
+        "color": "#fbfbfb",
+        "fontSize": "15px",
         "fontWeight": "400",
         "textAlign": "center"
       },
@@ -49,8 +56,7 @@ export default  {
       },
       "shortcut_ar": {
         "display": "inline-block",
-        "padding": "17px 20px",
-        "fontFamily": "Cairo, sans-serif",
+        "margin":" 0 auto 0 auto",
         "color": "#fbfbfb",
         "fontSize": "21px",
         "fontWeight": "400",
@@ -65,9 +71,8 @@ export default  {
       },
       "cloud":{
         "display": "inline-block",
-        "fontFamily": "Rubik, sans-serif",
         "color": "#fbfbfb",
-        "fontSize": "18px",
+        "fontSize": "17px",
         "fontWeight": "400",
         "paddingRight": "10px",
         "paddingTop": "5px",

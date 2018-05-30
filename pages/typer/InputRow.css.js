@@ -30,7 +30,8 @@ export default  {
         "justifyContent": "center",
         "width": "100%",
         "borderCollapse": "collapse",
-        "fontSize":"16px"
+        "fontSize":"16px",
+        "marginTop": "10px"
       },
     "constW": {
       "width": "170px"
@@ -50,7 +51,6 @@ export default  {
         "color": "rgb(103, 111, 117)",
         "height": "19px",
         "fontSize": "16px",
-        "fontFamily": "Cabin, sans-serif",
         "backgroundColor":"#f7f5f6"
     },
     "list-email-field":{
@@ -62,7 +62,6 @@ export default  {
       "color": "rgb(103, 111, 117)",
       "height": "19px",
       "fontSize": "16px",
-      "fontFamily": "Cabin, sans-serif",
       "backgroundColor":"#f7f5f6"
     },
     "list-row-selection-indicator":{
