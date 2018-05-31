@@ -34,6 +34,9 @@ app.prepare().then(() => {
 	server.get('/EventCreation', (req, res) => {
 		return app.render(req, res, '/EventCreation', req.query);
 	});
+	server.get('/Caller', (req, res) => {
+		return app.render(req, res, '/Caller', req.query);
+	});
 	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
 	server.get('*', (req, res) => {
 		return handle(req, res);
