@@ -41,7 +41,7 @@ const activistSchema = new mongoose.Schema({
   },
   role: {
     isTyper: Boolean,
-    iSCaller: Boolean,
+    isCaller: Boolean,
     isOrganizer: Boolean,
     isCircleLeader: Boolean,
   }
