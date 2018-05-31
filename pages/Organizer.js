@@ -90,11 +90,12 @@ handleFieldDisplayToggle(fieldIndex, status){
 	this.setState({tableFields: tableFields});
 }
 render() {
-	const tableFields = <MultiSelect
+	const tableFieldsMultiSelect = <MultiSelect
 		values={this.state.tableFields}
 		label='title'
 		selection='visibility'
 		handleChange={this.handleFieldDisplayToggle.bind(this)}/>;
+	const tableFieldsDropdown = <HamburgerMenu content={tableFieldsMultiSelect}/>;
 
 	return (
 		<div className="page-wrap">
@@ -106,9 +107,10 @@ render() {
 					<QueryCreator currFilters={this.state.currFilters}></QueryCreator>
 				</div>
 				<div className="main-panel">
-					<QueryResultsActionMenu></QueryResultsActionMenu>
+					<QueryResultsActionMenu items={[
+						{"index":1, "content":tableFieldsDropdown, "alignToEnd":true}
+					]}></QueryResultsActionMenu>
 					<div className="results-wrap">
-						<HamburgerMenu content={tableFields}/>
 						<div className="query-results">
 							<SelectableTable rows={this.state.activists} header={this.state.tableFields}></SelectableTable>
 						</div>

@@ -5,7 +5,7 @@ export default css
 		height:100vh;
 		display: flex;
 		flex-direction: column;
-		background-image: linear-gradient(180deg, #eaeaea, #eaeaea);
+		background: #fbfbfb;
 	}
 	.wrapper{
 		display: flex;
@@ -24,7 +24,6 @@ export default css
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
-		border-left: 1px solid #BFBFBF;
 	}
 	.results-wrap{
 		overflow: auto;

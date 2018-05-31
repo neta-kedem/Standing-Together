@@ -30,10 +30,9 @@ export default  {
         "justifyContent": "center",
         "paddingLeft": "5px",
         "marginTop" : "0px",
-        "fontFamily": "Cabin, sans-serif",
         "color": "rgba(86, 95, 108, .7)",
-        "fontSize": "15px",
-        "fontWeight": "bold"
+        "fontWeight": "bold",
+        "fontSize": "15px"
       },
       "awsome_hb_low": {
         "display": "inline",
@@ -46,7 +45,6 @@ export default  {
         "WebkitFlex": "0 0 auto",
         "MsFlex": "0 0 auto",
         "flex": "0 0 auto",
-        "fontFamily": "Cabin, sans-serif",
         "color": "rgba(86, 95, 108, .9)",
         "fontSize": "14px",
         "fontWeight": "600",

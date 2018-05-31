@@ -77,6 +77,22 @@ export default class Typer extends React.Component {
     return (
         <div>
           <Meta/>
+          <style jsx global>{`
+          :lang(heb){
+            font-family: 'Rubik', sans-serif;
+            font-size: 13px;
+        }
+
+        :lang(ar){
+            font-family: 'Cairo', sans-serif;
+            
+        }
+
+        br {
+          display: block;
+          margin: 0px 0;
+       }
+	      	`}</style>
           <HeaderBar></HeaderBar>
           <section style={styles.section}>
             <div style={styles.rightpanel}>
@@ -84,7 +100,7 @@ export default class Typer extends React.Component {
                   <TitleRow></TitleRow>
                   <div style={styles['save-div']}>
                     <span onClick ={this.addRow}><FontAwesomeIcon id = "save" icon="save" style={styles['save-btn']}/></span>
-                    <InputRow handleKeyPress={this._handleKeyPress}></InputRow>
+                    <InputRow style={{'MarginTop':'10px'}} handleKeyPress={this._handleKeyPress}></InputRow>
                   </div>
                   <br/>
                   <br/>
