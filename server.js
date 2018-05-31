@@ -2,6 +2,7 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 const express = require('express');
+const bodyParser = require('body-parser');
 const router = express.Router();
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -9,12 +10,17 @@ const handle = app.getRequestHandler();
 const port = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
+const Activist = require('./server/models/activistModel');
 
-mongoose.Promise = Promise;
-
+mongoose.connect(MONGODB_URI);
+mongoose.Promise = global.Promise;
+const server = express();
+server.use(bodyParser.urlencoded({ extended: false }));
+server.use(bodyParser.json());
 app.prepare().then(() => {
-	const server = express();
-
+	// API routes
+	require('./server/routes')(server);
+	
 	// CUSTOM ROUTES GO HERE
 	server.get('/Organizer', (req, res) => {
 		return app.render(req, res, '/Organizer', req.query);

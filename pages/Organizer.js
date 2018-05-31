@@ -29,9 +29,13 @@ constructor(props) {
 }
 
 componentDidMount() {
-	ItemService.getAcivists()
-		.then(activists =>
-				this.setState({activists}));
+	
+	fetch('/api/activists')
+		.then(res => res.json())
+		.then(json => {
+			console.log(json);
+			this.setState({activists:json});
+		});
 	ItemService.getCurrFilters()
 		.then(currFilters =>
 				this.setState({currFilters}));
@@ -43,6 +47,44 @@ handleActivistCallerStatusChange(activistIndex, status){
 	ItemService.toggleUserCallerStatus(this.state.activists[activistIndex]._id, status);
 }
 handleFieldDisplayToggle(fieldIndex, status){
+	var chomsky = {
+		"metadata":{
+			"creationDate":"01/06/18",
+			"lastUpdate":"01/06/18",
+			"joiningMethod":"contactPage",
+			"typerName":"Yaniv Cogan"
+		},
+		"profile":{
+			"firstName":"Noam",
+			"lastName":"Chomsky",
+			"phone":"050-99999999",
+			"email":"chomsky@mit.edu",
+			"residency":"Arizona",
+			"circle":"תל-אביב",
+			"isMember":false,
+			"isPaying":false,
+			"isNewsletter":false,
+			"participatedEvents":["peace demonstration", "moonlanding", "ice skating tournament"]
+		},
+		"role":{
+			"isTyper": false,
+			"iSCaller": false,
+			"isOrganizer": false,
+			"isCircleLeader": false
+		}
+	};
+	/*fetch('/api/activists', {
+		method: 'post',
+		body: JSON.stringify(chomsky),
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		}
+	})
+	.then(res => res.json())
+	.then(json => {
+		console.log(json);
+	});*/
 	const tableFields = this.state.tableFields.slice();
 	tableFields[fieldIndex].visibility=status;
 	this.setState({tableFields: tableFields});
