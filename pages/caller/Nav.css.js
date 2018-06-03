@@ -39,7 +39,7 @@ export default {
       },
       "cloud":{
         "display": "inline-block",
-        
+
         "color": "#fbfbfb",
         "fontSize": "18px",
         "fontWeight": "400",

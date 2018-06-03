@@ -120,5 +120,4 @@ export default  {
        "border": "0",
      "margin": "auto"
   }
-  }
-  
+}

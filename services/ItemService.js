@@ -2,9 +2,9 @@ import {mockUsers} from '../lib/mockDB';
 import cookie from './cookieManager';
 
 const currFilters = [
-    {id:1, filterName: "Lives", filterMain: "Tel-Aviv", filterPrefix:"In", filterValue: 20000},
-    {id:2, filterName: "Lives", filterMain: "Haifa", filterPrefix:"In", filterValue: 18000},
-    {id:3, filterName: "Lives", filterMain: "Ramat Gan", filterPrefix:"In", filterValue: 10000},
+    [{id:0, filterName: "Lives", filterMain: "Tel-Aviv", filterPrefix:"In", filterValue: 20000},
+    {id:1, filterName: "Lives", filterMain: "Haifa", filterPrefix:"In", filterValue: 18000},
+    {id:2, filterName: "Lives", filterMain: "Ramat Gan", filterPrefix:"In", filterValue: 10000},],
 ];
 
 function delay(val, timeout=0) {
@@ -17,6 +17,18 @@ function getCurrFilters() {
     return delay(currFilters, 10);
 }
 
+function addSingleFilter() {
+	const emptyFilter = {id:currFilters[0].length, filterName: "", filterMain: "", filterPrefix:"", filterValue: 0};
+	currFilters[0].push(emptyFilter);
+  return delay(currFilters, 10);
+}
+function removeSingleFilter(groupId, singleId) {
+	console.log('groupId', groupId);
+	console.log('singleId', singleId);
+	currFilters[groupId].splice(singleId, 1);
+  return delay(currFilters, 10);
+}
+
 function getAcivists() {
 	if(false&&!verifyToken())
 	{
@@ -26,7 +38,6 @@ function getAcivists() {
 	for(var i=0; i<activists.length; i++){
 		if(activists[i]["attendedEvents"]&&activists[i]["attendedEvents"].length)
 		{
-			console.log(activists[i]["attendedEvents"].length)
 			activists[i].lastEvent=activists[i].attendedEvents[activists[i].attendedEvents.length-1].title;
 			activists[i].lastSeen=activists[i].attendedEvents[activists[i].attendedEvents.length-1].date;
 		}
@@ -118,10 +129,12 @@ function generateToken() {
 }
 
 export default {
-    getAcivists,
-    getCurrFilters,
+	getAcivists,
+	getCurrFilters,
 	getUserByEmail,
 	getUserByPhone,
+  addSingleFilter,
+  removeSingleFilter,
 	login,
 	toggleUserCallerStatus
 }

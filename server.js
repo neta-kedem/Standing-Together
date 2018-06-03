@@ -74,6 +74,8 @@ app.prepare().then(() => {
       app.render(req, res, '/Organizer', query);
     } else if (pathname === '/Typer') {
       app.render(req, res, '/Typer', query)
+    } else if (pathname === '/Caller') {
+      app.render(req, res, '/Caller', query)
     } else if (pathname === '/') {
       app.render(req, res, '/', query)
     } else if (pathname === '/Login') {

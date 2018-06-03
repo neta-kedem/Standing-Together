@@ -54,7 +54,7 @@ constructor(props) {
             {title: "יישוב",  visibility: true, key: "city", icon:"building", type:"text"},
             {title: "שם משפחה", visibility: true, key: "lname", icon:"user", type:"text"},
             {title: "שם פרטי", visibility: true, key: "name", icon:"user", type:"text"}
-            
+
         ]
       }
       this.handleSelection = this.handleSelection.bind(this);
@@ -73,7 +73,7 @@ constructor(props) {
 
 
 render() {
-    const tableHeader = 
+    const tableHeader =
 			<tr style={styles['list-table-header']}>
 				<th style={styles['list-row-selection-indicator']}> </th>
 				{this.state.header.map((field, i) =>
@@ -87,24 +87,24 @@ render() {
 	return (
 		<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}}>{/*,"fontFamily": "'Rubik (Hebrew)','Cairo (Arabic)', sans-serif"*/}
             <style jsx global>{`
-					/* width */
+					          /* width */
                     ::-webkit-scrollbar {
                         width: 5px;
                     }
-                    
+
                     /* Track */
                     ::-webkit-scrollbar-track {
-                        background: rgb(169,169,169); 
+                        background: rgb(169,169,169);
                     }
-                     
+
                     /* Handle */
                     ::-webkit-scrollbar-thumb {
-                        background:rgba(86, 95, 108, .9); 
+                        background:rgba(86, 95, 108, .9);
                     }
-                    
+
                     /* Handle on hover */
                     ::-webkit-scrollbar-thumb:hover {
-                        background: rgba(86, 95, 108, .9); 
+                        background: rgba(86, 95, 108, .9);
                     }
 
                     :lang(heb){
@@ -144,15 +144,15 @@ render() {
                   <div style = {{...styles['query'],...styles['space']}}>
                   העתק טקסט &nbsp; <FontAwesomeIcon icon="copy"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ToggleSwitch/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; מסכימ/ה להגיע להפגנה 
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; מסכימ/ה להגיע להפגנה
                   </div>
-        
+
                   <div style = {styles['query']}>
                   העתק טקסט &nbsp; <FontAwesomeIcon icon="copy"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ToggleSwitch/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; מסכימ/ה לתרום לתנועה 
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; מסכימ/ה לתרום לתנועה
                   </div>
                   <div style = {{...styles['query'],...styles['space']}}>
                       <div>
@@ -171,7 +171,7 @@ render() {
                      לא עונים &nbsp; <FontAwesomeIcon icon="microphone-slash" style = {styles['icons']}/><br/>
                      لا بجيب&nbsp;&nbsp;&nbsp;&nbsp;
                      </div>
-                     
+
                   </div>
             </div>
             <div style={styles['left-panel']}>

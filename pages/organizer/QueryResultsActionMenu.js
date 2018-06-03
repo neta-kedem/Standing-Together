@@ -7,7 +7,6 @@ class QueryCreator extends React.Component {
 	constructor(props) {
 	super(props);
 	this.state = {items: props['items']};
-	console.log(this.state);
 }
 	render() {
 		const items = this.state.items.map(item => <div key={item.index} className={"action-button "+(item.alignToEnd?"align-to-end":"")}>{item.content}</div>);

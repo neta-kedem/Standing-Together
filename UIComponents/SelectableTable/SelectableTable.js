@@ -13,20 +13,22 @@ export default class SelectableTable extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			rows: props.rows,
-			header: props.header,
+			rows: [],
+			header: [],
 			allSelected: false
 		};
 	}
-	
+
 	/*required because the data is fetched asynchronously. Might not be the optimal solution.*/
-	componentWillReceiveProps(nextProps){
-		this.setState(
-			{rows: nextProps.rows,
-			header: nextProps.header}
-		);
+  componentDidUpdate(nextProps){
+    if(nextProps !== this.props){
+      this.setState(
+          {rows: nextProps.rows,
+            header: nextProps.header}
+      );
+    }
 	}
-	
+
 	toggleAllRowsSelection() {
 		const rows = this.state.rows.slice();
 		for (var i=0; i<rows.length; i++)
@@ -57,7 +59,7 @@ export default class SelectableTable extends React.Component {
 	}
 
 	render() {
-		const tableHeader = 
+		const tableHeader =
 			<tr className='list-table-header'>
 				<th className='list-row-selection-indicator'> </th>
 				{this.state.header.map((field, i) =>
