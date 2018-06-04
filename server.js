@@ -3,6 +3,7 @@ const { parse } = require('url');
 const next = require('next');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const router = express.Router();
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -10,20 +11,32 @@ const handle = app.getRequestHandler();
 const port = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
-const Activist = require('./server/models/activistModel');
+
+const authentication = require('./server/services/authentication');
 
 mongoose.connect(MONGODB_URI);
 mongoose.Promise = global.Promise;
 const server = express();
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
+server.use(cookieParser());
+
 app.prepare().then(() => {
 	// API routes
 	require('./server/routes')(server);
 	
 	// CUSTOM ROUTES GO HERE
 	server.get('/Organizer', (req, res) => {
-		return app.render(req, res, '/Organizer', req.query);
+		authentication.isUser(req, res).then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				app.render(req, res, '/Organizer', req.query);
+			}
+		});
 	});
 	server.get('/Typer', (req, res) => {
 		return app.render(req, res, '/Typer', req.query);

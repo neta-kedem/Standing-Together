@@ -4,6 +4,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Meta from '../lib/meta';
 
 import ItemService from '../services/ItemService'
+import server from '../services/server';
 
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import MultiSelect from '../UIComponents/MultiSelect/MultiSelect'
@@ -29,11 +30,8 @@ constructor(props) {
 }
 
 componentDidMount() {
-	
-	fetch('/api/activists')
-		.then(res => res.json())
+	server.get('activists')
 		.then(json => {
-			console.log(json);
 			this.setState({activists:json});
 		});
 	ItemService.getCurrFilters()
@@ -68,9 +66,13 @@ handleFieldDisplayToggle(fieldIndex, status){
 		},
 		"role":{
 			"isTyper": false,
-			"iSCaller": false,
+			"isCaller": false,
 			"isOrganizer": false,
 			"isCircleLeader": false
+		},
+		"login":{
+			"loginCode":"",
+			"token":[]
 		}
 	};
 	/*fetch('/api/activists', {
