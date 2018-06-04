@@ -3,6 +3,8 @@ import Router from 'next/router';
 import Meta from '../lib/meta';
 
 import ItemService from '../services/ItemService';
+import server from '../services/server';
+import cookie from '../services/cookieManager';
 import IdentificationField from './login/IdentificationField';
 import CodeInput from './login/CodeInput';
 import stylesheet from './login/Login.css';
@@ -30,31 +32,38 @@ validateEmail(email){
 	return pattern;
 }
 identifyByPhone(phone){
-	ItemService.getUserByPhone(phone)
-		.then(foundUser =>{
-				this.setState({codeSent: true, indetificationMethod: "SMS", phone: phone});
-			});
+	server.post('identify/phone', {'phone':phone})
+	.then(json => {
+		this.setState({codeSent: true, indetificationMethod: "SMS", phone: phone});
+	});
 }
 identifyByEmail(email){
-	ItemService.getUserByEmail(email)
-		.then(foundUser =>{
-				this.setState({codeSent: true, indetificationMethod: "SMS", email: email});
-			});
+	server.post('identify/email', {'email':email})
+	.then(json => {
+		this.setState({codeSent: true, indetificationMethod: "Email", email: email});
+	});
 }
 
 verifyLoginCode(code)
 {
-	ItemService.login(code, this.state.phone, this.state.email)
-		.then(token =>{
-			if(token)
-			{
-				Router.push({pathname: '/Organizer'});
-			}
-			else
-			{
-				alert("Wrong Code!");
-			}
-		});
+	var method = this.state.indetificationMethod=="Email"?"login/email":"login/phone";
+	var data ={'phone':this.state.phone, 'email':this.state.email, 'code':code};
+	server.post(method, data)
+	.then(json => {
+		if(json.error)
+		{
+			alert(json.error);
+		}
+		if(json.token)
+		{
+			cookie.setCookie('token', json.token, 150);
+			Router.push({pathname: '/Organizer'});
+		}
+		else
+		{
+			this.setState({codeSent: false, indetificationMethod: ""});
+		}
+	});
 }
 
 render() {
