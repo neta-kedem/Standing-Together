@@ -12,6 +12,7 @@ module.exports = (app) => {
 				for(let activist of activists)
 				{
 					activistsList.push({
+						"_id":activist._id,
 						"phone":activist.profile.phone,
 						"email":activist.profile.email,
 						"name":activist.profile.firstName+" "+activist.profile.lastName,
@@ -25,13 +26,21 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/activists', (req, res, next) => {
-		var chomsky = new Activist(req.body);
-		chomsky.save(function (err) {
+		var newActivist = new Activist(req.body);
+		newActivist.save(function (err) {
 			if (err){
 				return res.json(err);
 			}
 			else
 				return res.json(req.body);
+		});
+	});
+	app.post('/api/activist/toggleStatus', (req, res, next) => {
+		var activistId = req.body.activistId;
+		var isCaller = req.body.status;
+		let query = Activist.update({'_id':activistId},{'role.isCaller': isCaller});
+		return query.exec().then(()=>{
+			return res.json({"result":"set status to "+isCaller+" for user "+activistId});
 		});
 	});
 };

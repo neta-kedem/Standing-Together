@@ -42,7 +42,7 @@ handleActivistCallerStatusChange(activistIndex, status){
 	const activists = this.state.activists.slice();
 	activists[activistIndex].isCaller=status;
 	this.setState({activists: activists});
-	ItemService.toggleUserCallerStatus(this.state.activists[activistIndex]._id, status);
+	server.post('activist/toggleStatus', {'status':status, 'activistId':this.state.activists[activistIndex]._id});
 }
 handleFieldDisplayToggle(fieldIndex, status){
 	var chomsky = {
