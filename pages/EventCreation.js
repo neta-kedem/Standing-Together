@@ -7,7 +7,7 @@ import Stylesheet from './eventCreation/EventCreation.css'
 import TopNavBar from './organizer/TopNavbar'
 
 import ItemService from '../services/ItemService'
-
+import server from '../services/server';
 
 export default class EventCreation extends React.Component {
 constructor(props) {
@@ -30,6 +30,20 @@ handleInputChange(event) {
 	this.setState({
 		[name]: value
 	});
+}
+handlePost() {
+	let eventObject = {
+		"name": this.state.title,
+		"date": this.state.date,
+		"callInstructions": {
+			"text1": this.state.text1,
+			"text2": this.state.text2,
+			"question1": this.state.question1,
+			"question2": this.state.question2,
+			"script": this.state.callScript
+		}
+	};
+	server.post('events', {'event':eventObject});
 }
 
 render() {
@@ -78,6 +92,8 @@ render() {
 					</label>
 				</div>
 			</div>
+			<br/>
+			<button onClick={this.handlePost.bind(this)}>שמירת אירוע</button>
 		</div>
 	)
 }

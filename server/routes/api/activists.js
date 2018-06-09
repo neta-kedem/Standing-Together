@@ -35,7 +35,7 @@ module.exports = (app) => {
 				return res.json(req.body);
 		});
 	});
-	app.post('/api/activist/toggleStatus', (req, res, next) => {
+	app.post('/api/activists/toggleStatus', (req, res, next) => {
 		var activistId = req.body.activistId;
 		var isCaller = req.body.status;
 		let query = Activist.update({'_id':activistId},{'role.isCaller': isCaller});
