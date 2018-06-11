@@ -1,5 +1,6 @@
 import React from 'react';
 import Meta from '../lib/meta';
+import server from '../services/server';
 import HeaderBar from './typer/HeaderBar'
 import TableRow from './typer/TableRow'
 import TitleRow from './typer/TitleRow'
@@ -72,6 +73,14 @@ export default class Typer extends React.Component {
       data: contacts
     }));
   };
+  
+	handlePost(){
+		var data ={"activists":this.state.data};
+		server.post('activists/uploadTyped', data)
+		.then(json => {
+			this.setState({data: []});
+		});
+	};
 
   render() {
     return (
@@ -93,7 +102,7 @@ export default class Typer extends React.Component {
           margin: 0px 0;
        }
 	      	`}</style>
-          <HeaderBar></HeaderBar>
+          <HeaderBar sendFunction={this.handlePost.bind(this)}></HeaderBar>
           <section style={styles.section}>
             <div style={styles.rightpanel}>
               <content style={styles.content}>

@@ -67,7 +67,8 @@ export default  {
         "top": "0px",
         "right": "0px",
         "marginTop": "0px",
-        "fontSize": "10px"
+        "fontSize": "10px",
+        "cursor": "pointer"
       },
       "cloud":{
         "display": "inline-block",
@@ -86,7 +87,6 @@ export default  {
         "fontWeight": "400",
         "paddingRight": "10px",
         "paddingBottom": "7px",
-        "cursor": "pointer",
         "textAlign": "center"
       }
   }
