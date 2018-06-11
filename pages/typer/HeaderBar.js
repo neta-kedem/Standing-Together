@@ -6,6 +6,16 @@ import { faCloudUploadAlt } from '@fortawesome/fontawesome-free-solid'
 fontawesome.library.add(faCloudUploadAlt);
 
 export default class HeaderBar extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			sendFunction: props['sendFunction']
+		};
+		this.handlePost=function() {
+			this.state.sendFunction();
+		};
+	}
+	
     render() {
         return (
             <nav style={styles.wrapper}>
@@ -22,7 +32,7 @@ export default class HeaderBar extends React.Component {
                 <div style={styles.shortcutblock}>
                     <div style={styles.shortcut_hb}>שם המארגן<br/>اسم المنظم</div>
                 </div>
-                <div style={styles.heading_3}>
+                <div style={styles.heading_3} onClick={this.handlePost.bind(this)}>
                     <div style={styles.cloud}>שלח<br/>ارسل</div>
                     <FontAwesomeIcon icon="cloud-upload-alt" style={styles['cloud-icon']}/>
                 </div>

@@ -43,4 +43,54 @@ module.exports = (app) => {
 			return res.json({"result":"set status to "+isCaller+" for user "+activistId});
 		});
 	});
+	app.post('/api/activists/uploadTyped', (req, res, next) => {
+		var typedActivists = req.body.activists;
+		var processedActivists = [];
+		var today = new Date();
+		for (var i=0; i<typedActivists.length; i++)
+		{
+			var curr = typedActivists[i];
+			processedActivists.push(
+				{
+					"metadata" : {
+						"creationDate" : today,
+						"lastUpdate" : today,
+						"joiningMethod" : "contactPage",
+						"typerName" : "Yaniv Cogan"
+					},
+					"profile" : {
+						"firstName" : curr.fname,
+						"lastName" : curr.lname,
+						"phone" : curr.phone.replace(/[\-\.\(\)\:]/g, ''),
+						"email" : curr.mail,
+						"residency" : curr.settlement,
+						"circle" : "תל-אביב",
+						"isMember" : false,
+						"isPaying" : false,
+						"isNewsletter" : false,
+						"participatedEvents" : []
+					},
+					"role" : {
+						"isTyper" : false,
+						"isCaller" : false,
+						"isOrganizer" : false,
+						"isCircleLeader" : false
+					},
+					"login" : {
+						"loginCode" : null,
+						"token" : []
+					}
+				}
+			);
+		}
+		Activist.insertMany(processedActivists).then(function (err) {
+			if (err){
+				return res.json(err);
+			}
+			else
+			{
+				return res.json(true);
+			}
+		});
+	});
 };
