@@ -9,7 +9,7 @@ module.exports = (app) => {
 			{
 				activistsList.push({
 					"phone":activist.profile.phone,
-					"phone":activist.profile.phone,
+					"email":activist.profile.email,
 					"name":activist.profile.firstName+" "+activist.profile.lastName,
 					"city":activist.profile.residency,
 					"isCaller":activist.role.isCaller,
@@ -19,15 +19,16 @@ module.exports = (app) => {
 			return res.json(activistsList);
 		});
 	});
-	app.post('/api/identify/phone', (req, res, next) => {
-		let phone = req.body.phone;
-	Activist.findOneAndUpdate({'profile.phone':phone}, {$set : {'login.loginCode':'123456'}}, (err, user) => {
+	app.post('/api/identify/email', (req, res, next) => {
+		let email = req.body.email;
+	Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode':'123456'}}, (err, user) => {
 			if (err) return res.json({success: false, error: err});
 			return res.json(true);
 		});
 	});
 	app.post('/api/identify/phone', (req, res, next) => {
 		let phone = req.body.phone;
+		phone = phone.replace(/[\-\.\(\)\:]/g, '');
 		Activist.findOneAndUpdate({'profile.phone':phone}, {$set : {'login.loginCode':'123456'}}, (err, user) => {
 			if (err) return res.json({success: false, error: err});
 			return res.json(true);
@@ -35,7 +36,10 @@ module.exports = (app) => {
 	});
 	app.post('/api/login/phone', (req, res, next) => {
 		let phone = req.body.phone;
+		phone = phone.replace(/[\-\.\(\)\:]/g, '');
 		let code = req.body.code;
+		if(!code||code.length==0)
+			return res.json({"error":"incorrect credentials"});
 		if(!phone)
 			return res.json({"error":"missing identification"});
 		Activist.findOne({'profile.phone':phone, 'login.loginCode':code}, (err, user) => {
@@ -49,12 +53,14 @@ module.exports = (app) => {
 			});
 		});
 	});
-	app.post('/api/login/phone', (req, res, next) => {
-		let phone = req.body.phone;
+	app.post('/api/login/email', (req, res, next) => {
+		let email = req.body.email;
 		let code = req.body.code;
-		if(!phone)
+		if(!code||code.length==0)
+			return res.json({"error":"incorrect credentials"});
+		if(!email)
 			return res.json({"error":"missing identification"});
-		Activist.findOne({'profile.phone':phone, 'login.loginCode':code}, (err, user) => {
+		Activist.findOne({'profile.email':email, 'login.loginCode':code}, (err, user) => {
 			if (err) return res.json({success: false, error: err});
 			if(!user)
 			{

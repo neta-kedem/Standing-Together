@@ -42,51 +42,9 @@ handleActivistCallerStatusChange(activistIndex, status){
 	const activists = this.state.activists.slice();
 	activists[activistIndex].isCaller=status;
 	this.setState({activists: activists});
-	ItemService.toggleUserCallerStatus(this.state.activists[activistIndex]._id, status);
+	server.post('activists/toggleStatus', {'status':status, 'activistId':this.state.activists[activistIndex]._id});
 }
 handleFieldDisplayToggle(fieldIndex, status){
-	var chomsky = {
-		"metadata":{
-			"creationDate":"01/06/18",
-			"lastUpdate":"01/06/18",
-			"joiningMethod":"contactPage",
-			"typerName":"Yaniv Cogan"
-		},
-		"profile":{
-			"firstName":"Noam",
-			"lastName":"Chomsky",
-			"phone":"050-99999999",
-			"email":"chomsky@mit.edu",
-			"residency":"Arizona",
-			"circle":"תל-אביב",
-			"isMember":false,
-			"isPaying":false,
-			"isNewsletter":false,
-			"participatedEvents":["peace demonstration", "moonlanding", "ice skating tournament"]
-		},
-		"role":{
-			"isTyper": false,
-			"isCaller": false,
-			"isOrganizer": false,
-			"isCircleLeader": false
-		},
-		"login":{
-			"loginCode":"",
-			"token":[]
-		}
-	};
-	/*fetch('/api/activists', {
-		method: 'post',
-		body: JSON.stringify(chomsky),
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		}
-	})
-	.then(res => res.json())
-	.then(json => {
-		console.log(json);
-	});*/
 	const tableFields = this.state.tableFields.slice();
 	tableFields[fieldIndex].visibility=status;
 	this.setState({tableFields: tableFields});
