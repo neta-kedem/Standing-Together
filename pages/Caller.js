@@ -7,6 +7,7 @@ import styles from './caller/Caller.css'
 import Nav from './caller/Nav'
 import SelectableRow from './caller/SelectableRow'
 import ToggleSwitch from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
+import Thead from './caller/Thead.js'
 import ItemService from '../services/ItemService'
 import {faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
 fontawesome.library.add(faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
@@ -82,8 +83,9 @@ render() {
 				</th>)}
             </tr>;
     let selectedName = (this.state.activits[this.state.selectedRow]).fname;
+    var txt = "אומרים שלום ביחד!";
 	return (
-		<div style={{'height':'100vh','fontWeight':'540'}}>{/*,"fontFamily": "'Rubik (Hebrew)','Cairo (Arabic)', sans-serif"*/}
+		<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}}>{/*,"fontFamily": "'Rubik (Hebrew)','Cairo (Arabic)', sans-serif"*/}
             <style jsx global>{`
 					/* width */
                     ::-webkit-scrollbar {
@@ -117,10 +119,11 @@ render() {
 			<Meta/>
 			<Nav name={(this.state.activits[this.state.selectedRow]).fname} lname={(this.state.activits[this.state.selectedRow]).lname} phone={(this.state.activits[this.state.selectedRow]).phone} ></Nav>
             <div style={styles['right-panel']}>
+                  <Thead style={{...styles['row'],...styles['info_table']}}></Thead >
                   <table>
-                     <thead style={{...styles['row'],...styles['info_table']}}>
+                     {/*<thead style={{...styles['row'],...styles['info_table']}}>
                          {tableHeader}
-                     </thead>
+                </thead>*/}
                      <tbody style={styles['row1']}>
                      {
                        this.state.activits.map((person, i) =>
@@ -129,8 +132,14 @@ render() {
                      </tbody>
                   </table>
                   <div style = {styles['chevron-style']}>
-                      <br/>עוד שמות <FontAwesomeIcon icon="chevron-circle-down"/><br/>
-                      المزبد من الاسماء
+                  
+                  
+                  
+                   <div style = {styles['words']}>
+                      עוד שמות <br/>
+                      المزيد من الاسماء&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                     </div>
+                     <FontAwesomeIcon icon="chevron-circle-down" style = {styles['chevron-icon']}/>
                   </div>
                   <div style = {{...styles['query'],...styles['space']}}>
                   העתק טקסט &nbsp; <FontAwesomeIcon icon="copy"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -147,28 +156,28 @@ render() {
                   </div>
                   <div style = {{...styles['query'],...styles['space']}}>
                       <div>
-                     הסרה מהרשימה &nbsp; <FontAwesomeIcon icon="user-times"/><br/>
-                     ازالة من القائمة
+                     הסרה מהרשימה &nbsp; <FontAwesomeIcon icon="user-times" style = {styles['icons']}/><br/>
+                     ازالة من القائمة&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                      </div>
                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                      <div>
-                     להתקשר בשעה &nbsp; <FontAwesomeIcon icon="clock"/><br/>
-                     الاتصال في الساعة
+                     להתקשר בשעה &nbsp; <FontAwesomeIcon icon="clock" style = {styles['icons']}/><br/>
+                     الاتصال في الساعة&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                      </div>
                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                      <div>
-                     לא עונים &nbsp; <FontAwesomeIcon icon="microphone-slash"/><br/>
-                     لا بجيب
+                     לא עונים &nbsp; <FontAwesomeIcon icon="microphone-slash" style = {styles['icons']}/><br/>
+                     لا بجيب&nbsp;&nbsp;&nbsp;&nbsp;
                      </div>
                      
                   </div>
             </div>
             <div style={styles['left-panel']}>
-            <textarea style = {styles['talking-scenario']}>
-            .שלום ישראל ישראלי מדבר עמד עמעדי מעומדים ביחד
-            מסכימ/ה להגיע להפגנהמסכימ/ה לתרום לתנועהורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קוואזי במר מודוף. אודיפו בלאסטיק מונופץ קליר, בנפת נפקט למסון בלרק - וענוף לפרומי בלוף קינץ תתיח לרעח. לת צשחמי צש בליא, מנסוטו צמלח לביקו ננבי, צמוקו בלוקריה שיצמה ברורק.ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. עמחליף להאמית קרהשק סכעיט דז מא, מנכם למטכין נשואי מנורך. קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. עמחליף הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שעותלשך וחאית נובש ערששף. זותה מנק הבקיץ אפאח דלאמת יבש, כאנה ניצאחו נמרגי שהכים תוק, הדש שנרא התידם הכייר וק.סחטיר בלובק. תצטנפל בלינדו למרקל אס לכימפו, דול, צוט ומעיוט - לפתיעם ברשג - ולתיעם גדדיש. קוויז דומור ליאמום בלינך רוגצה. לפמעט מוסן מנת. ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שעותלשך וחאית נובש ערששף. זותה מנק הבקיץ אפאח דלאמת יבש, כאנה ניצאחו נמרגי שהכים תוק, הדש שנרא התידם הכייר ו
+            {/*.שלום ישראל ישראלי מדבר עמד עמעדי מעומדים ביחד
+            מסכימ/ה להגיע להפגנהמסכימ/ה לתרום לתנועהורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קוואזי במר מודוף. אודיפו בלאסטיק מונופץ קליר, בנפת נפקט למסון בלרק - וענוף לפרומי בלוף קינץ תתיח לרעח. לת צשחמי צש בליא, מנסוטו צמלח לביקו ננבי, צמוקו בלוקריה שיצמה ברורק.ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. עמחליף להאמית קרהשק סכעיט דז מא, מנכם למטכין נשואי מנורך. קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. עמחליף הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שעותלשך וחאית נובש ערששף. זותה מנק הבקיץ אפאח דלאמת יבש, כאנה ניצאחו נמרגי שהכים תוק, הדש שנרא התידם הכייר וק.סחטיר בלובק. תצטנפל בלינדו למרקל אס לכימפו, דול, צוט ומעיוט - לפתיעם ברשג - ולתיעם גדדיש. קוויז דומור ליאמום בלינך רוגצה. לפמעט מוסן מנת. ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שעותלשך וחאית נובש ערששף. זותה מנק הבקיץ אפאח דלאמת יבש, כאנה ניצאחו נמרגי שהכים תוק, הדש שנרא התידם הכייר */}
+            <textarea style = {styles['talking-scenario']} deafultvalue={txt}>
             </textarea>
             </div>
 		</div>
