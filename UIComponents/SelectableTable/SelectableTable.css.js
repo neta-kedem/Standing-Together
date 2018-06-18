@@ -14,8 +14,7 @@ export default css`
 		text-align: left;
 	}
 	.list-table-header-field{
-		padding: 5px;
-		padding-bottom: 10px;
+		padding-bottom: 5px;
 	}
 	.list-table-header-field.hidden{
 		display: none;
@@ -23,9 +22,14 @@ export default css`
 	.list-table-row{
 		background-color:#fff;
 		white-space: nowrap;
+		transition: background-color 1.5s;
 	}
 	.selected-table-row{
 		background-color:#FF4C94;
+	}
+	.list-table-row:hover{
+		background-color: #fafafa;
+		transition: background-color 0.5s;
 	}
 	.list-table-field{
 		border:1px solid rgb(202, 200, 199);
