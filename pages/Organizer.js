@@ -6,6 +6,7 @@ import Meta from '../lib/meta';
 import ItemService from '../services/ItemService'
 import server from '../services/server';
 
+import Popup from '../UIComponents/Popup/Popup'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import MultiSelect from '../UIComponents/MultiSelect/MultiSelect'
 import HamburgerMenu from '../UIComponents/HamburgerMenu/HamburgerMenu'
@@ -17,16 +18,21 @@ import style from './organizer/Organizer.css'
 export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
-	this.state = {activists: [], currFilters: [], allSelected: false,
-	tableFields:[
-		{title: "Name", visibility: true, key: "name", icon:"user", type:"text"},
-		{title: "Lives In",  visibility: true, key: "city", icon:"building", type:"text"},
-		{title: "Phone",  visibility: true, key: "phone", icon:"phone", type:"text"},
-		{title: "Email",  visibility: true, key: "email", icon:"envelope-open", type:"text"},
-		{title: "Last Seen",  visibility: false, key: "lastSeen", icon:"calendar", type:"text"},
-		{title: "Last Event",  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
-		{title: "Call?",  visibility: true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
-	]};
+	this.state = {
+		activists: [],
+		currFilters: [],
+		allSelected: false,
+		tableFields:[
+			{title: "Name", visibility: true, key: "name", icon:"user", type:"text"},
+			{title: "Lives In",  visibility: true, key: "city", icon:"building", type:"text"},
+			{title: "Phone",  visibility: true, key: "phone", icon:"phone", type:"text"},
+			{title: "Email",  visibility: true, key: "email", icon:"envelope-open", type:"text"},
+			{title: "Last Seen",  visibility: false, key: "lastSeen", icon:"calendar", type:"text"},
+			{title: "Last Event",  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
+			{title: "Call?",  visibility: true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
+		],
+		displayEventSelectionPopup: false
+	};
 }
 
 componentDidMount() {
@@ -49,6 +55,9 @@ handleFieldDisplayToggle(fieldIndex, status){
 	tableFields[fieldIndex].visibility=status;
 	this.setState({tableFields: tableFields});
 }
+handleEventPopupToggle(){
+	this.setState({displayEventSelectionPopup: !this.state.displayEventSelectionPopup});
+}
 render() {
 	const tableFieldsMultiSelect = <MultiSelect
 		values={this.state.tableFields}
@@ -69,7 +78,8 @@ render() {
 				<div className="main-panel">
 					<QueryResultsActionMenu items={[
 						{"index":1, "content":tableFieldsDropdown, "alignToEnd":true}
-					]}></QueryResultsActionMenu>
+					]}
+					toggleEventPopup={this.handleEventPopupToggle.bind(this)}></QueryResultsActionMenu>
 					<div className="results-wrap">
 						<div className="query-results">
 							<SelectableTable rows={this.state.activists} header={this.state.tableFields}></SelectableTable>
@@ -77,6 +87,9 @@ render() {
 					</div>
 				</div>
 			</div>
+			<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
+				choose an event:
+			</Popup>
 		</div>
 	)
 }
