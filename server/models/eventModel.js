@@ -77,10 +77,10 @@ const eventSchema = new mongoose.Schema({
 		selectionQuery: {
 			type: String,
 			required: true
-		}
+		},
 		//a list of all the invited users, and various properties of the invitation
 		invitations: {
-			type:[
+			type:[{
 				//the _id of an invited activist
 				activistId: {type: String, required: true},
 				//the results of the invitation - once this isn't null, the user should cease to come up in the callers queue
@@ -101,9 +101,8 @@ const eventSchema = new mongoose.Schema({
 				//_id of the activist who was last tasked with carrying out this invitation (i.e. call the activist)
 				//this doesn't have a purpose currently, because we don't bind activists to specific callers, but maybe it would be useful for statistical analysis sometime.
 				callerId: {type: String}
-			]
+			}]
 		}
-		required: false
 	}
 });
 
