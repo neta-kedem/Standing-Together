@@ -12,4 +12,14 @@ module.exports = (app) => {
 				return res.json(req.body);
 		});
 	});
+	app.get('/api/events', (req, res, next) => {
+		Authentication.isUser(req, res).then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			Event.find((err, events) => {
+				if (err) return res.json({success: false, error: err});
+				return res.json(events);
+			});
+		})
+	});
 };
