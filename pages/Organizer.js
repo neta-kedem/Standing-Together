@@ -7,6 +7,7 @@ import ItemService from '../services/ItemService'
 import server from '../services/server';
 
 import Popup from '../UIComponents/Popup/Popup'
+import Selector from '../UIComponents/Selector/Selector'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import MultiSelect from '../UIComponents/MultiSelect/MultiSelect'
 import HamburgerMenu from '../UIComponents/HamburgerMenu/HamburgerMenu'
@@ -19,6 +20,8 @@ export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
+		query: {"profile.firstName":"Noam"},
+		events: [],
 		activists: [],
 		currFilters: [],
 		allSelected: false,
@@ -36,9 +39,13 @@ constructor(props) {
 }
 
 componentDidMount() {
-	server.get('activists')
+	server.post('selectActivists', {'query':this.state.query})
 		.then(json => {
 			this.setState({activists:json});
+		});
+	server.get('events')
+		.then(json => {
+			this.setState({events:json});
 		});
 	ItemService.getCurrFilters()
 		.then(currFilters =>
@@ -57,6 +64,10 @@ handleFieldDisplayToggle(fieldIndex, status){
 }
 handleEventPopupToggle(){
 	this.setState({displayEventSelectionPopup: !this.state.displayEventSelectionPopup});
+}
+handleEventSelection(selected){
+	this.handleEventPopupToggle();
+	console.log(selected);
 }
 render() {
 	const tableFieldsMultiSelect = <MultiSelect
@@ -89,6 +100,14 @@ render() {
 			</div>
 			<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
 				choose an event:
+				<br/>
+				<br/>
+				<Selector
+					options={this.state.events}
+					idIndex="__id"
+					titleIndex="name"
+					handleSelection={this.handleEventSelection.bind(this)}
+				/>
 			</Popup>
 		</div>
 	)
