@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class ToggleSwitch extends React.Component {
+export default class HamburgerMenu extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
