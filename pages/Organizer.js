@@ -20,7 +20,7 @@ export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
-		query: {"profile.firstName":"Noam"},
+		query: {/*"profile.firstName":"Noam"*/},
 		events: [],
 		activists: [],
 		currFilters: [],
@@ -67,7 +67,10 @@ handleEventPopupToggle(){
 }
 handleEventSelection(selected){
 	this.handleEventPopupToggle();
-	console.log(selected);
+	server.post('events/inviteByQuery', {'query':this.state.query, 'eventId':selected._id})
+		.then(json => {
+//TODO
+		});
 }
 render() {
 	const tableFieldsMultiSelect = <MultiSelect
