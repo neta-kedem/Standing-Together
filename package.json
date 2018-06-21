@@ -1,5 +1,5 @@
 {
-  "name": "StanfingTogether",
+  "name": "StandingTogether",
   "license": "GPL-3.0",
   "scripts": {
     "dev": "node server",

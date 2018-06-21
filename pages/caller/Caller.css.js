@@ -6,6 +6,7 @@ export default  {
         "justifyContent": "center",
         "textAlign": "center",
         "backgroundImage": "linear-gradient(180deg, #eaeaea, #eaeaea)"
+        
     },
     "left-panel":{
       "float": "left",
@@ -17,7 +18,7 @@ export default  {
   },
     "info_table" : {
         "display": "flex",
-        "padding": "50px",
+        
         "paddingBottom": "10px",
         "justifyContent": "center",
         "width": "100%",
@@ -33,7 +34,8 @@ export default  {
         "justifyContent": "center",
         "textAlign": "right",
         "float":"rigth",
-        "dir": "rtl"
+        "dir": "rtl",
+        "paddingRight": "1em"
       },
       "row1" : {
         "display": "block",
@@ -63,23 +65,45 @@ export default  {
 		"width": "0px"
   },
   "chevron-style":{
-      "fontFamily": "'Fa solid 900', sans-serif",
+      "display": "inline",
       "color": "rgba(86, 95, 108, .9)",
       "paddingRight": "6em",
       "cursor": "pointer"
+  },
+  "chevron-icon":{
+    "width":"30px",
+    "height":"30px",
+    "textAlign": "right",
+    "justifyContent": "right",
+    "paddingRight":" 3em",
+    "top": "23em",
+    "position": "absolute"
+  },
+  "words":{
+    "paddingRight": "6em",
+    "paddingTop": "0em"
   },
   "query":{
     "display": "inline-flex",
     "paddingRight": "7.5em",
     "paddingTop": "1em",
-    "fontFamily": "'Fa solid 900', sans-serif",
       "color": "rgba(86, 95, 108, .9)"
   },
   "space":{
     "paddingTop": "50px"
   },
+  "icons":{
+    "width":"29px",
+    "height":"29px",
+    "textAlign": "right",
+    "justifyContent": "right",
+    "paddingRight":" 3em",
+    "top": "36.5em",
+    "position": "absolute"
+  },
   "talking-scenario":{
     "overflowY": "scroll",
+    "overflowX": "hidden",
     "height": "30em",
     "width":"40em",
     "resize": "none" ,
@@ -89,7 +113,7 @@ export default  {
       "left": "5%",
       "outline": "none",
       "textAlign": "right",
-      "fontFamily": "'Fa solid 900', sans-serif",
+      "fontFamily": "'Rubik', sans-serif",
       "color": "rgba(86, 95, 108, .9)",
       "fontWeight": "600",
        "fontSize":"14px",

@@ -33,7 +33,7 @@ export default  {
       },
       "shortcut_hb": {
         "display": "inline-block",
-        "padding": "8px 20px",
+        "padding": "5px 20px",
         "color": "#fbfbfb",
         "fontSize": "15px",
         "fontWeight": "400",
@@ -76,7 +76,7 @@ export default  {
         "fontSize": "17px",
         "fontWeight": "400",
         "paddingRight": "10px",
-        "paddingTop": "5px",
+        "paddingTop": "3px",
         "textAlign": "center"
       },
       "cloud-icon":{
