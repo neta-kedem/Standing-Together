@@ -79,6 +79,11 @@ const eventSchema = new mongoose.Schema({
 				type: String,
 				required: true
 			},
+			//a hash concatenated to urls in order to direct to this event
+			eventCode: {
+				type: String,
+				required: true
+			},
 			//a list of all the invited users, and various properties of the invitation
 			invitations: {
 				type:[{

@@ -75,11 +75,28 @@ module.exports = (app) => {
 						"creatorId": Authentication.getMyId()
 					},
 					"selectionQuery": JSON.stringify(query),
+					"eventCode": "ASDFGHJKL",
 					"invitations": invitations
 				}
 				Event.findOneAndUpdate({'_id':eventId}, {$set : {'campaign':campaignObject}}, (err, user) => {
 					if (err) return res.json({success: false, error: err});
 						return res.json(true);
+				});
+			});
+		})
+	});
+	app.post('/api/events/eventByCode', (req, res, next) => {
+		Authentication.isUser(req, res).then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			var eventCode = req.body.eventCode;
+			Event.findOne({"campaign.eventCode": eventCode}, (err, eventData) => {
+				if (err) return res.json({success: false, error: err});
+				if (!eventData)
+					return res.json({"error":"couldn't find a matching event"});
+				return res.json({
+					"eventDetails":eventData.eventDetails,
+					"callInstructions":eventData.callInstructions
 				});
 			});
 		})
