@@ -1,4 +1,4 @@
-var serverPath = "http://localhost:3000/";
+var serverPath = "https://standing-together.herokuapp.com/";
 export default {
     serverPath
 }
