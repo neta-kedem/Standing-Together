@@ -4,6 +4,8 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Meta from '../lib/meta';
 import styles from './caller/Caller.css'
 
+import server from '../services/server'
+
 import Nav from './caller/Nav'
 import SelectableRow from './caller/SelectableRow'
 import ToggleSwitch from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
@@ -16,6 +18,11 @@ export default class Caller extends React.Component {
 constructor(props) {
     super(props);
     this.state = {
+		eventCode: props.url.query.eventCode,
+		eventData: {
+			callInstructions:{},
+			eventDetails:{}
+		},
         activits:
             [{
                 "fname": "שמעון",
@@ -59,6 +66,7 @@ constructor(props) {
       }
       this.handleSelection = this.handleSelection.bind(this);
       this.selectedName = this.selectedName.bind(this);
+	  this.getEventDetails();
     }
     handleSelection(i){
         let arr = this.state.selectedRowArr;
@@ -70,7 +78,12 @@ constructor(props) {
         var name = (this.state.activits[this.state.selectedRow]).fname;
         return name;
     }
-
+	getEventDetails(){
+		server.post('events/eventByCode', {'eventCode':this.state.eventCode})
+			.then(json => {
+				this.setState({'eventData': json});
+		});
+	}
 
 render() {
     const tableHeader = 
@@ -81,9 +94,8 @@ render() {
                     {field.title+" "}
                     {field.icon!=""?<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>:''}
 				</th>)}
-            </tr>;
-    let selectedName = (this.state.activits[this.state.selectedRow]).fname;
-    var txt = "אומרים שלום ביחד!";
+      </tr>;
+  let selectedName = (this.state.activits[this.state.selectedRow]).fname;
 	return (
 		<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}}>{/*,"fontFamily": "'Rubik (Hebrew)','Cairo (Arabic)', sans-serif"*/}
             <style jsx global>{`
@@ -132,9 +144,6 @@ render() {
                      </tbody>
                   </table>
                   <div style = {styles['chevron-style']}>
-                  
-                  
-                  
                    <div style = {styles['words']}>
                       עוד שמות <br/>
                       المزيد من الاسماء&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -175,14 +184,11 @@ render() {
                   </div>
             </div>
             <div style={styles['left-panel']}>
-            {/*.שלום ישראל ישראלי מדבר עמד עמעדי מעומדים ביחד
-            מסכימ/ה להגיע להפגנהמסכימ/ה לתרום לתנועהורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קוואזי במר מודוף. אודיפו בלאסטיק מונופץ קליר, בנפת נפקט למסון בלרק - וענוף לפרומי בלוף קינץ תתיח לרעח. לת צשחמי צש בליא, מנסוטו צמלח לביקו ננבי, צמוקו בלוקריה שיצמה ברורק.ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. עמחליף להאמית קרהשק סכעיט דז מא, מנכם למטכין נשואי מנורך. קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. עמחליף הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שעותלשך וחאית נובש ערששף. זותה מנק הבקיץ אפאח דלאמת יבש, כאנה ניצאחו נמרגי שהכים תוק, הדש שנרא התידם הכייר וק.סחטיר בלובק. תצטנפל בלינדו למרקל אס לכימפו, דול, צוט ומעיוט - לפתיעם ברשג - ולתיעם גדדיש. קוויז דומור ליאמום בלינך רוגצה. לפמעט מוסן מנת. ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שעותלשך וחאית נובש ערששף. זותה מנק הבקיץ אפאח דלאמת יבש, כאנה ניצאחו נמרגי שהכים תוק, הדש שנרא התידם הכייר */}
-            <textarea style = {styles['talking-scenario']} deafultvalue={txt}>
-            </textarea>
+              <textarea style={styles['talking-scenario']} value={this.state.eventData.callInstructions.script}>
+				  	  </textarea>
             </div>
 		</div>
 	)
 }
-
 }
 
