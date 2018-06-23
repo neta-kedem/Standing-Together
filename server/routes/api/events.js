@@ -27,11 +27,11 @@ module.exports = (app) => {
 			});
 		})
 	});
-	app.get('/api/events', (req, res, next) => {
+	app.get('/api/events/getInviteless', (req, res, next) => {
 		Authentication.isUser(req, res).then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
-			Event.find((err, events) => {
+			Event.find({"campaign":{$exists:false}}, (err, events) => {
 				if (err) return res.json({success: false, error: err});
 				eventList = [];
 				for(let e of events)
@@ -80,7 +80,7 @@ module.exports = (app) => {
 				}
 				Event.findOneAndUpdate({'_id':eventId}, {$set : {'campaign':campaignObject}}, (err, user) => {
 					if (err) return res.json({success: false, error: err});
-						return res.json(true);
+						return res.json({"eventCode":campaignObject.eventCode});
 				});
 			});
 		})

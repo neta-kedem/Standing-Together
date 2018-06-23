@@ -2,6 +2,7 @@ import React from 'react';
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Meta from '../lib/meta';
+import config from '../config';
 
 import ItemService from '../services/ItemService'
 import server from '../services/server';
@@ -43,7 +44,7 @@ componentDidMount() {
 		.then(json => {
 			this.setState({activists:json});
 		});
-	server.get('events')
+	server.get('events/getInviteless')
 		.then(json => {
 			this.setState({events:json});
 		});
@@ -63,13 +64,15 @@ handleFieldDisplayToggle(fieldIndex, status){
 	this.setState({tableFields: tableFields});
 }
 handleEventPopupToggle(){
-	this.setState({displayEventSelectionPopup: !this.state.displayEventSelectionPopup});
+	this.setState({
+		displayEventSelectionPopup: !this.state.displayEventSelectionPopup,
+		campaignCreated: false
+	});
 }
 handleEventSelection(selected){
-	this.handleEventPopupToggle();
 	server.post('events/inviteByQuery', {'query':this.state.query, 'eventId':selected._id})
 		.then(json => {
-//TODO
+			this.setState({campaignCreated: true, selectedEventCode: json.eventCode});
 		});
 }
 render() {
@@ -79,7 +82,25 @@ render() {
 		selection='visibility'
 		handleChange={this.handleFieldDisplayToggle.bind(this)}/>;
 	const tableFieldsDropdown = <HamburgerMenu content={tableFieldsMultiSelect}/>;
-
+	const eventSelector =
+		<div>
+			choose an event:
+			<br/>
+			<br/>
+			<Selector
+				options={this.state.events}
+				idIndex="__id"
+				titleIndex="name"
+				handleSelection={this.handleEventSelection.bind(this)}
+			/>
+		</div>;
+	const eventLink =
+		<div>
+			provide this link to your callers:
+			<br/>
+			<input className="event-link" disabled value={config.serverPath+"Caller?eventCode="+this.state.selectedEventCode}/>
+			<div onClick={this.handleEventPopupToggle.bind(this)}>ok</div>
+		</div>;
 	return (
 		<div className="page-wrap">
 			<Meta/>
@@ -102,15 +123,7 @@ render() {
 				</div>
 			</div>
 			<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
-				choose an event:
-				<br/>
-				<br/>
-				<Selector
-					options={this.state.events}
-					idIndex="__id"
-					titleIndex="name"
-					handleSelection={this.handleEventSelection.bind(this)}
-				/>
+				{this.state.campaignCreated?eventLink:eventSelector}
 			</Popup>
 		</div>
 	)
