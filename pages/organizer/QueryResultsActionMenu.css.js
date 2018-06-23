@@ -11,7 +11,7 @@ export default css`
 	}
 	.results-count{
 		display: inline-block;
-		padding: 16px 20px;
+		padding: 0px 20px 16px 0px;
 		color: rgba(86, 95, 108, 0.9);
 		font-size: 24px;
 		line-height: 24px;
@@ -19,15 +19,18 @@ export default css`
 		text-align: center;
 	}
 	.action-button{
-		margin: 7.5px 10px;
-		padding: 6px 12px 0px 10px;
+		margin: 0px 10px 7.5px 10px;
+		padding: 0px 12px 0px 10px;
 		color: rgb(100, 109, 114);
 		font-size: 20px;
 		font-weight: 500;
 		text-align: center;
 	}
 	.action-button.align-to-end{
+		margin-right: 0;
+		padding-right: 0;
 		margin-left: auto;
+		
 	}
 	.action-button-icon{
 		font-size: 14px;

@@ -21,17 +21,21 @@ export default css
 	}
 	.main-panel{
 		width: 80%;
+		padding: 1%;
+		padding-left: 0;
+		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
 	}
 	.results-wrap{
 		overflow: auto;
-		padding: 2.5%;
+		padding: 2.5% 0;
 		position: relative;
 	}
 	.query-results{
-		width: 95%;
+		box-sizing: border-box;
+		width: 99.9%;
 	}
 	.event-link{
 		width: 100%;

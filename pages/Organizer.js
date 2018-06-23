@@ -44,7 +44,7 @@ componentDidMount() {
 		.then(json => {
 			this.setState({activists:json});
 		});
-	server.get('events')
+	server.get('events/getInviteless')
 		.then(json => {
 			this.setState({events:json});
 		});
