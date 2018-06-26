@@ -8,6 +8,7 @@ import server from '../services/server'
 
 import Nav from './caller/Nav'
 import SelectableRow from './caller/SelectableRow'
+import Toggle from './caller/Toggle'
 import ToggleSwitch from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
 import Thead from './caller/Thead.js'
 import ItemService from '../services/ItemService'
@@ -83,7 +84,12 @@ constructor(props) {
 			.then(json => {
 				this.setState({'eventData': json});
 		});
-	}
+    }
+    handleToggle(value){
+        value = !(value);
+        return value;
+ 
+    }
 
 render() {
     const tableHeader = 
@@ -152,14 +158,14 @@ render() {
                   </div>
                   <div style = {{...styles['query'],...styles['space']}}>
                   העתק טקסט &nbsp; <FontAwesomeIcon icon="copy"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ToggleSwitch/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Toggle value={true} handleChange={this.handleToggle.bind(this)}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; מסכימ/ה להגיע להפגנה 
                   </div>
         
                   <div style = {styles['query']}>
                   העתק טקסט &nbsp; <FontAwesomeIcon icon="copy"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ToggleSwitch/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Toggle/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; מסכימ/ה לתרום לתנועה 
                   </div>
