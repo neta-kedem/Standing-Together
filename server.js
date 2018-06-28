@@ -14,7 +14,7 @@ const mongoose = require('mongoose');
 
 const authentication = require('./server/services/authentication');
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI).catch(err=>console.log('err', err));
 mongoose.Promise = global.Promise;
 const server = express();
 server.use(bodyParser.urlencoded({ extended: false }));

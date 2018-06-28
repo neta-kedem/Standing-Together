@@ -1,16 +1,72 @@
 import {mockUsers} from '../lib/mockDB';
 import cookie from './cookieManager';
+import {
+	faBuilding,
+	faCalendarAlt,
+	faCheckCircle, faEnvelope,
+	faPhone,
+	faUser,
+	faUserCircle
+} from "@fortawesome/fontawesome-free-solid/index";
 
 const currFilters = [
-    [{id:0, filterName: "Lives", filterMain: "Tel-Aviv", filterPrefix:"In", filterValue: 20000},
+    {id:0, filterName: "Lives", filterMain: "Tel-Aviv", filterPrefix:"In", filterValue: 20000},
     {id:1, filterName: "Lives", filterMain: "Haifa", filterPrefix:"In", filterValue: 18000},
-    {id:2, filterName: "Lives", filterMain: "Ramat Gan", filterPrefix:"In", filterValue: 10000},],
+    {id:2, filterName: "Lives", filterMain: "Ramat Gan", filterPrefix:"In", filterValue: 10000},
+];
+
+const residencies = ['תל אביב', 'חיפה', 'ירושלים', 'באר שבע', 'פרדס חנה', 'טירה', 'נצרת'];
+const circles = ['תל אביב', 'חיפה', 'ירושלים', 'נגב', 'משולש-שרון', 'אניברסיטת חיפה', 'אוניברסיטת תל אביב', 'אוניברסיטת בן גוריון', 'האוניברסיטה העברית']
+
+const stringOptions = [
+		{label: 'Is', type: 'options'},
+		{label: 'Is not', type: 'options'},
+		{label: 'Starts with', type: 'text'},
+		{label: 'Ends with', type: 'text'},
+		{label: 'Contains', type: 'text'},
+		{label: 'Does not contain', type: 'text'},
+		{label: 'Is unknown', type: 'checkbox'},
+		{label: 'Has any value', type: 'checkbox'},
+		];
+
+const dateOptions = [
+		{label: 'After', type: 'date'},
+		{label: 'Exactly ',secondLable:' days ago', type: 'number'},
+		{label: 'Before', type: 'date'},
+		{label: 'Is unknown', type: 'checkbox'},
+		{label: 'Has any value', type: 'checkbox'},
+		];
+
+const possibleFilters =
+	[	{label:'Creation date', icon:faCalendarAlt, type: "date"},
+		{label:'Last update', icon:faCalendarAlt, type: "date"},
+		{label:'Residency', icon:faBuilding, type: "string", options:residencies},
+		{label:'Joining method', icon:faUserCircle, type: "string"},
+		{label:'Typer name', icon:faUser, type: "string"},
+		{label:'Full name', icon:faUser, type: "string"},
+		{label:'First name', icon:faUser, type: "string"},
+		{label:'Last name', icon:faCalendarAlt, type: "string"},
+		{label:'Phone number', icon:faPhone, type: "string"},
+		{label:'Email', icon:faEnvelope, type: "string"},
+		{label:'Circle', icon:faUserCircle, type: "string", options:circles},
+		{label:'Is member', icon:faCheckCircle, type: "boolean"},
+		{label:'Is paying', icon:faCheckCircle, type: "boolean"},
+		{label:'Is receiving newsletter', icon:faCheckCircle, type: "boolean"},
+		{label:'Is a typer', icon:faCheckCircle, type: "boolean"},
+		{label:'Is a caller', icon:faCheckCircle, type: "boolean"},
+		{label:'Is an organizer', icon:faCheckCircle, type: "boolean"},
+		{label:'Is a circle leader', icon:faCheckCircle, type: "boolean"},
+		{label:'Is an admin', icon:faCheckCircle, type: "boolean"},
 ];
 
 function delay(val, timeout=0) {
     return new Promise((resolve, reject)=>{
         setTimeout(()=>resolve(val), timeout)
     });
+}
+
+function getPossibleFilters(){
+	return possibleFilters;
 }
 
 function getCurrFilters() {
@@ -136,5 +192,6 @@ export default {
   addSingleFilter,
   removeSingleFilter,
 	login,
-	toggleUserCallerStatus
+	toggleUserCallerStatus,
+	getPossibleFilters,
 }

@@ -5,7 +5,7 @@ export default css
 		height:100vh;
 		display: flex;
 		flex-direction: column;
-		background: #fbfbfb;
+		// background: #fbfbfb;
 	}
 	.wrapper{
 		display: flex;
@@ -13,7 +13,7 @@ export default css
 		height: calc(100% - 55px);
 	}
 	.left-panel{
-		width: 20%;
+		// width: 20%;
 		padding: 1%;
 		box-sizing: border-box;
 		background-color: #fbfbfb;

@@ -11,8 +11,12 @@ class SingleCondition extends React.Component {
 
   }
   render() {
-    return(
-      <section style={style.wrapper}>
+		const { provided, innerRef } = this.props;
+		return(
+      <section style={style.wrapper}
+							 {...provided.draggableProps}
+							 {...provided.dragHandleProps}
+							 ref={innerRef}>
         <div style={style.titleRow}>
           <div style={style.titleWrapper}>
             {/*<span className={this.getFilterIcon()} style={style.filterIcon} aria-hidden="true"></span>*/}

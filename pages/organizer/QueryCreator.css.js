@@ -8,6 +8,12 @@ export default {
   "query": {
     "display": "flex",
     "flexDirection": "column",
-    "alignItems": "center"
+  },
+  "filter-title": {
+    "textAlign": "left",
+    "padding": "10px 0"
+  },
+  "filter-icon": {
+    "paddingRight": "5px"
   },
 }
