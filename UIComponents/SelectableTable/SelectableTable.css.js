@@ -11,10 +11,11 @@ export default css`
 		font-size:14px;
 		margin: 0 auto;
 		width: 100%;
-		text-align: left;
+		text-align: start;
 	}
 	.list-table-header-field{
 		padding-bottom: 5px;
+		text-align: start;
 	}
 	.list-table-header-field.hidden{
 		display: none;

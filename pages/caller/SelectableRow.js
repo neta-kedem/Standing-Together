@@ -16,16 +16,16 @@ export default class SelectableRow extends React.Component {
     render() {
       return (
         <tr style={{...styles['list-table-row'],...styles['list-table-field']}} onClick={() => this.toggleRowSelection()}>
-            <td style={styles['list-table-field']} type="text" value={this.props.data.mail} >
+            <td>
               {this.props.data.phone}
             </td>
-            <td style={styles['list-table-field']} type="text" value={this.props.data.mail} >
+            <td>
               {this.props.data.settlement}
             </td>
-            <td style={styles['list-table-field']} type="text" value={this.props.data.mail} >
+            <td>
               {this.props.data.lname}
             </td>
-            <td style={styles['list-table-field']} type="text" value={this.props.data.mail} >
+            <td>
               {this.props.data.fname}
             </td>
             <td style={{...styles['list-row-selection-indicator'], ...(this.props.selected?styles['selected-table-row']:{})}}> </td>
