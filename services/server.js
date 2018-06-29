@@ -1,9 +1,11 @@
 import cookie from './cookieManager';
 import Router from 'next/router';
+import fetch from 'node-fetch';
+import config from '../config';
 
-const serverPath='/api/';
+const apiPath='api/';
 function get(path){
-	var promise = fetch(serverPath+path, {
+	var promise = fetch(config.serverPath+apiPath+path, {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
@@ -22,7 +24,7 @@ function get(path){
 	return promise;
 }
 function post(path, data){
-	var promise = fetch(serverPath+path, {
+	var promise = fetch(config.serverPath+apiPath+path, {
 		method: 'post',
 		body: JSON.stringify(data),
 		headers: {

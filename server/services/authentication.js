@@ -1,5 +1,6 @@
 const Activist = require('../models/activistModel');
 
+var myId = "";
 const getUserByToken=function(req, res){
 	const token = req.cookies.token
 	const query = Activist.findOne({'login.token':token});
@@ -8,6 +9,7 @@ const getUserByToken=function(req, res){
 		{
 			return {"error":"missing token"};
 		}
+		myId = user["_id"];
 		return user;
 	});
 	return userPromise;
@@ -26,8 +28,13 @@ const isUser = function(req, res){
 	return promise;
 }
 
+const getMyId = function(){
+	return myId;
+}
+
 module.exports = {
 isUser,
-getUserByToken
+getUserByToken,
+getMyId
 };
 

@@ -33,8 +33,11 @@ handleInputChange(event) {
 }
 handlePost() {
 	let eventObject = {
-		"name": this.state.title,
-		"date": this.state.date,
+		"eventDetails":{
+			"name": this.state.title,
+			"date": this.state.date,
+			"location": "somewhere over the rainbow",
+		},
 		"callInstructions": {
 			"text1": this.state.text1,
 			"text2": this.state.text2,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class ToggleSwitch extends React.Component {
+export default class HamburgerMenu extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -32,18 +32,19 @@ export default class ToggleSwitch extends React.Component {
 						border-radius: 4px;
 					}
 					.bar1, .bar3{
-						transform-origin: 7.143% 50%;
+						transform-origin: 96.4285% 50%;
 						transition: 0.4s;
 					}
 					.bar2{
-						transform-origin: 70% 50%;
+						transform-origin: 30% 50%;
 						width: 17.85px;
+						margin-left: 7.65px;
 						transform: Scale(1, 1);
 						transition: 0.4s 0.4s;
 					}
 
 					.change .bar1 {
-						transform: rotate(45deg);
+						transform: rotate(-45deg);
 					}
 
 					.change .bar2 {
@@ -51,7 +52,7 @@ export default class ToggleSwitch extends React.Component {
 					}
 
 					.change .bar3 {
-						transform: rotate(-45deg);
+						transform: rotate(45deg);
 					}
 					.menu-content{
 						display:none;

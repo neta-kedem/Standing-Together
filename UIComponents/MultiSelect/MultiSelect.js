@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class ToggleSwitch extends React.Component {
+export default class MultiSelect extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
