@@ -106,7 +106,7 @@ render() {
 			<Meta/>
 			<style jsx global>{style}</style>
 			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
-			<div className="wrapper">
+			<div className="content-wrap">
 				<div className="left-panel">
 					<QueryCreator currFilters={this.state.currFilters}></QueryCreator>
 				</div>
@@ -124,6 +124,8 @@ render() {
 			</div>
 			<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
 				{this.state.campaignCreated?eventLink:eventSelector}
+				<br/>
+				<a href="./EventCreation">+ אירוע חדש</a>
 			</Popup>
 		</div>
 	)
