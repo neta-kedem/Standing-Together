@@ -1,6 +1,18 @@
 import css from 'styled-jsx/css'
 export default css
 `
+	.saved-views{
+		display: inline-block;
+		padding-left: 20px;
+		color: #fbfbfb;
+		font-size: 21px;
+		font-weight: 400;
+		line-height: 55px;
+	},
+	.saved-views-wrap{
+		overflow-x: auto;
+		white-space: nowrap;
+	},
 	.page-wrap{
 		height:100vh;
 		display: flex;

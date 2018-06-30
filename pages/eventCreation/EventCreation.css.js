@@ -113,5 +113,10 @@ export default
 		width: 100%;
 		padding: 2em;
 	}
-	
+	.save-event-button{
+		font-size: 1.5em;
+		color: white;
+		display: inline-block;
+		cursor: pointer;
+	}
 `
