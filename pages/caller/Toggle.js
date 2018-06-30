@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class ToggleSwitch extends React.Component {
+export default class Toggle extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -28,19 +28,17 @@ export default class ToggleSwitch extends React.Component {
 					}
 					
 					.switch input {
-						display:inline-block;
-						width:0;
-						visibility: none;
+						display:none;
 					}
 					
 					.slider {
+						height:1.5em;
 						position: absolute;
 						cursor: pointer;
-						top: 0;
+						top: -1em;
 						left: 0;
 						right: 0;
 						bottom: 0;
-						height: 1.5em;
 						border-radius: 3px;
 						box-sizing: border-box;
 						border: 1px solid #616B6F;

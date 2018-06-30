@@ -59,38 +59,38 @@ render() {
 				<div className="event-details-wrap">
 					<div className="inputGroup event-identification">
 						<label className="inline-label" id="event-name">
-							<div>שם האירוע<br/>שם האירוע</div>
+							<div>שם האירוע<br/>اسم الحدث</div>
 							<input type="text" name="title" value={this.state.title} onChange={this.handleInputChange.bind(this)}/>
 							</label>
 						<label className="inline-label" id="event-date">
-							<div>תאריך<br/>תאריך</div>
+							<div>תאריך<br/>التاريخ</div>
 							<input dir="ltr" type="text" name="date" value={this.state.date} onChange={this.handleInputChange.bind(this)} placeholder="DD.MM.YYYY"/>
 						</label>
 					</div>
 					<br/>
 					<label className="inline-label event-question">
-						<div>שאלה 1<br/>שאלה 1</div>
+						<div>שאלה 1<br/>سؤال 1</div>
 						<textarea name="question1" value={this.state.question1} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
 					<br/>
 					<label className="event-text">
-						<div>טקסט 1<br/>טקסט 1</div>
+						<div>טקסט 1<br/>نص 1</div>
 						<textarea name="text1" value={this.state.text1} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
 					<br/>
 					<label className="inline-label event-question">
-						<div>שאלה 2<br/>שאלה 2</div>
+						<div>שאלה 2<br/>سؤال 2</div>
 						<textarea name="question2" value={this.state.question2} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
 					<br/>
 					<label className="event-text">
-						<div>טקסט 2<br/>טקסט 2</div>
+						<div>טקסט 2<br/>نص 2</div>
 						<textarea name="text2" value={this.state.text2} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
 				</div>
 				<div className="event-script-wrap">
 					<label>
-						<div>תסריט שיחה<br/>תסריט שיחה</div>
+						<div>תסריט שיחה<br/>سيناريو الحوار</div>
 						<textarea name="callScript" value={this.state.callScript} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
 				</div>

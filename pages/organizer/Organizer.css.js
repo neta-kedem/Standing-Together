@@ -7,7 +7,7 @@ export default css
 		flex-direction: column;
 		background: #fbfbfb;
 	}
-	.wrapper{
+	.content-wrap{
 		display: flex;
 		flex-direction: row;
 		height: calc(100% - 55px);

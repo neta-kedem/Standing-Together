@@ -6,7 +6,7 @@ export default css`
 		font-size:16px;
 	}
 	.list-table-header{
-		color: #90959e;
+		color: #616B6F;
 		font-weight: 700;
 		font-size:14px;
 		margin: 0 auto;
