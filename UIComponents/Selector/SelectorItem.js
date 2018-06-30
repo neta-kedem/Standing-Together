@@ -22,6 +22,7 @@ export default class SelectorItem extends React.Component {
 						background-color: #ccc;
 						transition: background-color 1.5s;
 						transition: color 0.5s;
+						cursor: pointer;
 					}
 					.selector-item:hover{
 						background-color: #ffb4d0;

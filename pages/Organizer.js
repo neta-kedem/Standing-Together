@@ -126,12 +126,12 @@ render() {
 						</div>
 					</div>
 				</div>
+				<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
+					{this.state.campaignCreated?eventLink:eventSelector}
+					<br/>
+					<a href="./EventCreation">+ אירוע חדש</a>
+				</Popup>
 			</div>
-			<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
-				{this.state.campaignCreated?eventLink:eventSelector}
-				<br/>
-				<a href="./EventCreation">+ אירוע חדש</a>
-			</Popup>
 		</div>
 	)
 }

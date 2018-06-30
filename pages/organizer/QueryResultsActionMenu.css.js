@@ -25,6 +25,7 @@ export default css`
 		font-size: 20px;
 		font-weight: 500;
 		text-align: center;
+		cursor: pointer;
 	}
 	.action-button.align-to-end{
 		margin-right: 0;

@@ -22,7 +22,8 @@ export default css
 	.content-wrap{
 		display: flex;
 		flex-direction: row;
-		height: calc(100% - 55px);
+		height: calc(100vh - 55px);
+		position: relative;
 	}
 	.left-panel{
 		width: 20%;

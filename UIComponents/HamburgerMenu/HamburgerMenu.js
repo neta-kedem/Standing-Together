@@ -65,6 +65,7 @@ export default class HamburgerMenu extends React.Component {
 						border: 1px solid #ccc;
 						z-index: 1000;
 						text-align: left;
+						cursor: auto;
 					}
 					.menu-content.open{
 						display: block;

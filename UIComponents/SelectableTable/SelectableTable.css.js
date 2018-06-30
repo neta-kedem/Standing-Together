@@ -42,10 +42,12 @@ export default css`
 	}
 	.list-row-selection-indicator{
 		width: 0px;
+		cursor: pointer;
 	}
 	.select-all-checkbox{
 		color: rgb(128, 134, 138);
 		font-weight: 700;
+		cursor: pointer;
 	}
 	.checkbox{
 		display: inline-block;
