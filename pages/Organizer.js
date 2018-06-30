@@ -12,7 +12,7 @@ import Selector from '../UIComponents/Selector/Selector'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import MultiSelect from '../UIComponents/MultiSelect/MultiSelect'
 import HamburgerMenu from '../UIComponents/HamburgerMenu/HamburgerMenu'
-import TopNavBar from './organizer/TopNavbar'
+import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
@@ -105,8 +105,13 @@ render() {
 		<div className="page-wrap">
 			<Meta/>
 			<style jsx global>{style}</style>
-			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
-			<div className="wrapper">
+			<TopNavBar>
+				<div className="saved-views-wrap">
+					<div className="saved-views">New Activists</div>
+					<div className="saved-views">Some Category</div>
+				</div>
+			</TopNavBar>
+			<div className="content-wrap">
 				<div className="left-panel">
 					<QueryCreator currFilters={this.state.currFilters}></QueryCreator>
 				</div>
@@ -124,6 +129,8 @@ render() {
 			</div>
 			<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
 				{this.state.campaignCreated?eventLink:eventSelector}
+				<br/>
+				<a href="./EventCreation">+ אירוע חדש</a>
 			</Popup>
 		</div>
 	)

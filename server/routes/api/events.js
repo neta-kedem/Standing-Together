@@ -75,7 +75,7 @@ module.exports = (app) => {
 						"creatorId": Authentication.getMyId()
 					},
 					"selectionQuery": JSON.stringify(query),
-					"eventCode": "ASDFGHJKL",
+					"eventCode": Math.random().toString(36).substr(2, 10),
 					"invitations": invitations
 				}
 				Event.findOneAndUpdate({'_id':eventId}, {$set : {'campaign':campaignObject}}, (err, user) => {

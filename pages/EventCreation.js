@@ -4,10 +4,13 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Meta from '../lib/meta';
 import Stylesheet from './eventCreation/EventCreation.css'
 
-import TopNavBar from './organizer/TopNavbar'
+import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 
 import ItemService from '../services/ItemService'
 import server from '../services/server';
+
+import { faSave } from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faSave);
 
 export default class EventCreation extends React.Component {
 constructor(props) {
@@ -54,7 +57,7 @@ render() {
 		<div style={{'height':'100vh'}}>
 			<Meta/>
 			<style jsx global>{Stylesheet}</style>
-			<TopNavBar savedViews={[{'name':'New Activists'}, {'name':'Callers in Haifa'}]}></TopNavBar>
+			<TopNavBar><div onClick={this.handlePost.bind(this)} className="save-event-button">שמירת מפגש <FontAwesomeIcon icon="save"/></div></TopNavBar>
 			<div dir="rtl" className="page-wrap">
 				<div className="event-details-wrap">
 					<div className="inputGroup event-identification">
@@ -95,8 +98,6 @@ render() {
 					</label>
 				</div>
 			</div>
-			<br/>
-			<button onClick={this.handlePost.bind(this)}>שמירת אירוע</button>
 		</div>
 	)
 }

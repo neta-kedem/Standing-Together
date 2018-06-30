@@ -1,4 +1,5 @@
 const Activist = require('../../models/activistModel');
+const Mailer = require('../../services/mailer');
 
 module.exports = (app) => {
 	app.get('/api/activists', (req, res, next) => {
@@ -21,8 +22,10 @@ module.exports = (app) => {
 	});
 	app.post('/api/identify/email', (req, res, next) => {
 		let email = req.body.email;
-	Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode':'123456'}}, (err, user) => {
+		let code = Math.random().toString(36).substr(2, 6);
+		Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode':code}}, (err, user) => {
 			if (err) return res.json({success: false, error: err});
+			sendCodeViaMail(code, email);
 			return res.json(true);
 		});
 	});
@@ -71,6 +74,15 @@ module.exports = (app) => {
 			});
 		});
 	});
+	function sendCodeViaMail(code, email)
+	{
+		Mailer.sendEmail({
+			from: 'yanivcogan89@gmail.com',
+			to: email,
+			subject: 'Your login code for Standing Together',
+			text: 'Use the following code: '+code
+		});
+	}
 	function assignToken(userid) {
 		let token = generateToken();
 		let id = userid;

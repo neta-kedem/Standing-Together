@@ -28,7 +28,9 @@ export default class ToggleSwitch extends React.Component {
 					}
 					
 					.switch input {
-						display:none;
+						display:inline-block;
+						width:0;
+						visibility: none;
 					}
 					
 					.slider {
@@ -38,9 +40,10 @@ export default class ToggleSwitch extends React.Component {
 						left: 0;
 						right: 0;
 						bottom: 0;
+						height: 1.5em;
 						border-radius: 3px;
 						box-sizing: border-box;
-						border: 1px solid #888;
+						border: 1px solid #616B6F;
 						background-color: #fff;
 						-webkit-transition: .4s;
 						transition: .4s;
@@ -54,7 +57,7 @@ export default class ToggleSwitch extends React.Component {
 						height: 1.5em;
 						width: 1.5em;
 						border-radius: 3px;
-						background-color: #888;
+						background-color: #616B6F;
 						-webkit-transition: .4s;
 						transition: .4s;
 					}
