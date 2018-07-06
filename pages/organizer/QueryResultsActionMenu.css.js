@@ -7,7 +7,6 @@ export default css`
 		display: flex;
 		height: 50px;
 		flex: 0 0 auto;
-		background-color: #fbfbfb;
 	}
 	.results-count{
 		display: inline-block;
