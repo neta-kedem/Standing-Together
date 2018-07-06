@@ -32,7 +32,6 @@ export default class Caller extends React.Component {
 		};
 		this.handleSelection = this.handleSelection.bind(this);
 		this.getEventDetails();
-		this.getActivistsToCall();
 	}
 
 	getEventDetails(){
@@ -43,10 +42,11 @@ export default class Caller extends React.Component {
 					return;
 				}
 				this.setState({'eventData': json});
+				this.getActivistsToCall();
 		});
     }
 	getActivistsToCall(){
-		server.post('call/fetchActivistsToCall', {'eventCode':this.state.eventCode})
+		server.post('call/fetchActivistsToCall', {'eventId':this.state.eventData._id})
 			.then(json => {
 				if(json.error)
 				{
@@ -75,7 +75,7 @@ export default class Caller extends React.Component {
         this.setState((props) => ({activists : activists}));
     }
 	toggleContribution(value){
-		if(!this.state.selectedRowIndex)
+		if(!this.state.activists[this.state.selectedRowIndex])
 			return;
         const activists = this.state.activists.slice();
 		activists[this.state.selectedRowIndex].contributed=value;

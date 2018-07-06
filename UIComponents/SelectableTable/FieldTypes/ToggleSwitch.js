@@ -13,7 +13,6 @@ export default class ToggleSwitch extends React.Component {
 		this.state.onChangeFunction(event.target.checked);
 	}
 	render() {
-		console.log(this.props);
 		return (
 			<div className="switch-wrap">
 				<style jsx global>{`

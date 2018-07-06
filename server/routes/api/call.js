@@ -8,10 +8,10 @@ module.exports = (app) => {
 		Authentication.isUser(req, res).then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
-			const eventCode = req.body.eventCode;
+			const eventId = req.body.eventId;
 			const callerId = Authentication.getMyId();
 			const bulkSize= 2;
-			Event.findOne({"campaign.eventCode": eventCode}, (err, eventData) => {
+			Event.findOne({"_id": eventId}, (err, eventData) => {
 				if (err) return res.json({success: false, error: err});
 				if (!eventData)
 					return res.json({"error":"couldn't find a matching event"});
@@ -54,7 +54,7 @@ module.exports = (app) => {
 				const assignedActivists = activistToCall.slice(0, Math.min(activistToCall.length, bulkSize));
 				const assignedActivistsIds = assignedActivists.map(function(value,index) {return value["activistId"];})
 				Event.update(
-					{"campaign.eventCode": eventCode},
+					{"_id": eventId},
 					{"$set": {"campaign.invitations.$[elem].isHandled": true}},
 					{"arrayFilters": [{"elem.activistId":{$in:assignedActivistsIds}}], "multi": true },
 					(err, result) => {
