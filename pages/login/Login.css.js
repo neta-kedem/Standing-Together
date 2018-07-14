@@ -14,6 +14,11 @@ export default css`
 	.login-page-wrap{
 		direction: rtl;
 	}
+	.identification-input-title{
+		text-align: center;
+		line-height: 0.75em;
+		margin-top: 2em;
+	}
 	.code-input-title{
 		text-align: center;
 		font-size: 1.25em;
@@ -26,14 +31,17 @@ export default css`
 	}
 	::placeholder {
 		color: var(--field-placeholder-color);
-		direction: rtl;
+		direction: ltr;
+		text-align: center;
 	}
 	:-ms-input-placeholder {
 		color: var(--field-placeholder-color);
-		direction: rtl;
+		direction: ltr;
+		text-align: center;
 	}
 	::-ms-input-placeholder {
 		color: var(--field-placeholder-color);
-		direction: rtl;
+		direction: ltr;
+		text-align: center;
 	}
 `

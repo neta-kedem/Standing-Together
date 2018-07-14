@@ -12,7 +12,6 @@ import stylesheet from './login/Login.css';
 export default class Login extends React.Component {
 
 state = {
-	lang: "he",
 	phone: "",
 	email: "",
 	codeSent: false
@@ -67,30 +66,26 @@ verifyLoginCode(code)
 }
 
 render() {
-	const dictionary = {
-		"he":{
-			"smsAuthentication":"אימות באמצעות SMS",
-			"emailAuthentication":"אימות באמצעות Email",
-			"inputCode":"הזינו את הקוד שנשלח אליכם ב-"
-		},
-		"ar":{
-			"smsAuthentication":"authenticate via SMS",
-			"emailAuthentication":"authenticate via Email"
-		}
-	};
-	const vocabulary = dictionary[this.state.lang];
 	/**Stage 1 - Verification Method Selection**/
 	const identification = 
 		<div>
+			<div className='identification-input-title'>
+				<div>
+					אימות באמצעות
+				<div>
+				</div>
+					אימות באמצעות
+				</div>
+			</div>
 			<IdentificationField
 				dir="ltr" inputType="tel" minLength="9" maxLength="15"
-				placeholder={vocabulary["smsAuthentication"]}
+				placeholder="Phone Number"
 				validationFunction={this.validatePhone}
 				identificationFunction={this.identifyByPhone.bind(this)}
 			/>
 			<IdentificationField
 				dir="ltr" inputType="email" minLength="5" maxLength="100"
-				placeholder={vocabulary["emailAuthentication"]}
+				placeholder="Email Address"
 				validationFunction={this.validateEmail}
 				identificationFunction={this.identifyByEmail.bind(this)}
 			/>
@@ -100,7 +95,7 @@ render() {
 		<div>
 			<br/>
 			<div className='code-input-title'>
-				{vocabulary.inputCode+" "+this.state.indetificationMethod}
+				{"הזינו את הקוד שנשלח אליכם ב- "+this.state.indetificationMethod}
 			</div>
 			<br/>
 			<CodeInput verificationFunction={this.verifyLoginCode.bind(this)}/>
