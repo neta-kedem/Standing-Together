@@ -50,7 +50,8 @@ export default class SelectableTable extends React.Component {
 		}
 		rows[rowIndex].selected = !rows[rowIndex].selected;
 		this.setState({rows: rows});
-		this.state.onSelect(rowIndex);
+		if(this.state.onSelect)
+			this.state.onSelect(rowIndex);
 	}
 
 	cellConstructor(type, val, onChangeFunction) {
