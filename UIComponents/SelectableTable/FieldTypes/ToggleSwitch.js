@@ -10,7 +10,6 @@ export default class ToggleSwitch extends React.Component {
 	}
 	handleChange(event)
 	{
-		this.setState({value: event.target.checked});
 		this.state.onChangeFunction(event.target.checked);
 	}
 	render() {
@@ -74,7 +73,7 @@ export default class ToggleSwitch extends React.Component {
 				`}
 				</style>
 				<label className="switch">
-					<input type="checkbox" defaultChecked={this.state.value} onChange={(event)=>this.handleChange(event)}/>
+					<input type="checkbox" checked={this.props.value} onChange={(event)=>this.handleChange(event)}/>
 					<span className="slider"></span>
 				</label>
 			</div>

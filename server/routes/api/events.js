@@ -95,6 +95,7 @@ module.exports = (app) => {
 				if (!eventData)
 					return res.json({"error":"couldn't find a matching event"});
 				return res.json({
+					"_id":eventData._id,
 					"eventDetails":eventData.eventDetails,
 					"callInstructions":eventData.callInstructions
 				});

@@ -40,6 +40,7 @@ export default css
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
+		background-color: #fbfbfb;
 	}
 	.results-wrap{
 		overflow: auto;

@@ -70,6 +70,13 @@ export default css
 		padding: 2%;
 		box-sizing: border-box;
 	}
+	.script-title{
+		padding-top: 5px;
+		padding-bottom: 7px;
+		color: #616B6F;
+		font-weight: bold;
+		font-size: 14px;
+	}
 	.left-panel textarea{
 		width: 100%;
 		height: 30%;
