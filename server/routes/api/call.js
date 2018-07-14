@@ -39,7 +39,7 @@ module.exports = (app) => {
 		Authentication.isUser(req, res).then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
-			const eventId = req.body.eventId;
+			const eventId = mongoose.Types.ObjectId(req.body.eventId);
 			const callerId = Authentication.getMyId();
 			const bulkSize= 2;
 			Event.findOne({"_id": eventId}, (err, eventData) => {
