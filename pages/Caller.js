@@ -9,8 +9,8 @@ import style from './caller/Caller.css'
 import Nav from './caller/Nav'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import Toggle from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
-import {faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
+import {faPaperPlane, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faPaperPlane, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
 
 export default class Caller extends React.Component {
 	constructor(props) {
@@ -81,6 +81,20 @@ export default class Caller extends React.Component {
 		activists[this.state.selectedRowIndex].contributed=value;
         this.setState((props) => ({activists : activists}));
     }
+	resolveCall(){
+		if(!this.state.activists[this.state.selectedRowIndex])
+			return;
+		const activist = this.state.activists.slice()[this.state.selectedRowIndex];
+		server.post('call/resolveCall', {
+			'eventId':this.state.eventData._id,
+			'activistId': activist._id,
+			'contributed': activist.contributed,
+			'attendingEvent': activist.attendingEvent,
+		})
+		.then(json => {
+			console.log("aha!");	
+		});
+	}
 	render() {
 		const i = this.state.selectedRowIndex;
 		const isSelected = i!=undefined;
@@ -130,6 +144,14 @@ export default class Caller extends React.Component {
 						לא עונים
 						<br/>
 						لا بجيب
+					</div>
+				</div>
+				<div className="call-outcome-button" onClick={this.resolveCall.bind(this)}>
+					<FontAwesomeIcon icon="paper-plane" className="label-icon"/>
+					<div className="label-text">
+						סיום שיחה
+						<br/>
+						סיום שיחה
 					</div>
 				</div>
 			</div>
