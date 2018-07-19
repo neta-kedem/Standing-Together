@@ -1,6 +1,7 @@
 import React from 'react';
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import Meta from '../lib/meta';
 
 import server from '../services/server'
@@ -50,7 +51,6 @@ export default class Caller extends React.Component {
 			.then(json => {
 				if(json.error)
 				{
-					alert(json.error);
 					return;
 				}
 				let activists = json;
@@ -92,7 +92,6 @@ export default class Caller extends React.Component {
 			'attendingEvent': activist.attendingEvent,
 		})
 		.then(json => {
-			console.log("aha!");	
 		});
 	}
 	render() {
@@ -103,8 +102,12 @@ export default class Caller extends React.Component {
 		<div>
 			<div className="caller-action attendance-indication">
 				<div className="copy-text-button caller-action-col">
-					<div className="label-text">העתק טקסט</div>
-					<FontAwesomeIcon icon="copy" className="label-icon"/>
+					<CopyToClipboard text={this.state.eventData.callInstructions.text1} onCopy={()=>{alert("saved to clipboard!")}}>
+						<div>
+							<div className="label-text">העתק טקסט</div>
+							<FontAwesomeIcon icon="copy" className="label-icon"/>
+						</div>
+					</CopyToClipboard>
 				</div>
 				<div className="caller-action-col">
 					<Toggle value={isSelected?selectedActivist["attendingEvent"]:false} handleChange={this.toggleAttendance.bind(this)}/>
@@ -113,8 +116,12 @@ export default class Caller extends React.Component {
 			</div>
 			<div className="caller-action donation-indication">
 				<div className="copy-text-button caller-action-col">
-					<div className="label-text">העתק טקסט</div>
-					<FontAwesomeIcon icon="copy" className="label-icon"/>
+					<CopyToClipboard text={this.state.eventData.callInstructions.text2} onCopy={()=>{alert("saved to clipboard!")}}>
+						<div>
+							<div className="label-text">העתק טקסט</div>
+							<FontAwesomeIcon icon="copy" className="label-icon"/>
+						</div>
+					</CopyToClipboard>
 				</div>
 				<div className="caller-action-col">
 					<Toggle value={isSelected?selectedActivist["contributed"]:false} handleChange={this.toggleContribution.bind(this)}/>
