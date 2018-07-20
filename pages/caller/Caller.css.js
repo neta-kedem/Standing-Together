@@ -84,4 +84,15 @@ export default css
 		box-sizing: border-box;
 		resize: none;
 	}
+	@media only screen and (max-width: 768px) {
+		.content-wrap{
+			flex-direction: column;
+		}
+		.left-panel{
+			width: 100%;
+		}
+		.right-panel{
+			width: 100%;
+		}
+	}
 `
