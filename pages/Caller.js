@@ -1,6 +1,8 @@
 import React from 'react';
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import TimeInput from 'react-time-input';
 import Meta from '../lib/meta';
 
 import server from '../services/server'
@@ -31,6 +33,8 @@ export default class Caller extends React.Component {
 			selectedRow:{}
 		};
 		this.handleSelection = this.handleSelection.bind(this);
+	}
+	componentDidMount() {
 		this.getEventDetails();
 	}
 
@@ -50,7 +54,6 @@ export default class Caller extends React.Component {
 			.then(json => {
 				if(json.error)
 				{
-					alert(json.error);
 					return;
 				}
 				let activists = json;
@@ -84,7 +87,10 @@ export default class Caller extends React.Component {
 	resolveCall(){
 		if(!this.state.activists[this.state.selectedRowIndex])
 			return;
-		const activist = this.state.activists.slice()[this.state.selectedRowIndex];
+		const activists = this.state.activists.slice();
+		const activist = activists[this.state.selectedRowIndex];
+		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		this.setState({activists : activists});
 		server.post('call/resolveCall', {
 			'eventId':this.state.eventData._id,
 			'activistId': activist._id,
@@ -92,19 +98,43 @@ export default class Caller extends React.Component {
 			'attendingEvent': activist.attendingEvent,
 		})
 		.then(json => {
-			console.log("aha!");	
+		});
+	}
+	updateActivistAvailability(val){
+		const activists = this.state.activists.slice();
+		activists[this.state.selectedRowIndex].availableAt = val;
+		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		const activist = activists[this.state.selectedRowIndex];
+		this.setState({activists : activists});
+		server.post('call/postponeCall', {
+			'eventId':this.state.eventData._id,
+			'activistId': activist._id,
+			'availableAt': val
+		})
+		.then(json => {
 		});
 	}
 	render() {
 		const i = this.state.selectedRowIndex;
 		const isSelected = i!=undefined;
 		const selectedActivist = this.state.activists[i]?this.state.activists[i]:{};
+		let lastCallTime = "";
+		if(selectedActivist.lastCallAt)
+		{
+			const minutes = ("0" + selectedActivist.lastCallAt.getMinutes()).slice(-2);
+			const hours = ("0" + selectedActivist.lastCallAt.getHours()).slice(-2);
+			lastCallTime = hours+":"+minutes;
+		}
 		const actionOptions =
 		<div>
 			<div className="caller-action attendance-indication">
 				<div className="copy-text-button caller-action-col">
-					<div className="label-text">העתק טקסט</div>
-					<FontAwesomeIcon icon="copy" className="label-icon"/>
+					<CopyToClipboard text={this.state.eventData.callInstructions.text1} onCopy={()=>{alert("saved to clipboard!")}}>
+						<div>
+							<div className="label-text">העתק טקסט</div>
+							<FontAwesomeIcon icon="copy" className="label-icon"/>
+						</div>
+					</CopyToClipboard>
 				</div>
 				<div className="caller-action-col">
 					<Toggle value={isSelected?selectedActivist["attendingEvent"]:false} handleChange={this.toggleAttendance.bind(this)}/>
@@ -113,8 +143,12 @@ export default class Caller extends React.Component {
 			</div>
 			<div className="caller-action donation-indication">
 				<div className="copy-text-button caller-action-col">
-					<div className="label-text">העתק טקסט</div>
-					<FontAwesomeIcon icon="copy" className="label-icon"/>
+					<CopyToClipboard text={this.state.eventData.callInstructions.text2} onCopy={()=>{alert("saved to clipboard!")}}>
+						<div>
+							<div className="label-text">העתק טקסט</div>
+							<FontAwesomeIcon icon="copy" className="label-icon"/>
+						</div>
+					</CopyToClipboard>
 				</div>
 				<div className="caller-action-col">
 					<Toggle value={isSelected?selectedActivist["contributed"]:false} handleChange={this.toggleContribution.bind(this)}/>
@@ -122,7 +156,7 @@ export default class Caller extends React.Component {
 				<div className="caller-action-col">מסכימ/ה לתרום לתנועה</div>
 			</div>
 			<div className="call-outcomes">
-				<div className="call-outcome-button">
+				<div className="call-outcome-button remove-contact">
 					<FontAwesomeIcon icon="user-times" className="label-icon"/>
 					<div className="label-text">
 						הסרה מהרשימה
@@ -137,6 +171,14 @@ export default class Caller extends React.Component {
 						<br/>
 						الاتصال في الساعة
 					</div>
+					<div>
+						<TimeInput
+							className="availability-timer"
+							ref="TimeInputWrapper"
+							mountFocus='true'
+							onTimeChange={this.updateActivistAvailability.bind(this)}
+						/>
+					</div>
 				</div>
 				<div className="call-outcome-button">
 					<FontAwesomeIcon icon="microphone-slash" className="label-icon"/>
@@ -145,8 +187,13 @@ export default class Caller extends React.Component {
 						<br/>
 						لا بجيب
 					</div>
+					<div>
+						שיחה אחרונה ב-{lastCallTime}
+						<br/>
+						שיחה אחרונה ב-{lastCallTime}
+					</div>
 				</div>
-				<div className="call-outcome-button" onClick={this.resolveCall.bind(this)}>
+				<div className="call-outcome-button finish-call" onClick={this.resolveCall.bind(this)}>
 					<FontAwesomeIcon icon="paper-plane" className="label-icon"/>
 					<div className="label-text">
 						סיום שיחה

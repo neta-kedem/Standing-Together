@@ -37,12 +37,24 @@ export default css
 		font-weight: bold;
 		margin-bottom: 5%;
 	}
+	.fetch-more-button{
+		cursor: pointer;
+	}
 	.caller-action-col{
 		display: inline-block;
 		vertical-align: middle;
 		line-height: 1.5em;
 		box-sizing: border-box;
 		margin-left: 2.5em;
+	}
+	.copy-text-button{
+		cursor: pointer;
+	}
+	.copy-text-button .label-icon{
+		transition: color 0.25s;
+	}
+	.copy-text-button:hover .label-icon{
+		color: #90278e;
 	}
 	.label-text{
 		margin-left: 0.5em;
@@ -64,6 +76,32 @@ export default css
 	}
 	.call-outcome-button{
 		box-sizing: border-box;
+		cursor: pointer;
+		transition: color 0.25s;
+	}
+	.remove-contact:hover{
+		color: #a00;
+	}
+	.availability-timer{
+		border: none;
+		border-bottom: 2px solid #616B6F;
+		background-color: transparent;
+		font-size: 1.25em;
+		text-align: center;
+		width: 4em;
+		height: 1.33em;
+		display: block;
+		margin: 0 auto;
+		outline: none;
+	}
+	.availability-timer .time-passed{
+		border-color: green;
+	}
+	.availability-timer .time-not-passed{
+		border-color: #a00;
+	}
+	.finish-call:hover{
+		color: #90278e;
 	}
 	.left-panel{
 		width: 50%;
@@ -83,5 +121,16 @@ export default css
 		padding: 1em;
 		box-sizing: border-box;
 		resize: none;
+	}
+	@media only screen and (max-width: 768px) {
+		.content-wrap{
+			flex-direction: column;
+		}
+		.left-panel{
+			width: 100%;
+		}
+		.right-panel{
+			width: 100%;
+		}
 	}
 `

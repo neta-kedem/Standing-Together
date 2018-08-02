@@ -2,6 +2,7 @@ export default {
 	"wrapper": {
 		"position": "relative",
 		"display": "flex",
+		"alignItems": "center",
 		"height": "55px",
 		"backgroundColor": "#90278e"
 	},
