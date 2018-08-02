@@ -5,11 +5,13 @@ export default class HamburgerMenu extends React.Component {
 		super(props);
 		this.state = {
 			content: props.content,
-			isOpen: false
+			isOpen: false,
+			leftAlignment: false
 		};
 	}
-	handleMenuToggle() {
-		this.setState({isOpen: !this.state.isOpen});
+	handleMenuToggle(event) {
+		const leftAlignment = event.target.offsetParent.offsetLeft*2>window.innerWidth;
+		this.setState({isOpen: !this.state.isOpen, leftAlignment: leftAlignment});
 	}
 	render() {
 		return (
@@ -23,7 +25,6 @@ export default class HamburgerMenu extends React.Component {
 						display: inline-block;
 						cursor: pointer;
 					}
-
 					.bar1, .bar2, .bar3 {
 						width: 25.5px;
 						height: 4px;
@@ -32,27 +33,23 @@ export default class HamburgerMenu extends React.Component {
 						border-radius: 4px;
 					}
 					.bar1, .bar3{
-						transform-origin: 96.4285% 50%;
+						transform-origin: 7.143% 50%;
 						transition: 0.4s;
 					}
 					.bar2{
-						transform-origin: 30% 50%;
+						transform-origin: 70% 50%;
 						width: 17.85px;
-						margin-left: 7.65px;
 						transform: Scale(1, 1);
 						transition: 0.4s 0.4s;
 					}
-
 					.change .bar1 {
-						transform: rotate(-45deg);
+						transform: rotate(45deg);
 					}
-
 					.change .bar2 {
 						transform: Scale(0, 1);
 					}
-
 					.change .bar3 {
-						transform: rotate(45deg);
+						transform: rotate(-45deg);
 					}
 					.menu-content{
 						display:none;
@@ -60,12 +57,16 @@ export default class HamburgerMenu extends React.Component {
 						color: rgb(100, 109, 114);
 						position: absolute;
 						width: 10vw;
-						right: 0;
+						right: auto;
+						left: 0;
 						padding: 1em;
 						border: 1px solid #ccc;
 						z-index: 1000;
 						text-align: left;
-						cursor: auto;
+					}
+					.menu-content.left-align{
+						left: auto;
+						right: 0;
 					}
 					.menu-content.open{
 						display: block;
@@ -77,7 +78,7 @@ export default class HamburgerMenu extends React.Component {
 					<div className="bar2"></div>
 					<div className="bar3"></div>
 				</div>
-				<div className={"menu-content " + (this.state.isOpen ? 'open' : '')}>
+				<div className={"menu-content " + (this.state.isOpen ? 'open' : '') + (this.state.leftAlignment ? 'left-align' : '')}>
 					{this.state.content}
 				</div>
 			</div>
