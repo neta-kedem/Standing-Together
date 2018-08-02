@@ -32,6 +32,15 @@ function sortCallsByPriority (a, b, callerId, now){
 		else
 			weightB -= 4;
 	}
+	//introduce bias toward calling people who weren't called lately
+	if((b.lastCallAt?0:b.lastCallAt)>(a.lastCallAt?0:a.lastCallAt))
+	{
+		weightA += 1;
+	}
+	if((b.lastCallAt?0:b.lastCallAt)<(a.lastCallAt?0:a.lastCallAt))
+	{
+		weightB += 1;
+	}
 	return weightB - weightA;
 }
 module.exports = (app) => {
@@ -123,7 +132,7 @@ module.exports = (app) => {
 				{
 					"$set": {
 						"campaign.invitations.$[elem].lastCallAt": now,
-						"campaign.invitations.$[elem].resolution": resolution
+						"campaign.invitations.$[elem].availableAt": availableAt
 					}
 				},
 				{"arrayFilters": [{"elem.activistId":activistId}], "multi": true},
