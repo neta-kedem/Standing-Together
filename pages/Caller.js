@@ -40,13 +40,13 @@ export default class Caller extends React.Component {
 
 	getEventDetails(){
 		server.post('events/eventByCode', {'eventCode':this.state.eventCode})
-			.then(json => {
-				if(json.error)
-				{
-					return;
-				}
-				this.setState({'eventData': json});
-				this.getActivistsToCall();
+		.then(json => {
+			if(json.error)
+			{
+				return;
+			}
+			this.setState({'eventData': json});
+			this.getActivistsToCall();
 		});
     }
 	getActivistsToCall(){

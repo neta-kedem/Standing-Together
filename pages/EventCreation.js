@@ -49,7 +49,11 @@ handlePost() {
 			"script": this.state.callScript
 		}
 	};
-	server.post('events', {'event':eventObject});
+	server.post('events', {'event':eventObject})
+	.then(json => {
+		alert("saved");
+		Router.push({pathname: '/Organizer'});
+	});
 }
 
 render() {
