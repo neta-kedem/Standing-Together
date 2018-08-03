@@ -27,13 +27,13 @@ constructor(props) {
 		currFilters: [],
 		allSelected: false,
 		tableFields:[
-			{title: "Name", visibility: true, key: "name", icon:"user", type:"text"},
-			{title: "Lives In",  visibility: true, key: "city", icon:"building", type:"text"},
-			{title: "Phone",  visibility: true, key: "phone", icon:"phone", type:"text"},
-			{title: "Email",  visibility: true, key: "email", icon:"envelope-open", type:"text"},
-			{title: "Last Seen",  visibility: false, key: "lastSeen", icon:"calendar", type:"text"},
-			{title: "Last Event",  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
-			{title: "Call?",  visibility: true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
+			{title: "שם", visibility: true, key: "name", icon:"user", type:"text"},
+			{title: "עיר",  visibility: true, key: "city", icon:"building", type:"text"},
+			{title: "טלפון",  visibility: true, key: "phone", icon:"phone", type:"text"},
+			{title: "אימייל",  visibility: true, key: "email", icon:"envelope-open", type:"text"},
+			{title: "נראתה לאחרונה",  visibility: false, key: "lastSeen", icon:"calendar", type:"text"},
+			{title: "אירוע אחרון",  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
+			{title: "טלפנית?",  visibility: true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
 		],
 		displayEventSelectionPopup: false
 	};
@@ -84,31 +84,42 @@ render() {
 	const tableFieldsDropdown = <HamburgerMenu content={tableFieldsMultiSelect}/>;
 	const eventSelector =
 		<div>
-			choose an event:
-			<br/>
-			<br/>
-			<Selector
-				options={this.state.events}
-				idIndex="__id"
-				titleIndex="name"
-				handleSelection={this.handleEventSelection.bind(this)}
-			/>
+			<div className="event-selection-popup-title">בחירת אירוע:</div>
+			<div className="event-selector">
+				<Selector
+					options={this.state.events}
+					idIndex="__id"
+					titleIndex="name"
+					handleSelection={this.handleEventSelection.bind(this)}
+				/>
+			</div>
+			<a className="new-event-button" href="./EventCreation">
+				<div>
+					<div>אירוע חדש</div>
+					<div>אירוע חדש</div>
+				</div>
+			</a>
 		</div>;
 	const eventLink =
-		<div>
-			provide this link to your callers:
-			<br/>
+		<div className="event-link-wrap">
+			<div className="event-link-title">
+				<div>לינק לעמוד טלפנים</div>
+				<div>לינק לעמוד טלפנים</div>
+			</div>
 			<input className="event-link" disabled value={config.serverPath+"Caller?eventCode="+this.state.selectedEventCode}/>
-			<div onClick={this.handleEventPopupToggle.bind(this)}>ok</div>
+			<div className="event-link-ok" onClick={this.handleEventPopupToggle.bind(this)}>
+				<div>אוקיי</div>
+				<div>אוקיי</div>
+			</div>
 		</div>;
 	return (
-		<div className="page-wrap">
+		<div className="page-wrap" dir="rtl">
 			<Meta/>
 			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="saved-views-wrap">
-					<div className="saved-views">New Activists</div>
-					<div className="saved-views">Some Category</div>
+					<div className="saved-views">שאילתה 1</div>
+					<div className="saved-views">שאילתה 2</div>
 				</div>
 			</TopNavBar>
 			<div className="content-wrap">
@@ -128,8 +139,6 @@ render() {
 				</div>
 				<Popup visibility={this.state.displayEventSelectionPopup} toggleVisibility={this.handleEventPopupToggle.bind(this)}>
 					{this.state.campaignCreated?eventLink:eventSelector}
-					<br/>
-					<a href="./EventCreation">+ אירוע חדש</a>
 				</Popup>
 			</div>
 		</div>

@@ -10,7 +10,7 @@ export default css`
 	}
 	.results-count{
 		display: inline-block;
-		padding: 0px 20px 16px 0px;
+		padding: 0px 0px 16px 20px;
 		color: rgba(86, 95, 108, 0.9);
 		font-size: 24px;
 		line-height: 24px;
@@ -19,7 +19,7 @@ export default css`
 	}
 	.action-button{
 		margin: 0px 10px 7.5px 10px;
-		padding: 0px 12px 0px 10px;
+		padding: 0px 10px 0px 12px;
 		color: rgb(100, 109, 114);
 		font-size: 20px;
 		font-weight: 500;
@@ -27,10 +27,9 @@ export default css`
 		cursor: pointer;
 	}
 	.action-button.align-to-end{
-		margin-right: 0;
-		padding-right: 0;
-		margin-left: auto;
-		
+		margin-left: 0;
+		padding-left: 0;
+		margin-right: auto;
 	}
 	.action-button-icon{
 		font-size: 14px;

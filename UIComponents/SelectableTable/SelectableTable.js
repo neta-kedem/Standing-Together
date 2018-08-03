@@ -92,7 +92,10 @@ export default class SelectableTable extends React.Component {
 		const selectAll =
 			<div className='select-all-checkbox' onClick={() => this.toggleAllRowsSelection()}>
 				<div className={'checkbox '+(this.state.allSelected?'checkbox-checked':'')}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
-				SELECT ALL
+				<div className="checkbox-label">
+					<div>סימון הכל</div>
+					<div>סימון הכל</div>
+				</div>
 			</div>;
 		return (
 			<div>

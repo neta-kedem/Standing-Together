@@ -35,7 +35,6 @@ export default css
 	.main-panel{
 		width: 80%;
 		padding: 1%;
-		padding-left: 0;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
@@ -51,21 +50,70 @@ export default css
 		box-sizing: border-box;
 		width: 99.9%;
 	}
+	.event-selection-popup-title{
+		font-size: 1.75em;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	.event-selector{
+		text-align: center;
+		font-size: 1.25em;
+		width: 50%;
+		display: block;
+		margin: 0 auto;
+		margin-bottom: 1.5em;
+	}
+	.new-event-button{
+		text-decoration: none;
+	}
+	.new-event-button>div{
+	    border: 2px solid white;
+		padding: 0.5em;
+		border-radius: 0.5em;
+		display: block;
+		text-align: center;
+		width: 50%;
+		margin: 0 auto;
+		font-size: 1.25em;
+		transition: color 0.25s, background-color 0.25s;
+	}
+	.new-event-button:active>div{
+		background-color: white;
+		color: rgb(144, 39, 142);
+	}
+	.event-link-title{
+		font-size: 1.5em;
+		text-align: center;
+		margin-bottom: 1em;
+	}
 	.event-link{
-		width: 100%;
+		width: calc(100% - 3.75em);
+		display: inline-block;
 		margin: 2.5% 0;
 		background: white;
-		padding: 1%;
+		padding: 0.25em;;
 		border: 1px solid black;
 		box-sizing: border-box;
-		transition: color 0.5s, background 0.5s;
+		-webkit-transition: color 0.5s,background 0.5s;
+		transition: color 0.5s,background 0.5s;
+		font-weight: bold;
+		font-size: 1em;
+		text-align: center;
+		vertical-align: middle;
 	}
 	.event-link:hover{
 		color: black;
-		background: #ffb4d0;
 	}
-	.event-link:active{
-		background: #dc1560;
-		color: white;
+	.event-link-ok{
+		display: inline-block;
+		font-size: 1.25em;
+		margin: 0 0.5em;
+		vertical-align: middle;
+		cursor: pointer;
+		opacity: 0.8;
+		transition: opacity 0.5s;
+	}
+	.event-link-ok:hover{
+		opacity:1;
 	}
 `

@@ -57,4 +57,9 @@ export default css`
 	.checkbox-checked{
 		color: #FF4C94;
 	}
+	.checkbox-label{
+		display: inline-block;
+		vertical-align: middle;
+		margin: 0 0.5em;
+	}
 `

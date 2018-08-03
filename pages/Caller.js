@@ -25,10 +25,10 @@ export default class Caller extends React.Component {
 			},
 			activists:[],
 			header:[
-				{title: "טלפון رقم الهاتف",  visibility: true, key: "phone", icon:"", type:"text"},
-				{title: "יישוב البلد",  visibility: true, key: "city", icon:"", type:"text"},
-				{title: "שם משפחה اسم العائلة", visibility: true, key: "lastName", icon:"", type:"text"},
-				{title: "שם פרטי الاسم الشخصي", visibility: true, key: "firstName", icon:"", type:"text"}	
+				{title: "שם פרטי الاسم الشخصي", visibility: true, key: "firstName", icon:"", type:"text", width:"25%"},
+				{title: "שם משפחה اسم العائلة", visibility: true, key: "lastName", icon:"", type:"text", width:"25%"},
+				{title: "טלפון رقم الهاتف",  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
+				{title: "יישוב البلد",  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
 			],
 			selectedRow:{}
 		};
@@ -40,13 +40,13 @@ export default class Caller extends React.Component {
 
 	getEventDetails(){
 		server.post('events/eventByCode', {'eventCode':this.state.eventCode})
-			.then(json => {
-				if(json.error)
-				{
-					return;
-				}
-				this.setState({'eventData': json});
-				this.getActivistsToCall();
+		.then(json => {
+			if(json.error)
+			{
+				return;
+			}
+			this.setState({'eventData': json});
+			this.getActivistsToCall();
 		});
     }
 	getActivistsToCall(){

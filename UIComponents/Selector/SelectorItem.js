@@ -18,19 +18,17 @@ export default class SelectorItem extends React.Component {
 			<div>
 				<style jsx global>{`
 					.selector-item{
-						padding: 2%;
-						background-color: #ccc;
-						transition: background-color 1.5s;
-						transition: color 0.5s;
+						padding: 0.5%;
+						color: white;
+						transition: color 0.25s, background-color 0.25s;
 						cursor: pointer;
 					}
 					.selector-item:hover{
-						background-color: #ffb4d0;
-						transition: background-color 0.5s;
+						background-color: white;
+						color:rgb(144, 39, 142);
 					}
 					.selector-item:active{
-						background-color: #dc1560;
-						color: white;
+						background-color: #ccc;
 					}
 				`}
 				</style>

@@ -26,17 +26,38 @@ export default class Popup extends React.Component {
 						position: absolute;
 						height: 100%;
 						width: 100%;
-						background-color: rgba(80, 0, 80, 0.75);
+						background-color: rgba(82, 86, 89, 0.75);
 						z-index: 0;
 					}
 					.popup {
 						position: relative;
 						margin: 10vh auto;
-						width: 30%;
+						width: 50%;
 						max-height: 80vh;
-						background-color: #f7f5f6;
+						color: white;
+						background-color: rgb(144, 39, 142);
 						padding: 2.5%;
 						z-index: 1;
+						box-shadow: 0px 1px 5px 0px black;
+					}
+					/* unvisited link */
+					.popup a:link {
+						color: #fff;
+					}
+					
+					/* visited link */
+					.popup a:visited {
+						color: #fff;
+					}
+					
+					/* mouse over link */
+					.popup a:hover {
+						color: #fff;
+					}
+					
+					/* selected link */
+					.popup a:active {
+						color: #fff;
 					}
 				`}
 				</style>
