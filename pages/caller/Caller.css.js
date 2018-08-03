@@ -39,6 +39,7 @@ export default css
 	}
 	.fetch-more-button{
 		cursor: pointer;
+		text-align: center;
 	}
 	.caller-action-col{
 		display: inline-block;
