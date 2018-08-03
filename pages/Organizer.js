@@ -85,12 +85,14 @@ render() {
 	const eventSelector =
 		<div>
 			<div className="event-selection-popup-title">בחירת אירוע:</div>
-			<Selector
-				options={this.state.events}
-				idIndex="__id"
-				titleIndex="name"
-				handleSelection={this.handleEventSelection.bind(this)}
-			/>
+			<div className="event-selector">
+				<Selector
+					options={this.state.events}
+					idIndex="__id"
+					titleIndex="name"
+					handleSelection={this.handleEventSelection.bind(this)}
+				/>
+			</div>
 			<a className="new-event-button" href="./EventCreation">
 				<div>
 					<div>אירוע חדש</div>
@@ -99,11 +101,16 @@ render() {
 			</a>
 		</div>;
 	const eventLink =
-		<div>
-			לינק לעמוד טלפנים:
-			<br/>
+		<div className="event-link-wrap">
+			<div className="event-link-title">
+				<div>לינק לעמוד טלפנים</div>
+				<div>לינק לעמוד טלפנים</div>
+			</div>
 			<input className="event-link" disabled value={config.serverPath+"Caller?eventCode="+this.state.selectedEventCode}/>
-			<div onClick={this.handleEventPopupToggle.bind(this)}>ok</div>
+			<div className="event-link-ok" onClick={this.handleEventPopupToggle.bind(this)}>
+				<div>אוקיי</div>
+				<div>אוקיי</div>
+			</div>
 		</div>;
 	return (
 		<div className="page-wrap" dir="rtl">

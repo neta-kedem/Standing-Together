@@ -55,6 +55,14 @@ export default css
 		text-align: center;
 		margin-bottom: 1em;
 	}
+	.event-selector{
+		text-align: center;
+		font-size: 1.25em;
+		width: 50%;
+		display: block;
+		margin: 0 auto;
+		margin-bottom: 1.5em;
+	}
 	.new-event-button{
 		text-decoration: none;
 	}
@@ -73,21 +81,39 @@ export default css
 		background-color: white;
 		color: rgb(144, 39, 142);
 	}
+	.event-link-title{
+		font-size: 1.5em;
+		text-align: center;
+		margin-bottom: 1em;
+	}
 	.event-link{
-		width: 100%;
+		width: calc(100% - 3.75em);
+		display: inline-block;
 		margin: 2.5% 0;
 		background: white;
-		padding: 1%;
+		padding: 0.25em;;
 		border: 1px solid black;
 		box-sizing: border-box;
-		transition: color 0.5s, background 0.5s;
+		-webkit-transition: color 0.5s,background 0.5s;
+		transition: color 0.5s,background 0.5s;
+		font-weight: bold;
+		font-size: 1em;
+		text-align: center;
+		vertical-align: middle;
 	}
 	.event-link:hover{
 		color: black;
-		background: #ffb4d0;
 	}
-	.event-link:active{
-		background: #dc1560;
-		color: white;
+	.event-link-ok{
+		display: inline-block;
+		font-size: 1.25em;
+		margin: 0 0.5em;
+		vertical-align: middle;
+		cursor: pointer;
+		opacity: 0.8;
+		transition: opacity 0.5s;
+	}
+	.event-link-ok:hover{
+		opacity:1;
 	}
 `

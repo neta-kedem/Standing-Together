@@ -32,7 +32,7 @@ export default class Popup extends React.Component {
 					.popup {
 						position: relative;
 						margin: 10vh auto;
-						width: 30%;
+						width: 50%;
 						max-height: 80vh;
 						color: white;
 						background-color: rgb(144, 39, 142);
