@@ -70,7 +70,7 @@ export default class SelectableTable extends React.Component {
 	render() {
 		const tableHeader = 
 			<tr className='list-table-header'>
-				<th className='list-row-selection-indicator'> </th>
+				<th className='list-row-selection-indicator list-table-header-field'> </th>
 				{this.state.header.map((field, i) =>
 				<th key={i} className={'list-table-header-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}}>
 					{field.icon!=""?<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>:''}
@@ -79,11 +79,11 @@ export default class SelectableTable extends React.Component {
 			</tr>;
 		const rows =
 			this.state['rows'].map((row, i) =>
-				<tr key={i} className='list-table-row list-table-field' onClick={() => this.toggleRowSelection(i)}>
-					<td className={'list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
+				<tr key={i} className='list-table-row' onClick={() => this.toggleRowSelection(i)}>
+					<td className={'list-table-field no-padding list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
 					{
 						this.state.header.map((field, j) =>
-							<td key={j} className={'list-table-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
+							<td key={j} className={'list-table-field '+(!field.visibility?'hidden ':' ')+(field.noPadding?'no-padding ':'')} style={{'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
 								{this.cellConstructor(field["type"], row[field["key"]], function(value){field["handleChange"](i, value)},)}
 							</td>
 						)
