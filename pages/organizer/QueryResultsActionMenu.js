@@ -3,7 +3,7 @@ import style from './QueryResultsActionMenu.css'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-class QueryCreator extends React.Component {
+class QueryResultsActionMenu extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -28,4 +28,4 @@ class QueryCreator extends React.Component {
 	}
 }
 
-export default QueryCreator;
+export default QueryResultsActionMenu;

@@ -23,6 +23,16 @@ export default css`
 	.list-table-header-field.hidden{
 		display: none;
 	}
+	.list-table-header-icon{
+		display:inline-block;
+		text-align: center;
+		margin-left: 0.5em;
+		vertical-align: middle;
+	}
+	.list-table-header-titles{
+		display:inline-block;
+		vertical-align: middle;
+	}
 	.list-table-row{
 		background-color:#fff;
 		white-space: nowrap;
