@@ -16,7 +16,7 @@ export default css`
 	}
 	.identification-input-title{
 		text-align: center;
-		line-height: 0.75em;
+		font-size: 1.25em;
 		margin-top: 2em;
 	}
 	.code-input-title{
