@@ -25,10 +25,10 @@ export default class Caller extends React.Component {
 			},
 			activists:[],
 			header:[
-				{title: "שם פרטי الاسم الشخصي", visibility: true, key: "firstName", icon:"", type:"text", width:"25%"},
-				{title: "שם משפחה اسم العائلة", visibility: true, key: "lastName", icon:"", type:"text", width:"25%"},
-				{title: "טלפון رقم الهاتف",  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
-				{title: "יישוב البلد",  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
+				{title: ["שם פרטי الاسم الشخصي"], visibility: true, key: "firstName", icon:"", type:"text", width:"25%"},
+				{title: ["שם משפחה اسم العائلة"], visibility: true, key: "lastName", icon:"", type:"text", width:"25%"},
+				{title: ["טלפון رقم الهاتف"],  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
+				{title: ["יישוב البلد"],  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
 			],
 			selectedRow:{}
 		};
