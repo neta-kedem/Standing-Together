@@ -9,8 +9,8 @@ import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import ItemService from '../services/ItemService'
 import server from '../services/server';
 
-import { faSave } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faSave);
+import {faShareSquare} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faShareSquare);
 
 export default class EventCreation extends React.Component {
 constructor(props) {
@@ -34,7 +34,18 @@ handleInputChange(event) {
 		[name]: value
 	});
 }
+validateEvent() {
+	if(!this.state.title.length)
+		alert("please provide a title for the event");
+	if(!this.state.date.length)
+		alert("please provide a date for the event");
+	if(!this.state.script.length)
+		alert("please provide a script for the event");
+	return true;
+}
 handlePost() {
+	if(!this.validateEvent())
+		return;
 	let eventObject = {
 		"eventDetails":{
 			"name": this.state.title,
@@ -61,8 +72,18 @@ render() {
 		<div style={{'height':'100vh'}}>
 			<Meta/>
 			<style jsx global>{Stylesheet}</style>
-			<TopNavBar><div onClick={this.handlePost.bind(this)} className="save-event-button">שמירת מפגש <FontAwesomeIcon icon="save"/></div></TopNavBar>
-			<div dir="rtl" className="page-wrap">
+			<TopNavBar>
+				<div onClick={this.handlePost.bind(this)} className="save-event-button">
+					<div className="save-event-button-label">
+						<div>שמירה</div>
+						<div>שמירה</div>
+					</div>
+					<div className="save-event-button-icon">
+						<FontAwesomeIcon icon="share-square"/>
+					</div>
+				</div>
+			</TopNavBar>
+			<div dir="rtl" className="content-wrap">
 				<div className="event-details-wrap">
 					<div className="inputGroup event-identification">
 						<label className="inline-label" id="event-name">
@@ -74,22 +95,18 @@ render() {
 							<input dir="ltr" type="text" name="date" value={this.state.date} onChange={this.handleInputChange.bind(this)} placeholder="DD.MM.YYYY"/>
 						</label>
 					</div>
-					<br/>
 					<label className="inline-label event-question">
 						<div>שאלה 1<br/>سؤال 1</div>
 						<textarea name="question1" value={this.state.question1} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
-					<br/>
 					<label className="event-text">
 						<div>טקסט 1<br/>نص 1</div>
 						<textarea name="text1" value={this.state.text1} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
-					<br/>
 					<label className="inline-label event-question">
 						<div>שאלה 2<br/>سؤال 2</div>
 						<textarea name="question2" value={this.state.question2} onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
-					<br/>
 					<label className="event-text">
 						<div>טקסט 2<br/>نص 2</div>
 						<textarea name="text2" value={this.state.text2} onChange={this.handleInputChange.bind(this)}></textarea>

@@ -8,7 +8,6 @@ export default
 	::-webkit-scrollbar-track {
 		background: #999; 
 	}
-	
 	/* Handle */
 	::-webkit-scrollbar-thumb {
 		background: #4D4D4D; 
@@ -30,20 +29,24 @@ export default
 	.inputGroup label:last-child{
 		margin-left: 0;
 	}
+	.inputGroup label div{
+		margin-left: 0.5em;
+	}
 	label{
 		color: #4D4D4D;
-		width: 100%;
 		vertical-align: middle;
 		display: flex;
 		flex-direction: column;
+		margin: 1em 0;
 	}
 	label div{
-		margin-bottom: 0.25em;
+		margin-bottom: 0.5em;
+		margin-left: 2em;
 		white-space: nowrap;
-		margin-left: 0.25em;
 		align-self: center;
-		line-height: 0.8em;
+		line-height: 1.2em;
 		color: #90969E;
+		font-weight: bold;
 	}
 	
 	label.inline-label{
@@ -53,29 +56,29 @@ export default
 		resize: none;
 		background-color: white;
 		color: #4D4D4D;
-		border: 1px solid #AEB3B9;
 		outline: none;
 		width: 100%;
 		height: 100%;
 		padding: 0.5em;
 		box-sizing: border-box;
+		border: 1px solid #AEB3B9;
 		font-size: 1em;
 	}
-	.page-wrap{
-		padding: 5%;
+	body{
 		background-color: #F9F9F9;
-		height: calc(100% - 55px);
+	}
+	.content-wrap{
+		height: calc(100vh - 55px);
+		padding: 4em 8em;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: row;
+		overflow-y: auto;
 	}
 	.event-details-wrap{
-		display: flex;
-		flex-direction: column;
 		box-sizing: border-box;
-		width:50%;
-		height: 100%;
-		padding-left: 5%;
+		width: 50%;
+		padding-left: 5em;
 		vertical-align: top;
 	}
 	.event-details-wrap input{
@@ -90,19 +93,19 @@ export default
 		width: 40%;
 	}
 	.event-identification{
-		height:10%;
+		height:4em;
 	}
 	.event-question{
-		height: 15%;
+		height: 3em;
 	}
 	.event-text{
-		height: 30%;
+		height: 13em;
 	}
 	.event-script-wrap{
 		display: flex;
 		flex-direction: column;
 		width:50%;
-		height: 100%;
+		height: 28.75em;
 		vertical-align: top;
 	}
 	.event-script-wrap label{
@@ -111,12 +114,25 @@ export default
 	.event-script-wrap textarea{
 		height: 100%;
 		width: 100%;
-		padding: 2em;
+		padding: 0.5em;
+		border: none;
+		overflow-y: scroll;
 	}
 	.save-event-button{
-		font-size: 1.5em;
 		color: white;
 		display: inline-block;
 		cursor: pointer;
+		float: right:
+	}
+	.save-event-button-label{
+		display: inline-block;
+		vertical-align: middle;
+	}
+	.save-event-button-icon{
+		display: inline-block;
+		vertical-align: middle;
+		font-size: 2em;
+		margin: 0 0.5em;
+		margin-left: auto;
 	}
 `
