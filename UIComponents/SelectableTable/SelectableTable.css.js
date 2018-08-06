@@ -16,9 +16,22 @@ export default css`
 	.list-table-header-field{
 		padding-bottom: 5px;
 		text-align: start;
+		border-top-color: transparent !important;
+		border-right-color: transparent !important;
+		border-left-color: transparent !important;
 	}
 	.list-table-header-field.hidden{
 		display: none;
+	}
+	.list-table-header-icon{
+		display:inline-block;
+		text-align: center;
+		margin-left: 0.5em;
+		vertical-align: middle;
+	}
+	.list-table-header-titles{
+		display:inline-block;
+		vertical-align: middle;
 	}
 	.list-table-row{
 		background-color:#fff;
@@ -33,16 +46,21 @@ export default css`
 		transition: background-color 0.5s;
 	}
 	.list-table-field{
-		border:1px solid rgb(202, 200, 199);
+		border: 1px solid #888;
 		height: 1.5em;
-		color: rgb(103, 111, 117);
+		color: rgb(103,111,117);
+		padding: 2px 5px;
+	}
+	.list-table-field.no-padding{
+		padding: 0px;
 	}
 	.list-table-field.hidden{
 		display: none;
 	}
 	.list-row-selection-indicator{
-		width: 0px;
+		width: 2px;
 		cursor: pointer;
+		border: 1px solid #888;
 	}
 	.select-all-checkbox{
 		color: rgb(128, 134, 138);

@@ -6,8 +6,8 @@ import ToggleSwitch from './FieldTypes/ToggleSwitch'
 
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck);
+import {faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck, faPhoneSquare} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck, faPhoneSquare);
 
 export default class SelectableTable extends React.Component {
 	constructor(props) {
@@ -70,20 +70,28 @@ export default class SelectableTable extends React.Component {
 	render() {
 		const tableHeader = 
 			<tr className='list-table-header'>
-				<th className='list-row-selection-indicator'> </th>
+				<th className='list-row-selection-indicator list-table-header-field'> </th>
 				{this.state.header.map((field, i) =>
 				<th key={i} className={'list-table-header-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}}>
-					{field.icon!=""?<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>:''}
-					{" "+field.title}
+					{field.icon!=""?
+						<div className="list-table-header-icon">
+							<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>
+						</div>
+					:''}
+					<div className="list-table-header-titles">
+						{field.title.map((title, j)=>
+							<div key={j}>{title}</div>
+						)}
+					</div>
 				</th>)}
 			</tr>;
 		const rows =
 			this.state['rows'].map((row, i) =>
-				<tr key={i} className='list-table-row list-table-field' onClick={() => this.toggleRowSelection(i)}>
-					<td className={'list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
+				<tr key={i} className='list-table-row' onClick={() => this.toggleRowSelection(i)}>
+					<td className={'list-table-field no-padding list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
 					{
 						this.state.header.map((field, j) =>
-							<td key={j} className={'list-table-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
+							<td key={j} className={'list-table-field '+(!field.visibility?'hidden ':' ')+(field.noPadding?'no-padding ':'')} style={{'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
 								{this.cellConstructor(field["type"], row[field["key"]], function(value){field["handleChange"](i, value)},)}
 							</td>
 						)

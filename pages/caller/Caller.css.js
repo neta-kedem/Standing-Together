@@ -28,25 +28,38 @@ export default css
 	}
 	.right-panel{
 		width: 50%;
-		padding: 2%;
+		padding: 5% 10% 5% 0%;
 		padding-left: 0;
 		box-sizing: border-box;
+	}
+	.fetch-more-button{
+		cursor: pointer;
+		text-align: center;
+		color: #616B6F;
+		font-weight: bold;
+		margin-bottom: 5%;
+	}
+	.fetch-more-button .label-icon{
+		transition: color 0.25s;
+	}
+	.fetch-more-button:hover .label-icon{
+		color: #09a;
 	}
 	.caller-action{
 		color: #616B6F;
 		font-weight: bold;
 		margin-bottom: 5%;
-	}
-	.fetch-more-button{
-		cursor: pointer;
-		text-align: center;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 	}
 	.caller-action-col{
-		display: inline-block;
 		vertical-align: middle;
 		line-height: 1.5em;
 		box-sizing: border-box;
-		margin-left: 2.5em;
+	}
+	.call-question{
+		width: 50%;
 	}
 	.copy-text-button{
 		cursor: pointer;
@@ -58,15 +71,22 @@ export default css
 		color: #90278e;
 	}
 	.label-text{
-		margin-left: 0.5em;
-		display: inline-block;
+		text-align: center;
+		display: block;
+		margin: 0 auto;
 		vertical-align: middle;
 	}
 	.label-icon{
-		margin-left: 0.5em;
 		font-size: 1.5em;
+		display: block;
+		margin: 0 auto;
+	}
+	.inline-label .label-icon, .inline-label .label-text{
 		display: inline-block;
 		vertical-align: middle;
+	}
+	.inline-label .label-text{
+		margin-left: 0.5em;
 	}
 	.call-outcomes{
 		display: flex;
@@ -106,7 +126,8 @@ export default css
 	}
 	.left-panel{
 		width: 50%;
-		padding: 2%;
+		padding: 5%;
+		padding-left: 10%;
 		box-sizing: border-box;
 	}
 	.script-title{

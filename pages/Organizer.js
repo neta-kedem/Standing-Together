@@ -27,30 +27,40 @@ constructor(props) {
 		currFilters: [],
 		allSelected: false,
 		tableFields:[
-			{title: "שם", visibility: true, key: "name", icon:"user", type:"text"},
-			{title: "עיר",  visibility: true, key: "city", icon:"building", type:"text"},
-			{title: "טלפון",  visibility: true, key: "phone", icon:"phone", type:"text"},
-			{title: "אימייל",  visibility: true, key: "email", icon:"envelope-open", type:"text"},
-			{title: "נראתה לאחרונה",  visibility: false, key: "lastSeen", icon:"calendar", type:"text"},
-			{title: "אירוע אחרון",  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
-			{title: "טלפנית?",  visibility: true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
+			{title: ["שם", "שם"],  visibility: true, key: "name", icon:"user", type:"text"},
+			{title: ["עיר", "עיר"],  visibility: true, key: "city", icon:"building", type:"text"},
+			{title: ["טלפון", "טלפון"],  visibility: true, key: "phone", icon:"phone", type:"text"},
+			{title: ["אימייל", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text"},
+			{title: ["נראתה לאחרונה", "נראתה לאחרונה"],  visibility: true, key: "lastSeen", icon:"calendar", type:"text"},
+			{title: ["אירוע אחרון", "אירוע אחרון"],  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
+			{title: ["טלפנית?", "טלפנית?"],  visibility: true, noPadding:true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
 		],
 		displayEventSelectionPopup: false
 	};
 }
 
 componentDidMount() {
-	server.post('selectActivists', {'query':this.state.query})
+	this.fetchActivistsByQuery(this.state.query);
+	this.getPotentialEvents();
+	this.getCurrFilters();
+}
+fetchActivistsByQuery(query){
+	server.post('selectActivists', {'query':query})
 		.then(json => {
 			this.setState({activists:json});
 		});
+}
+getPotentialEvents(){
 	server.get('events/getInviteless')
 		.then(json => {
 			this.setState({events:json});
 		});
+}
+getCurrFilters(){
 	ItemService.getCurrFilters()
-		.then(currFilters =>
-				this.setState({currFilters}));
+		.then(currFilters => {
+			this.setState({currFilters})
+		});
 }
 handleActivistCallerStatusChange(activistIndex, status){
 	const activists = this.state.activists.slice();
@@ -73,18 +83,19 @@ handleEventSelection(selected){
 	server.post('events/inviteByQuery', {'query':this.state.query, 'eventId':selected._id})
 		.then(json => {
 			this.setState({campaignCreated: true, selectedEventCode: json.eventCode});
+			this.getPotentialEvents();
 		});
 }
 render() {
 	const tableFieldsMultiSelect = <MultiSelect
 		values={this.state.tableFields}
-		label='title'
+		label='key'
 		selection='visibility'
 		handleChange={this.handleFieldDisplayToggle.bind(this)}/>;
 	const tableFieldsDropdown = <HamburgerMenu content={tableFieldsMultiSelect}/>;
 	const eventSelector =
 		<div>
-			<div className="event-selection-popup-title">בחירת אירוע:</div>
+			<div className="event-selection-popup-title">בחירת אירוע · בחירת אירוע</div>
 			<div className="event-selector">
 				<Selector
 					options={this.state.events}
