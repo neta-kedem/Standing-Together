@@ -122,7 +122,7 @@ export default
 		color: white;
 		display: inline-block;
 		cursor: pointer;
-		float: right:
+		margin-left: auto;
 	}
 	.save-event-button-label{
 		display: inline-block;
@@ -133,6 +133,5 @@ export default
 		vertical-align: middle;
 		font-size: 2em;
 		margin: 0 0.5em;
-		margin-left: auto;
 	}
 `

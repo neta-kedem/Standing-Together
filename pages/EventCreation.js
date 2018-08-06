@@ -36,11 +36,20 @@ handleInputChange(event) {
 }
 validateEvent() {
 	if(!this.state.title.length)
+	{
 		alert("please provide a title for the event");
+		return false;
+	}
 	if(!this.state.date.length)
+	{
 		alert("please provide a date for the event");
-	if(!this.state.script.length)
+		return false;
+	}
+	if(!this.state.callScript.length)
+	{
 		alert("please provide a script for the event");
+		return false;
+	}
 	return true;
 }
 handlePost() {
@@ -97,7 +106,7 @@ render() {
 					</div>
 					<label className="inline-label event-question">
 						<div>שאלה 1<br/>سؤال 1</div>
-						<textarea name="question1" value={this.state.question1} onChange={this.handleInputChange.bind(this)}></textarea>
+						<textarea name="question1" value={this.state.question1} maxLength="50" onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
 					<label className="event-text">
 						<div>טקסט 1<br/>نص 1</div>
@@ -105,7 +114,7 @@ render() {
 					</label>
 					<label className="inline-label event-question">
 						<div>שאלה 2<br/>سؤال 2</div>
-						<textarea name="question2" value={this.state.question2} onChange={this.handleInputChange.bind(this)}></textarea>
+						<textarea name="question2" value={this.state.question2} maxLength="50" onChange={this.handleInputChange.bind(this)}></textarea>
 					</label>
 					<label className="event-text">
 						<div>טקסט 2<br/>نص 2</div>
