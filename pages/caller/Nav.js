@@ -2,8 +2,8 @@ import React from 'react';
 import style from './Nav.css'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faStopCircle } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faStopCircle);
+import { faChevronCircleLeft } from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faChevronCircleLeft);
 
 export default class Nav extends React.Component {
 	constructor(props) {
@@ -21,10 +21,10 @@ export default class Nav extends React.Component {
 				<div style={style["saved-views-wrap"]}>
 					{items}
 				</div>
-                <div style={style.heading_3}>
+                {/*<div style={style.heading_3}>
                     <div style={style.cloud}>סיום<br/>انهاء</div>
-                    <FontAwesomeIcon icon="stop-circle" style={style['cloud-icon']}/>
-                </div>
+                    <FontAwesomeIcon icon="chevron-circle-left" style={style['cloud-icon']}/>
+                </div>*/}
 			</div>
 		)
 	}

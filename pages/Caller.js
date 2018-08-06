@@ -11,8 +11,8 @@ import style from './caller/Caller.css'
 import Nav from './caller/Nav'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import Toggle from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
-import {faPaperPlane, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faPaperPlane, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
+import {faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
 
 export default class Caller extends React.Component {
 	constructor(props) {
@@ -128,32 +128,32 @@ export default class Caller extends React.Component {
 		const actionOptions =
 		<div>
 			<div className="caller-action attendance-indication">
-				<div className="copy-text-button caller-action-col">
-					<CopyToClipboard text={this.state.eventData.callInstructions.text1} onCopy={()=>{alert("saved to clipboard!")}}>
-						<div>
-							<div className="label-text">העתק טקסט</div>
-							<FontAwesomeIcon icon="copy" className="label-icon"/>
-						</div>
-					</CopyToClipboard>
-				</div>
+				<div className="caller-action-col call-question">{this.state.eventData.callInstructions.question1}</div>
 				<div className="caller-action-col">
 					<Toggle value={isSelected?selectedActivist["attendingEvent"]:false} handleChange={this.toggleAttendance.bind(this)}/>
 				</div>
-				<div className="caller-action-col">מסכימ/ה להגיע להפגנה</div>
-			</div>
-			<div className="caller-action donation-indication">
 				<div className="copy-text-button caller-action-col">
-					<CopyToClipboard text={this.state.eventData.callInstructions.text2} onCopy={()=>{alert("saved to clipboard!")}}>
-						<div>
+					<CopyToClipboard text={this.state.eventData.callInstructions.text1} onCopy={()=>{alert("saved to clipboard!")}}>
+						<div className="inline-label">
 							<div className="label-text">העתק טקסט</div>
 							<FontAwesomeIcon icon="copy" className="label-icon"/>
 						</div>
 					</CopyToClipboard>
 				</div>
+			</div>
+			<div className="caller-action donation-indication">
+				<div className="caller-action-col call-question">{this.state.eventData.callInstructions.question2}</div>
 				<div className="caller-action-col">
 					<Toggle value={isSelected?selectedActivist["contributed"]:false} handleChange={this.toggleContribution.bind(this)}/>
 				</div>
-				<div className="caller-action-col">מסכימ/ה לתרום לתנועה</div>
+				<div className="copy-text-button caller-action-col">
+					<CopyToClipboard text={this.state.eventData.callInstructions.text2} onCopy={()=>{alert("saved to clipboard!")}}>
+						<div className="inline-label">
+							<div className="label-text">העתק טקסט</div>
+							<FontAwesomeIcon icon="copy" className="label-icon"/>
+						</div>
+					</CopyToClipboard>
+				</div>
 			</div>
 			<div className="call-outcomes">
 				<div className="call-outcome-button remove-contact">
@@ -194,7 +194,7 @@ export default class Caller extends React.Component {
 					</div>
 				</div>
 				<div className="call-outcome-button finish-call" onClick={this.resolveCall.bind(this)}>
-					<FontAwesomeIcon icon="paper-plane" className="label-icon"/>
+					<FontAwesomeIcon icon="chevron-circle-left" className="label-icon"/>
 					<div className="label-text">
 						סיום שיחה
 						<br/>
@@ -211,7 +211,7 @@ export default class Caller extends React.Component {
 				<div className="content-wrap">
 					<div className="right-panel">
 						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}></SelectableTable>
-						<div className="caller-action fetch-more-button">
+						<div className="fetch-more-button inline-label">
 							<div className="label-text">
 								עוד שמות
 								<br/>
