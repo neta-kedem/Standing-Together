@@ -3,14 +3,13 @@ const Event = require('../../models/eventModel');
 const Activist = require('../../models/activistModel');
 
 const Authentication = require('../../services/authentication');
+
+//constants
+//how much time (in minutes) after the last ping should an activist be reserved for the caller assigned to it.
+const maxReservationDuration = 3;
 function sortCallsByPriority (a, b, callerId, now){
 	let weightA = 0;
 	let weightB = 0;
-	//if the activist was already assigned to some caller, give them a lower ranking
-	if(a.isHandled)
-		weightA -= 3;
-	if(b.isHandled)
-		weightB -= 3;
 	//if the activist has been assigned previously (in this campaign) to this caller give them a higher ranking
 	if(a.callerId===callerId)
 		weightA += 2;
@@ -59,13 +58,15 @@ module.exports = (app) => {
 					return res.json({"error":"couldn't find any invited activists"});
 				const now = new Date();
 				const invitedActivists = eventData.campaign.invitations;
-				let activistToCall = invitedActivists.filter(invite => !invite.resolution);
+				//filter out any activists that have had their calls resolved, or any activists that are reserved for another caller.
+				const reservationDeadline = new Date(now.getTime()-maxReservationDuration*60000);
+				let activistToCall = invitedActivists.filter(invite => !invite.resolution&&(!invite.lastPing||invite.lastPing<reservationDeadline));
 				activistToCall.sort((a, b)=>{return sortCallsByPriority(a, b, callerId, now)});
 				const assignedActivists = activistToCall.slice(0, Math.min(activistToCall.length, bulkSize));
 				const assignedActivistsIds = assignedActivists.map(function(value,index) {return value["activistId"];})
 				Event.update(
 					{"_id": eventId},
-					{"$set": {"campaign.invitations.$[elem].isHandled": true}},
+					{"$set": {"campaign.invitations.$[elem].lastPing": now}},
 					{"arrayFilters": [{"elem.activistId":{$in:assignedActivistsIds}}], "multi": true },
 					(err, result) => {
 					}
@@ -90,7 +91,24 @@ module.exports = (app) => {
 			});
 		})
 	});
-	
+	app.post('/api/call/pingCalls', (req, res, next) => {
+		Authentication.isUser(req, res).then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			const eventId = mongoose.Types.ObjectId(req.body.eventId);
+			const activistIds = req.body.activistIds.map(id=>mongoose.Types.ObjectId(id));
+			const callerId = Authentication.getMyId();
+			const now = new Date();
+			Event.update(
+				{"_id": eventId},
+				{"$set": {"campaign.invitations.$[elem].lastPing": now}},
+				{"arrayFilters": [{"elem.activistId":{$in:activistIds}}], "multi": true },
+				(err, result) => {
+					return res.json({"err":err, "result":result});
+				}
+			);
+		});
+	});
 	app.post('/api/call/resolveCall', (req, res, next) => {
 		Authentication.isUser(req, res).then(isUser=>{
 			if(!isUser)

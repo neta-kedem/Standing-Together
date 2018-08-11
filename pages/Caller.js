@@ -15,6 +15,8 @@ import {faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEn
 fontawesome.library.add(faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
 
 export default class Caller extends React.Component {
+	//constants
+	callPingIntervalDuration = 10000;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -36,6 +38,13 @@ export default class Caller extends React.Component {
 	}
 	componentDidMount() {
 		this.getEventDetails();
+		var callPingInterval = setInterval(this.pingCalls.bind(this), this.callPingIntervalDuration);
+		// store interval promise in the state so it can be cancelled later:
+		this.setState({callPingInterval: callPingInterval});
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.state.callPingInterval);
 	}
 
 	getEventDetails(){
@@ -62,7 +71,7 @@ export default class Caller extends React.Component {
 					activists[i].contributed = false;
 					activists[i].attendingEvent = false;
 				}
-				this.setState({'activists': activists});
+				this.setState({'activists': this.state.activists.slice().concat(activists)});
 		});
 	}
 
@@ -77,6 +86,7 @@ export default class Caller extends React.Component {
 		activists[this.state.selectedRowIndex].attendingEvent=value;
         this.setState((props) => ({activists : activists}));
     }
+	
 	toggleContribution(value){
 		if(!this.state.activists[this.state.selectedRowIndex])
 			return;
@@ -84,6 +94,7 @@ export default class Caller extends React.Component {
 		activists[this.state.selectedRowIndex].contributed=value;
         this.setState((props) => ({activists : activists}));
     }
+	
 	resolveCall(){
 		if(!this.state.activists[this.state.selectedRowIndex])
 			return;
@@ -110,6 +121,17 @@ export default class Caller extends React.Component {
 			'eventId':this.state.eventData._id,
 			'activistId': activist._id,
 			'availableAt': val
+		})
+		.then(json => {
+		});
+	}
+	pingCalls(){
+		//if there are no activists in the to-call list, return without doing anything
+		if(this.state.activists.length==0)
+			return;
+		server.post('call/pingCalls', {
+			'eventId':this.state.eventData._id,
+			'activistIds': this.state.activists.map(function(value,index) {return value["_id"];})
 		})
 		.then(json => {
 		});
@@ -211,7 +233,7 @@ export default class Caller extends React.Component {
 				<div className="content-wrap">
 					<div className="right-panel">
 						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}></SelectableTable>
-						<div className="fetch-more-button inline-label">
+						<div className="fetch-more-button inline-label" onClick={this.getActivistsToCall.bind(this)}>
 							<div className="label-text">
 								עוד שמות
 								<br/>
