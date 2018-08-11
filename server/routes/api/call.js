@@ -72,7 +72,7 @@ module.exports = (app) => {
 					return res.json({"message":"All invitations are already being processed!"});
 				}
 				const sortedInvitations = unreservedInvitations.sort((a, b)=>{return sortCallsByPriority(a, b, callerId, now)});
-				const assignedActivists = sortedInvitations.slice(0, Math.min(activistToCall.length, bulkSize));
+				const assignedActivists = sortedInvitations.slice(0, Math.min(sortedInvitations.length, bulkSize));
 				const assignedActivistsIds = assignedActivists.map(function(value,index) {return value["activistId"];})
 				Event.update(
 					{"_id": eventId},

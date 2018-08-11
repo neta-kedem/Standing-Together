@@ -9,6 +9,7 @@ import server from '../services/server'
 
 import style from './caller/Caller.css'
 import Nav from './caller/Nav'
+import Popup from '../UIComponents/Popup/Popup'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import Toggle from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
 import {faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
@@ -32,7 +33,9 @@ export default class Caller extends React.Component {
 				{title: ["טלפון رقم الهاتف"],  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
 				{title: ["יישוב البلد"],  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
 			],
-			selectedRow:{}
+			selectedRow:{},
+			fetchActivistsMessagePopup: false,
+			fetchActivistsMessage: ""
 		};
 		this.handleSelection = this.handleSelection.bind(this);
 	}
@@ -65,6 +68,12 @@ export default class Caller extends React.Component {
 				{
 					return;
 				}
+				//if the fetch attempt returned a message instead of an activists list, display that message
+				if(json.message)
+				{
+					this.setState({'fetchActivistsMessage': json.message, 'fetchActivistsMessagePopup': true});
+					return;
+				}
 				let activists = json;
 				for(var i = 0; i<activists.length; i++)
 				{
@@ -74,7 +83,11 @@ export default class Caller extends React.Component {
 				this.setState({'activists': this.state.activists.slice().concat(activists)});
 		});
 	}
-
+	handleFetchActivistsMessagePopupToggle(){
+		this.setState({
+			'fetchActivistsMessagePopup': !this.state.fetchActivistsMessagePopup
+		});
+	}
     handleSelection(i){
         this.setState((props) => ({selectedRowIndex : i}));
     }
@@ -248,6 +261,9 @@ export default class Caller extends React.Component {
 						<textarea value={this.state.eventData.callInstructions.script}>
 						</textarea>
 					</div>
+					<Popup visibility={this.state.fetchActivistsMessagePopup} toggleVisibility={this.handleFetchActivistsMessagePopupToggle.bind(this)}>
+						{this.state.fetchActivistsMessage}
+					</Popup>
 				</div>
 			</div>
 		);

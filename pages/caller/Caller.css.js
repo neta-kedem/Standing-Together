@@ -25,6 +25,7 @@ export default css
 		flex-direction: row;
 		height: calc(100% - 55px);
 		background-color: #EBEBE8;
+		position: relative;
 	}
 	.right-panel{
 		width: 50%;
