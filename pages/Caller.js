@@ -9,12 +9,15 @@ import server from '../services/server'
 
 import style from './caller/Caller.css'
 import Nav from './caller/Nav'
+import Popup from '../UIComponents/Popup/Popup'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import Toggle from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
 import {faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
 fontawesome.library.add(faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
 
 export default class Caller extends React.Component {
+	//constants
+	callPingIntervalDuration = 10000;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -25,17 +28,26 @@ export default class Caller extends React.Component {
 			},
 			activists:[],
 			header:[
-				{title: ["שם פרטי الاسم الشخصي"], visibility: true, key: "firstName", icon:"", type:"text", width:"25%"},
-				{title: ["שם משפחה اسم العائلة"], visibility: true, key: "lastName", icon:"", type:"text", width:"25%"},
-				{title: ["טלפון رقم الهاتف"],  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
-				{title: ["יישוב البلد"],  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
+				{title: ["الاسم الشخصي", "שם פרטי"], visibility: true, key: "firstName", icon:"", type:"text", width:"25%"},
+				{title: ["اسم العائلة", "שם משפחה"], visibility: true, key: "lastName", icon:"", type:"text", width:"25%"},
+				{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
+				{title: ["البلد", "יישוב"],  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
 			],
-			selectedRow:{}
+			selectedRow:{},
+			fetchActivistsMessagePopup: false,
+			fetchActivistsMessage: ""
 		};
 		this.handleSelection = this.handleSelection.bind(this);
 	}
 	componentDidMount() {
 		this.getEventDetails();
+		var callPingInterval = setInterval(this.pingCalls.bind(this), this.callPingIntervalDuration);
+		// store interval promise in the state so it can be cancelled later:
+		this.setState({callPingInterval: callPingInterval});
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.state.callPingInterval);
 	}
 
 	getEventDetails(){
@@ -56,16 +68,26 @@ export default class Caller extends React.Component {
 				{
 					return;
 				}
+				//if the fetch attempt returned a message instead of an activists list, display that message
+				if(json.message)
+				{
+					this.setState({'fetchActivistsMessage': json.message, 'fetchActivistsMessagePopup': true});
+					return;
+				}
 				let activists = json;
 				for(var i = 0; i<activists.length; i++)
 				{
 					activists[i].contributed = false;
 					activists[i].attendingEvent = false;
 				}
-				this.setState({'activists': activists});
+				this.setState({'activists': this.state.activists.slice().concat(activists)});
 		});
 	}
-
+	handleFetchActivistsMessagePopupToggle(){
+		this.setState({
+			'fetchActivistsMessagePopup': !this.state.fetchActivistsMessagePopup
+		});
+	}
     handleSelection(i){
         this.setState((props) => ({selectedRowIndex : i}));
     }
@@ -77,6 +99,7 @@ export default class Caller extends React.Component {
 		activists[this.state.selectedRowIndex].attendingEvent=value;
         this.setState((props) => ({activists : activists}));
     }
+	
 	toggleContribution(value){
 		if(!this.state.activists[this.state.selectedRowIndex])
 			return;
@@ -84,6 +107,7 @@ export default class Caller extends React.Component {
 		activists[this.state.selectedRowIndex].contributed=value;
         this.setState((props) => ({activists : activists}));
     }
+	
 	resolveCall(){
 		if(!this.state.activists[this.state.selectedRowIndex])
 			return;
@@ -110,6 +134,17 @@ export default class Caller extends React.Component {
 			'eventId':this.state.eventData._id,
 			'activistId': activist._id,
 			'availableAt': val
+		})
+		.then(json => {
+		});
+	}
+	pingCalls(){
+		//if there are no activists in the to-call list, return without doing anything
+		if(this.state.activists.length==0)
+			return;
+		server.post('call/pingCalls', {
+			'eventId':this.state.eventData._id,
+			'activistIds': this.state.activists.map(function(value,index) {return value["_id"];})
 		})
 		.then(json => {
 		});
@@ -211,21 +246,26 @@ export default class Caller extends React.Component {
 				<div className="content-wrap">
 					<div className="right-panel">
 						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}></SelectableTable>
-						<div className="fetch-more-button inline-label">
+						<div className="fetch-more-button inline-label" onClick={this.getActivistsToCall.bind(this)}>
 							<div className="label-text">
-								עוד שמות
-								<br/>
-								المزيد من الاسماء
+								<div>المزيد من الاسماء</div>
+								<div>עוד שמות</div>
 							</div>
 							<div className="label-icon"><FontAwesomeIcon icon="chevron-circle-down"/></div>
 						</div>
 						{isSelected?actionOptions:''}
 					</div>
 					<div className="left-panel">
-						<div className="script-title">תסריט שיחה:</div>
+						<div className="script-title">
+							<div>תסריט שיחה:</div>
+							<div>תסריט שיחה:</div>
+						</div>
 						<textarea value={this.state.eventData.callInstructions.script}>
 						</textarea>
 					</div>
+					<Popup visibility={this.state.fetchActivistsMessagePopup} toggleVisibility={this.handleFetchActivistsMessagePopupToggle.bind(this)}>
+						{this.state.fetchActivistsMessage}
+					</Popup>
 				</div>
 			</div>
 		);

@@ -25,6 +25,7 @@ export default css
 		flex-direction: row;
 		height: calc(100% - 55px);
 		background-color: #EBEBE8;
+		position: relative;
 	}
 	.right-panel{
 		width: 50%;
@@ -143,16 +144,5 @@ export default css
 		padding: 1em;
 		box-sizing: border-box;
 		resize: none;
-	}
-	@media only screen and (max-width: 768px) {
-		.content-wrap{
-			flex-direction: column;
-		}
-		.left-panel{
-			width: 100%;
-		}
-		.right-panel{
-			width: 100%;
-		}
 	}
 `

@@ -5,7 +5,7 @@ const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
 	app.post('/api/events', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			var eventObject = req.body.event;
@@ -28,7 +28,7 @@ module.exports = (app) => {
 		})
 	});
 	app.get('/api/events/getInviteless', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			Event.find({"campaign":{$exists:false}}, (err, events) => {
@@ -47,7 +47,7 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/events/inviteByQuery', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			const query = req.body.query;
@@ -86,7 +86,7 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/events/eventByCode', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			var eventCode = req.body.eventCode;

@@ -2,7 +2,7 @@ const Activist = require('../models/activistModel');
 
 var myId = "";
 const getUserByToken=function(req, res){
-	const token = req.cookies.token
+	const token = req.cookies.token;
 	const query = Activist.findOne({'login.token':token});
 	const userPromise = query.exec().then((user) => {
 		if(!user)
@@ -27,14 +27,29 @@ const isUser = function(req, res){
 	);
 	return promise;
 }
+const hasRole = function(req, res, role){
+	const promise = (
+		getUserByToken(req, res)
+		.then(user=>{
+			if(user.error)
+				return false;
+			else
+			{
+				return user.role[role];
+			}
+		})
+	);
+	return promise;
+}
 
 const getMyId = function(){
 	return myId;
 }
 
 module.exports = {
-isUser,
-getUserByToken,
-getMyId
+	isUser,
+	hasRole,
+	getUserByToken,
+	getMyId
 };
 

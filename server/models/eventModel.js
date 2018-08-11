@@ -103,7 +103,9 @@ const eventSchema = new mongoose.Schema({
 					lastCallAt: {type: Date},
 					//if the activist has asked to be called at a later hour, when?
 					availableAt: {type: Date},
-					isHandled: {type: Boolean, required: true},
+					//if null - means that the activist never showed up on anyone's phone-lsit. Otherwise, contains the date of the last ping from a callers client which displayed this activist.
+					//as long as the las ping wasn't too long ago, the activist won't show up on any other phone lists.
+					lastPing: {type: Date},
 					//_id of the activist who was last tasked with carrying out this invitation (i.e. call the activist)
 					//this doesn't have a purpose currently, because we don't bind activists to specific callers, but maybe it would be useful for statistical analysis sometime.
 					callerId: {type: String}
