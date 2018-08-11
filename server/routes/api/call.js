@@ -58,11 +58,21 @@ module.exports = (app) => {
 					return res.json({"error":"couldn't find any invited activists"});
 				const now = new Date();
 				const invitedActivists = eventData.campaign.invitations;
-				//filter out any activists that have had their calls resolved, or any activists that are reserved for another caller.
+				//filter out any activists that have had their calls resolved
+				const unresolvedInvitations = invitedActivists.filter(invite => !invite.resolution);
+				if(!unresolvedInvitations.length)
+				{
+					return res.json({"message":"All invitations have been resolved!"});
+				}
+				//filter out any activists that are reserved for another caller
 				const reservationDeadline = new Date(now.getTime()-maxReservationDuration*60000);
-				let activistToCall = invitedActivists.filter(invite => !invite.resolution&&(!invite.lastPing||invite.lastPing<reservationDeadline));
-				activistToCall.sort((a, b)=>{return sortCallsByPriority(a, b, callerId, now)});
-				const assignedActivists = activistToCall.slice(0, Math.min(activistToCall.length, bulkSize));
+				const unreservedInvitations = unresolvedInvitations.filter(invite => !invite.lastPing||invite.lastPing<reservationDeadline);
+				if(!unreservedInvitations.length)
+				{
+					return res.json({"message":"All invitations are already being processed!"});
+				}
+				const sortedInvitations = unreservedInvitations.sort((a, b)=>{return sortCallsByPriority(a, b, callerId, now)});
+				const assignedActivists = sortedInvitations.slice(0, Math.min(activistToCall.length, bulkSize));
 				const assignedActivistsIds = assignedActivists.map(function(value,index) {return value["activistId"];})
 				Event.update(
 					{"_id": eventId},
