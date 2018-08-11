@@ -27,7 +27,7 @@ app.prepare().then(() => {
 	
 	// CUSTOM ROUTES GO HERE
 	server.get('/Organizer', (req, res) => {
-		authentication.isUser(req, res).then(user=>{
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
 			if(!user)
 			{
 				res.redirect('/Login');
@@ -38,17 +38,44 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/EventCreation', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				app.render(req, res, '/EventCreation', req.query);
+			}
+		});
+	});
 	server.get('/Typer', (req, res) => {
-		return app.render(req, res, '/Typer', req.query);
+		authentication.hasRole(req, res, "isTyper").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				app.render(req, res, '/Typer', req.query);
+			}
+		});
+	});
+	server.get('/Caller', (req, res) => {
+		authentication.hasRole(req, res, "isCaller").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				app.render(req, res, '/Caller', req.query);
+			}
+		});
 	});
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);
-	});
-	server.get('/EventCreation', (req, res) => {
-		return app.render(req, res, '/EventCreation', req.query);
-	});
-	server.get('/Caller', (req, res) => {
-		return app.render(req, res, '/Caller', req.query);
 	});
 	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
 	server.get('*', (req, res) => {

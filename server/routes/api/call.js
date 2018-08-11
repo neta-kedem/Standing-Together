@@ -44,7 +44,7 @@ function sortCallsByPriority (a, b, callerId, now){
 }
 module.exports = (app) => {
 	app.post('/api/call/fetchActivistsToCall', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isCaller").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			const eventId = mongoose.Types.ObjectId(req.body.eventId);
@@ -102,7 +102,7 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/call/pingCalls', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isCaller").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			const eventId = mongoose.Types.ObjectId(req.body.eventId);
@@ -120,7 +120,7 @@ module.exports = (app) => {
 		});
 	});
 	app.post('/api/call/resolveCall', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isCaller").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			const eventId = mongoose.Types.ObjectId(req.body.eventId);
@@ -147,7 +147,7 @@ module.exports = (app) => {
 		});
 	});
 	app.post('/api/call/postponeCall', (req, res, next) => {
-		Authentication.isUser(req, res).then(isUser=>{
+		Authentication.hasRole(req, res, "isCaller").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			const eventId = mongoose.Types.ObjectId(req.body.eventId);
