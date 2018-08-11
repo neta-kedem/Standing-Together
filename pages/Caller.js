@@ -28,10 +28,10 @@ export default class Caller extends React.Component {
 			},
 			activists:[],
 			header:[
-				{title: ["שם פרטי الاسم الشخصي"], visibility: true, key: "firstName", icon:"", type:"text", width:"25%"},
-				{title: ["שם משפחה اسم العائلة"], visibility: true, key: "lastName", icon:"", type:"text", width:"25%"},
-				{title: ["טלפון رقم الهاتف"],  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
-				{title: ["יישוב البلد"],  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
+				{title: ["الاسم الشخصي", "שם פרטי"], visibility: true, key: "firstName", icon:"", type:"text", width:"25%"},
+				{title: ["اسم العائلة", "שם משפחה"], visibility: true, key: "lastName", icon:"", type:"text", width:"25%"},
+				{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
+				{title: ["البلد", "יישוב"],  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
 			],
 			selectedRow:{},
 			fetchActivistsMessagePopup: false,
@@ -248,16 +248,18 @@ export default class Caller extends React.Component {
 						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}></SelectableTable>
 						<div className="fetch-more-button inline-label" onClick={this.getActivistsToCall.bind(this)}>
 							<div className="label-text">
-								עוד שמות
-								<br/>
-								المزيد من الاسماء
+								<div>المزيد من الاسماء</div>
+								<div>עוד שמות</div>
 							</div>
 							<div className="label-icon"><FontAwesomeIcon icon="chevron-circle-down"/></div>
 						</div>
 						{isSelected?actionOptions:''}
 					</div>
 					<div className="left-panel">
-						<div className="script-title">תסריט שיחה:</div>
+						<div className="script-title">
+							<div>תסריט שיחה:</div>
+							<div>תסריט שיחה:</div>
+						</div>
 						<textarea value={this.state.eventData.callInstructions.script}>
 						</textarea>
 					</div>
