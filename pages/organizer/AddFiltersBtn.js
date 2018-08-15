@@ -1,16 +1,17 @@
 import React from 'react';
 import style from './AddFiltersBtn.css';
-import ItemService from '../../services/ItemService';
 
 class AddFiltersBtn extends React.Component {
 
-  state = {
-    isActive: false,
-  };
-  _addFilters(){
+  constructor(props){
+    super(props)
+    this.state = {
+			isActive: false,
+      onclick: props.saveFilter
 
-    // ItemService.addSingleFilter();
+		}
   }
+
   componentWillMount() {
     const type = this.props.type;
     if(type === 'single'){
@@ -48,7 +49,7 @@ class AddFiltersBtn extends React.Component {
         </style>
         <div
             className={"addBtn "+ this.state.class}
-            onClick={this._addFilters}
+            onClick={this.state.onclick}
         >
           {this.props.text}
           </div>

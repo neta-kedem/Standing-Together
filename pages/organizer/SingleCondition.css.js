@@ -1,12 +1,14 @@
 export default {
 	"wrapper": {
 		"alignSelf": "stretch",
-		"height": "100%",
+		// "height": "100%",
 		"borderRadius": "5px",
-		"backgroundColor": "#f8ecef",
 		"fontFamily": "Cabin, sans-serif",
 		"color": "rgba(86, 95, 108, .9)",
-		"padding": "0 10px 10px"
+		"padding": "0 10px 10px",
+		"backgroundColor": "#f8ecef",
+		// "transform": "null",
+		// "transition": "null"
 	},
 	"valueContainer": {
 		"textAlign": "left",

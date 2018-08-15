@@ -1,6 +1,28 @@
 const Activist = require('../../models/activistModel');
 const Authentication = require('../../services/authentication');
 
+function queryToMongo(query){
+	console.log('query', query)
+	let toSend = `{$and:[`;
+	(query.conditions||[]).forEach(cond => {
+		switch(cond.filterPrefix){
+			case 'Is ': toSend += '{'
+		}
+		switch(cond.filterName){
+			case 'Residency': toSend += 'profile.residency:'
+		}
+		toSend += `"${cond.filterMain}"`;
+		switch(cond.filterPrefix){
+			case 'Is ': toSend += '}'
+		}
+		toSend += `]`;
+	})
+	toSend += `}`;
+	console.log('toSend', toSend);
+	return {};
+}
+
+
 module.exports = (app) => {
 	app.get('/api/activists', (req, res, next) => {
 		Authentication.isUser(req, res).then(isUser=>{
@@ -30,9 +52,10 @@ module.exports = (app) => {
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			const query = req.body.query;
-			Activist.find(query, (err, activists) => {
+			Activist.find(queryToMongo(query), (err, activists) => {
 				if (err) return res.json({success: false, error: err});
-				activistsList = [];
+				const activistsList = [];
+				console.log('activists.length', activists.length)
 				for(let activist of activists)
 				{
 					activistsList.push({

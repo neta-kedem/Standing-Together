@@ -190,8 +190,8 @@ render() {
                   </div>
             </div>
             <div style={styles['left-panel']}>
-              <textarea style={styles['talking-scenario']} value={this.state.eventData.callInstructions.script}>
-				  	  </textarea>
+              <textarea style={styles['talking-scenario']} >
+							</textarea>
             </div>
 		</div>
 	)

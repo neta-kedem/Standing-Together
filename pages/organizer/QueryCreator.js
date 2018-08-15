@@ -8,6 +8,7 @@ import { faCalendarAlt, faTimes, faBuilding, faUserCircle, faUser, faPhone, faEn
 fontawesome.library.add(faCalendarAlt, faTimes, faBuilding, faUserCircle, faUser, faPhone, faEnvelope, faCheckCircle);
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd';
 import ItemService from '../../services/ItemService'
+import CreateFilter from './CreateFilter';
 
 // icons
 const orIcon = require('../../static/or.png');
@@ -22,7 +23,9 @@ class QueryCreator extends React.Component {
 			currLogicalOperator: orIcon,
 			isAddFilterBtnActive: false,
 			isAddGroupBtnActive: false,
-			currFilters: []
+			currFilters: {operator:"", conditions:[]},
+			shownFilter: -1,
+			newFilter: props.newFilter
 		};
 
     this.filters = ItemService.getPossibleFilters();
@@ -46,6 +49,7 @@ class QueryCreator extends React.Component {
   }
 
   _addFilter() {
+  	// this.setState()
   }
 
   _removeFilter(groupId, filterId){
@@ -55,17 +59,31 @@ class QueryCreator extends React.Component {
   onDragStart(result){
 		const oldIndex = result.source.index;
     const newIndex = result.destination.index;
-    this.state.currFilters.splice(newIndex, 0, this.state.currFilters.splice(oldIndex, 1)[0]);
+    this.state.currFilters.conditions.splice(newIndex, 0, this.state.currFilters.conditions.splice(oldIndex, 1)[0]);
   }
+	_exploreFilter(key){
+  	if(this.state.shownFilter === key) this.setState({shownFilter:-1});
+		else this.setState({shownFilter:key})
+
+	}
+	newFilter(lable, filter){
+  	const newFilters = ItemService.addFilter(filter, lable);
+		this.setState({currFilters:newFilters});
+		this.state.newFilter(newFilters);
+	}
 
   render() {
-
     const possibleFilters = this.filters.map((filter, key) => {
-      return <div style={style["filter-title"]} key={key}><FontAwesomeIcon style={style["filter-icon"]} icon={filter.icon} />{filter.label}</div>
+      return (<div onClick={this._exploreFilter.bind(this, key)} style={style["filter-title"]} key={key}>
+				<FontAwesomeIcon style={style["filter-icon"]} icon={filter.icon}/>{filter.label}
+				<div>
+					<CreateFilter index={key} newFilter={this.newFilter.bind(this, filter.label)} filter={filter} show={this.state.shownFilter === key} />
+				</div>
+				</div>)
     })
 
     return(
-      <section style={{overflow: "auto", height: "100%"}}>
+      <section style={{overflow: "auto", height: "100%", "userSelect": "none"}}>
 
         <style global jsx>
           {`
@@ -91,7 +109,7 @@ class QueryCreator extends React.Component {
 					<Droppable droppableId="droppable">
 						{provided => (
 								<Queries provided={provided} innerRef={provided.innerRef} {...provided.droppableProps}>
-									{this.state.currFilters.map((filter, index) => {
+									{this.state.currFilters.conditions.map((filter, index) => {
 										if(index) {return  (
 												<div style={style.query} key={index}>
 													<img className="filterIcon" src={this.state.currLogicalOperator} style={{alignSelf:"center"}} alt="logical operator" onMouseDown={() => this._toggleLogicalOperator()}/>
@@ -124,8 +142,8 @@ class QueryCreator extends React.Component {
 				</DragDropContext>
 
 
-        <AddFiltersBtn text="Add Filter" type="single" onclick={this._addFilter}></AddFiltersBtn>
-        <AddFiltersBtn text="Add Group" type="group"></AddFiltersBtn>
+        <AddFiltersBtn text="Add Filter" type="single" onClick={this._addFilter}></AddFiltersBtn>
+        {/*<AddFiltersBtn text="Add Group" type="group"></AddFiltersBtn>*/}
         {possibleFilters}
       </section>
     )

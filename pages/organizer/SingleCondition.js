@@ -12,11 +12,16 @@ class SingleCondition extends React.Component {
   }
   render() {
 		const { provided, innerRef } = this.props;
+    const newStyle = {};
+		for (let bla in provided.draggableProps.style) {
+      newStyle[bla] = provided.draggableProps.style[bla]
+    }
 		return(
-      <section style={style.wrapper}
-							 {...provided.draggableProps}
-							 {...provided.dragHandleProps}
-							 ref={innerRef}>
+      <section
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          style={Object.assign(newStyle, style.wrapper)}
+					ref={innerRef}>
         <div style={style.titleRow}>
           <div style={style.titleWrapper}>
             {/*<span className={this.getFilterIcon()} style={style.filterIcon} aria-hidden="true"></span>*/}
@@ -36,7 +41,7 @@ class SingleCondition extends React.Component {
             <span>{this.props.condition.filterMain}</span>
           </div>
           <div>
-            <span style={style.valueNumber}>{this.props.condition.filterValue}</span>
+            {/*<span style={style.valueNumber}>{this.props.condition.filterValue}</span>*/}
           </div>
         </div>
       </section>
@@ -45,13 +50,13 @@ class SingleCondition extends React.Component {
 
   getFilterValuePrefix(){
     const filterName = this.props.condition.filterName;
-    if(filterName === "Lives") return "In ";
+    // if(filterName === "Residency") return "In ";
 
-    return "";
+    return this.props.condition.prefix;
   }
   getFilterIcon(){
     const filterName = this.props.condition.filterName;
-    if(filterName === "Lives") return "fa fa-building";
+    if(filterName === "Residency") return "fa fa-building";
 
     return "";
   }

@@ -9,24 +9,26 @@ import {
 	faUserCircle
 } from "@fortawesome/fontawesome-free-solid/index";
 
-const currFilters = [
-    {id:0, filterName: "Lives", filterMain: "Tel-Aviv", filterPrefix:"In", filterValue: 20000},
-    {id:1, filterName: "Lives", filterMain: "Haifa", filterPrefix:"In", filterValue: 18000},
-    {id:2, filterName: "Lives", filterMain: "Ramat Gan", filterPrefix:"In", filterValue: 10000},
-];
+const currFilters = {
+	operator:'AND',
+	conditions: [
+    // {id:0, filterName: "Lives", filterMain: "Tel-Aviv", filterPrefix:"In", filterValue: 20000},
+    // {id:1, filterName: "Lives", filterMain: "Haifa", filterPrefix:"In", filterValue: 18000},
+    // {id:2, filterName: "Lives", filterMain: "Ramat Gan", filterPrefix:"In", filterValue: 10000},
+]};
 
 const residencies = ['תל אביב', 'חיפה', 'ירושלים', 'באר שבע', 'פרדס חנה', 'טירה', 'נצרת'];
 const circles = ['תל אביב', 'חיפה', 'ירושלים', 'נגב', 'משולש-שרון', 'אניברסיטת חיפה', 'אוניברסיטת תל אביב', 'אוניברסיטת בן גוריון', 'האוניברסיטה העברית']
 
 const stringOptions = [
-		{label: 'Is', type: 'options'},
-		{label: 'Is not', type: 'options'},
-		{label: 'Starts with', type: 'text'},
-		{label: 'Ends with', type: 'text'},
-		{label: 'Contains', type: 'text'},
-		{label: 'Does not contain', type: 'text'},
-		{label: 'Is unknown', type: 'checkbox'},
-		{label: 'Has any value', type: 'checkbox'},
+		{label: 'Is ', type: 'options'},
+		{label: 'Is not ', type: 'options'},
+		{label: 'Starts with ', type: 'text'},
+		{label: 'Ends with ', type: 'text'},
+		{label: 'Contains ', type: 'text'},
+		{label: 'Does not contain ', type: 'text'},
+		{label: 'Is unknown ', type: 'checkbox'},
+		{label: 'Has any value ', type: 'checkbox'},
 		];
 
 const dateOptions = [
@@ -38,25 +40,26 @@ const dateOptions = [
 		];
 
 const possibleFilters =
-	[	{label:'Creation date', icon:faCalendarAlt, type: "date"},
-		{label:'Last update', icon:faCalendarAlt, type: "date"},
-		{label:'Residency', icon:faBuilding, type: "string", options:residencies},
-		{label:'Joining method', icon:faUserCircle, type: "string"},
-		{label:'Typer name', icon:faUser, type: "string"},
-		{label:'Full name', icon:faUser, type: "string"},
-		{label:'First name', icon:faUser, type: "string"},
-		{label:'Last name', icon:faCalendarAlt, type: "string"},
-		{label:'Phone number', icon:faPhone, type: "string"},
-		{label:'Email', icon:faEnvelope, type: "string"},
-		{label:'Circle', icon:faUserCircle, type: "string", options:circles},
+	[
+		{label:'Residency', icon:faBuilding, type: "string", options:residencies, questions:stringOptions},
+		{label:'Joining method', icon:faUserCircle, type: "string", questions:stringOptions},
+		{label:'Typer name', icon:faUser, type: "string", questions:stringOptions},
+		{label:'Full name', icon:faUser, type: "string", questions:stringOptions},
+		{label:'First name', icon:faUser, type: "string", questions:stringOptions},
+		{label:'Last name', icon:faCalendarAlt, type: "string", questions:stringOptions},
+		{label:'Phone number', icon:faPhone, type: "string", questions:stringOptions},
+		{label:'Email', icon:faEnvelope, type: "string", questions:stringOptions},
+		{label:'Creation date', icon:faCalendarAlt, type: "date", questions:dateOptions},
+		{label:'Last update', icon:faCalendarAlt, type: "date", questions:dateOptions},
+		{label:'Circle', icon:faUserCircle, type: "string", options:circles, questions:stringOptions},
 		{label:'Is member', icon:faCheckCircle, type: "boolean"},
-		{label:'Is paying', icon:faCheckCircle, type: "boolean"},
+		// {label:'Is paying', icon:faCheckCircle, type: "boolean"},
 		{label:'Is receiving newsletter', icon:faCheckCircle, type: "boolean"},
 		{label:'Is a typer', icon:faCheckCircle, type: "boolean"},
 		{label:'Is a caller', icon:faCheckCircle, type: "boolean"},
 		{label:'Is an organizer', icon:faCheckCircle, type: "boolean"},
 		{label:'Is a circle leader', icon:faCheckCircle, type: "boolean"},
-		{label:'Is an admin', icon:faCheckCircle, type: "boolean"},
+		// {label:'Is an admin', icon:faCheckCircle, type: "boolean"},
 ];
 
 function delay(val, timeout=0) {
@@ -69,6 +72,13 @@ function getPossibleFilters(){
 	return possibleFilters;
 }
 
+function addFilter(filter, label){
+	const prefix = Object.keys(filter)[0]
+	const newFilter = {id:currFilters.length, filterName:label, prefix, filterMain:filter[prefix], filterValue: 1000}
+	currFilters.conditions.push(newFilter);
+	return currFilters;
+}
+
 function getCurrFilters() {
     return delay(currFilters, 10);
 }
@@ -79,9 +89,7 @@ function addSingleFilter() {
   return delay(currFilters, 10);
 }
 function removeSingleFilter(groupId, singleId) {
-	console.log('groupId', groupId);
-	console.log('singleId', singleId);
-	currFilters[groupId].splice(singleId, 1);
+	currFilters.conditions.splice(singleId, 1);
   return delay(currFilters, 10);
 }
 
@@ -194,4 +202,6 @@ export default {
 	login,
 	toggleUserCallerStatus,
 	getPossibleFilters,
+	addFilter,
 }
+
