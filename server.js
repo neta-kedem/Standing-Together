@@ -77,6 +77,9 @@ app.prepare().then(() => {
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);
 	});
+	server.get('/ScanContacts', (req, res) => {
+		return app.render(req, res, '/ScanContacts', req.query);
+	});
 	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
 	server.get('*', (req, res) => {
 		return handle(req, res);
