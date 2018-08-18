@@ -17,7 +17,7 @@ function detectOuterEdgeFromCorner(img, x, y, rad, checkDelta, speed) {
 function getFuzzyCornerCoordinates(img, x, y, rad){
 	let sin = Math.sin(rad);
 	let cos = Math.cos(rad);
-	const fuzziness = 6;
+	const fuzziness = 3;
 	let points = [];
 	const width = img.width;
 	const height = img.height;
@@ -29,7 +29,7 @@ function getFuzzyCornerCoordinates(img, x, y, rad){
 		if((tempX>0)&&(tempX<width)&&(tempY>0)&&(tempY<height))
 			points.push({"x":tempX, "y":tempY});
 	}
-	return points;
+	return aggregator.uniq(points);
 }
 function detectOuterEdgeFromCoordinate(img, x, y, sin, cos) {
 	const brightnessThreshold = 150;
