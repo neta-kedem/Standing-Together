@@ -17,7 +17,7 @@ function detectOuterEdgeFromCorner(img, x, y, rad, checkDelta, speed) {
 function getFuzzyCornerCoordinates(img, x, y, rad){
 	let sin = Math.sin(rad);
 	let cos = Math.cos(rad);
-	const fuzziness = 3;
+	const fuzziness = 4;
 	let points = [];
 	const width = img.width;
 	const height = img.height;
@@ -31,12 +31,12 @@ function getFuzzyCornerCoordinates(img, x, y, rad){
 	return points;
 }
 function detectOuterEdgeFromCoordinate(img, x, y, sin, cos) {
-	const threshold = 220;
+	const threshold = 200;
 	img = img.getContext('2d');
 	const width = img.canvas.width;
 	const height = img.canvas.height;
 	const imageData = img.getImageData(0, 0, width, height).data;
-	const maxLineLength = Math.sqrt(width*width + height*height);
+	const maxLineLength = Math.sqrt(width*width + height*height)/4;
 	let linePoints = [];
 	for(var i=0; i<maxLineLength; i++)
 	{

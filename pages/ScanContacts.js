@@ -8,7 +8,7 @@ import aggregator from '../services/arrayAggregator';
 
 //graphics
 import ia from '../services/canvas/imageAdjustor';
-import sd from '../services/canvas/shapeDrawer';
+import ScannerDrawer from './scanContacts/ScannerDrawer'
 
 //optical recognition
 import cornerDetector from '../services/tableDetector/cornerDetector';
@@ -20,14 +20,11 @@ constructor(props) {
 		this.state = {
 			scanReady: false,
 			topScannerPosition : 0,
-			bottomScannerPosition : 1,
 			cornerScanSpeed : 3,
-			line1ScannerRad: -0.2,
-			line2ScannerRad: -0.2,
-			line3ScannerRad: -0.2+Math.PI,
-			line4ScannerRad: -0.2+Math.PI,
+			line1ScannerRad: -0.3+(Math.PI/2),
+			line2ScannerRad: -0.3+(Math.PI),
 			outerBorderScanSpeed : 5,
-			outerBorderScanRadDelta : 0.02,
+			outerBorderScanRadDelta : 0.002,
 		};
 	}
 
@@ -74,7 +71,7 @@ adjustScan(){
 	//make the image greyscale
 	ia.desaturateImage(scan.getContext('2d'));
 	//increase contrast to eliminate noise and highlight edges
-	ia.contrastImage(scan.getContext('2d'), 0.75);
+	ia.contrastImage(scan.getContext('2d'), 0.8);
 	//store in the state
 	this.setState({scan:scan}, ()=>{this.setState({scanReady:true});});
 }
@@ -87,53 +84,34 @@ updateCanvas() {
 	//if still scanning for top corner, show scan progress
 	if(!this.state.topCorner)
 	{
-		sd.drawLine(ctx, 0, this.state.topScannerPosition, this.state.width, this.state.topScannerPosition);
+		ScannerDrawer.drawCornerScanner(ctx, this.state.topScannerPosition);
 	}
 	else
 	{
-		sd.fillOval(ctx, this.state.topCorner.x-2, this.state.topCorner.y-2, 5);
-	}
-	if(!this.state.bottomCorner)
-	{
-		sd.drawLine(ctx, 0, this.state.height-this.state.bottomScannerPosition, this.state.width, this.state.height-this.state.bottomScannerPosition);
-	}
-	else
-	{
-		sd.fillOval(ctx, this.state.bottomCorner.x-2, this.state.bottomCorner.y-2, 5);
-	}
-	if(this.state.bottomCorner&&this.state.topCorner){
-		const maxLineLength = Math.sqrt(this.state.width*this.state.width + this.state.height*this.state.height);
-		//outer border 1
-		let x1 = this.state.topCorner.x;
-		let y1 = this.state.topCorner.y;
-		let x2 = x1+(maxLineLength*Math.cos(this.state.line1ScannerRad));
-		let y2 = y1+(maxLineLength*Math.sin(this.state.line1ScannerRad));
-		sd.drawLine(ctx, x1, y1, x2, y2);
-		//outer border 2
-		x1 = this.state.topCorner.x;
-		y1 = this.state.topCorner.y;
-		x2 = x1+(maxLineLength*Math.cos(this.state.line2ScannerRad));
-		y2 = y1+(maxLineLength*Math.sin(this.state.line2ScannerRad));
-		//outer border 3
-		x1 = this.state.bottomCorner.x;
-		y1 = this.state.bottomCorner.y;
-		x2 = x1+(maxLineLength*Math.cos(this.state.line3ScannerRad));
-		y2 = y1+(maxLineLength*Math.sin(this.state.line3ScannerRad));
-		sd.drawLine(ctx, x1, y1, x2, y2);
-		//outer border 4
-		x1 = this.state.bottomCorner.x;
-		y1 = this.state.bottomCorner.y;
-		x2 = x1+(maxLineLength*Math.cos(this.state.line4ScannerRad));
-		y2 = y1+(maxLineLength*Math.sin(this.state.line4ScannerRad));
-		sd.drawLine(ctx, x1, y1, x2, y2);
+		ScannerDrawer.drawDetectedCorner(ctx, this.state.topCorner.x, this.state.topCorner.y);
+		//outer border 1 scanner
+		if(this.state.line1Rad){
+			ScannerDrawer.drawOuterBorder(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line1Rad);
+		}
+		else{
+		ScannerDrawer.drawOuterBorderScanner(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line1ScannerRad);
+		}
+		//outer border 2 scanner
+		if(this.state.line2Rad){
+			ScannerDrawer.drawOuterBorder(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line2Rad);
+		}
+		else{
+		ScannerDrawer.drawOuterBorderScanner(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line2ScannerRad);
+		}
 	}
 }
+
 detectionStep() {
 	if(!this.state.scanReady||!this.state.scan)
 		return;
-	if(!this.state.topCorner||!this.state.bottomCorner)
+	if(!this.state.topCorner)
 		this.detectCorners();
-	if(this.state.topCorner&&this.state.bottomCorner)
+	else
 	{
 		this.detectOuterEdges();
 	}
@@ -141,26 +119,16 @@ detectionStep() {
 detectCorners() {
 	if(!this.state.topCorner)
 	{
-		const topDetection = cornerDetector.detectCornerInRange(this.state.scan, this.state.topScannerPosition, 1, this.state.cornerScanSpeed, this.state.bottomCorner);
+		const topDetection = cornerDetector.detectCornerInRange(this.state.scan, this.state.topScannerPosition, 1, this.state.cornerScanSpeed);
 		if(topDetection)
 		{
 			this.setState({topCorner:{x:topDetection.x, y:topDetection.y}});
+			if(topDetection.x<this.state.width/2)
+				this.setState({line1ScannerRad:this.state.line1ScannerRad+Math.PI/2*3, line2ScannerRad:this.state.line2ScannerRad+Math.PI/2*3,});
 		}
 		else
 		{
 			this.setState({"topScannerPosition":this.state.topScannerPosition+this.state.cornerScanSpeed});
-		}
-	}
-	if(!this.state.bottomCorner)
-	{
-		const bottomDetection = cornerDetector.detectCornerInRange(this.state.scan, this.state.bottomScannerPosition, -1, this.state.cornerScanSpeed, this.state.topCorner);
-		if(bottomDetection)
-		{
-			this.setState({bottomCorner:{x:bottomDetection.x, y:bottomDetection.y}});
-		}
-		else
-		{
-			this.setState({"bottomScannerPosition":this.state.bottomScannerPosition+this.state.cornerScanSpeed});
 		}
 	}
 }
@@ -172,7 +140,9 @@ detectOuterEdges() {
 			this.state.scan, this.state.topCorner.x, this.state.topCorner.y, this.state.line1ScannerRad, this.state.outerBorderScanRadDelta, this.state.outerBorderScanSpeed
 		)
 		if(detectedEdge!=null)
-			this.setState({line1Rad: detectedEdge.rad, topCorner: {"x":detectedEdge.x, "y":detectedEdge.y}});
+		{
+			this.setState({line1Rad: detectedEdge.rad});
+		}
 		else
 			this.setState({line1ScannerRad: this.state.line1ScannerRad+(this.state.outerBorderScanRadDelta*this.state.outerBorderScanSpeed)});
 	}
@@ -182,29 +152,9 @@ detectOuterEdges() {
 			this.state.scan, this.state.topCorner.x, this.state.topCorner.y, this.state.line2ScannerRad, this.state.outerBorderScanRadDelta, this.state.outerBorderScanSpeed
 		)
 		if(detectedEdge!=null)
-			this.setState({line2Rad: detectedEdge.rad, topCorner: {"x":detectedEdge.x, "y":detectedEdge.y}});
+			this.setState({line2Rad: detectedEdge.rad});
 		else
 			this.setState({line2ScannerRad: this.state.line2ScannerRad+(this.state.outerBorderScanRadDelta*this.state.outerBorderScanSpeed)});
-	}
-	if(!this.state.line3Rad)
-	{
-		detectedEdge = outerEdgeDetector.detectOuterEdgeFromCorner(
-			this.state.scan, this.state.bottomCorner.x, this.state.bottomCorner.y, this.state.line3ScannerRad, this.state.outerBorderScanRadDelta, this.state.outerBorderScanSpeed
-		)
-		if(detectedEdge!=null)
-			this.setState({line3Rad: detectedEdge.rad, bottomCorner: {"x":detectedEdge.x, "y":detectedEdge.y}});
-		else
-			this.setState({line3ScannerRad: this.state.line3ScannerRad+(this.state.outerBorderScanRadDelta*this.state.outerBorderScanSpeed)});
-	}
-	if(!this.state.line4Rad)
-	{
-		detectedEdge = outerEdgeDetector.detectOuterEdgeFromCorner(
-			this.state.scan, this.state.bottomCorner.x, this.state.bottomCorner.y, this.state.line4ScannerRad, this.state.outerBorderScanRadDelta, this.state.outerBorderScanSpeed
-		)
-		if(detectedEdge!=null)
-			this.setState({line4Rad: detectedEdge.rad, bottomCorner: {"x":detectedEdge.x, "y":detectedEdge.y}});
-		else
-			this.setState({line4ScannerRad: this.state.line4ScannerRad+(this.state.outerBorderScanRadDelta*this.state.outerBorderScanSpeed)});
 	}
 }
 render() {
