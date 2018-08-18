@@ -17,21 +17,23 @@ function detectOuterEdgeFromCorner(img, x, y, rad, checkDelta, speed) {
 function getFuzzyCornerCoordinates(img, x, y, rad){
 	let sin = Math.sin(rad);
 	let cos = Math.cos(rad);
-	const fuzziness = 4;
+	const fuzziness = 6;
 	let points = [];
 	const width = img.width;
 	const height = img.height;
 	for(var i=-fuzziness; i<fuzziness; i++)
 	{
-		let tempX = x+(i*cos);
-		let tempY = y+(i*sin);
+		//x is added sin, and y is added cos on purpose - because the fuzzyness should be perpendicular to the angle of the checked line
+		let tempX = Math.round(x+(i*sin));
+		let tempY = Math.round(y+(i*cos));
 		if((tempX>0)&&(tempX<width)&&(tempY>0)&&(tempY<height))
 			points.push({"x":tempX, "y":tempY});
 	}
 	return points;
 }
 function detectOuterEdgeFromCoordinate(img, x, y, sin, cos) {
-	const threshold = 200;
+	const brightnessThreshold = 150;
+	const darknessRatioThreshold = 0.7;
 	img = img.getContext('2d');
 	const width = img.canvas.width;
 	const height = img.canvas.height;
@@ -48,8 +50,10 @@ function detectOuterEdgeFromCoordinate(img, x, y, sin, cos) {
 			linePoints.push(brightnessAtPoint);
 		}
 	}
-	const avgBrightness = aggregator.avg(linePoints);
-	if(avgBrightness!=null&&avgBrightness<threshold)
+	const darkPoints = linePoints.filter(point => point < brightnessThreshold);
+	//const avgBrightness = aggregator.avg(linePoints);
+	//if(avgBrightness!=null&&avgBrightness<threshold)
+	if(darkPoints.length/linePoints.length>darknessRatioThreshold)
 		return true;
 	return null;
 	
