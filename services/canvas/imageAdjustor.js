@@ -1,6 +1,23 @@
-function drawImage(context, img, x, y){
-	if(img)
+function drawImage(context, img, x, y, width, height){
+	//handle unloaded images
+	if(!img){
+		console.error("can't draw an unloaded image");
+		return;
+	}
+	//in case no width and height were provided
+	if(arguments.length==4)
+	{
 		context.drawImage(img, x, y);
+		return;
+	}
+	//in case width and height were provided
+	else if(arguments.length==6)
+	{
+		context.drawImage(img, x, y, width, height);
+		return;
+	}
+	//otherwise
+	else console.error("invalid parameter number");
 }
 function desaturateImage(img){
 	let imageData = img.getImageData(0, 0, img.canvas.width, img.canvas.height);

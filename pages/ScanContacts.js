@@ -13,18 +13,24 @@ import ScannerDrawer from './scanContacts/ScannerDrawer'
 //optical recognition
 import cornerDetector from '../services/tableDetector/cornerDetector';
 import outerEdgeDetector from '../services/tableDetector/outerEdgeDetector';
+import borderDetector from '../services/tableDetector/borderDetector';
 
 export default class ScanContacts extends React.Component {
 constructor(props) {
 		super(props);
 		this.state = {
 			scanReady: false,
+			scanWidth: 1000,
 			topScannerPosition : 0,
 			cornerScanSpeed : 3,
-			line1ScannerRad: -0.3+(Math.PI/2),
-			line2ScannerRad: -0.3+(Math.PI),
-			outerBorderScanSpeed : 5,
-			outerBorderScanRadDelta : 0.002,
+			line1ScannerRad: -0.5+(Math.PI/2),
+			line2ScannerRad: -0.5+(Math.PI),
+			outerBorderScanSpeed : 10,
+			outerBorderScanRadDelta : 0.005,
+			bordersScannerPosition: 0,
+			bordersScannerSpeed: 10,
+			verticalBorders: [],
+			horizontalBorders: [],
 		};
 	}
 
@@ -38,7 +44,7 @@ componentDidMount() {
 		else
 			scanImage.onload=function(){
 				this.loadImageToCanvasWrap();
-			};
+			}.bind(this);
 		this.updateCanvas();
 	});
 	setInterval(this.updateCanvas.bind(this), 60);
@@ -52,17 +58,17 @@ loadImageToCanvasWrap() {
 	//this is the image being scanned
 	const scanImage = this.refs.scanImage;
 	//initialize wrapper canvas to have the same size as the image it's wrapping
-	scanCanvas.width = scanImage.width;
-	scanCanvas.height = scanImage.height;
+	scanCanvas.width = 1000;
+	scanCanvas.height = Math.floor(scanImage.height/scanImage.width*1000);
 	const ctx = scanCanvas.getContext('2d');
 	//initialize canvas to have a white background to prevent transparent areas messing with the detection
 	ctx.fillStyle="#FFFFFF";
-	ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	ctx.fillRect(0, 0, scanCanvas.width, scanCanvas.height);
 	//draw the image onto a wrapping canvas - this allows us to access the pixel data directly later on
-	ia.drawImage(ctx, scanImage, 0, 0);
+	ia.drawImage(ctx, scanImage, 0, 0, scanCanvas.width, scanCanvas.height);
 	//initialize drawing canvas to the size of the scanned document
-	canvas.width = scanImage.width;
-	canvas.height = scanImage.height;
+	canvas.width = scanCanvas.width;
+	canvas.height = scanCanvas.height;
 	//storing the canvases in the state. Once done, perform minor contrast/saturation adustments.
 	this.setState({width:canvas.width, height:canvas.height, scan:scanCanvas}, ()=>{this.adjustScan();});
 }
@@ -86,22 +92,48 @@ updateCanvas() {
 	{
 		ScannerDrawer.drawCornerScanner(ctx, this.state.topScannerPosition);
 	}
-	else
+	if(this.state.topCorner)
 	{
 		ScannerDrawer.drawDetectedCorner(ctx, this.state.topCorner.x, this.state.topCorner.y);
 		//outer border 1 scanner
-		if(this.state.line1Rad){
-			ScannerDrawer.drawOuterBorder(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line1Rad);
-		}
-		else{
-		ScannerDrawer.drawOuterBorderScanner(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line1ScannerRad);
+		if(!this.state.line1Rad){
+			ScannerDrawer.drawOuterBorderScanner(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line1ScannerRad);
 		}
 		//outer border 2 scanner
-		if(this.state.line2Rad){
-			ScannerDrawer.drawOuterBorder(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line2Rad);
+		if(!this.state.line2Rad){
+			ScannerDrawer.drawOuterBorderScanner(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line2ScannerRad);
 		}
-		else{
-		ScannerDrawer.drawOuterBorderScanner(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.line2ScannerRad);
+		//vertical outer border
+		if(this.state.verticalEdgeRad){
+			ScannerDrawer.drawOuterBorder(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.verticalEdgeRad);
+		}
+		//horizontal outer border
+		if(this.state.horizontalEdgeRad){
+			ScannerDrawer.drawOuterBorder(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.horizontalEdgeRad);
+		}
+	}
+	if(this.state.horizontalEdgeRad&&this.state.verticalEdgeRad)
+	{
+		const bordersScannerPosition =  this.state.bordersScannerPosition;
+		const scannerOriginX = this.state.topCorner.x;
+		const scannerOriginY = this.state.topCorner.y;
+		const horizontalEdgeRad = this.state.horizontalEdgeRad;
+		const verticalEdgeRad = this.state.verticalEdgeRad;
+		const horizontalScannerPositionX = scannerOriginX+bordersScannerPosition*Math.cos(verticalEdgeRad);
+		const horizontalScannerPositionY = scannerOriginY+bordersScannerPosition*Math.sin(verticalEdgeRad);
+		const verticalScannerPositionX = scannerOriginX+bordersScannerPosition*Math.cos(horizontalEdgeRad);
+		const verticalScannerPositionY = scannerOriginY+bordersScannerPosition*Math.sin(horizontalEdgeRad);
+		ScannerDrawer.drawBorderScanner(ctx, horizontalScannerPositionX, horizontalScannerPositionY, this.state.horizontalEdgeRad);
+		ScannerDrawer.drawBorderScanner(ctx, verticalScannerPositionX, verticalScannerPositionY, this.state.verticalEdgeRad);
+		const horizontalBorders = this.state.horizontalBorders.slice();
+		const verticalBorders = this.state.verticalBorders.slice(); 
+		for(var i=0; i<horizontalBorders.length; i++)
+		{
+			ScannerDrawer.drawBorder(ctx, horizontalBorders[i].x, horizontalBorders[i].y, this.state.horizontalEdgeRad);
+		}
+		for(var i=0; i<verticalBorders.length; i++)
+		{
+			ScannerDrawer.drawBorder(ctx, verticalBorders[i].x, verticalBorders[i].y, this.state.verticalEdgeRad);
 		}
 	}
 }
@@ -111,9 +143,13 @@ detectionStep() {
 		return;
 	if(!this.state.topCorner)
 		this.detectCorners();
-	else
+	if(this.state.topCorner&&(!this.state.horizontalEdgeRad||!this.state.verticalEdgeRad))
 	{
 		this.detectOuterEdges();
+	}
+	if(this.state.horizontalEdgeRad&&this.state.verticalEdgeRad&&(!this.state.allHorizontalBordersFound||!this.state.allVerticalBordersFound))
+	{
+		this.detectBorders();
 	}
 }
 detectCorners() {
@@ -134,6 +170,8 @@ detectCorners() {
 }
 detectOuterEdges() {
 	let detectedEdge = null;
+	let isHorizontal = false;
+	let alreadyDetected = false;
 	if(!this.state.line1Rad)
 	{
 		detectedEdge = outerEdgeDetector.detectOuterEdgeFromCorner(
@@ -141,9 +179,29 @@ detectOuterEdges() {
 		)
 		if(detectedEdge!=null)
 		{
-			this.setState({line1Rad: detectedEdge.rad});
+			isHorizontal = Math.abs(Math.cos(detectedEdge.rad))>Math.abs(Math.sin(detectedEdge.rad));
+			if(isHorizontal)
+			{
+				if(!this.state.horizontalEdgeRad)
+				{
+					this.setState({horizontalEdgeRad: detectedEdge.rad, line1Rad: detectedEdge.rad});
+					alreadyDetected = false;
+				}
+				else
+					alreadyDetected=true;
+			}
+			if(!isHorizontal)
+			{
+				if(!this.state.verticalEdgeRad)
+				{
+					this.setState({verticalEdgeRad: detectedEdge.rad, line1Rad: detectedEdge.rad});
+					alreadyDetected=false;
+				}
+				else
+					alreadyDetected=true;
+			}
 		}
-		else
+		if(detectedEdge==null||alreadyDetected)
 			this.setState({line1ScannerRad: this.state.line1ScannerRad+(this.state.outerBorderScanRadDelta*this.state.outerBorderScanSpeed)});
 	}
 	if(!this.state.line2Rad)
@@ -152,10 +210,82 @@ detectOuterEdges() {
 			this.state.scan, this.state.topCorner.x, this.state.topCorner.y, this.state.line2ScannerRad, this.state.outerBorderScanRadDelta, this.state.outerBorderScanSpeed
 		)
 		if(detectedEdge!=null)
-			this.setState({line2Rad: detectedEdge.rad});
-		else
+		{
+			isHorizontal = Math.abs(Math.cos(detectedEdge.rad))>Math.abs(Math.sin(detectedEdge.rad));
+			if(isHorizontal)
+			{
+				if(!this.state.horizontalEdgeRad)
+				{
+					this.setState({horizontalEdgeRad: detectedEdge.rad, line2Rad: detectedEdge.rad});
+					alreadyDetected = false;
+				}
+				else
+					alreadyDetected=true;
+			}
+			if(!isHorizontal)
+			{
+				if(!this.state.verticalEdgeRad)
+				{
+					this.setState({verticalEdgeRad: detectedEdge.rad, line2Rad: detectedEdge.rad});
+					alreadyDetected=false;
+				}
+				else
+					alreadyDetected=true;
+			}
+		}
+		if(detectedEdge==null||alreadyDetected)
 			this.setState({line2ScannerRad: this.state.line2ScannerRad+(this.state.outerBorderScanRadDelta*this.state.outerBorderScanSpeed)});
 	}
+}
+
+detectBorders() {
+	const horizontalBorders = this.state.horizontalBorders.slice();
+	const verticalBorders = this.state.verticalBorders.slice();
+	const scan = this.state.scan;
+	const x = this.state.topCorner.x;
+	const y = this.state.topCorner.y;
+	const horizontalEdgeRad = this.state.horizontalEdgeRad;
+	const verticalEdgeRad = this.state.verticalEdgeRad;
+	const bordersScannerPosition = this.state.bordersScannerPosition;
+	//check for borders parallel to the horizontal edge
+	const border1Origin = borderDetector.detectBorder(
+		scan, x, y, horizontalEdgeRad, verticalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
+	);
+	if(border1Origin!=null)
+	{
+		horizontalBorders.push(border1Origin);
+		this.setState({horizontalBorders:horizontalBorders});
+	}
+	//check for borders parallel to the vertical edge
+	const border2Origin = borderDetector.detectBorder(
+		scan, x, y, verticalEdgeRad, horizontalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
+	);
+	if(border2Origin!=null)
+	{
+		verticalBorders.push(border2Origin);
+		this.setState({verticalBorders:verticalBorders});
+	}
+	this.setState({bordersScannerPosition: bordersScannerPosition+this.state.bordersScannerSpeed});
+	this.checkBorderScanComplete();
+}
+checkBorderScanComplete() {
+	const xOrigin = this.state.topCorner.x;
+	const yOrigin = this.state.topCorner.y;
+	const horizontalEdgeRad = this.state.horizontalEdgeRad;
+	const verticalEdgeRad = this.state.verticalEdgeRad;
+	const bordersScannerPosition = this.state.bordersScannerPosition;
+	//check if horizontal scan is complete
+	let moveAlongY = Math.sin(verticalEdgeRad);
+	let sin = Math.sin(horizontalEdgeRad);
+	let y = Math.floor(yOrigin+moveAlongY*bordersScannerPosition);
+	if(y>this.state.height||y<=0)
+		this.setState({allHorizontalBordersFound:true});
+	//check if vertical scan is complete
+	let moveAlongX = Math.cos(horizontalEdgeRad);
+	let cos = Math.cos(verticalEdgeRad);
+	let x = Math.floor(xOrigin+moveAlongX*bordersScannerPosition);
+	if(x>this.state.width||x<=0)
+		this.setState({allVerticalBordersFound:true});
 }
 render() {
 	return (
@@ -164,7 +294,7 @@ render() {
 			<style jsx global>{Stylesheet}</style>
 			<canvas ref="canvas" width={300} height={300} className="scanCanvas"/>
 			<canvas ref="scanCanvas" className="hidden"/>
-			<img ref="scanImage" src="../static/table_mid_small.png" className="hidden"/>
+			<img ref="scanImage" src="../static/table_mid.png" className="hidden"/>
 		</div>
 	)
 }
