@@ -1,13 +1,15 @@
 import aggregator from '../arrayAggregator';
 function detectOuterEdgeFromCorner(img, x, y, rad, checkDelta, speed) {
 	const points = getFuzzyCornerCoordinates(img, x, y, rad);
+	const imgContext = img.getContext('2d');
+	const imgData = imgContext.getImageData(0, 0, img.width, img.width).data;
 	for(var i=0; i<speed; i++)
 	{
 		let sin = Math.sin(rad+(i*checkDelta));
 		let cos = Math.cos(rad+(i*checkDelta));
 		for(var j=0; j<points.length; j++)
 		{
-			let detection = detectOuterEdgeFromCoordinate(img, points[j].x, points[j].y, sin, cos);
+			let detection = detectOuterEdgeFromCoordinate(imgContext, imgData, points[j].x, points[j].y, sin, cos);
 			if(detection!=null)
 				return {"x":points[j].x, "y":points[j].y, "rad":rad+(i*checkDelta)};
 		}
@@ -17,7 +19,7 @@ function detectOuterEdgeFromCorner(img, x, y, rad, checkDelta, speed) {
 function getFuzzyCornerCoordinates(img, x, y, rad){
 	let sin = Math.sin(rad);
 	let cos = Math.cos(rad);
-	const fuzziness = 3;
+	const fuzziness = 4;
 	let points = [];
 	const width = img.width;
 	const height = img.height;
@@ -31,14 +33,12 @@ function getFuzzyCornerCoordinates(img, x, y, rad){
 	}
 	return aggregator.uniq(points);
 }
-function detectOuterEdgeFromCoordinate(img, x, y, sin, cos) {
+function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
 	const brightnessThreshold = 150;
-	const darknessRatioThreshold = 0.7;
-	img = img.getContext('2d');
-	const width = img.canvas.width;
-	const height = img.canvas.height;
-	const imageData = img.getImageData(0, 0, width, height).data;
-	const maxLineLength = Math.sqrt(width*width + height*height)/4;
+	const darknessRatioThreshold = 0.5;
+	const width = imgContext.canvas.width;
+	const height = imgContext.canvas.height;
+	const maxLineLength = Math.min(width, height)/1.5;
 	let linePoints = [];
 	for(var i=0; i<maxLineLength; i++)
 	{
@@ -46,13 +46,11 @@ function detectOuterEdgeFromCoordinate(img, x, y, sin, cos) {
 		let pointY = Math.floor(y+(i*sin));
 		if((pointX>0)&&(pointX<width)&&(pointY>0)&&(pointY<height))
 		{
-			let brightnessAtPoint = imageData[4*(pointX+(pointY*width))]
+			let brightnessAtPoint = imgData[4*(pointX+(pointY*width))];
 			linePoints.push(brightnessAtPoint);
 		}
 	}
 	const darkPoints = linePoints.filter(point => point < brightnessThreshold);
-	//const avgBrightness = aggregator.avg(linePoints);
-	//if(avgBrightness!=null&&avgBrightness<threshold)
 	if(darkPoints.length/linePoints.length>darknessRatioThreshold)
 		return true;
 	return null;
