@@ -19,8 +19,42 @@ function fillOval(ctx, x, y, radius)
 	ctx.closePath();
 	ctx.fill();
 }
+function fillPolygon(ctx, points)
+{
+	if(points.length<2)
+	{
+		console.error("at least 3 points are required to draw a polygon");
+		return;
+	}
+	ctx.beginPath();
+	ctx.moveTo(points[0].x, points[0].y);
+	for(var i=0; i<points.length; i++)
+	{
+		ctx.lineTo(points[i].x, points[i].y);
+	}
+	ctx.closePath();
+	ctx.fill();
+}
+function strokePolygon(ctx, points)
+{
+	if(points.length<2)
+	{
+		console.error("at least 3 points are required to draw a polygon");
+		return;
+	}
+	ctx.beginPath();
+	ctx.moveTo(points[0].x, points[0].y);
+	for(var i=0; i<points.length; i++)
+	{
+		ctx.lineTo(points[i].x, points[i].y);
+	}
+	ctx.closePath();
+	ctx.stroke();
+}
 export default {
 	drawLine,
     drawOval,
-	fillOval
+	fillOval,
+	fillPolygon,
+	strokePolygon
 }

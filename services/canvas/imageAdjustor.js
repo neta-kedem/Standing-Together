@@ -48,8 +48,21 @@ function contrastImage(img, contrast){
     // overwrite original image
 	img.putImageData(imageData, 0 ,0);
 }
+//set brightness
+function setImageBrightness(img, brightness){
+	let imageData = img.getImageData(0, 0, img.canvas.width, img.canvas.height);
+	let data = imageData.data;
+    for(var i=0;i<data.length;i+=4){   //r,g,b,a
+        data[i] = data[i]*brightness;
+        data[i+1] = data[i+1]*brightness;
+        data[i+2] = data[i+2]*brightness;
+    }
+    // overwrite original image
+	img.putImageData(imageData, 0 ,0);
+}
 export default {
 	drawImage,
     desaturateImage,
-	contrastImage
+	contrastImage,
+	setImageBrightness
 }

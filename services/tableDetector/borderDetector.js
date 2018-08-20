@@ -17,7 +17,7 @@ function detectBorder(img, xEdge, yEdge, rad, moveAlong, scanPos, speed) {
 	return null;
 }
 function detectBorderFromCoordinate(img, x, y, sin, cos) {
-	const brightnessThreshold = 220;
+	const brightnessThreshold = 230;
 	const darknessRatioThreshold = 0.7;
 	img = img.getContext('2d');
 	const width = img.canvas.width;
