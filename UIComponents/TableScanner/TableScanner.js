@@ -17,29 +17,43 @@ import cellsDetector from '../../services/tableDetector/cellsDetector';
 
 export default class TableScanner extends React.Component {
 constructor(props) {
-		super(props);
-		this.state = {
-			scanReady: false,
-			scanWidth: 1000,
-			topScannerPosition : 0,
-			cornerScanSpeed : 5,
-			line1ScannerRad: -0.5+(Math.PI/2),
-			line2ScannerRad: -0.5+(Math.PI),
-			outerBorderScanSpeed : 10,
-			outerBorderScanRadDelta : 0.005,
-			bordersScannerPosition: 0,
-			bordersScannerSpeed: 10,
-			verticalBorders: [],
-			horizontalBorders: [],
-			cells: []
-		};
-	}
+	super(props);
+	this.state = {
+		src: props.src,
+		scanReady: false,
+		scanWidth: 1000,
+		topScannerPosition : 0,
+		cornerScanSpeed : 5,
+		line1ScannerRad: -0.5+(Math.PI/2),
+		line2ScannerRad: -0.5+(Math.PI),
+		outerBorderScanSpeed : 10,
+		outerBorderScanRadDelta : 0.005,
+		bordersScannerPosition: 0,
+		bordersScannerSpeed: 10,
+		verticalBorders: [],
+		horizontalBorders: [],
+		cells: []
+	};
+}
 
 componentDidMount() {
+	if(this.state.src)
+		this.initializeScanner();
+}
+	
+componentWillReceiveProps(nextProps) {
+  // You don't have to do this check first, but it can help prevent an unneeded render
+  if (nextProps.src && !this.state.src) {
+	this.setState({src: nextProps.src});
+	this.initializeScanner();
+  }
+}
+initializeScanner() {
 	const canvas = this.refs.canvas;
 	const ctx = canvas.getContext('2d');
 	this.setState({canvas: canvas},()=>{
 		const scanImage = this.refs.scanImage;
+		scanImage.src = this.state.src;
 		if(scanImage.complete)
 			this.loadImageToCanvasWrap();
 		else
@@ -362,7 +376,7 @@ render() {
 			</div>
 			<canvas ref="scanCanvas" className="hidden"/>
 			<canvas ref="originalScanCanvas" className="hidden"/>
-			<img ref="scanImage" src="../static/table_hard.png" className="hidden"/>
+			<img ref="scanImage" className="hidden"/>
 		</div>
 	)
 }

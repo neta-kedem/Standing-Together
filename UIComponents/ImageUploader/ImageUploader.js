@@ -9,16 +9,7 @@ export default class ImageUploader extends React.Component {
 	}
 	fileSelectionHandler(event)
 	{
-		var formWrap = new FormData();
-		formWrap.append('scan', event.target.files[0]);
-		fetch(config.serverPath+"api/contactScan", {
-			headers: {
-				'Accept': 'application/json, application/xml, text/play, text/html, *.*'
-			},
-			credentials: 'same-origin',
-			method: 'POST',
-			body: formWrap
-		})
+		this.state.onSelect(event.target.files[0], "scan");
 		//not sure why this doesn't work:
 		//server.uploadFile("contactScan", event.target.files[0], "scan");
 		//server call request body shows just "object[formData]"
