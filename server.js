@@ -9,6 +9,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 const port = process.env.PORT || 3000;
+//db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
 
@@ -17,8 +18,9 @@ const authentication = require('./server/services/authentication');
 mongoose.connect(MONGODB_URI);
 mongoose.Promise = global.Promise;
 const server = express();
-server.use(bodyParser.urlencoded({ extended: false }));
-server.use(bodyParser.json());
+//setup server to use accept calls whose body contains files up to 5 mgb
+server.use(bodyParser.urlencoded({extended:false, limit:1024*1024*5, type:'application/x-www-form-urlencoding'}));
+server.use(bodyParser.json({limit:1024*1024*5, type:'application/json'}));
 server.use(cookieParser());
 
 app.prepare().then(() => {

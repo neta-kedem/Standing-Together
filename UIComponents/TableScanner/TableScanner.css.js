@@ -26,10 +26,10 @@ export default
     width: 100%;
     height: 100%;
 	transition: opacity 0.25s;
-	-webkit-animation-name: fadeInOut;
 	animation-name: fadeInOut;
-	-webkit-animation-duration: 0.5s;
+	-webkit-animation-name: fadeInOut;
 	animation-duration: 0.5s;
+	-webkit-animation-duration: 0.5s;
 }
 .detected-table-cell:hover{
 	opacity: 0.5;

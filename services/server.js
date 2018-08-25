@@ -43,7 +43,32 @@ function post(path, data){
 	});
 	return promise;
 }
+/*
+not sure why this doesn't work:
+server.uploadFile("contactScan", event.target.files[0], "scan");
+function uploadFile(path, file, name){
+	var formWrap = new FormData();
+	formWrap.append(name, file);
+	var promise = fetch(config.serverPath+apiPath+path, {
+		headers: {
+			'Accept': 'application/json, application/xml, text/play, text/html, *.*'
+		},
+		credentials: 'same-origin',
+		method: 'POST',
+		body: formWrap
+	})
+	.then(res => res.json())
+	.then(json => {
+		if(json.error=="missing token")
+		{
+			Router.push({pathname: '/Login'});
+		}
+		return json;
+	});
+	return promise;
+}*/
 export default {
     get,
-    post
+    post,
+	//uploadFile
 }
