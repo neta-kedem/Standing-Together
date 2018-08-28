@@ -20,6 +20,7 @@ constructor(props) {
 	super(props);
 	this.state = {
 		src: props.src,
+		onDetection: props.onDetection,
 		scanReady: false,
 		scanWidth: 1000,
 		topScannerPosition : 0,
@@ -27,7 +28,7 @@ constructor(props) {
 		line1ScannerRad: -0.5+(Math.PI/2),
 		line2ScannerRad: -0.5+(Math.PI),
 		outerBorderScanSpeed : 10,
-		outerBorderScanRadDelta : 0.005,
+		outerBorderScanRadDelta : 0.004,
 		bordersScannerPosition: 0,
 		bordersScannerSpeed: 10,
 		verticalBorders: [],
@@ -108,14 +109,8 @@ adjustScan(){
 	ia.drawImage(ctx, originalScan, 0, 0);
 	//make the image greyscale
 	ia.desaturateImage(ctx);
-	//brighten up image
-	ia.setImageBrightness(ctx, 1.1);
 	//increase contrast to eliminate noise and highlight edges
-	ia.contrastImage(ctx, 0.5);
-	//re-darken image
-	ia.setImageBrightness(ctx, 1/1.1);
-	ia.contrastImage(ctx, 0.3);
-	//ia.setImageBrightness(ctx, 1.4);
+	ia.contrastImage(ctx, 0.7);
 	//store in the state
 	this.setState({scan:scanCanvas}, ()=>{this.setState({scanReady:true});});
 }
@@ -205,6 +200,10 @@ detectionStep() {
 			this.state.verticalBorders, this.state.horizontalBorders, this.state.verticalEdgeRad, this.state.horizontalEdgeRad
 		);
 		this.setState({"cells":cells});
+		this.state.originalScan.toBlob(file => {
+				file.name = "test";
+				this.state.onDetection(file, cells);
+			}, 'image/jpeg');
 	}
 }
 detectCorners() {

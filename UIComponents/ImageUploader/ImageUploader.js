@@ -10,9 +10,6 @@ export default class ImageUploader extends React.Component {
 	fileSelectionHandler(event)
 	{
 		this.state.onSelect(event.target.files[0], "scan");
-		//not sure why this doesn't work:
-		//server.uploadFile("contactScan", event.target.files[0], "scan");
-		//server call request body shows just "object[formData]"
 	}
 	render() {
 		return (

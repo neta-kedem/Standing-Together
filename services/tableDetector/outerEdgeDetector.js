@@ -3,11 +3,11 @@ function detectOuterEdgeFromCorner(img, x, y, rad, checkDelta, speed) {
 	const points = getFuzzyCornerCoordinates(img, x, y, rad);
 	const imgContext = img.getContext('2d');
 	const imgData = imgContext.getImageData(0, 0, img.width, img.width).data;
-	for(var i=0; i<speed; i++)
+	for(let i=0; i<speed; i++)
 	{
 		let sin = Math.sin(rad+(i*checkDelta));
 		let cos = Math.cos(rad+(i*checkDelta));
-		for(var j=0; j<points.length; j++)
+		for(let j=0; j<points.length; j++)
 		{
 			let detection = detectOuterEdgeFromCoordinate(imgContext, imgData, points[j].x, points[j].y, sin, cos);
 			if(detection!=null)
@@ -23,7 +23,7 @@ function getFuzzyCornerCoordinates(img, x, y, rad){
 	let points = [];
 	const width = img.width;
 	const height = img.height;
-	for(var i=-fuzziness; i<fuzziness; i++)
+	for(let i=-fuzziness; i<fuzziness; i++)
 	{
 		//x is added sin, and y is added cos on purpose - because the fuzzyness should be perpendicular to the angle of the checked line
 		let tempX = Math.round(x+(i*sin));
@@ -40,7 +40,7 @@ function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
 	const height = imgContext.canvas.height;
 	const maxLineLength = Math.min(width, height)/1.5;
 	let linePoints = [];
-	for(var i=0; i<maxLineLength; i++)
+	for(let i=0; i<maxLineLength; i++)
 	{
 		let pointX = Math.floor(x+(i*cos));
 		let pointY = Math.floor(y+(i*sin));

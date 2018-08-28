@@ -5,18 +5,16 @@ const storage = multer.diskStorage({
 	},
 	filename: function (req, file, cb) {
 		console.log('file', file);
-		const ext = file.originalname.substr(
-		 file.originalname.lastIndexOf('.'));
-		 
-		cb(null, file.fieldname + '-' + Date.now() + ext)
+		const ext = file.originalname.substr(file.originalname.lastIndexOf('.'));
+		cb(null, file.fieldname + '-' + Date.now() + (ext.length>2?ext:".jpg"));
 	}
 });
 const upload = multer({ storage: storage });
 // It's very crucial that the file name matches the name attribute in your html
 
 module.exports = (app) => {
-	app.post('/api/contactScan', upload.single('scan'), (req, res) => {
-		res.json(false);
+	app.post('/api/contactScan/upload', upload.single('scan'), (req, res) => {
+		res.json({"success":true, "url": req.file.filename});
 	});
 };
 
