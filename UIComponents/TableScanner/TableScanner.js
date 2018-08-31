@@ -204,12 +204,13 @@ detectionStep() {
 		const colCount = this.state.verticalBorders.length-1;
 		const rowCount = this.state.horizontalBorders.length-1;
 		let structuredCells = [];
-		for(let i=0; i<rowCount; i++)
+		for(let i=0; i<colCount; i++)
 		{
-			structuredCells[i]=[];
-			for(let j=0; j<colCount; j++)
+			for(let j=0; j<rowCount; j++)
 			{
-				structuredCells[i][j]=cells[i*colCount+j];
+				if(!structuredCells[j]||!structuredCells[j].length)
+					structuredCells[j]=[];
+				structuredCells[j][i]=cells[i*rowCount+j];
 			}
 		}
 		this.state.originalScan.toBlob(file => {
