@@ -200,9 +200,21 @@ detectionStep() {
 			this.state.verticalBorders, this.state.horizontalBorders, this.state.verticalEdgeRad, this.state.horizontalEdgeRad
 		);
 		this.setState({"cells":cells});
+		//before posting to the server, iterate over the cells and sort them by rows
+		const colCount = this.state.verticalBorders.length-1;
+		const rowCount = this.state.horizontalBorders.length-1;
+		let structuredCells = [];
+		for(let i=0; i<rowCount; i++)
+		{
+			structuredCells[i]=[];
+			for(let j=0; j<colCount; j++)
+			{
+				structuredCells[i][j]=cells[i*colCount+j];
+			}
+		}
 		this.state.originalScan.toBlob(file => {
 				file.name = "test";
-				this.state.onDetection(file, cells);
+				this.state.onDetection(file, structuredCells);
 			}, 'image/jpeg');
 	}
 }

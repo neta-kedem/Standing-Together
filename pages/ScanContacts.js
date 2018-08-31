@@ -42,8 +42,8 @@ handlePost(){
 	});
 }
 publishScan(imgUrl){
-	const data ={"imgUrl":this.state.imgUrl, "cells":this.state.cells};
-	server.post('api/contactScan', data)
+	const data ={"scanUrl":imgUrl, "cells":this.state.detectedCells,};
+	server.post('contactScan', data)
 	.then(json => {
 		this.setState({data: []});
 	});

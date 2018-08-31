@@ -38,7 +38,7 @@ function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
 	const darknessRatioThreshold = 0.5;
 	const width = imgContext.canvas.width;
 	const height = imgContext.canvas.height;
-	const maxLineLength = Math.min(width, height)/1.5;
+	const maxLineLength = Math.min(width, height)/1;
 	let linePoints = [];
 	for(let i=0; i<maxLineLength; i++)
 	{
