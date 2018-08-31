@@ -6,7 +6,7 @@ import TableRow from './typer/TableRow'
 import TitleRow from './typer/TitleRow'
 import InputFields from './typer/InputFields'
 import InputRow from './typer/InputRow'
-import ItemService from '../services/ItemService'
+import ContactScanDisplay from './typer/ContactScanDisplay'
 import style from './typer/Typer.css'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
@@ -24,7 +24,8 @@ export default class Typer extends React.Component {
 		super();
 		this.state = {
 			data:[],
-			cells: []
+			cells: [],
+			selectedRow: 0
 		}
 		this.addRow = this.addRow.bind(this);
 		this.deleteRow = this.deleteRow.bind(this);
@@ -92,29 +93,7 @@ export default class Typer extends React.Component {
 			this.setState({data: []});
 		});
 	};
-	handleImageLoaded({target:img}){
-		this.setState({scanWidth:img.naturalWidth, scanHeight:img.naturalHeight});
-	}
 	render() {
-		const scan = <img src={"../uploads/contactScans/"+this.state.scanUrl} className="scan-canvas" onLoad={this.handleImageLoaded.bind(this)}/>
-		//width perecentage - 100 divided by the width of the canvas
-		const wp = this.state.scanWidth?100/this.state.scanWidth:0.1;
-		//height perecentage - 100 divided by the height of the canvas
-		const hp = this.state.scanHeight?100/this.state.scanHeight:0.1;
-		const cellsOverlay = this.state.cells.map((row, i)=>{
-			const cells = row.cells.map((cell, j)=>{
-				return <div className="detected-table-cell"
-					key={j}
-					style={{clipPath: "polygon("+
-						cell.corners[0].x*wp+"% "+cell.corners[0].y*hp+"%, "+
-						cell.corners[1].x*wp+"% "+cell.corners[1].y*hp+"%, "+
-						cell.corners[2].x*wp+"% "+cell.corners[2].y*hp+"%, "+
-						cell.corners[3].x*wp+"% "+cell.corners[3].y*hp+"%"+
-					")"}}
-				></div>;
-			});
-				return <div className="detected-table-row" key={i}>{cells}</div>;
-		});
 		return (
 			<div>
 				<Meta/>
@@ -122,30 +101,25 @@ export default class Typer extends React.Component {
 				<HeaderBar sendFunction={this.handlePost.bind(this)}></HeaderBar>
 				<section className="section">
 					<div className="main-panel">
-						<div className="scan-preview-wrap">
-							{this.state.scanUrl?scan:""}
-							<div className="detected-table-cells-wrap">
-								{cellsOverlay}
-							</div>
-						</div>
+						<ContactScanDisplay cells={this.state.cells} scanUrl={this.state.scanUrl} selectedRow={this.state.selectedRow}/>
 						<content className="content">
-								<TitleRow></TitleRow>
-								<div className="save-div">
-									<span onClick ={this.addRow}>
-										<FontAwesomeIcon id="save" icon="save" className="save-btn"/>
-									</span>
-									<InputRow handleKeyPress={this._handleKeyPress}></InputRow>
-								</div>
-								<table className="info_table">
-									 <tbody className="row">
-									 {
-										 this.state.data.map((person, i) =>
-										 <div>
-											 <FontAwesomeIcon onClick ={this.deleteRow.bind(this,i)} key={i+0.1} id="delete" icon="trash-alt" className="save-btn"/>
-											 <TableRow key={i} data={person} num={i}
-											 handleChangeEvent={this.handleChangeEvent} handleKeyPress={this._handleKeyPress}/></div>)}
-									 </tbody>
-								</table>
+							<TitleRow></TitleRow>
+							<div className="save-div">
+								<span onClick ={this.addRow}>
+									<FontAwesomeIcon id="save" icon="save" className="save-btn"/>
+								</span>
+								<InputRow handleKeyPress={this._handleKeyPress}></InputRow>
+							</div>
+							<table className="info_table">
+								 <tbody className="row">{
+									 this.state.data.map((person, i) =>
+									 <div>
+										 <FontAwesomeIcon onClick ={this.deleteRow.bind(this,i)} key={i+0.1} id="delete" icon="trash-alt" className="save-btn"/>
+										 <TableRow key={i} data={person} num={i}
+										 handleChangeEvent={this.handleChangeEvent} handleKeyPress={this._handleKeyPress}/>
+									</div>)
+								}</tbody>
+							</table>
 					 </content>
 					</div>
 				</section>
