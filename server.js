@@ -22,6 +22,7 @@ const server = express();
 server.use(bodyParser.urlencoded({extended:false, limit:1024*1024*5, type:'application/x-www-form-urlencoding'}));
 server.use(bodyParser.json({limit:1024*1024*5, type:'application/json'}));
 server.use(cookieParser());
+server.use(express.static('public'))
 
 app.prepare().then(() => {
 	// API routes
