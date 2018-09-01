@@ -26,6 +26,10 @@ function linesIntersection(x1, y1, rad1, x2, y2, rad2) {
 	const n2 = (-m2*x2)+y2;
 	const xRes = Math.round((n2-n1)/(m1-m2));
 	const yRes = Math.round(xRes*m1+n1);
+	if(m1>50)
+		return {x: x1, y: y2};
+	if(m2>50)
+		return {x: x2, y: y1};
 	return {x: xRes, y: yRes};
 }
 export default {
