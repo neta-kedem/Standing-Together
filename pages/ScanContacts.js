@@ -4,6 +4,7 @@ import Meta from '../lib/meta';
 
 import config from '../config';
 import server from '../services/server';
+import RowSelector from './scanContacts/TableRowSelector';
 import TableScanner from '../UIComponents/TableScanner/TableScanner';
 import ImageUploader from '../UIComponents/ImageUploader/ImageUploader';
 import ImageCropper from '../UIComponents/ImageCropper/ImageCropper';
@@ -13,7 +14,13 @@ constructor(props) {
 	super(props);
 	this.state = {
 		selectedImage: false,
-		croppedImage: false
+		croppedImage: false,
+		scanUrl: null,
+		horizontalBorders: [],
+		verticalBorders: [],
+		detectedCells: [],
+		width: 1000,
+		height: 1000,
 	};
 }
 handleImageSelection(file) {
@@ -22,8 +29,8 @@ handleImageSelection(file) {
 handleImageCrop(img) {
 	this.setState({croppedImage: img});
 }
-handleTableDetection(img, cells){
-	this.setState({detectedCells: cells, normalizedImg: img});
+handleTableDetection(img, width, height, cells, horizontalBorders, verticalBorders){
+	this.setState({normalizedImg: img, width:width, height:height, detectedCells: cells, horizontalBorders:horizontalBorders, verticalBorders:verticalBorders});
 }
 handlePost(){
 	var formWrap = new FormData();
@@ -55,14 +62,16 @@ render() {
 	const imgUploadUI = <ImageUploader onSelect={this.handleImageSelection.bind(this)}/>;
 	const imgCropperUI = <ImageCropper file={selectedImage} onCrop={this.handleImageCrop.bind(this)}/>
 	const tableScannerUI = <TableScanner src={croppedImage} onDetection={this.handleTableDetection.bind(this)}/>
+	const rowSelectorUI = <RowSelector src={croppedImage} width={this.state.width} height={this.state.height} cells={cells} horizontalBorders={this.state.horizontalBorders} verticalBorders={this.state.verticalBorders}/>
 	const postButton = <button onClick={this.handlePost.bind(this)}>post me!</button>
 	return (
 		<div>
 			<Meta/>
 			{!selectedImage?imgUploadUI:""}
 			{(selectedImage&&!croppedImage)?imgCropperUI:""}
-			{tableScannerUI}
-			{cells?postButton:""}
+			{!cells.length?tableScannerUI:""}
+			{cells.length?rowSelectorUI:""}
+			{cells.length?postButton:""}
 		</div>
 	)
 }

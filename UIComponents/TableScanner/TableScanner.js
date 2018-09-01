@@ -214,7 +214,7 @@ detectionStep() {
 		}
 		this.state.originalScan.toBlob(file => {
 				file.name = "test";
-				this.state.onDetection(file, structuredCells);
+				this.state.onDetection(file, this.state.canvas.width, this.state.canvas.height, structuredCells, this.state.horizontalBorders, this.state.verticalBorders);
 			}, 'image/jpeg');
 	}
 }
@@ -354,36 +354,11 @@ checkBorderScanComplete() {
 		this.setState({allVerticalBordersFound:true});
 }
 render() {
-	//initilaize layout dimensions - if the relevant variables aren't available yet, use an arbitrary default
-	
-	//width perecentage - 100 divided by the width of the canvas
-	const wp = this.state.canvas?100/this.state.canvas.width:0.1;
-	//height perecentage - 100 divided by the height of the canvas
-	const hp = this.state.canvas?100/this.state.canvas.height:0.1;
-	const colCount = this.state.verticalBorders.length-1;
-	const rowCount = this.state.horizontalBorders.length-1;
-	const hoverableCells = this.state.cells.map((cell, i)=>{
-		let colIndex=Math.floor(i/rowCount);
-		let rowIndex=i%rowCount;
-		return <div className="detected-table-cell"
-				key={i}
-				style={{...{clipPath: "polygon("+
-					cell[0].x*wp+"% "+cell[0].y*hp+"%, "+
-					cell[1].x*wp+"% "+cell[1].y*hp+"%, "+
-					cell[2].x*wp+"% "+cell[2].y*hp+"%, "+
-					cell[3].x*wp+"% "+cell[3].y*hp+"%"+
-				")"},...{animationDelay: (colIndex+rowIndex)*0.05+"s"}}}
-			></div>;
-		}
-	)
 	return (
 		<div>
 			<style jsx global>{Stylesheet}</style>
 			<div className="display-wrap">
 				<canvas ref="canvas" width={300} height={300} className="scan-canvas"/>
-				<div className="detected-table-cells-wrap">
-					{hoverableCells}
-				</div>
 			</div>
 			<canvas ref="scanCanvas" className="hidden"/>
 			<canvas ref="originalScanCanvas" className="hidden"/>
