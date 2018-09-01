@@ -35,7 +35,7 @@ export default css
 }
 .detected-table-row.empty-row .detected-table-cell{
 	background-color: #000;
-	opacity: 0.2;
+	opacity: 0.7;
 }
 .detected-table-cell:hover{
 	opacity: 0.5 !important;
