@@ -1,12 +1,13 @@
-function isBorderNonDuplicate(borders, newBorder) {
-	//the minimum allowed distance between two borders,
-	//(if the distance is less than that, the border will be considered a duplicate),
-	//squared - in order to spare an unnecessary square root
-	const minBorderDistSquared = 16;
+function isBorderNonDuplicate(borders, newBorder, isHorizontal) {
+	//the minimum allowed distance between two borders along either axis
+	const minBorderDist = 8;
 	for(var i=0; i<borders.length; i++)
 	{
-		let distSquared=Math.pow(newBorder.x-borders[i].x, 2)+Math.pow(newBorder.y-borders[i].y, 2);
-		if (distSquared<minBorderDistSquared)
+		if (isHorizontal&&Math.abs(newBorder.y-borders[i].y)<minBorderDist)
+		{
+			return false;
+		}
+		if(!isHorizontal&&Math.abs(newBorder.x-borders[i].x)<minBorderDist)
 		{
 			return false;
 		}

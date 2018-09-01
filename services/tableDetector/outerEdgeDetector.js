@@ -11,7 +11,10 @@ function detectOuterEdgeFromCorner(img, x, y, rad, checkDelta, speed) {
 		{
 			let detection = detectOuterEdgeFromCoordinate(imgContext, imgData, points[j].x, points[j].y, sin, cos);
 			if(detection!=null)
-				return {"x":points[j].x, "y":points[j].y, "rad":rad+(i*checkDelta)};
+			{
+				let darkestRad = scanAngleRangeForDarkestLine(imgContext, imgData, points[j].x, points[j].y, rad+(i*checkDelta));
+				return {"x":points[j].x, "y":points[j].y, "rad":darkestRad};
+			}
 		}
 	}
 	return null;
@@ -38,7 +41,7 @@ function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
 	const darknessRatioThreshold = 0.5;
 	const width = imgContext.canvas.width;
 	const height = imgContext.canvas.height;
-	const maxLineLength = Math.min(width, height)/1;
+	const maxLineLength = Math.min(width, height);
 	let linePoints = [];
 	for(let i=0; i<maxLineLength; i++)
 	{
@@ -55,6 +58,38 @@ function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
 		return true;
 	return null;
 	
+}
+function scanAngleRangeForDarkestLine(imgContext, imgData, x, y, rad){
+	const rangeSize = 0.05;
+	const checkResolution = 0.001;
+	let darkestRad = rad;
+	let darkestLineSum = null;
+	const width = imgContext.canvas.width;
+	const height = imgContext.canvas.height;
+	const maxLineLength = Math.min(width, height)/1;
+	for(let i=0; i<rangeSize/checkResolution; i++){
+		let tempRad = rad -(rangeSize/2)+i*checkResolution;
+		let sin = Math.sin(tempRad);
+		let cos = Math.cos(tempRad);
+		let linePoints = [];
+		for(let j=0; j<maxLineLength; j++)
+		{
+			let pointX = Math.floor(x+(j*cos));
+			let pointY = Math.floor(y+(j*sin));
+			if((pointX>0)&&(pointX<width)&&(pointY>0)&&(pointY<height))
+			{
+				let brightnessAtPoint = imgData[4*(pointX+(pointY*width))];
+				linePoints.push(brightnessAtPoint);
+			}
+		}
+		let averageSum = aggregator.sum(linePoints);
+		if(averageSum<darkestLineSum||darkestLineSum==null)
+		{
+			darkestRad = tempRad;
+			darkestLineSum = averageSum;
+		}
+	}
+	return darkestRad;
 }
 export default {
 	detectOuterEdgeFromCorner

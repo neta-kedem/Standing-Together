@@ -148,7 +148,6 @@ updateCanvas() {
 			ScannerDrawer.drawOuterBorder(ctx, this.state.topCorner.x, this.state.topCorner.y, this.state.horizontalEdgeRad);
 		}
 	}
-	const cells = this.state.cells.slice();
 	if(this.state.horizontalEdgeRad&&this.state.verticalEdgeRad)
 	{
 		const bordersScannerPosition =  this.state.bordersScannerPosition;
@@ -318,7 +317,7 @@ detectBorders() {
 	const border1Origin = borderDetector.detectBorder(
 		scan, x, y, horizontalEdgeRad, verticalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
 	);
-	if(border1Origin!=null&&duplicateBorderDetector.isBorderNonDuplicate(horizontalBorders, border1Origin))
+	if(border1Origin!=null&&duplicateBorderDetector.isBorderNonDuplicate(horizontalBorders, border1Origin, true))
 	{
 		horizontalBorders.push(border1Origin);
 		this.setState({horizontalBorders:horizontalBorders});
@@ -327,7 +326,7 @@ detectBorders() {
 	const border2Origin = borderDetector.detectBorder(
 		scan, x, y, verticalEdgeRad, horizontalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
 	);
-	if(border2Origin!=null&&duplicateBorderDetector.isBorderNonDuplicate(verticalBorders, border2Origin))
+	if(border2Origin!=null&&duplicateBorderDetector.isBorderNonDuplicate(verticalBorders, border2Origin, false))
 	{
 		verticalBorders.push(border2Origin);
 		this.setState({verticalBorders:verticalBorders});
