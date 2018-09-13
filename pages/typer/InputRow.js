@@ -74,7 +74,7 @@ export default class InputRow extends React.Component {
 						<input value={this.props.values.phone} type="phone" name="phone" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
 					<td> 
-						<input value={this.props.values.email} onKeyPress={this.handleKeyPress} type="email" name="email" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+						<input value={this.props.values.email} onKeyDown={this.handleKeyPress} type="email" name="email" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
 				</tr>
 			<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
