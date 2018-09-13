@@ -47,7 +47,7 @@ module.exports = (app) => {
 				return res.json({"error":"missing token"});
 			const typerId = Authentication.getMyId();
 			const now = new Date();
-			const reservationDeadline = new Date(now.getTime()-maxReservationDuration*60000);
+			const reservationDeadline = new Date(now.getTime()+maxReservationDuration*60000);
 			contactScan.findOneAndUpdate(
 				{"complete": false, $or:[{"lastPing":null}, {"lastPing":{$lt: reservationDeadline}}]},
 				{"$set": {"lastPing": now, "typerId": typerId}},

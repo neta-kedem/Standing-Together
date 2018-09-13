@@ -17,6 +17,7 @@ export default css
 		outline: none;
 		color: white;
 		background-color: rgba(0, 0, 0, 0);
+		cursor: pointer;
 	}
 	.row-nav:hover{
 		background-color: rgba(0, 0, 0, 0.2);

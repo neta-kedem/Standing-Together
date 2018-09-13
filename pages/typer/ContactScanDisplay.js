@@ -1,5 +1,9 @@
 import React from 'react';
 import style from './ContactScanDisplay.css'
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faChevronUp, faChevronDown} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faChevronUp, faChevronDown);
 
 export default class ContactScanDisplay extends React.Component {
 	constructor(props) {
@@ -7,7 +11,8 @@ export default class ContactScanDisplay extends React.Component {
 		this.state = {
 			cells: props.cells,
 			scanUrl: props.scanUrl,
-			selectedRow: props.selectedRow
+			selectedRow: (props.selectedRow==null)?0:props.selectedRow,
+			selectScanRow: props.selectScanRow
 		}
 	};
 	componentWillReceiveProps(nextProps) {
@@ -18,7 +23,7 @@ export default class ContactScanDisplay extends React.Component {
 		if (nextProps.cells) {
 			this.setState({cells: nextProps.cells});
 		}
-		if (nextProps.selectedRow && !this.state.selectedRow) {
+		if (nextProps.selectedRow && this.state.selectedRow!=nextProps.selectedRow) {
 			this.setState({selectedRow: nextProps.selectedRow});
 		}
 	}
@@ -28,7 +33,10 @@ export default class ContactScanDisplay extends React.Component {
 	selectScanRow(num)
 	{
 		if(num>=0&&num<this.state.cells.length)
+		{
 			this.setState({selectedRow: num});
+			this.state.selectScanRow(num);
+		}
 	}
 	render() {
 		const scan = <img src={"../uploads/contactScans/"+this.state.scanUrl} className="scan-canvas" onLoad={this.handleImageLoaded.bind(this)}/>
@@ -69,8 +77,12 @@ export default class ContactScanDisplay extends React.Component {
 				<style jsx global>{style}</style>
 				<div className="scan-wrap">
 					<div className="row-nav-wrap">
-						<button className="row-nav row-nav-up" onClick={() => this.selectScanRow(selectedRow-1)}>up</button>
-						<button className="row-nav row-nav-down" onClick={() => this.selectScanRow(selectedRow+1)}>down</button>
+						<button className="row-nav row-nav-up" onClick={() => this.selectScanRow(selectedRow-1)}>
+							<FontAwesomeIcon icon="chevron-up"/>
+						</button>
+						<button className="row-nav row-nav-down" onClick={() => this.selectScanRow(selectedRow+1)}>
+							<FontAwesomeIcon icon="chevron-down"/>
+						</button>
 					</div>
 					<div className="scan-display-wrap">
 						<div className="scan-display" style={{transform: "translateY(calc("+positionOffset+" * 0.19% + 30px)) rotate("+rotationOffset+"deg)"}}>

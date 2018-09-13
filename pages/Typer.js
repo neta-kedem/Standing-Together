@@ -2,20 +2,9 @@ import React from 'react';
 import Meta from '../lib/meta';
 import server from '../services/server';
 import HeaderBar from './typer/HeaderBar'
-import TableRow from './typer/TableRow'
-import TitleRow from './typer/TitleRow'
-import InputFields from './typer/InputFields'
-import InputRow from './typer/InputRow'
+import TypedActivistsTable from './typer/TypedActivistsTable'
 import ContactScanDisplay from './typer/ContactScanDisplay'
 import style from './typer/Typer.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCheckSquare } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faCheckSquare);
-import { faSave } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faSave);
-import { faTrashAlt } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faTrashAlt);
 
 
 
@@ -23,13 +12,10 @@ export default class Typer extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			data:[],
+			activists:[{firstName:"", lastName:"", phone:"", city:"", email:"", scanRow:0}],
 			cells: [],
-			selectedRow: 0
+			selectedRowIndex: 0
 		}
-		this.addRow = this.addRow.bind(this);
-		this.deleteRow = this.deleteRow.bind(this);
-		this._handleKeyPress = this._handleKeyPress.bind(this);
 	};
 	componentDidMount() {
 		this.getContactsScan();
@@ -47,79 +33,79 @@ export default class Typer extends React.Component {
 			this.setState({"scanUrl":json.scanUrl, "cells":json.rows});
 		});
 	}
-	addRow() {
-		var input = document.createElement("input");
-		var fname = document.getElementById("firstName").value;
-		var lname = document.getElementById("lastName").value;
-		var mail = document.getElementById("mail").value;
-		var city = document.getElementById("city").value;
-		var phone = document.getElementById("phNo").value;
-		var item = {
-			"fname": fname,
-			"lname": lname,
-			"settlement": city,
-			"phone": phone,
-			"mail": mail
-		}
-		this.setState((prevState, props) => ({
-			data: [...prevState.data, item]
-		}));
-	};
-
-	handleChangeEvent = (value, cell, index) => {
-		let newState = this.state.data.slice(0);
-		newState[cell][index] = value;
-		this.setState({data: newState});
-	};
-
-	_handleKeyPress = (e) => {
-		if (e.key === 'Enter') {
+	
+	addRow=function() {
+		let activists = this.state.activists.slice();
+		let nextScanRow = Math.min(activists[this.state.selectedRowIndex].scanRow+1, this.state.cells.length-1);
+		activists.push({firstName:"", lastName:"", phone:"", city:"", email:"", scanRow:nextScanRow});
+		this.setState({activists: activists, selectedRowIndex:activists.length-1});
+	}.bind(this);
+	
+	handleRowFocus = function(rowIndex) {
+		this.setState({selectedRowIndex:rowIndex});
+	}.bind(this)
+	
+	handleTypedInput = function (name, value, rowIndex){
+		let activists = this.state.activists.slice();
+		activists[rowIndex][name] = value;
+		this.setState({activists: activists});
+	}.bind(this);
+	
+	selectScanRow = function(index){
+		let activists = this.state.activists.slice();
+		activists[this.state.selectedRowIndex].scanRow = index;
+		this.setState({activists: activists});
+	}.bind(this);
+	
+	handleRowPost = function(rowIndex){
+		let activists = this.state.activists.slice();
+		if(rowIndex==activists.length-1)
 			this.addRow();
+		else
+		{
+			this.setState({selectedRowIndex:rowIndex+1});
 		}
-	};
+	}.bind(this);
 
-	deleteRow(index){
-		var contacts = [...this.state.data];
-		contacts.splice(Number(index), 1);
-		this.setState((props) => ({
-			data: contacts
-		}));
-	};
+	handleRowDeletion=function(index){
+		let activists = this.state.activists.slice();
+		//remove the appropriate row from the activists array
+		activists.splice(Number(index), 1);
+		//decrease selected row index if necessary
+		let selectedRowIndex = this.state.selectedRowIndex;
+		if(selectedRowIndex>=index){
+			selectedRowIndex=selectedRowIndex==0?selectedRowIndex:(selectedRowIndex-1);
+		}
+		//if no rows are left, create a new one
+		if(!activists.length)
+			activists.push({firstName:"", lastName:"", phone:"", city:"", email:"", scanRow:0});
+		//commit to state
+		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
+	}.bind(this);
 
-	handlePost(){
-		var data ={"activists":this.state.data};
+	handlePost=function(){
+		var data ={"activists":this.state.activists};
 		server.post('activists/uploadTyped', data)
 		.then(json => {
-			this.setState({data: []});
+			this.setState({activists: []});
 		});
-	};
+	}.bind(this);
+	
 	render() {
+		const cells = this.state.cells;
+		const scanUrl = this.state.scanUrl;
+		const selectedRowIndex = this.state.selectedRowIndex;
+		const activists = this.state.activists;
 		return (
-			<div>
+			<div dir="rtl">
 				<Meta/>
 				<style jsx global>{style}</style>
 				<HeaderBar sendFunction={this.handlePost.bind(this)}></HeaderBar>
 				<section className="section">
 					<div className="main-panel">
-						<ContactScanDisplay cells={this.state.cells} scanUrl={this.state.scanUrl} selectedRow={this.state.selectedRow}/>
+						<ContactScanDisplay cells={cells} scanUrl={scanUrl} selectedRow={activists[selectedRowIndex].scanRow} selectScanRow={this.selectScanRow}/>
 						<content className="content">
-							<TitleRow></TitleRow>
-							<div className="save-div">
-								<span onClick ={this.addRow}>
-									<FontAwesomeIcon id="save" icon="save" className="save-btn"/>
-								</span>
-								<InputRow handleKeyPress={this._handleKeyPress}></InputRow>
-							</div>
-							<table className="info_table">
-								 <tbody className="row">{
-									 this.state.data.map((person, i) =>
-									 <div>
-										 <FontAwesomeIcon onClick ={this.deleteRow.bind(this,i)} key={i+0.1} id="delete" icon="trash-alt" className="save-btn"/>
-										 <TableRow key={i} data={person} num={i}
-										 handleChangeEvent={this.handleChangeEvent} handleKeyPress={this._handleKeyPress}/>
-									</div>)
-								}</tbody>
-							</table>
+							<TypedActivistsTable handleChange={this.handleTypedInput} handleRowPost={this.handleRowPost} handleRowFocus={this.handleRowFocus} handleRowDeletion={this.handleRowDeletion} activists={activists} selectedRow={selectedRowIndex}/>
 					 </content>
 					</div>
 				</section>
