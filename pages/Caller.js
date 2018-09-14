@@ -209,7 +209,6 @@ export default class Caller extends React.Component {
 					<div>
 						<TimeInput
 							className="availability-timer"
-							ref="TimeInputWrapper"
 							mountFocus='true'
 							onTimeChange={this.updateActivistAvailability.bind(this)}
 						/>
