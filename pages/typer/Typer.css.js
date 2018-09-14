@@ -1,123 +1,73 @@
-export default {
-  "content": {
-    "height": "100%",
-    "padding": "20px",
-    "paddingTop": "40px",
-    "WebkitBoxFlex": "1",
-    "WebkitFlex": "1",
-    "MsFlex": "1",
-    "flex": "1",
-    "borderStyle": "none solid solid",
-    "borderWidth": "1px",
-    "borderColor": "rgba(86, 95, 108, .3)",
-    "backgroundImage": "linear-gradient(180deg, #eaeaea, #eaeaea)"
-  },
-  "rightpanel": {
-    "display": "flex",
-    "height": "100%",
-    "minHeight": "600px",
-    "float": "none",
-    "WebkitBoxOrient": "vertical",
-    "WebkitBoxDirection": "normal",
-    "WebkitFlexDirection": "column",
-    "MsFlexDirection": "column",
-    "flexDirection": "column"
-  },
-  "section": {
-    "width": "100%",
-    "height": "100%"
-  },
-  "row" : {
-    "display": "block",
-    "WebkitBoxPack": "center",
-    "WebkitJustifyContent": "center",
-    "MsFlexPack": "center",
-    "borderCollapse": "collapse",
-    "justifyContent": "center"
-  },
-  "info_table" : {
-    "display": "flex",
-    "padding": "0",
-    "justifyContent": "center",
-    "width": "100%",
-		"borderCollapse": "collapse",
-		"fontSize":"16px"
-  },
-  "selectall": {
-    "display": "flex",
-    "minWidth": "200px",
-    "marginTop": "30px",
-    "WebkitBoxPack": "center",
-    "WebkitJustifyContent": "center",
-    "MsFlexPack": "center",
-    "justifyContent": "center"
-  },
-  "heading": {
-    "marginTop": "0px",
-    "paddingLeft": "5px",
-    "color": "rgba(86, 95, 108, .7)",
-    "fontWeight": "700",
-    //"fontSize": "18px",
-    "lineHeight": "24px",
-    "textTransform": "uppercase"
-    //"fontFamily": "Cabin, sans-serif"
-  },
-  "awsome_low": {
-    "textAlign": "right",
-        "display": "inline",
-        "WebkitBoxFlex": "0",
-        "WebkitFlex": "0 0 auto",
-        "MsFlex": "0 0 auto",
-        "flex": "0 0 auto",
-        "fontFamily": "'Fa solid 900', sans-serif",
-        "color": "rgba(86, 95, 108, .9)",
-        "fontSize": "14px",
-        "fontWeight": "600",
-        "paddingTop": "6px",
-        "paddingLeft": "9px",
-        "justifyContent": "right",
-        "color": "rgba(86, 95, 108, .7)"
-  },
-  "save-btn": {
-      "position": "absolute",
-      "textAlign": "right",
-      "fontFamily": "'Fa solid 900', sans-serif",
-      "color": "rgba(86, 95, 108, .9)",
-      "fontSize": "14px",
-      "justifyContent": "right",
-      "right": "255px",
-      "paddingTop": "10px",
-      "cursor": "pointer"
-  },
-  "save-div": {
-    "textAlign": "right",
-    "justifyContent": "right",
-    "paddingBottom": "10px",
-    "top": "0px"
-},
-  "addfilter_copy": {
-    "cursor": "pointer",
-    "display": "block",
-    "width": "215px",
-    "height": "40px",
-    "marginTop": "15px",
-    "marginRight": "20px",
-    "marginLeft": "20px",
-    "paddingTop": "20px",
-    "borderStyle": "solid",
-    "borderWidth": "1px",
-    "borderColor": "rgba(86, 95, 108, .3)",
-    "borderRadius": "8px",
-    "fontFamily": "Rubik, sans-serif",
-    "textAlign": "center"
-  },
-  "input_fields": {
-    "display": "flex",
-    "marginTop": "40px",
-    "marginBottom": "40px",
-    "WebkitBoxPack": "center",
-    "WebkitJustifyContent": "center",
-    "MsFlexPack": "center",
-    "justifyContent": "center",
-  }
-}
+import css from 'styled-jsx/css'
+export default css
+`
+	.content{
+		height: 100%;
+		padding: 20px;
+		padding-top: 40px;
+		-webkit-box-flex: 1;
+		-webkit-flex: 1;
+		-ms-flex: 1;
+		flex: 1;
+		border-style: none solid solid;
+		border-width: 1px;
+		border-color: rgba(86, 95, 108, .3);
+		background-image: linear-gradient(180deg, #eaeaea, #eaeaea);
+	}
+	.main-panel{
+		display: flex;
+		height: 100%;
+		min-height: calc(100vh - 55px);
+		float: none;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: column;
+		-ms-flex-direction: column;
+		flex-direction: column;
+	}
+	.section{
+		width: 100%;
+		height: 100%;
+	}
+	.row{
+		display: block;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		ms-flex-pack: center;
+		border-collapse: collapse;
+		justifyc-ontent: center;
+	}
+	.info_table{
+		display: flex;
+		padding: 0;
+		justify-content: center;
+		width: 100%;
+		border-collapse: collapse;
+		font-size:16px;
+	}
+	.heading{
+		margin-top: 0px;
+		padding-left: 5px;
+		color: rgba(86, 95, 108, .7);
+		font-weight: 700;
+		line-height: 24px;
+		text-transform: uppercase;
+	}
+	.save-btn{
+		position: absolute;
+		text-align: right;
+		font-family: 'Fa solid 900', sans-serif;
+		color: rgba(86, 95, 108, .9);
+		font-size: 14px;
+		justify-content: right;
+		right: 255px;
+		padding-top: 10px;
+		cursor: pointer;
+	}
+	.save-div{
+		text-align: right;
+		justify-content: right;
+		padding-bottom: 10px;
+		top: 0px;
+	}
+`

@@ -2,142 +2,147 @@ import React from 'react';
 import Meta from '../lib/meta';
 import server from '../services/server';
 import HeaderBar from './typer/HeaderBar'
-import TableRow from './typer/TableRow'
-import TitleRow from './typer/TitleRow'
-import InputFields from './typer/InputFields'
-import InputRow from './typer/InputRow'
-import ItemService from '../services/ItemService'
-import styles from './typer/Typer.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCheckSquare } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faCheckSquare);
-import { faSave } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faSave);
-import { faTrashAlt } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faTrashAlt);
+import TypedActivistsTable from './typer/TypedActivistsTable'
+import ContactScanDisplay from './typer/ContactScanDisplay'
+import style from './typer/Typer.css'
 
 
 
 export default class Typer extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      data:
-          []
-    }
-    this.addRow = this.addRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this._handleKeyPress = this._handleKeyPress.bind(this);
-  };
+	//constants
+	scanPingIntervalDuration = 10000;
+	constructor() {
+		super();
+		this.state = {
+			activists:[{firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0}],
+			cells: [],
+			selectedRowIndex: 0,
+			scanId: null,
+			scanUrl: null
+		}
+	};
+	componentDidMount() {
+		this.getContactsScan();
+	}
+	getContactsScan() {
+		server.get('contactScan', {})
+		.then(json => {
+			if(json.error)
+			{
+				if(json.error = "no pending scans are available")
+					alert("אין דפי קשר שדורשים הקלדה במערכת. תוכלו להקליד פרטי פעילים בכל מקרה");
+				return;
+			}
+			if(json.scanUrl)
+			{
+				this.setState({"scanUrl":json.scanUrl, "cells":json.rows, "scanId":json._id});
+				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
+				// store interval promise in the state so it can be cancelled later:
+				this.setState({callPingInterval: callPingInterval});
+			}
+		});
+	}
+	pingScan(){
+		if(!this.state.scanId)
+			return;
+		server.post('contactScan/pingScan', {
+			'scanId':this.state.scanId
+		})
+		.then(json => {
+		});
+	}
+	
+	addRow=function() {
+		let activists = this.state.activists.slice();
+		let nextScanRow = Math.min(activists[this.state.selectedRowIndex].scanRow+1, this.state.cells.length-1);
+		activists.push({firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:nextScanRow});
+		this.setState({activists: activists, selectedRowIndex:activists.length-1});
+	}.bind(this);
+	
+	handleRowFocus = function(rowIndex) {
+		this.setState({selectedRowIndex:rowIndex});
+	}.bind(this)
+	
+	handleTypedInput = function (name, value, rowIndex){
+		let activists = this.state.activists.slice();
+		activists[rowIndex][name] = value;
+		this.setState({activists: activists});
+	}.bind(this);
+	
+	selectScanRow = function(index){
+		let activists = this.state.activists.slice();
+		activists[this.state.selectedRowIndex].scanRow = index;
+		this.setState({activists: activists});
+	}.bind(this);
+	
+	handleRowPost = function(rowIndex){
+		let activists = this.state.activists.slice();
+		if(rowIndex==activists.length-1)
+			this.addRow();
+		else
+		{
+			this.setState({selectedRowIndex:rowIndex+1});
+		}
+	}.bind(this);
 
-  addRow() {
-    var input = document.createElement("input");
-    var fname = document.getElementById("firstName").value;
-    var lname = document.getElementById("lastName").value;
-    var mail = document.getElementById("mail").value;
-    var city = document.getElementById("city").value;
-    var phone = document.getElementById("phNo").value;
-    var item = {
-      "fname": fname,
-      "lname": lname,
-      "settlement": city,
-      "phone": phone,
-      "mail": mail
-    }
-    this.setState((prevState, props) => ({
-      data: [...prevState.data, item]
-    }));
-  };
+	handleRowDeletion=function(index){
+		let activists = this.state.activists.slice();
+		//remove the appropriate row from the activists array
+		activists.splice(Number(index), 1);
+		//decrease selected row index if necessary
+		let selectedRowIndex = this.state.selectedRowIndex;
+		if(selectedRowIndex>=index){
+			selectedRowIndex=selectedRowIndex==0?selectedRowIndex:(selectedRowIndex-1);
+		}
+		//if no rows are left, create a new one
+		if(!activists.length)
+			activists.push({firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0});
+		//commit to state
+		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
+	}.bind(this);
 
-  myFunction = () => {
-    this.props.updateItem(this.state)
-  };
-
-  handleChangeEvent = (value, cell, index) => {
-    let newState = this.state.data.slice(0);
-    newState[cell][index] = value;
-    this.setState({data: newState});
-  };
-
-  _handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      this.addRow();
-    }
-  };
-
-  deleteRow(index){
-    var contacts = [...this.state.data];
-    contacts.splice(Number(index), 1);
-    this.setState((props) => ({
-      data: contacts
-    }));
-  };
-  
-	handlePost(){
-		var data ={"activists":this.state.data};
+	handlePost=function(){
+		var data ={
+			"activists":this.state.activists,
+			"scanUrl":this.state.scanUrl,
+			"scanId":this.state.scanId
+		};
 		server.post('activists/uploadTyped', data)
 		.then(json => {
-			this.setState({data: []});
+			this.setState({
+				activists: [{firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0}],
+				cells: [],
+				selectedRowIndex: 0,
+				scanId: null,
+				scanUrl: null
+			});
+			alert("the details have been stored in the system");
+			this.getContactsScan();
 		});
-	};
-
-  render() {
-    return (
-        <div>
-          <Meta/>
-          <style jsx global>{`
-          :lang(heb){
-            font-family: 'Rubik', sans-serif;
-            font-size: 13px;
-        }
-
-        :lang(ar){
-            font-family: 'Cairo', sans-serif;
-            
-        }
-
-        br {
-          display: block;
-          margin: 0px 0;
-       }
-	      	`}</style>
-          <HeaderBar sendFunction={this.handlePost.bind(this)}></HeaderBar>
-          <section style={styles.section}>
-            <div style={styles.rightpanel}>
-              <content style={styles.content}>
-                  <TitleRow></TitleRow>
-                  <div style={styles['save-div']}>
-                    <span onClick ={this.addRow}><FontAwesomeIcon id = "save" icon="save" style={styles['save-btn']}/></span>
-                    <InputRow style={{'MarginTop':'10px'}} handleKeyPress={this._handleKeyPress}></InputRow>
-                  </div>
-                  <br/>
-                  <br/>
-
-                  <table style={styles.info_table}>
-                     <tbody style={styles.row}>
-                     {
-                       this.state.data.map((person, i) =>
-                       <div>
-                         <FontAwesomeIcon onClick ={this.deleteRow.bind(this,i)}  key={i+0.1} id="delete" icon="trash-alt" style={styles['save-btn']}/>
-                         <TableRow key={i} data={person} num={i}
-                         handleChangeEvent={this.handleChangeEvent} handleKeyPress={this._handleKeyPress}/></div>)}
-                     </tbody>
-                  </table>
-                  {/*<div style={styles.selectall}>
-                      <div style={styles.awsome_low}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
-                      <h4 style={styles.heading}>select all</h4>
-                 </div>
-                 <div style={styles.input_fields}>
-                <div style={styles.addfilter_copy}>שלח למסד הנתונים</div>
-                </div>*/}
-             </content>
-            </div>
-          </section>
-        </div>
-
-    )
-  }
-
+	}.bind(this);
+	
+	render() {
+		const cells = this.state.cells;
+		const scanUrl = this.state.scanUrl;
+		const selectedRowIndex = this.state.selectedRowIndex;
+		const activists = this.state.activists;
+		const selectedScanRow = activists[selectedRowIndex].scanRow;
+		const scanDisplay = <ContactScanDisplay cells={cells} scanUrl={scanUrl} selectedRow={selectedScanRow} selectScanRow={this.selectScanRow}/>
+		return (
+			<div dir="rtl">
+				<Meta/>
+				<style jsx global>{style}</style>
+				<HeaderBar sendFunction={this.handlePost.bind(this)}></HeaderBar>
+				<section className="section">
+					<div className="main-panel">
+					{scanUrl?scanDisplay:""}
+						<content className="content">
+							<TypedActivistsTable handleChange={this.handleTypedInput} handleRowPost={this.handleRowPost} handleRowFocus={this.handleRowFocus} handleRowDeletion={this.handleRowDeletion} activists={activists} selectedRow={selectedRowIndex}/>
+						</content>
+					</div>
+				</section>
+			</div>
+		)
+	}
 }
 
