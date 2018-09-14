@@ -14,6 +14,9 @@ export default class ContactScanDisplay extends React.Component {
 			selectedRow: (props.selectedRow==null)?0:props.selectedRow,
 			selectScanRow: props.selectScanRow
 		}
+		this.scanDisplay = React.createRef();
+		this.scanCanvas = React.createRef();
+		this.scanDisplayWrap = React.createRef();
 	};
 	componentWillReceiveProps(nextProps) {
 		// You don't have to do this check first, but it can help prevent an unneeded render
@@ -39,7 +42,7 @@ export default class ContactScanDisplay extends React.Component {
 		}
 	}
 	render() {
-		const scan = <img src={"../uploads/contactScans/"+this.state.scanUrl} className="scan-canvas" onLoad={this.handleImageLoaded.bind(this)}/>
+		const scan = <img src={"../uploads/contactScans/"+this.state.scanUrl} className="scan-canvas" onLoad={this.handleImageLoaded.bind(this)} ref={this.scanCanvas}/>
 		//width perecentage - 100 divided by the width of the canvas
 		const wp = this.state.scanWidth?100/this.state.scanWidth:0.1;
 		//height perecentage - 100 divided by the height of the canvas
@@ -70,7 +73,14 @@ export default class ContactScanDisplay extends React.Component {
 			const selectedY1 = cells[selectedRow].cells[0].corners[0].y;
 			const selectedY2 = cells[selectedRow].cells[cells[selectedRow].cells.length-1].corners[0].y;
 			rotationOffset = -Math.atan((selectedY1-selectedY2)/(selectedX1-selectedX2))/Math.PI*180;
-			positionOffset = -((selectedY1+selectedY2)/2) - Math.abs(selectedY1 - selectedY2)/4;
+			const scanDisplayWidth = this.scanDisplay.current?this.scanDisplay.current.clientWidth:1;
+			const scanCanvasWidth = this.scanCanvas.current?this.scanCanvas.current.naturalWidth:1;
+			const scanDisplayWrapHeight = this.scanDisplayWrap.current?this.scanDisplayWrap.current.clientHeight:1;
+			//vertically focus on the highlighted row
+			const selectedY1Bottom = cells[selectedRow].cells[0].corners[2].y;
+			positionOffset = -(selectedY1+selectedY2 + Math.abs(selectedY1 - selectedY1Bottom))/2/scanCanvasWidth*scanDisplayWidth;
+			//vertically center inside the highlighted row
+			positionOffset += scanDisplayWrapHeight/2;
 		}
 		return (
 			<div>
@@ -84,8 +94,8 @@ export default class ContactScanDisplay extends React.Component {
 							<FontAwesomeIcon icon="chevron-down"/>
 						</button>
 					</div>
-					<div className="scan-display-wrap">
-						<div className="scan-display" style={{transform: "translateY(calc("+positionOffset+" * 0.19% + 30px)) rotate("+rotationOffset+"deg)"}}>
+					<div ref={this.scanDisplayWrap} className="scan-display-wrap">
+						<div ref={this.scanDisplay} className="scan-display" style={{transform: "translateY("+positionOffset+"px ) rotate("+rotationOffset+"deg)"}}>
 							{this.state.scanUrl?scan:""}
 							<div className="detected-table-cells-wrap">
 								{cellsOverlay}
