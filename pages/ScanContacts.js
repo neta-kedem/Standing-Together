@@ -71,9 +71,9 @@ render() {
 			<style jsx global>{style}</style>
 			{!selectedImage?imgUploadUI:""}
 			{(selectedImage&&!croppedImage)?imgCropperUI:""}
-			{!cells.length?tableScannerUI:""}
-			{cells.length?rowSelectorUI:""}
-			{cells.length?postButton:""}
+			{croppedImage&&!cells.length?tableScannerUI:""}
+			{croppedImage&&cells.length?rowSelectorUI:""}
+			{croppedImage&&cells.length?postButton:""}
 		</div>
 	)
 }
