@@ -159,8 +159,17 @@ module.exports = (app) => {
 				);
 			}
 			Activist.insertMany(processedActivists).then(function (result) {
-				if (result)
-					this.markTypedContactScanRows(res, typerId, scanId, processedActivists);
+				if (result){
+					if(scanId){
+						this.markTypedContactScanRows(res, typerId, scanId, processedActivists);
+					}
+					else{
+						return res.json(result);
+					}
+				}
+				else{
+					return res.json({"error":"an unknown error has occured, the activists were not saved"});
+				}
 			});
 		});
 	});
