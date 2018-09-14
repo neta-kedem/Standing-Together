@@ -4,6 +4,7 @@ import Meta from '../lib/meta';
 
 import config from '../config';
 import server from '../services/server';
+import style from './scanContacts/ScanContacts.css';
 import RowSelector from './scanContacts/TableRowSelector';
 import TableScanner from '../UIComponents/TableScanner/TableScanner';
 import ImageUploader from '../UIComponents/ImageUploader/ImageUploader';
@@ -60,13 +61,14 @@ render() {
 	const croppedImage = this.state.croppedImage;
 	const cells = this.state.detectedCells;
 	const imgUploadUI = <ImageUploader onSelect={this.handleImageSelection.bind(this)}/>;
-	const imgCropperUI = <ImageCropper file={selectedImage} onCrop={this.handleImageCrop.bind(this)}/>
+	const imgCropperUI = <div className="contact-scan-cropper-wrap"><ImageCropper file={selectedImage} onCrop={this.handleImageCrop.bind(this)}/></div>
 	const tableScannerUI = <TableScanner src={croppedImage} onDetection={this.handleTableDetection.bind(this)}/>
 	const rowSelectorUI = <RowSelector src={croppedImage} width={this.state.width} height={this.state.height} cells={cells} horizontalBorders={this.state.horizontalBorders} verticalBorders={this.state.verticalBorders}/>
 	const postButton = <button onClick={this.handlePost.bind(this)}>post me!</button>
 	return (
 		<div>
 			<Meta/>
+			<style jsx global>{style}</style>
 			{!selectedImage?imgUploadUI:""}
 			{(selectedImage&&!croppedImage)?imgCropperUI:""}
 			{!cells.length?tableScannerUI:""}
