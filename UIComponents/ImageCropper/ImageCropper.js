@@ -24,15 +24,20 @@ export default class ImageCropper extends React.Component {
 			reader.readAsDataURL(props.file)
 		}
 	}
+	handleImageLoad(){
+		this.setState({baseImg: this.state.cropper.img});
+	}
 	handleCrop(cropper){
 		this.state.onCrop(this.state.cropper.crop());
 	}
 	render() {
 		const src = this.state.src;
+		const imageWidth = this.state.baseImg?this.state.baseImg.clientWidth:1;
+		const imageHeight = this.state.baseImg?this.state.baseImg.clientHeight:1;
 		const cropperWrap =
 		src?
 			<div>
-				<Cropper src={this.state.src} fixedRatio={false} ref={ ref => { this.state.cropper = ref }}/>
+				<Cropper src={this.state.src} onImgLoad={this.handleImageLoad.bind(this)} originX={imageWidth/20} originY={imageHeight/20} width={imageWidth/20*18} height={imageHeight/20*18} fixedRatio={false} ref={ ref => { this.state.cropper = ref }}/>
 				<button type="button" onClick={this.handleCrop.bind(this)}>crop!</button>
 			</div>
 		:"";
