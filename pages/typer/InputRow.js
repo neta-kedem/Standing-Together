@@ -35,6 +35,7 @@ export default class InputRow extends React.Component {
 	handleKeyPress=function(event){
 		if(event.key == 'Enter' || event.key == 'Tab'){
 			this.handlePost(this.state.rowIndex);
+			event.preventDefault();
 		}
 	}.bind(this);
 	
@@ -71,7 +72,7 @@ export default class InputRow extends React.Component {
 						<input value={this.props.values.residency} type="text" name="residency" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
 						<td> 
-						<input value={this.props.values.phone} type="phone" name="phone" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+						<input value={this.props.values.phone} type="tel" name="phone" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
 					<td> 
 						<input value={this.props.values.email} onKeyDown={this.handleKeyPress} type="email" name="email" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
