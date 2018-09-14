@@ -68,7 +68,7 @@ export default class InputRow extends React.Component {
 						<input value={this.props.values.lastName} type="text" name="lastName" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
 						<td> 
-						<input value={this.props.values.city} type="text" name="city" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+						<input value={this.props.values.residency} type="text" name="residency" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
 						<td> 
 						<input value={this.props.values.phone} type="phone" name="phone" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>

@@ -1,4 +1,5 @@
-const contactScan = require('../../models/contactScanModel');
+const mongoose = require('mongoose');
+const ContactScan = require('../../models/contactScanModel');
 const Authentication = require('../../services/authentication');
 //constants
 //how much time (in minutes) after the last ping should an scanned sheet be reserved for the typer assigned to it.
@@ -31,7 +32,7 @@ module.exports = (app) => {
 				"scanUrl":scanUrl,
 				"rows":cellsObject
 			}
-			const newScan = new contactScan(scanObject);
+			const newScan = new ContactScan(scanObject);
 			newScan.save(function (err) {
 				if (err){
 					return res.json(err);
@@ -47,16 +48,31 @@ module.exports = (app) => {
 				return res.json({"error":"missing token"});
 			const typerId = Authentication.getMyId();
 			const now = new Date();
-			const reservationDeadline = new Date(now.getTime()+maxReservationDuration*60000);
-			contactScan.findOneAndUpdate(
-				{"complete": false, $or:[{"lastPing":null}, {"lastPing":{$lt: reservationDeadline}}]},
+			const reservationDeadline = new Date(now.getTime()-maxReservationDuration*60000);
+			ContactScan.findOneAndUpdate(
+				{"complete": false, $or:[{"lastPing":null}, {"lastPing":{$lt: reservationDeadline}}, {"typerId": typerId}]},
 				{"$set": {"lastPing": now, "typerId": typerId}},
-				(err, eventData) => {
+				(err, scanData) => {
 				if (err) return res.json({success: false, error: err});
-				if (!eventData)
+				if (!scanData)
 					return res.json({"error":"no pending scans are available"});
-				return res.json(eventData);
+				return res.json(scanData);
 			});
 		})
+	});
+	app.post('/api/contactScan/pingScan', (req, res, next) => {
+		Authentication.hasRole(req, res, "isTyper").then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			const scanId = mongoose.Types.ObjectId(req.body.scanId);
+			const now = new Date();
+			ContactScan.update(
+				{"_id": scanId},
+				{"$set": {"lastPing": now}},
+				(err, result) => {
+					return res.json({"err":err, "result":result});
+				}
+			);
+		});
 	});
 };

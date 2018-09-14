@@ -16,6 +16,7 @@ const activistSchema = new mongoose.Schema({
 			required: true,
 		},
 		typerName: String,
+		scanUrl: {type:String, required: false},
 	},
 	profile: {
 		firstName: {

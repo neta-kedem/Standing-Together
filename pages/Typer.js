@@ -9,35 +9,53 @@ import style from './typer/Typer.css'
 
 
 export default class Typer extends React.Component {
+	//constants
+	scanPingIntervalDuration = 10000;
 	constructor() {
 		super();
 		this.state = {
-			activists:[{firstName:"", lastName:"", phone:"", city:"", email:"", scanRow:0}],
+			activists:[{firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0}],
 			cells: [],
-			selectedRowIndex: 0
+			selectedRowIndex: 0,
+			scanId: null,
+			scanUrl: null
 		}
 	};
 	componentDidMount() {
 		this.getContactsScan();
-		//var callPingInterval = setInterval(this.pingCalls.bind(this), this.callPingIntervalDuration);
-		// store interval promise in the state so it can be cancelled later:
-		//this.setState({callPingInterval: callPingInterval});
 	}
 	getContactsScan() {
 		server.get('contactScan', {})
 		.then(json => {
 			if(json.error)
 			{
+				if(json.error = "no pending scans are available")
+					alert("אין דפי קשר שדורשים הקלדה במערכת. תוכלו להקליד פרטי פעילים בכל מקרה");
 				return;
 			}
-			this.setState({"scanUrl":json.scanUrl, "cells":json.rows});
+			if(json.scanUrl)
+			{
+				this.setState({"scanUrl":json.scanUrl, "cells":json.rows, "scanId":json._id});
+				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
+				// store interval promise in the state so it can be cancelled later:
+				this.setState({callPingInterval: callPingInterval});
+			}
+		});
+	}
+	pingScan(){
+		if(!this.state.scanId)
+			return;
+		server.post('contactScan/pingScan', {
+			'scanId':this.state.scanId
+		})
+		.then(json => {
 		});
 	}
 	
 	addRow=function() {
 		let activists = this.state.activists.slice();
 		let nextScanRow = Math.min(activists[this.state.selectedRowIndex].scanRow+1, this.state.cells.length-1);
-		activists.push({firstName:"", lastName:"", phone:"", city:"", email:"", scanRow:nextScanRow});
+		activists.push({firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:nextScanRow});
 		this.setState({activists: activists, selectedRowIndex:activists.length-1});
 	}.bind(this);
 	
@@ -78,16 +96,28 @@ export default class Typer extends React.Component {
 		}
 		//if no rows are left, create a new one
 		if(!activists.length)
-			activists.push({firstName:"", lastName:"", phone:"", city:"", email:"", scanRow:0});
+			activists.push({firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0});
 		//commit to state
 		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
 	}.bind(this);
 
 	handlePost=function(){
-		var data ={"activists":this.state.activists};
+		var data ={
+			"activists":this.state.activists,
+			"scanUrl":this.state.scanUrl,
+			"scanId":this.state.scanId
+		};
 		server.post('activists/uploadTyped', data)
 		.then(json => {
-			this.setState({activists: []});
+			this.setState({
+				activists: [{firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0}],
+				cells: [],
+				selectedRowIndex: 0,
+				scanId: null,
+				scanUrl: null
+			});
+			alert("the details have been stored in the system");
+			this.getContactsScan();
 		});
 	}.bind(this);
 	
@@ -96,6 +126,8 @@ export default class Typer extends React.Component {
 		const scanUrl = this.state.scanUrl;
 		const selectedRowIndex = this.state.selectedRowIndex;
 		const activists = this.state.activists;
+		const selectedScanRow = activists[selectedRowIndex].scanRow;
+		const scanDisplay = <ContactScanDisplay cells={cells} scanUrl={scanUrl} selectedRow={selectedScanRow} selectScanRow={this.selectScanRow}/>
 		return (
 			<div dir="rtl">
 				<Meta/>
@@ -103,10 +135,10 @@ export default class Typer extends React.Component {
 				<HeaderBar sendFunction={this.handlePost.bind(this)}></HeaderBar>
 				<section className="section">
 					<div className="main-panel">
-						<ContactScanDisplay cells={cells} scanUrl={scanUrl} selectedRow={activists[selectedRowIndex].scanRow} selectScanRow={this.selectScanRow}/>
+					{scanUrl?scanDisplay:""}
 						<content className="content">
 							<TypedActivistsTable handleChange={this.handleTypedInput} handleRowPost={this.handleRowPost} handleRowFocus={this.handleRowFocus} handleRowDeletion={this.handleRowDeletion} activists={activists} selectedRow={selectedRowIndex}/>
-					 </content>
+						</content>
 					</div>
 				</section>
 			</div>

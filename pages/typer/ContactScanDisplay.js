@@ -23,7 +23,7 @@ export default class ContactScanDisplay extends React.Component {
 		if (nextProps.cells) {
 			this.setState({cells: nextProps.cells});
 		}
-		if (nextProps.selectedRow && this.state.selectedRow!=nextProps.selectedRow) {
+		if (nextProps.selectedRow!=null && this.state.selectedRow!=nextProps.selectedRow) {
 			this.setState({selectedRow: nextProps.selectedRow});
 		}
 	}

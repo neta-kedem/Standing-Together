@@ -7,7 +7,7 @@ const contactScanSchema = new mongoose.Schema({
 			type:Date,
 			required: true,
 		},
-		//timestamp for when the event was last saved
+		//timestamp for when the scan details were last saved
 		lastUpdate: {
 			type:Date,
 			required: true,
@@ -34,12 +34,12 @@ const contactScanSchema = new mongoose.Schema({
 							}
 						],
 						required: true
-					},
-					typerId: {type: String},
-					activistId: {type: String},
+					}
 				},
 				required: true
-			}
+			},
+			typerId: {type: String},
+			activistId: {type: String}
 		}],
 		required: true
 	},
