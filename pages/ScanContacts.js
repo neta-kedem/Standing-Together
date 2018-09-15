@@ -17,6 +17,7 @@ constructor(props) {
 	this.state = {
 		selectedImage: false,
 		croppedImage: false,
+		normalizedImg: false,
 		scanUrl: null,
 		horizontalBorders: [],
 		verticalBorders: [],
@@ -54,7 +55,18 @@ publishScan(imgUrl){
 	const data ={"scanUrl":imgUrl, "cells":this.state.detectedCells,};
 	server.post('contactScan', data)
 	.then(json => {
-		this.setState({data: []});
+		this.setState({
+				selectedImage: false,
+				croppedImage: false,
+				normalizedImg: false,
+				scanUrl: null,
+				horizontalBorders: [],
+				verticalBorders: [],
+				detectedCells: [],
+				width: 1000,
+				height: 1000
+			});
+		alert("המסמך נשמר בהצלחה, ויוצג לקלדנים");
 	});
 }
 render() {
