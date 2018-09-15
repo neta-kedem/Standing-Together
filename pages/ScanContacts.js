@@ -61,7 +61,9 @@ render() {
 	const selectedImage = this.state.selectedImage;
 	const croppedImage = this.state.croppedImage;
 	const cells = this.state.detectedCells;
-	const imgUploadUI = <ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText="⇪ העלאת סריקת דף קשר ⇪"/>;
+	const imgUploadUI = <div className="contact-scan-uploader">
+			<ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText="⇪ העלאת סריקת דף קשר ⇪"/>
+		</div>;
 	const imgCropperUI = <div className="contact-scan-cropper-wrap"><ImageCropper file={selectedImage} onCrop={this.handleImageCrop.bind(this)}/></div>
 	const tableScannerUI = <TableScanner src={croppedImage} onDetection={this.handleTableDetection.bind(this)}/>
 	const rowSelectorUI = <RowSelector src={croppedImage} width={this.state.width} height={this.state.height} cells={cells} horizontalBorders={this.state.horizontalBorders} verticalBorders={this.state.verticalBorders}/>
@@ -71,9 +73,11 @@ render() {
 			<Meta/>
 			<style jsx global>{style}</style>
 			<TopNavBar>
-				<div className="scan-page-title">
-					<div>סריקת דף קשר</div>
-					<div>סריקת דף קשר</div>
+				<div className="scan-page-title-wrap">
+					<div className="scan-page-title">
+						<div>סריקת דף קשר</div>
+						<div>סריקת דף קשר</div>
+					</div>
 				</div>
 			</TopNavBar>
 			{!selectedImage?imgUploadUI:""}
