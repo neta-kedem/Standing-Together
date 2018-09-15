@@ -38,11 +38,31 @@ export default class ImageCropper extends React.Component {
 		src?
 			<div>
 				<Cropper src={this.state.src} onImgLoad={this.handleImageLoad.bind(this)} originX={imageWidth/20} originY={imageHeight/20} width={imageWidth/20*18} height={imageHeight/20*18} fixedRatio={false} ref={ ref => { this.state.cropper = ref }}/>
-				<button type="button" onClick={this.handleCrop.bind(this)}>crop!</button>
+				<button className="crop-button" type="button" onClick={this.handleCrop.bind(this)}>crop!</button>
 			</div>
 		:"";
 		return (
 			<div>
+				<style jsx global>{`
+					.crop-button{
+						color: white;
+						background-color: #90278e;
+						border: none;
+						outline: none;
+						font-size: 1.5em;
+						display: block;
+						padding: 0.25em 0.5em;
+						margin: 0.5em auto;
+						transition: background-color 0.25s;
+						cursor: pointer;
+					}
+					.crop-button:hover{
+						background-color: #731f72;
+					}
+					.crop-button:active{
+						background-color: #561755;
+					}
+				`}</style>
 				{cropperWrap}
 			</div>
 		)

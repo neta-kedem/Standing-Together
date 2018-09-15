@@ -64,10 +64,31 @@ render() {
 	const imgUploadUI = <div className="contact-scan-uploader">
 			<ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText="⇪ העלאת סריקת דף קשר ⇪"/>
 		</div>;
-	const imgCropperUI = <div className="contact-scan-cropper-wrap"><ImageCropper file={selectedImage} onCrop={this.handleImageCrop.bind(this)}/></div>
-	const tableScannerUI = <TableScanner src={croppedImage} onDetection={this.handleTableDetection.bind(this)}/>
-	const rowSelectorUI = <RowSelector src={croppedImage} width={this.state.width} height={this.state.height} cells={cells} horizontalBorders={this.state.horizontalBorders} verticalBorders={this.state.verticalBorders}/>
-	const postButton = <button onClick={this.handlePost.bind(this)}>post me!</button>
+	const imgCropperUI =
+		<div>
+			<div className="contact-scan-step-title">
+				<div>יש לחתוך את הסריקה כך שלא יישארו קצוות מעבר לנייר</div>
+				<div>יש לחתוך את הסריקה כך שלא יישארו קצוות מעבר לנייר</div>
+			</div>
+			<div className="contact-scan-step-wrap"><ImageCropper file={selectedImage} onCrop={this.handleImageCrop.bind(this)}/></div>
+		</div>
+	const tableScannerUI = 
+		<div>
+			<div className="contact-scan-step-title">
+				<div>המסמך נסרק...</div>
+				<div>המסמך נסרק...</div>
+			</div>
+			<div className="contact-scan-step-wrap"><TableScanner src={croppedImage} onDetection={this.handleTableDetection.bind(this)}/></div>
+		</div>
+	const rowSelectorUI = 
+		<div>
+			<div className="contact-scan-step-title">
+				<div>הסריקה הסתיימה. אם חלק מהרשומות ריקות, נא לסמן אותן</div>
+				<div>הסריקה הסתיימה. אם חלק מהרשומות ריקות, נא לסמן אותן</div>
+			</div>
+			<div className="contact-scan-step-wrap"><RowSelector src={croppedImage} width={this.state.width} height={this.state.height} cells={cells} horizontalBorders={this.state.horizontalBorders} verticalBorders={this.state.verticalBorders}/></div>
+		</div>
+	const postButton = <button className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>
 	return (
 		<div>
 			<Meta/>
