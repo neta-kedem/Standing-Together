@@ -1,4 +1,4 @@
-function detectCells(verticalBorders, horizontalBorders, rad1, rad2) {
+function detectCells(verticalBorders, horizontalBorders) {
 	let cellsArray = [];
 	for (var i=0; i<verticalBorders.length-1; i++)
 	{
@@ -11,7 +11,8 @@ function detectCells(verticalBorders, horizontalBorders, rad1, rad2) {
 			for (var k=0; k<corners.length; k++)
 			{
 				cornersCoordinates.push(linesIntersection(
-					verticalBorders[corners[k][0]].x, verticalBorders[corners[k][0]].y, rad1, horizontalBorders[corners[k][1]].x, horizontalBorders[corners[k][1]].y, rad2
+					verticalBorders[corners[k][0]].x, verticalBorders[corners[k][0]].y, verticalBorders[corners[k][0]].rad,
+					horizontalBorders[corners[k][1]].x, horizontalBorders[corners[k][1]].y, horizontalBorders[corners[k][0]].rad
 				));
 			}
 			cellsArray.push(cornersCoordinates);

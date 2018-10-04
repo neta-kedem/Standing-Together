@@ -42,7 +42,7 @@ function detectBorderFromCoordinate(img, x, y, sin, cos) {
 	return null;
 }
 function scanAngleRangeForDarkestLine(imgContext, x, y, rad){
-	const rangeSize = 0.05;
+	const rangeSize = 0.3;
 	const checkResolution = 0.001;
 	let darkestRad = rad;
 	let darkestLineSum = null;

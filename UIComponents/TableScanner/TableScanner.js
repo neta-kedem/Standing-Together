@@ -153,16 +153,17 @@ updateCanvas() {
 		const bordersScannerPosition =  this.state.bordersScannerPosition;
 		const scannerOriginX = this.state.topCorner.x;
 		const scannerOriginY = this.state.topCorner.y;
-		const horizontalEdgeRad = this.state.horizontalEdgeRad;
-		const verticalEdgeRad = this.state.verticalEdgeRad;
+		const horizontalBorders = this.state.horizontalBorders.slice();
+		const verticalBorders = this.state.verticalBorders.slice(); 
+		const horizontalEdgeRad = horizontalBorders[horizontalBorders.length-1].rad;
+		const verticalEdgeRad = verticalBorders[verticalBorders.length-1].rad;
 		const horizontalScannerPositionX = scannerOriginX+bordersScannerPosition*Math.cos(verticalEdgeRad);
 		const horizontalScannerPositionY = scannerOriginY+bordersScannerPosition*Math.sin(verticalEdgeRad);
 		const verticalScannerPositionX = scannerOriginX+bordersScannerPosition*Math.cos(horizontalEdgeRad);
 		const verticalScannerPositionY = scannerOriginY+bordersScannerPosition*Math.sin(horizontalEdgeRad);
-		ScannerDrawer.drawBorderScanner(ctx, horizontalScannerPositionX, horizontalScannerPositionY, this.state.horizontalEdgeRad);
-		ScannerDrawer.drawBorderScanner(ctx, verticalScannerPositionX, verticalScannerPositionY, this.state.verticalEdgeRad);
-		const horizontalBorders = this.state.horizontalBorders.slice();
-		const verticalBorders = this.state.verticalBorders.slice(); 
+		ScannerDrawer.drawBorderScanner(ctx, horizontalScannerPositionX, horizontalScannerPositionY, horizontalEdgeRad);
+		ScannerDrawer.drawBorderScanner(ctx, verticalScannerPositionX, verticalScannerPositionY, verticalEdgeRad);
+		
 		for(var i=0; i<horizontalBorders.length; i++)
 		{
 			ScannerDrawer.drawBorder(ctx, horizontalBorders[i].x, horizontalBorders[i].y, horizontalBorders[i].rad);
@@ -202,7 +203,7 @@ detectionStep() {
 	//once all borders have been detected, if the cells array wasn't calculated yet, calculate the cells array
 	if(this.state.allHorizontalBordersFound&&this.state.allVerticalBordersFound&&this.state.cells.length==0){
 		const cells = cellsDetector.detectCells(
-			this.state.verticalBorders, this.state.horizontalBorders, this.state.verticalEdgeRad, this.state.horizontalEdgeRad
+			this.state.verticalBorders, this.state.horizontalBorders
 		);
 		this.setState({"cells":cells});
 		//before posting to the server, iterate over the cells and sort them by rows
