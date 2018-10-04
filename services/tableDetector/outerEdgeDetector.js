@@ -38,10 +38,10 @@ function getFuzzyCornerCoordinates(img, x, y, rad){
 }
 function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
 	const brightnessThreshold = 200;
-	const darknessRatioThreshold = 0.3;
+	const darknessRatioThreshold = 0.6;
 	const width = imgContext.canvas.width;
 	const height = imgContext.canvas.height;
-	const maxLineLength = Math.min(width, height);
+	const maxLineLength = Math.min(width, height)/4;
 	let linePoints = [];
 	for(let i=0; i<maxLineLength; i++)
 	{

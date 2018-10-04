@@ -35,11 +35,11 @@ function desaturateImage(img){
 	img.putImageData(imageData, 0 ,0);
 }
 //contrast between -1 and 1
-function contrastImage(img, contrast){
+function contrastImage(img, contrast, mid){
 	let imageData = img.getImageData(0, 0, img.canvas.width, img.canvas.height);
 	let data = imageData.data;
     contrast = contrast + 1;  //convert to decimal & shift range: [0..2]
-    const intercept = 128 * (1 - contrast);
+    const intercept = mid * (1 - contrast);
     for(var i=0;i<data.length;i+=4){   //r,g,b,a
         data[i] = data[i]*contrast + intercept;
         data[i+1] = data[i+1]*contrast + intercept;

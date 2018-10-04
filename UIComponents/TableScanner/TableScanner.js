@@ -110,7 +110,7 @@ adjustScan(){
 	//make the image greyscale
 	ia.desaturateImage(ctx);
 	//increase contrast to eliminate noise and highlight edges
-	ia.contrastImage(ctx, 0.7);
+	ia.contrastImage(ctx, 2.5, 180);
 	//store in the state
 	this.setState({scan:scanCanvas}, ()=>{this.setState({scanReady:true});});
 }
@@ -165,35 +165,41 @@ updateCanvas() {
 		const verticalBorders = this.state.verticalBorders.slice(); 
 		for(var i=0; i<horizontalBorders.length; i++)
 		{
-			ScannerDrawer.drawBorder(ctx, horizontalBorders[i].x, horizontalBorders[i].y, this.state.horizontalEdgeRad);
+			ScannerDrawer.drawBorder(ctx, horizontalBorders[i].x, horizontalBorders[i].y, horizontalBorders[i].rad);
 		}
 		for(var i=0; i<verticalBorders.length; i++)
 		{
-			ScannerDrawer.drawBorder(ctx, verticalBorders[i].x, verticalBorders[i].y, this.state.verticalEdgeRad);
+			ScannerDrawer.drawBorder(ctx, verticalBorders[i].x, verticalBorders[i].y, verticalBorders[i].rad);
 		}
 	}
 }
 
 detectionStep() {
+	//if the image hasn't loaded up yet, don't do anything
 	if(!this.state.scanReady||!this.state.scan)
 		return;
+	//once the image has loaded, and as long as a top corner wasn't detected, try detecting the top corner.
 	if(!this.state.topCorner)
 		this.detectCorners();
+	//once a top corner has been detected, and as long as either of the outer edges originating from the corner hasn't been detected yet, try to detect them.
 	if(this.state.topCorner&&(!this.state.horizontalEdgeRad||!this.state.verticalEdgeRad))
 	{
 		this.detectOuterEdges();
 	}
+	//once both outer borders have been detected, and as long as either  inner border scanner is in the bounds of the image, scan for additional innner borders.
 	if(this.state.horizontalEdgeRad&&this.state.verticalEdgeRad&&(!this.state.allHorizontalBordersFound||!this.state.allVerticalBordersFound))
 	{
 		if(this.state.horizontalBorders.length==0&&this.state.verticalBorders.length==0)
 		{
 			//if both outer edges were detected, but no borders are defined, initialize the borders arrays to contain the table origin
-			let tempBorderArr = [];
-			tempBorderArr.push({x:this.state.topCorner.x, y:this.state.topCorner.y});
-			this.setState({horizontalBorders:tempBorderArr, verticalBorders:tempBorderArr});
+			const firstHorizontalBorder = [{x:this.state.topCorner.x, y:this.state.topCorner.y, rad:this.state.horizontalEdgeRad}];
+			const firstVerticalBorder = [{x:this.state.topCorner.x, y:this.state.topCorner.y, rad:this.state.verticalEdgeRad}];
+			//add the first two borders to the state-stored array
+			this.setState({horizontalBorders:firstHorizontalBorder, verticalBorders:firstVerticalBorder});
 		}
 		this.detectBorders();
 	}
+	//once all borders have been detected, if the cells array wasn't calculated yet, calculate the cells array
 	if(this.state.allHorizontalBordersFound&&this.state.allVerticalBordersFound&&this.state.cells.length==0){
 		const cells = cellsDetector.detectCells(
 			this.state.verticalBorders, this.state.horizontalBorders, this.state.verticalEdgeRad, this.state.horizontalEdgeRad
@@ -307,6 +313,8 @@ detectOuterEdges() {
 detectBorders() {
 	const horizontalBorders = this.state.horizontalBorders.slice();
 	const verticalBorders = this.state.verticalBorders.slice();
+	const lastHorizontalBorderRad = horizontalBorders[horizontalBorders.length-1].rad;
+	const lastVerticalBorderRad = verticalBorders[verticalBorders.length-1].rad;
 	const scan = this.state.scan;
 	const x = this.state.topCorner.x;
 	const y = this.state.topCorner.y;
@@ -315,7 +323,7 @@ detectBorders() {
 	const bordersScannerPosition = this.state.bordersScannerPosition;
 	//check for borders parallel to the horizontal edge
 	const border1Origin = borderDetector.detectBorder(
-		scan, x, y, horizontalEdgeRad, verticalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
+		scan, x, y, lastHorizontalBorderRad, verticalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
 	);
 	if(border1Origin!=null&&duplicateBorderDetector.isBorderNonDuplicate(horizontalBorders, border1Origin, true))
 	{
@@ -324,7 +332,7 @@ detectBorders() {
 	}
 	//check for borders parallel to the vertical edge
 	const border2Origin = borderDetector.detectBorder(
-		scan, x, y, verticalEdgeRad, horizontalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
+		scan, x, y, lastVerticalBorderRad, horizontalEdgeRad, bordersScannerPosition, this.state.bordersScannerSpeed
 	);
 	if(border2Origin!=null&&duplicateBorderDetector.isBorderNonDuplicate(verticalBorders, border2Origin, false))
 	{

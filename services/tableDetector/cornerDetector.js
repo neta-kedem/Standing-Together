@@ -16,7 +16,7 @@ function detectCornerInRange(img, rowIndex, dir, rowBulkSize) {
 	}
 }
 function scanRowForCorner(row) {
-	const cornerWidthThreshold = 5;
+	const cornerWidthThreshold = 3;
 	const cornerBrightnessThreshold = 230;
 	const rowWidth = row.data.length/4;
 	const buffer = 2;
