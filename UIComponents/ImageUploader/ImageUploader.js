@@ -49,7 +49,7 @@ export default class ImageUploader extends React.Component {
 					<form method="post">
 						<div className="upload-btn-wrapper">
 							<button className="upload-btn">{this.state.labelText}</button>
-							<input required type="file" onChange={this.fileSelectionHandler.bind(this)}/>
+							<input required type="file" accept="image/*" onChange={this.fileSelectionHandler.bind(this)}/>
 						</div>
 					</form>
 				</div>
