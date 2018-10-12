@@ -18,13 +18,13 @@ function detectBorder(img, xEdge, yEdge, rad, moveAlong, scanPos, speed) {
 	return null;
 }
 function detectBorderFromCoordinate(img, x, y, sin, cos) {
-	const brightnessThreshold = 230;
+	const brightnessThreshold = 150;
 	const darknessRatioThreshold = 0.7;
 	img = img.getContext('2d');
 	const width = img.canvas.width;
 	const height = img.canvas.height;
 	const imageData = img.getImageData(0, 0, width, height).data;
-	const maxLineLength = Math.sqrt(width*width + height*height)/16;
+	const maxLineLength = Math.sqrt(width*width + height*height)/10;
 	let linePoints = [];
 	for(var i=0; i<maxLineLength; i++)
 	{
@@ -42,7 +42,7 @@ function detectBorderFromCoordinate(img, x, y, sin, cos) {
 	return null;
 }
 function scanAngleRangeForDarkestLine(imgContext, x, y, rad){
-	const rangeSize = 0.3;
+	const rangeSize = 0.25;
 	const checkResolution = 0.001;
 	let darkestRad = rad;
 	let darkestLineSum = null;
