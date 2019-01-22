@@ -10,6 +10,7 @@ import TableScanner from '../UIComponents/TableScanner/TableScanner';
 import ImageUploader from '../UIComponents/ImageUploader/ImageUploader';
 import ImageCropper from '../UIComponents/ImageCropper/ImageCropper';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
+import Popup from '../UIComponents/Popup/Popup';
 
 export default class ScanContacts extends React.Component {
 constructor(props) {
@@ -22,6 +23,7 @@ constructor(props) {
 		horizontalBorders: [],
 		verticalBorders: [],
 		detectedCells: [],
+		scanFailed: false,
 		width: 1000,
 		height: 1000,
 	};
@@ -34,6 +36,9 @@ handleImageCrop(img) {
 }
 handleTableDetection(img, width, height, cells, horizontalBorders, verticalBorders){
 	this.setState({normalizedImg: img, width:width, height:height, detectedCells: cells, horizontalBorders:horizontalBorders, verticalBorders:verticalBorders});
+}
+handleDetectionFailure(img, width, height, cause){
+	this.setState({normalizedImg: img, width:width, height:height, scanFailed: true});
 }
 handlePost(){
 	var formWrap = new FormData();
@@ -90,7 +95,7 @@ render() {
 				<div>המסמך נסרק...</div>
 				<div>המסמך נסרק...</div>
 			</div>
-			<div className="contact-scan-step-wrap"><TableScanner src={croppedImage} onDetection={this.handleTableDetection.bind(this)}/></div>
+			<div className="contact-scan-step-wrap"><TableScanner src={croppedImage} onDetection={this.handleTableDetection.bind(this)} onFail={this.handleDetectionFailure.bind(this)}/></div>
 		</div>
 	const rowSelectorUI = 
 		<div>
@@ -101,6 +106,17 @@ render() {
 			<div className="contact-scan-step-wrap"><RowSelector src={croppedImage} width={this.state.width} height={this.state.height} cells={cells} horizontalBorders={this.state.horizontalBorders} verticalBorders={this.state.verticalBorders}/></div>
 		</div>
 	const postButton = <button className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>
+	const failedScanPopup = <div className="failed-scan-popup">
+		<Popup visibility={this.state.scanFailed} toggleVisibility={()=>{}}>
+			<div className="failed-scan-popup-label">
+				<div>זיהוי אוטומטי של הטבלה לא הצליח</div>
+				<div>זיהוי אוטומטי של הטבלה לא הצליח</div>
+			</div>
+			<div>
+				<button>העלאה ללא זיהוי טבלה</button>
+				<button>בחירת קובץ אחר</button>
+			</div>
+		</Popup></div>
 	return (
 		<div>
 			<Meta/>
@@ -113,11 +129,14 @@ render() {
 					</div>
 				</div>
 			</TopNavBar>
-			{!selectedImage?imgUploadUI:""}
-			{(selectedImage&&!croppedImage)?imgCropperUI:""}
-			{croppedImage&&!cells.length?tableScannerUI:""}
-			{croppedImage&&cells.length?rowSelectorUI:""}
-			{croppedImage&&cells.length?postButton:""}
+			<div className="page-wrap">
+				{!selectedImage?imgUploadUI:""}
+				{(selectedImage&&!croppedImage)?imgCropperUI:""}
+				{!failedScanPopup&&croppedImage&&!cells.length?tableScannerUI:""}
+				{!failedScanPopup&&croppedImage&&cells.length?rowSelectorUI:""}
+				{!failedScanPopup&&croppedImage&&cells.length?postButton:""}
+				{failedScanPopup}
+			</div>
 		</div>
 	)
 }

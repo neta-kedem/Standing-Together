@@ -9,6 +9,11 @@ export default css
 	margin-right: 0.5em;
 	color: white;
 }
+.page-wrap{
+	height: calc(100vh - 55px);
+	width: 100%;
+	position: relative;
+}
 .contact-scan-step-wrap{
 	width: 90%;
 	margin: 0 auto 5% auto;
@@ -41,5 +46,11 @@ export default css
 }
 .post-scan-button:active{
 	background-color: #561755;
+}
+.failed-scan-popup{
+	text-align: center;
+}
+.failed-scan-popup-label{
+	margin-bottom: 5%;
 }
 `

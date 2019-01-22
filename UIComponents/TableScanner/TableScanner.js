@@ -21,6 +21,7 @@ constructor(props) {
 	this.state = {
 		src: props.src,
 		onDetection: props.onDetection,
+		onFail: props.onFail,
 		scanReady: false,
 		scanWidth: 1000,
 		topScannerPosition : 0,
@@ -63,8 +64,9 @@ initializeScanner() {
 			}.bind(this);
 		this.updateCanvas();
 	});
-	setInterval(this.updateCanvas.bind(this), 60);
-	setInterval(this.detectionStep.bind(this), 60);
+	const drawInterval = setInterval(this.updateCanvas.bind(this), 60);
+	const detectionInterval = setInterval(this.detectionStep.bind(this), 60);
+	this.setState({drawInterval:drawInterval, detectionInterval:detectionInterval});
 }
 loadImageToCanvasWrap() {
 	//this is the canvas we draw on
@@ -111,6 +113,7 @@ adjustScan(){
 	ia.desaturateImage(ctx);
 	//increase contrast to eliminate noise and highlight edges
 	ia.contrastImage(ctx, 2.5, 180);
+	ia.threshold(ctx, 0.9, 3, 0.25);
 	//store in the state
 	this.setState({scan:scanCanvas}, ()=>{this.setState({scanReady:true});});
 }
@@ -174,18 +177,33 @@ updateCanvas() {
 		}
 	}
 }
-
+onFail = function (cause){
+	clearInterval(this.state.detectionInterval);
+	clearInterval(this.state.drawInterval);
+	this.state.originalScan.toBlob(file => {
+		file.name = "test";
+		this.state.onFail(file, this.state.canvas.width, this.state.canvas.height, cause);
+	}, 'image/jpeg');
+}
 detectionStep() {
 	//if the image hasn't loaded up yet, don't do anything
 	if(!this.state.scanReady||!this.state.scan)
 		return;
 	//once the image has loaded, and as long as a top corner wasn't detected, try detecting the top corner.
 	if(!this.state.topCorner)
+	{
 		this.detectCorners();
+		//if after scanning the entire image no corner was found, the scan has failed
+		if(this.state.topScannerPosition>this.state.height)
+			this.onFail("no corner");
+	}
 	//once a top corner has been detected, and as long as either of the outer edges originating from the corner hasn't been detected yet, try to detect them.
 	if(this.state.topCorner&&(!this.state.horizontalEdgeRad||!this.state.verticalEdgeRad))
 	{
 		this.detectOuterEdges();
+		//if after a 2PI rotation no borders were found, the scan has failed
+		if(this.state.line1ScannerRad>Math.PI*4&&this.state.line2ScannerRad>Math.PI*4)
+			this.onFail("no outer borders");
 	}
 	//once both outer borders have been detected, and as long as either  inner border scanner is in the bounds of the image, scan for additional innner borders.
 	if(this.state.horizontalEdgeRad&&this.state.verticalEdgeRad&&(!this.state.allHorizontalBordersFound||!this.state.allVerticalBordersFound))
@@ -202,6 +220,9 @@ detectionStep() {
 	}
 	//once all borders have been detected, if the cells array wasn't calculated yet, calculate the cells array
 	if(this.state.allHorizontalBordersFound&&this.state.allVerticalBordersFound&&this.state.cells.length==0){
+		//if no additional borders (other than the outer ones) where detected, the scan has failed
+		if(this.state.verticalBorders.length<1||this.state.horizontalBorders.length<2)
+			this.onFail("no inner borders");
 		const cells = cellsDetector.detectCells(
 			this.state.verticalBorders, this.state.horizontalBorders
 		);
@@ -220,9 +241,9 @@ detectionStep() {
 			}
 		}
 		this.state.originalScan.toBlob(file => {
-				file.name = "test";
-				this.state.onDetection(file, this.state.canvas.width, this.state.canvas.height, structuredCells, this.state.horizontalBorders, this.state.verticalBorders);
-			}, 'image/jpeg');
+			file.name = "test";
+			this.state.onDetection(file, this.state.canvas.width, this.state.canvas.height, structuredCells, this.state.horizontalBorders, this.state.verticalBorders);
+		}, 'image/jpeg');
 	}
 }
 detectCorners() {
