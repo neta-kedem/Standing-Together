@@ -26,7 +26,9 @@ markTypedContactScanRows = function(res, typerId, scanId, activists, markedDone)
 					break;
 				}
 			}
-			scanData.complete=allRowsTyped||markedDone;
+			// if the scan went through row detection, mark it as finished IFF all rows have a correspondings typed in data.
+			// otherwise, mark it as finished IFF the typer has indicated it to be
+			scanData.complete=(scanData.rows.length&&allRowsTyped)||markedDone;
 			ContactScan.replaceOne(
 				{"_id": scanId},
 				scanData,
