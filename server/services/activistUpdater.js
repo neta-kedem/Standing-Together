@@ -3,7 +3,6 @@ const Activist = require('../models/activistModel');
 const ContactScan = require('../models/contactScanModel');
 const Authentication = require('../services/authentication');
 const markTypedContactScanRows = function(res, typerId, scanId, activists, markedDone){
-    scanId = mongoose.Types.ObjectId(scanId);
     ContactScan.findOne(
         {"_id": scanId},
         (err, scanData) => {
@@ -68,8 +67,7 @@ const uploadTypedActivists = function (req, res){
             return res.json({"error":"missing token"});
         const typerId = Authentication.getMyId();
         const typedActivists = req.body.activists;
-        const scanUrl = req.body.scanUrl;
-        const scanId = req.body.scanId;
+        const scanId = mongoose.Types.ObjectId(req.body.scanId);
         const markedDone = req.body.markedDone;
         let processedActivists = [];
         const today = new Date();
@@ -84,7 +82,7 @@ const uploadTypedActivists = function (req, res){
                         "lastUpdate" : today,
                         "joiningMethod" : "contactPage",
                         "typerName" : "Yaniv Cogan",
-                        "scanUrl": scanUrl,
+                        "scanId": scanId,
                         "scanRow": curr.scanRow
                     },
                     "profile" : {
