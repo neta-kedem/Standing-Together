@@ -42,12 +42,18 @@ export default class Typer extends React.Component {
 					alert("אין דפי קשר שדורשים הקלדה במערכת. תוכלו להקליד פרטי פעילים בכל מקרה");
 				return;
 			}
-			if(json.scanUrl)
+			if(json.scanData)
 			{
-				this.setState({"scanUrl":json.scanUrl, "cells":json.rows, "scanId":json._id});
+				const scanData = json.scanData;
+				this.setState({"scanUrl":scanData.scanUrl, "cells":scanData.rows, "scanId":scanData._id});
 				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
 				// store interval promise in the state so it can be cancelled later:
 				this.setState({callPingInterval: callPingInterval});
+			}
+			if(json.activists && json.activists.length)
+			{
+				const activists = json.activists;
+				this.setState({"activists":activists});
 			}
 		});
 	}
@@ -140,7 +146,6 @@ export default class Typer extends React.Component {
 		}
 		const data ={
 			"activists": activists,
-			"scanUrl": this.state.scanUrl,
 			"scanId": this.state.scanId,
 			"markedDone": this.state.fullyTyped
 		};
