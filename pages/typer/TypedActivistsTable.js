@@ -39,7 +39,7 @@ export default class TypedActivistsTable extends React.Component {
 		return (
 			<div className="typed-table-wrap">
 				<style jsx global>{style}</style>
-				<table className="typed-rows-table">
+				<table className={"typed-rows-table "+(this.props.highlightInvalidFields?"highlight-invalid-fields":"")}>
 					<thead>
 						{titleRow}
 					</thead>

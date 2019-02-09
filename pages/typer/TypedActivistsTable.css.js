@@ -74,4 +74,7 @@ export default css`
 	.delete-row:active{
 		color: #444;
 	}
+	.highlight-invalid-fields .invalid{
+        background-color: rgb(255, 150, 160);
+    }
 `

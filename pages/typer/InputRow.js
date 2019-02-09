@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './InputRow.css'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { faTrashAlt  } from '@fortawesome/fontawesome-free-solid'
@@ -55,6 +54,7 @@ export default class InputRow extends React.Component {
 	}.bind(this);
 	
 	render() {
+		const rowValues = this.props.values;
 		return (
 			<tbody className="row-wrap">
 				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
@@ -62,23 +62,23 @@ export default class InputRow extends React.Component {
 					<th className="delete-row-wrap">
 						<FontAwesomeIcon className="delete-row" icon="trash-alt" onClick={this.handleDelete}/>
 					</th>
-					<td> 
-						<input value={this.props.values.firstName} type="text" name="firstName" onChange={this.syncStateToInput} onFocus={this.handleFocus} ref={this.firstInput} autoFocus/>
+					<td className={rowValues.firstNameValid?"":"invalid"}>
+						<input value={rowValues.firstName} type="text" name="firstName" onChange={this.syncStateToInput} onFocus={this.handleFocus} ref={this.firstInput} autoFocus/>
 					</td>
-					<td> 
-						<input value={this.props.values.lastName} type="text" name="lastName" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+					<td className={rowValues.lastNameValid?"":"invalid"}>
+						<input value={rowValues.lastName} type="text" name="lastName" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
-						<td> 
-						<input value={this.props.values.residency} type="text" name="residency" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+					<td className={rowValues.residencyValid?"":"invalid"}>
+						<input value={rowValues.residency} type="text" name="residency" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
-						<td> 
-						<input value={this.props.values.phone} type="tel" name="phone" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+					<td className={rowValues.phoneValid?"":"invalid"}>
+						<input value={rowValues.phone} type="tel" name="phone" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
-					<td> 
-						<input value={this.props.values.email} onKeyDown={this.handleKeyPress} type="email" name="email" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+					<td className={rowValues.emailValid?"":"invalid"}>
+						<input value={rowValues.email} onKeyDown={this.handleKeyPress} type="email" name="email" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
 					</td>
 				</tr>
-			<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
+				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
 			</tbody>
 		);
 	}

@@ -4,6 +4,7 @@ import server from '../services/server';
 import HeaderBar from './typer/HeaderBar'
 import TypedActivistsTable from './typer/TypedActivistsTable'
 import ContactScanDisplay from './typer/ContactScanDisplay'
+import FieldValidation from './typer/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
 import style from './typer/Typer.css'
 
@@ -16,13 +17,17 @@ export default class Typer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activists:[{firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0}],
+			activists:[{
+				firstName:"", lastName:"", phone:"", residency:"", email:"",
+				firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
+				scanRow:0}],
 			cells: [],
 			selectedRowIndex: 0,
 			scanId: null,
 			scanUrl: null,
 			fullyTyped: false,
-			displayFullyTypedPopup: false
+			displayFullyTypedPopup: false,
+			postAttempted: false //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
 		}
 	};
 	componentDidMount() {
@@ -59,7 +64,10 @@ export default class Typer extends React.Component {
 	addRow=function() {
 		let activists = this.state.activists.slice();
 		let nextScanRow = Math.min(activists[this.state.selectedRowIndex].scanRow+1, this.state.cells.length-1);
-		activists.push({firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:nextScanRow});
+		activists.push({
+			firstName:"", lastName:"", phone:"", residency:"", email:"",
+			firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
+			scanRow:nextScanRow});
 		this.setState({activists: activists, selectedRowIndex:activists.length-1});
 	}.bind(this);
 	
@@ -70,6 +78,7 @@ export default class Typer extends React.Component {
 	handleTypedInput = function (name, value, rowIndex){
 		let activists = this.state.activists.slice();
 		activists[rowIndex][name] = value;
+        FieldValidation.validate(activists, rowIndex, name);
 		this.setState({activists: activists});
 	}.bind(this);
 	
@@ -100,7 +109,10 @@ export default class Typer extends React.Component {
 		}
 		//if no rows are left, create a new one
 		if(!activists.length)
-			activists.push({firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0});
+			activists.push({
+				firstName:"", lastName:"", phone:"", residency:"", email:"",
+				firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
+				scanRow:0});
 		//commit to state
 		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
 	}.bind(this);
@@ -121,22 +133,31 @@ export default class Typer extends React.Component {
 	}.bind(this);
 
 	handlePost=function(){
+		const activists = this.state.activists.slice();
+		if(!FieldValidation.validateAll(activists)){
+			this.setState({postAttempted: true});
+			return;
+		}
 		const data ={
-			"activists":this.state.activists,
-			"scanUrl":this.state.scanUrl,
-			"scanId":this.state.scanId,
-			"markedDone":this.state.fullyTyped
+			"activists": activists,
+			"scanUrl": this.state.scanUrl,
+			"scanId": this.state.scanId,
+			"markedDone": this.state.fullyTyped
 		};
 		server.post('activists/uploadTyped', data)
 		.then(json => {
 			this.setState({
-				activists: [{firstName:"", lastName:"", phone:"", residency:"", email:"", scanRow:0}],
+				activists: [{
+					firstName:"", lastName:"", phone:"", residency:"", email:"",
+					firstNameValid:"", lastNameValid:"", phoneValid:"", residencyValid:"", emailValid:"",
+					scanRow:0}],
 				cells: [],
 				selectedRowIndex: 0,
 				scanId: null,
 				scanUrl: null,
 				fullyTyped: false,
-				displayFullyTypedPopup: false
+				displayFullyTypedPopup: false,
+				postAttempted: false
 			});
 			alert("the details have been stored in the system");
 			this.getContactsScan();
@@ -180,7 +201,8 @@ export default class Typer extends React.Component {
 								handleRowFocus={this.handleRowFocus}
 								handleRowDeletion={this.handleRowDeletion}
 								activists={activists}
-								selectedRow={selectedRowIndex}/>
+								selectedRow={selectedRowIndex}
+								highlightInvalidFields={this.state.postAttempted}/>
 						</content>
 						{toggleFullyTypedPopup}
 					</div>
