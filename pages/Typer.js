@@ -69,16 +69,31 @@ export default class Typer extends React.Component {
 	
 	addRow=function() {
 		let activists = this.state.activists.slice();
-		let nextScanRow = Math.min(activists[this.state.selectedRowIndex].scanRow+1, this.state.cells.length-1);
+		const rows = activists.map(activist => activist.scanRow);
+		//generally, the new row should correspond to the n[th] line of the scan, if there are already n-1 rows
+		let nextScanRow = rows.length;
+		for(let i=0; i< rows.length; i++){
+			//however, if we skipped some scanned line, which can happen if we delete a row, we should add it in instead
+			if(i < rows[i]){
+				nextScanRow = i;
+				break;
+			}
+		}
+		//don't overflow the scanned rows
+		if(this.state.cells.length && nextScanRow >= this.state.cells.length){
+			return;
+		}
 		activists.push({
 			firstName:"", lastName:"", phone:"", residency:"", email:"",
 			firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
 			scanRow:nextScanRow});
-		this.setState({activists: activists, selectedRowIndex:activists.length-1});
+		//if a row was added in the middle, sort it into position
+		activists.sort((a, b)=>(a.scanRow - b.scanRow));
+		this.setState({activists: activists, selectedRowIndex:nextScanRow});
 	}.bind(this);
 	
 	handleRowFocus = function(rowIndex) {
-		this.setState({selectedRowIndex:rowIndex});
+		this.setState({selectedRowIndex: rowIndex});
 	}.bind(this);
 	
 	handleTypedInput = function (name, value, rowIndex){
@@ -89,9 +104,12 @@ export default class Typer extends React.Component {
 	}.bind(this);
 	
 	selectScanRow = function(index){
-		let activists = this.state.activists.slice();
-		activists[this.state.selectedRowIndex].scanRow = index;
-		this.setState({activists: activists});
+		if(index>=this.state.activists.length){
+			this.addRow();
+		}
+		else{
+			this.setState({selectedRowIndex: index});
+		}
 	}.bind(this);
 	
 	handleRowPost = function(rowIndex){
@@ -110,8 +128,8 @@ export default class Typer extends React.Component {
 		activists.splice(Number(index), 1);
 		//decrease selected row index if necessary
 		let selectedRowIndex = this.state.selectedRowIndex;
-		if(selectedRowIndex>=index){
-			selectedRowIndex=selectedRowIndex === 0?selectedRowIndex:(selectedRowIndex-1);
+		if(selectedRowIndex >= index){
+			selectedRowIndex = selectedRowIndex === 0 ? selectedRowIndex : (selectedRowIndex-1);
 		}
 		//if no rows are left, create a new one
 		if(!activists.length)

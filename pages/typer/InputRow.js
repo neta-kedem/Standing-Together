@@ -22,7 +22,7 @@ export default class InputRow extends React.Component {
 		if(nextProps.isFocused&&!this.state.isFocused) {
 			this.firstInput.current.focus();
 		}
-		if(nextProps.isFocused!=this.state.isFocused){
+		if(nextProps.isFocused !== this.state.isFocused){
 			this.setState({isFocused: nextProps.isFocused});
 		}
 	}
@@ -32,7 +32,7 @@ export default class InputRow extends React.Component {
 	}.bind(this);
 	
 	handleKeyPress=function(event){
-		if(event.key == 'Enter' || event.key == 'Tab'){
+		if(event.key === 'Enter' || event.key === 'Tab'){
 			this.handlePost(this.state.rowIndex);
 			event.preventDefault();
 		}
