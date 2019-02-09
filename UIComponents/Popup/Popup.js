@@ -17,7 +17,7 @@ export default class Popup extends React.Component {
 				<style jsx global>
 				{`
 					.popup-wrapper{
-						position: absolute;
+						position: fixed;
 						height: 100%;
 						width: 100%;
 					}

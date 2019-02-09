@@ -155,7 +155,7 @@ export default class Typer extends React.Component {
 			selectedRow={selectedScanRow}
 			selectScanRow={this.selectScanRow}/>;
 		const toggleFullyTypedPopup =
-				<Popup visibility={this.state.displayFullyTypedPopup} toggleVisibility={()=>{}}>
+				<Popup visibility={this.state.displayFullyTypedPopup} toggleVisibility={()=>{this.setState({displayFullyTypedPopup: !this.state.displayFullyTypedPopup})}}>
 					<div className="fully-typed-popup-label">
 						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
 						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
