@@ -19,14 +19,11 @@ const isUser = function(req, res){
 	const promise = (
 		getUserByToken(req, res)
 		.then(user=>{
-			if(user.error)
-				return false;
-			else
-				return true;
+			return !user.error;
 		})
 	);
 	return promise;
-}
+};
 const hasRole = function(req, res, role){
 	const promise = (
 		getUserByToken(req, res)
@@ -40,11 +37,11 @@ const hasRole = function(req, res, role){
 		})
 	);
 	return promise;
-}
+};
 
 const getMyId = function(){
 	return myId;
-}
+};
 
 module.exports = {
 	isUser,
