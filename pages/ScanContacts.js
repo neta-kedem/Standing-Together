@@ -60,24 +60,29 @@ publishScan(imgUrl){
 	const data ={"scanUrl":imgUrl, "cells":this.state.detectedCells,};
 	server.post('contactScan', data)
 	.then(json => {
-		this.setState({
-				selectedImage: false,
-				croppedImage: false,
-				normalizedImg: false,
-				scanUrl: null,
-				horizontalBorders: [],
-				verticalBorders: [],
-				detectedCells: [],
-				width: 1000,
-				height: 1000
-			});
+		this.reset();
 		alert("המסמך נשמר בהצלחה, ויוצג לקלדנים");
+	});
+}
+reset() {
+	this.setState ({
+		selectedImage: false,
+		croppedImage: false,
+		normalizedImg: false,
+		scanUrl: null,
+		horizontalBorders: [],
+		verticalBorders: [],
+		detectedCells: [],
+		scanFailed: false,
+		width: 1000,
+		height: 1000,
 	});
 }
 render() {
 	const selectedImage = this.state.selectedImage;
 	const croppedImage = this.state.croppedImage;
 	const cells = this.state.detectedCells;
+	const scanFailed = this.state.scanFailed;
 	const imgUploadUI = <div className="contact-scan-uploader">
 			<ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText="⇪ העלאת סריקת דף קשר ⇪"/>
 		</div>;
@@ -107,14 +112,14 @@ render() {
 		</div>
 	const postButton = <button className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>
 	const failedScanPopup = <div className="failed-scan-popup">
-		<Popup visibility={this.state.scanFailed} toggleVisibility={()=>{}}>
+		<Popup visibility={scanFailed} toggleVisibility={()=>{}}>
 			<div className="failed-scan-popup-label">
 				<div>זיהוי אוטומטי של הטבלה לא הצליח</div>
 				<div>זיהוי אוטומטי של הטבלה לא הצליח</div>
 			</div>
 			<div>
-				<button>העלאה ללא זיהוי טבלה</button>
-				<button>בחירת קובץ אחר</button>
+				<button className="failed-scan-button" onClick={this.handlePost.bind(this)}>העלאה ללא זיהוי טבלה</button>
+				<button className="failed-scan-button" onClick={this.reset.bind(this)}>בחירת קובץ אחר</button>
 			</div>
 		</Popup></div>
 	return (
@@ -132,9 +137,9 @@ render() {
 			<div className="page-wrap">
 				{!selectedImage?imgUploadUI:""}
 				{(selectedImage&&!croppedImage)?imgCropperUI:""}
-				{!failedScanPopup&&croppedImage&&!cells.length?tableScannerUI:""}
-				{!failedScanPopup&&croppedImage&&cells.length?rowSelectorUI:""}
-				{!failedScanPopup&&croppedImage&&cells.length?postButton:""}
+				{!scanFailed&&croppedImage&&!cells.length?tableScannerUI:""}
+				{!scanFailed&&croppedImage&&cells.length?rowSelectorUI:""}
+				{!scanFailed&&croppedImage&&cells.length?postButton:""}
 				{failedScanPopup}
 			</div>
 		</div>

@@ -70,4 +70,38 @@ export default css
 		padding-bottom: 10px;
 		top: 0px;
 	}
+	.fully-typed-popup-label div{
+	    text-align: center;
+	}
+	.toggle-fully-typed{
+	    width: 100px;
+	    height: 50px;
+	    display: inline-block;
+	}
+	.confirm-fully-typed-wrap{
+	    margin-top: 1em;
+	    display: flex;
+	    flex-direction: row;
+	    justify-content: center;
+	}
+	.confirm-fully-typed{
+	    width: 15em;
+	    padding: 0.25em;
+	    margin: 0.5em;
+        color: white;
+        background-color: #90278e;
+        border: none;
+        outline: none;
+        font-size: 1.5em;
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        transition: background-color 0.25s;
+        cursor: pointer;
+    }
+    .confirm-fully-typed:hover{
+    	background-color: #731f72;
+    }
+    .confirm-fully-typed:active{
+    	background-color: #561755;
+    }   
 `

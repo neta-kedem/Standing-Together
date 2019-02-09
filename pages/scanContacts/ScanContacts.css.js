@@ -53,4 +53,21 @@ export default css
 .failed-scan-popup-label{
 	margin-bottom: 5%;
 }
+.failed-scan-button{
+    color: white;
+	background-color: #90278e;
+	border: none;
+	outline: none;
+	font-size: 1.5em;
+	display: inline-block;
+	padding: 0.25em 0.5em;
+	transition: background-color 0.25s;
+	cursor: pointer;
+}
+.failed-scan-button:hover{
+	background-color: #731f72;
+}
+.failed-scan-button:active{
+	background-color: #561755;
+}
 `

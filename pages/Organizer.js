@@ -1,6 +1,4 @@
 import React from 'react';
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import Meta from '../lib/meta';
 import config from '../config';
 
@@ -135,16 +133,16 @@ render() {
 			</TopNavBar>
 			<div className="content-wrap">
 				<div className="left-panel">
-					<QueryCreator currFilters={this.state.currFilters}></QueryCreator>
+					<QueryCreator currFilters={this.state.currFilters}> </QueryCreator>
 				</div>
 				<div className="main-panel">
 					<QueryResultsActionMenu items={[
 						{"index":1, "content":tableFieldsDropdown, "alignToEnd":true}
 					]}
-					toggleEventPopup={this.handleEventPopupToggle.bind(this)}></QueryResultsActionMenu>
+					toggleEventPopup={this.handleEventPopupToggle.bind(this)}> </QueryResultsActionMenu>
 					<div className="results-wrap">
 						<div className="query-results">
-							<SelectableTable rows={this.state.activists} header={this.state.tableFields}></SelectableTable>
+							<SelectableTable rows={this.state.activists} header={this.state.tableFields}> </SelectableTable>
 						</div>
 					</div>
 				</div>
