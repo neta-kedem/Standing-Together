@@ -86,7 +86,7 @@ export default class ContactScanDisplay extends React.Component {
 			<div>
 				<style jsx global>{style}</style>
 				<div className="scan-wrap">
-					{this.cells != null?<div className="row-nav-wrap">
+					{this.state.cells != null?<div className="row-nav-wrap">
 						<button className="row-nav row-nav-up" onClick={() => this.selectScanRow(selectedRow-1)}>
 							<FontAwesomeIcon icon="chevron-up"/>
 						</button>
