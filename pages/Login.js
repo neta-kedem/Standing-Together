@@ -1,8 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
 import Meta from '../lib/meta';
-
-import ItemService from '../services/ItemService';
 import server from '../services/server';
 import cookie from '../services/cookieManager';
 import IdentificationField from './login/IdentificationField';
@@ -10,43 +8,42 @@ import CodeInput from './login/CodeInput';
 import stylesheet from './login/Login.css';
 
 export default class Login extends React.Component {
-
 state = {
 	phone: "",
 	email: "",
 	codeSent: false
 };
 
-validatePhone=function(phone){
-	var length = phone.length>9;
+validatePhone = function(phone){
+	const length = phone.length>9;
 	//strips the input string of all hyphens, parentheses, and white spaces
-	var num = phone.replace(/([-()\+\s])/g, '');
+	const num = phone.replace(/([-()+\s])/g, '');
 	//checks that the result is composed entirely of digits, and is between 9 and 11 chars long.
-	var digitsOnly = /^[0-9]{9,15}$/g.test(num);
-	return length&&digitsOnly;
-}
-validateEmail(email){
+	const digitsOnly = /^[0-9]{9,15}$/g.test(num);
+	return length && digitsOnly;
+};
+
+validateEmail = function(email){
 	//checks for example@example.example, such that [example] doesn't contain a '@'
-	var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-	return pattern;
-}
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 identifyByPhone(phone){
 	server.post('identify/phone', {'phone':phone})
-	.then(json => {
-		this.setState({codeSent: true, indetificationMethod: "SMS", phone: phone});
+	.then(() => {
+		this.setState({codeSent: true, identificationMethod: "SMS", phone: phone});
 	});
 }
 identifyByEmail(email){
 	server.post('identify/email', {'email':email})
-	.then(json => {
-		this.setState({codeSent: true, indetificationMethod: "Email", email: email});
+	.then(() => {
+		this.setState({codeSent: true, identificationMethod: "Email", email: email});
 	});
 }
 
 verifyLoginCode(code)
 {
-	var method = this.state.indetificationMethod=="Email"?"login/email":"login/phone";
-	var data ={'phone':this.state.phone, 'email':this.state.email, 'code':code};
+	const method = this.state.identificationMethod === "Email" ? "login/email" : "login/phone";
+	const data ={'phone':this.state.phone, 'email':this.state.email, 'code':code};
 	server.post(method, data)
 	.then(json => {
 		if(json.error)
@@ -56,11 +53,11 @@ verifyLoginCode(code)
 		if(json.token)
 		{
 			cookie.setCookie('token', json.token, 150);
-			Router.push({pathname: '/Organizer'});
+			Router.push({pathname: '/Organizer'}).then(()=>{});
 		}
 		else
 		{
-			this.setState({codeSent: false, indetificationMethod: ""});
+			this.setState({codeSent: false, identificationMethod: ""});
 		}
 	});
 }
@@ -95,7 +92,7 @@ render() {
 		<div>
 			<br/>
 			<div className='code-input-title'>
-				{"הזינו את הקוד שנשלח אליכם ב- "+this.state.indetificationMethod}
+				{"הזינו את הקוד שנשלח אליכם ב- "+this.state.identificationMethod}
 			</div>
 			<br/>
 			<CodeInput verificationFunction={this.verifyLoginCode.bind(this)}/>
@@ -104,7 +101,7 @@ render() {
 		<div className='login-page-wrap' dir="rtl">
 			<Meta/>
 			<style jsx global>{stylesheet}</style>
-			<img src="../static/Logo.svg" className='logo'></img>
+			<img src="../static/Logo.svg" alt="standing-together" className='logo'> </img>
 			{this.state.codeSent?loginCode:identification}
 		</div>
 	)

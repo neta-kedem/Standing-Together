@@ -16,7 +16,7 @@ const mongoose = require('mongoose');
 
 const authentication = require('./server/services/authentication');
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI).then(()=>{});
 mongoose.Promise = global.Promise;
 const server = express();
 //setup server to use accept calls whose body contains files up to 5 mgb
