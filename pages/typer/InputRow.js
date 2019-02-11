@@ -74,7 +74,7 @@ export default class InputRow extends React.Component {
 		return (
 			<tbody className="row-wrap">
 				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
-				<tr>
+				<tr onClick={this.handleFocus}>
 					{rowValues.locked ? editRow : rowValues.saved ? noAction : deleteRow}
 					<td className={rowValues.firstNameValid?"":"invalid"}>
 						<input value={rowValues.firstName} type="text" name="firstName"
