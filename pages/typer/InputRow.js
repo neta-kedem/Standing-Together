@@ -1,8 +1,8 @@
 import React from 'react';
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faTrashAlt  } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faTrashAlt );
+import {faTrashAlt, faPenSquare} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faTrashAlt, faPenSquare);
 
 export default class InputRow extends React.Component {
 	constructor(props) {
@@ -12,6 +12,7 @@ export default class InputRow extends React.Component {
 			handleChange: props['handleChange'],
 			handleFocus: props['handleFocus'],
 			handleDelete: props['handleDelete'],
+			handleEditToggle: props['handleEditToggle'],
 			rowIndex: props['rowIndex'],
 			isFocused: props['isFocused']
 		};
@@ -52,30 +53,50 @@ export default class InputRow extends React.Component {
 	handleDelete = function(){
 		this.state.handleDelete(this.state.rowIndex);
 	}.bind(this);
+
+	handleEditToggle = function(){
+		this.state.handleEditToggle(this.state.rowIndex);
+	}.bind(this);
 	
 	render() {
 		const rowValues = this.props.values;
+		const deleteRow =
+			<td className="delete-row-wrap">
+				<FontAwesomeIcon className="delete-row" icon="trash-alt" onClick={this.handleDelete}/>
+			</td>;
+		const editRow =
+			<td className="delete-row-wrap">
+				<FontAwesomeIcon className="delete-row" icon="pen-square" onClick={this.handleEditToggle}/>
+			</td>;
 		return (
 			<tbody className="row-wrap">
 				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
 				<tr>
-					<th className="delete-row-wrap">
-						<FontAwesomeIcon className="delete-row" icon="trash-alt" onClick={this.handleDelete}/>
-					</th>
+					{rowValues.locked ? editRow : deleteRow}
 					<td className={rowValues.firstNameValid?"":"invalid"}>
-						<input value={rowValues.firstName} type="text" name="firstName" onChange={this.syncStateToInput} onFocus={this.handleFocus} ref={this.firstInput} autoFocus/>
+						<input value={rowValues.firstName} type="text" name="firstName"
+							   onChange={this.syncStateToInput} onFocus={this.handleFocus} ref={this.firstInput}
+							   autoFocus disabled={rowValues.locked}/>
 					</td>
 					<td className={rowValues.lastNameValid?"":"invalid"}>
-						<input value={rowValues.lastName} type="text" name="lastName" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+						<input value={rowValues.lastName} type="text" name="lastName"
+							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
+							   disabled={rowValues.locked}/>
 					</td>
 					<td className={rowValues.residencyValid?"":"invalid"}>
-						<input value={rowValues.residency} type="text" name="residency" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+						<input value={rowValues.residency} type="text" name="residency"
+							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
+							   disabled={rowValues.locked}/>
 					</td>
 					<td className={rowValues.phoneValid?"":"invalid"}>
-						<input value={rowValues.phone} type="tel" name="phone" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+						<input value={rowValues.phone} type="tel" name="phone"
+							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
+							   disabled={rowValues.locked}/>
 					</td>
 					<td className={rowValues.emailValid?"":"invalid"}>
-						<input value={rowValues.email} onKeyDown={this.handleKeyPress} type="email" name="email" onChange={this.syncStateToInput} onFocus={this.handleFocus}/>
+						<input value={rowValues.email} onKeyDown={this.handleKeyPress} type="email" name="email"
+							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
+							   disabled={rowValues.locked}/>
 					</td>
 				</tr>
 				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>

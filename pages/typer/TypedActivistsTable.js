@@ -9,13 +9,20 @@ export default class TypedActivistsTable extends React.Component {
 			handleChange: props['handleChange'],
 			handleRowPost: props['handleRowPost'],
 			handleRowFocus: props['handleRowFocus'],
-			handleRowDeletion: props['handleRowDeletion']
+			handleRowDeletion: props['handleRowDeletion'],
+			handleRowEditToggle: props['handleRowEditToggle']
 		};
 	}
 	render() {
 		const rows = this.props.activists.map((activist, i) =>
 			{
-				return <InputRow isFocused={i === this.props.selectedRow} handleFocus={this.state.handleRowFocus} handleChange={this.state.handleChange} handlePost={this.state.handleRowPost} handleDelete={this.state.handleRowDeletion} key={i} values={activist} rowIndex={i}/>
+				return <InputRow isFocused={i === this.props.selectedRow}
+								 handleFocus={this.state.handleRowFocus}
+								 handleChange={this.state.handleChange}
+								 handlePost={this.state.handleRowPost}
+								 handleDelete={this.state.handleRowDeletion}
+								 handleEditToggle={this.state.handleRowEditToggle}
+								 key={i} values={activist} rowIndex={i}/>
 			});
 		const titleRow =
 			<tr>

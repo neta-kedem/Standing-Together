@@ -20,7 +20,7 @@ export default class Typer extends React.Component {
 			activists:[{
 				firstName:"", lastName:"", phone:"", residency:"", email:"",
 				firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
-				scanRow:0}],
+				scanRow:0, locked: false, saved: false}],
 			cells: [],
 			selectedRowIndex: 0,
 			scanId: null,
@@ -52,7 +52,10 @@ export default class Typer extends React.Component {
 			}
 			if(json.activists && json.activists.length)
 			{
-				const activists = json.activists;
+				const activists = json.activists.map((activist)=>{
+					activist.locked=true;
+					activist.saved=true;
+					return activist});
 				this.setState({"activists":activists});
 			}
 		});
@@ -72,7 +75,7 @@ export default class Typer extends React.Component {
 		const rows = activists.map(activist => activist.scanRow);
 		//generally, the new row should correspond to the n[th] line of the scan, if there are already n-1 rows
 		let nextScanRow = rows.length;
-		for(let i=0; i< rows.length; i++){
+		for(let i=0; i < rows.length; i++){
 			//however, if we skipped some scanned line, which can happen if we delete a row, we should add it in instead
 			if(i < rows[i]){
 				nextScanRow = i;
@@ -86,10 +89,13 @@ export default class Typer extends React.Component {
 		activists.push({
 			firstName:"", lastName:"", phone:"", residency:"", email:"",
 			firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
-			scanRow:nextScanRow});
+			scanRow:nextScanRow, locked: false, saved: false});
 		//if a row was added in the middle, sort it into position
 		activists.sort((a, b)=>(a.scanRow - b.scanRow));
-		this.setState({activists: activists, selectedRowIndex:nextScanRow});
+		//assignment into state is done in two explicit stages, in order to keep the focus on the correct row
+		//it still doesn't work most of the time
+		//not important enough to find a fix, though
+		this.setState({activists: activists}, ()=>{this.setState({selectedRowIndex:nextScanRow})});
 	}.bind(this);
 	
 	handleRowFocus = function(rowIndex) {
@@ -122,7 +128,7 @@ export default class Typer extends React.Component {
 		}
 	}.bind(this);
 
-	handleRowDeletion=function(index){
+	handleRowDeletion = function(index){
 		let activists = this.state.activists.slice();
 		//remove the appropriate row from the activists array
 		activists.splice(Number(index), 1);
@@ -132,14 +138,23 @@ export default class Typer extends React.Component {
 			selectedRowIndex = selectedRowIndex === 0 ? selectedRowIndex : (selectedRowIndex-1);
 		}
 		//if no rows are left, create a new one
-		if(!activists.length)
+		if(!activists.length) {
 			activists.push({
-				firstName:"", lastName:"", phone:"", residency:"", email:"",
-				firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
-				scanRow:0});
+				firstName: "", lastName: "", phone: "", residency: "", email: "",
+				firstNameValid: false, lastNameValid: false, phoneValid: false, residencyValid: false, emailValid: false,
+				scanRow: 0, locked: false, saved: false
+			});
+		}
 		//commit to state
 		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
 	}.bind(this);
+
+	handleRowEditToggle = function(index){
+		let activists = this.state.activists.slice();
+		activists[index].locked = !activists[index].locked;
+		this.setState({activists: activists});
+	}.bind(this);
+
 	checkFullyTyped = function(){
 		const checkNeeded = this.state.scanId && this.state.cells.length===0;
 		if(checkNeeded){
@@ -223,6 +238,7 @@ export default class Typer extends React.Component {
 								handleRowPost={this.handleRowPost}
 								handleRowFocus={this.handleRowFocus}
 								handleRowDeletion={this.handleRowDeletion}
+								handleRowEditToggle={this.handleRowEditToggle}
 								activists={activists}
 								selectedRow={selectedRowIndex}
 								highlightInvalidFields={this.state.postAttempted}/>
