@@ -68,11 +68,14 @@ export default class InputRow extends React.Component {
 			<td className="delete-row-wrap">
 				<FontAwesomeIcon className="delete-row" icon="pen-square" onClick={this.handleEditToggle}/>
 			</td>;
+		//filler tag in case no row action is appropriate - without it, the layout gets all messed up
+		const noAction =
+			<td className="delete-row-wrap"> </td>;
 		return (
 			<tbody className="row-wrap">
 				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
 				<tr>
-					{rowValues.locked ? editRow : deleteRow}
+					{rowValues.locked ? editRow : rowValues.saved ? noAction : deleteRow}
 					<td className={rowValues.firstNameValid?"":"invalid"}>
 						<input value={rowValues.firstName} type="text" name="firstName"
 							   onChange={this.syncStateToInput} onFocus={this.handleFocus} ref={this.firstInput}
