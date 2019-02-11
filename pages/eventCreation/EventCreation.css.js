@@ -1,4 +1,5 @@
-export default 
+import css from 'styled-jsx/css'
+export default css
 `
 	/*Scroll Bar*/
 	::-webkit-scrollbar {
@@ -12,7 +13,6 @@ export default
 	::-webkit-scrollbar-thumb {
 		background: #4D4D4D; 
 	}
-	
 	/* Handle on hover */
 	::-webkit-scrollbar-thumb:hover {
 		background: #555; 
@@ -48,7 +48,6 @@ export default
 		color: #90969E;
 		font-weight: bold;
 	}
-	
 	label.inline-label{
 		flex-direction: row;
 	}
