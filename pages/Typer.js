@@ -47,11 +47,18 @@ export default class Typer extends React.Component {
 			fullyTyped: false,
 			displayFullyTypedPopup: false,
 			postAttempted: false, //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
+			unsaved: false
 		};
 	};
+	refreshHandler = function() {
+		if(this.state.unsaved)
+			return "You Have Unsaved Data - Are You Sure You Want To Quit?";
+	}.bind(this);
 	componentDidMount() {
 		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
 		FieldValidation.setFields(this.state.profileFields.slice());
+		//confirm exit without saving
+		window.onbeforeunload = this.refreshHandler;
 	}
 	getContactsScan() {
 		server.get('contactScan', {})
@@ -135,7 +142,7 @@ export default class Typer extends React.Component {
 		let activists = this.state.activists.slice();
 		activists[rowIndex][name] = value;
         FieldValidation.validate(activists, rowIndex, name);
-		this.setState({activists: activists});
+		this.setState({activists: activists, unsaved: true});
 	}.bind(this);
 	
 	selectScanRow = function(index){
@@ -217,7 +224,8 @@ export default class Typer extends React.Component {
 				scanUrl: null,
 				fullyTyped: false,
 				displayFullyTypedPopup: false,
-				postAttempted: false
+				postAttempted: false,
+				unsaved: false
 			});
 			alert("the details have been stored in the system");
 			this.getContactsScan();
