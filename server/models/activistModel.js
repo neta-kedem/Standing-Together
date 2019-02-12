@@ -15,7 +15,7 @@ const activistSchema = new mongoose.Schema({
 			enum: ['webSite', 'contactPage', 'memberPage'],
 			required: true,
 		},
-		typerName: String,
+		typerId: {type:String, required: false},
 		scanId: {type:String, required: false},
 	},
 	profile: {

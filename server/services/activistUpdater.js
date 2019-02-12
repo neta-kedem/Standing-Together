@@ -24,7 +24,7 @@ const markTypedContactScanRows = function(res, typerId, scanId, activists, marke
                     break;
                 }
             }
-            // if the scan went through row detection, mark it as finished IFF all rows have a correspondings typed in data.
+            // if the scan went through row detection, mark it as finished IFF all rows have a corresponding typed in data.
             // otherwise, mark it as finished IFF the typer has indicated it to be
             scanData.complete=(scanData.rows.length&&allRowsTyped)||markedDone;
             ContactScan.replaceOne(
@@ -34,7 +34,7 @@ const markTypedContactScanRows = function(res, typerId, scanId, activists, marke
                     if (err){
                         return res.json(err);
                     }
-                    return res.json(result);
+                    return res.json({"result":"aha!", "scanData": scanData, "activists": activists});
                 }
             );
         });
@@ -98,7 +98,7 @@ const uploadTypedActivists = function (req, res){
                             "creationDate" : today,
                             "lastUpdate" : today,
                             "joiningMethod" : "contactPage",
-                            "typerName" : "Yaniv Cogan",
+                            "typerId" : typerId,
                             "scanId": scanId,
                             "scanRow": curr.scanRow
                         },

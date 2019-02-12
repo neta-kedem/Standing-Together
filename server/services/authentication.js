@@ -1,6 +1,6 @@
 const Activist = require('../models/activistModel');
 
-var myId = "";
+let myId = "";
 const getUserByToken=function(req, res){
 	const token = req.cookies.token;
 	const query = Activist.findOne({'login.token':token});
