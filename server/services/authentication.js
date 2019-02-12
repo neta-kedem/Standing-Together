@@ -1,6 +1,6 @@
 const Activist = require('../models/activistModel');
 
-var myId = "";
+let myId = "";
 const getUserByToken=function(req, res){
 	const token = req.cookies.token;
 	const query = Activist.findOne({'login.token':token});
@@ -19,14 +19,11 @@ const isUser = function(req, res){
 	const promise = (
 		getUserByToken(req, res)
 		.then(user=>{
-			if(user.error)
-				return false;
-			else
-				return true;
+			return !user.error;
 		})
 	);
 	return promise;
-}
+};
 const hasRole = function(req, res, role){
 	const promise = (
 		getUserByToken(req, res)
@@ -40,11 +37,11 @@ const hasRole = function(req, res, role){
 		})
 	);
 	return promise;
-}
+};
 
 const getMyId = function(){
 	return myId;
-}
+};
 
 module.exports = {
 	isUser,

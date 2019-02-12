@@ -9,17 +9,24 @@ export default class TypedActivistsTable extends React.Component {
 			handleChange: props['handleChange'],
 			handleRowPost: props['handleRowPost'],
 			handleRowFocus: props['handleRowFocus'],
-			handleRowDeletion: props['handleRowDeletion']
+			handleRowDeletion: props['handleRowDeletion'],
+			handleRowEditToggle: props['handleRowEditToggle']
 		};
 	}
 	render() {
 		const rows = this.props.activists.map((activist, i) =>
 			{
-				return <InputRow isFocused={i==this.props.selectedRow} handleFocus={this.state.handleRowFocus} handleChange={this.state.handleChange} handlePost={this.state.handleRowPost} handleDelete={this.state.handleRowDeletion} key={i} values={activist} rowIndex={i}/>
+				return <InputRow isFocused={i === this.props.selectedRow}
+								 handleFocus={this.state.handleRowFocus}
+								 handleChange={this.state.handleChange}
+								 handlePost={this.state.handleRowPost}
+								 handleDelete={this.state.handleRowDeletion}
+								 handleEditToggle={this.state.handleRowEditToggle}
+								 key={i} values={activist} rowIndex={i}/>
 			});
 		const titleRow =
 			<tr>
-				<th className="delete-row-wrap"></th>
+				<th className="delete-row-wrap"> </th>
 				<th>
 					<h4>שם פרטי<br/>الاسم الشخصي</h4>
 				</th>
@@ -35,11 +42,11 @@ export default class TypedActivistsTable extends React.Component {
 				<th>
 					<h4>אימייל<br/>البريد الإلكتروني</h4>
 				</th>
-			</tr>
+			</tr>;
 		return (
 			<div className="typed-table-wrap">
 				<style jsx global>{style}</style>
-				<table className="typed-rows-table">
+				<table className={"typed-rows-table "+(this.props.highlightInvalidFields?"highlight-invalid-fields":"")}>
 					<thead>
 						{titleRow}
 					</thead>

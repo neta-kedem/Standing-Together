@@ -51,7 +51,7 @@ export default class Caller extends React.Component {
 	}
 
 	getEventDetails(){
-		server.post('events/eventByCode', {'eventCode':this.state.eventCode})
+		server.get('events/eventByCode', {'eventCode':this.state.eventCode})
 		.then(json => {
 			if(json.error)
 			{

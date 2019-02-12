@@ -15,13 +15,18 @@ export default css`
 	}
 	.typed-rows-table tr, .typed-rows-table td{
 		border: 1px solid rgb(202, 200, 199);
-		padding: 5px;
+		padding: 0px
 	}
 	.typed-rows-table input{
 		border: none;
 		background-color: transparent;
 		outline: none;
 		margin: 0;
+		padding: 5px;
+	}
+	.typed-rows-table input:disabled{
+	    background-color: #DDD;
+	    color: #555;
 	}
 	.typed-rows-table tr{
 		transition: background-color 0.25s ease-in-out;
@@ -74,4 +79,7 @@ export default css`
 	.delete-row:active{
 		color: #444;
 	}
+	.highlight-invalid-fields .invalid{
+        background-color: rgb(255, 150, 160);
+    }
 `

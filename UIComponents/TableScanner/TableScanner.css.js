@@ -2,7 +2,7 @@ import css from 'styled-jsx/css'
 export default css
 `
 .hidden{
-	display: none;
+	/*display: none;*/
 }
 .display-wrap{
 	position: relative;

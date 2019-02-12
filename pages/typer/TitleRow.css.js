@@ -39,8 +39,6 @@ export default  {
         "paddingTop": "2px",
         "paddingRight": "5px",
         "paddingLeft": "5px",
-        "color": "rgba(86, 95, 108, .7)",
-        "display": "inline",
         "WebkitBoxFlex": "0",
         "WebkitFlex": "0 0 auto",
         "MsFlex": "0 0 auto",

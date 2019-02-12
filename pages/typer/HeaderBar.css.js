@@ -25,7 +25,6 @@ export default  {
       },
       "shortcut": {
         "display": "inline-block",
-
         "color": "#fbfbfb",
         "fontSize": "21px",
         "fontWeight": "400",
@@ -46,13 +45,6 @@ export default  {
         "fontSize": "15px",
         "fontWeight": "400",
         "textAlign": "center"
-      },
-      "shortcutblock_copy": {
-        "position": "absolute",
-        "left": "85px",
-        "top": "0px",
-        "height": "100%",
-        "minWidth": "100px"
       },
       "shortcut_ar": {
         "display": "inline-block",

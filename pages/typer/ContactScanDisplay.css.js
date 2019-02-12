@@ -30,6 +30,11 @@ export default css
 		height: 60px;
 		overflow: hidden;
 	}
+	.scan-display-wrap.full-scan-display-wrap{
+	    height: 200px;
+	    overflow: auto;
+	    margin: 2.5% auto;
+	}
 	.scan-display{
 		position: relative;
 		display: block;

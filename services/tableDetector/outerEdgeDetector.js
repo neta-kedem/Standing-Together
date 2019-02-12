@@ -37,11 +37,11 @@ function getFuzzyCornerCoordinates(img, x, y, rad){
 	return aggregator.uniq(points);
 }
 function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
-	const brightnessThreshold = 200;
-	const darknessRatioThreshold = 0.5;
+	const brightnessThreshold = 100;
+	const darknessRatioThreshold = 0.8;
 	const width = imgContext.canvas.width;
 	const height = imgContext.canvas.height;
-	const maxLineLength = Math.min(width, height);
+	const maxLineLength = Math.min(width, height)/4;
 	let linePoints = [];
 	for(let i=0; i<maxLineLength; i++)
 	{
@@ -60,7 +60,7 @@ function detectOuterEdgeFromCoordinate(imgContext, imgData, x, y, sin, cos) {
 	
 }
 function scanAngleRangeForDarkestLine(imgContext, imgData, x, y, rad){
-	const rangeSize = 0.05;
+	const rangeSize = 0.1;
 	const checkResolution = 0.001;
 	let darkestRad = rad;
 	let darkestLineSum = null;

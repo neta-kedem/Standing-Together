@@ -1,28 +1,30 @@
+/*
 const { createServer } = require('http');
 const { parse } = require('url');
+const router = express.Router();
+*/
 const next = require('next');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const router = express.Router();
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-const port = process.env.PORT || 3000;
 //db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
 
 const authentication = require('./server/services/authentication');
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI).then(()=>{});
 mongoose.Promise = global.Promise;
 const server = express();
 //setup server to use accept calls whose body contains files up to 5 mgb
-server.use(bodyParser.urlencoded({extended:false, limit:1024*1024*5, type:'application/x-www-form-urlencoding'}));
-server.use(bodyParser.json({limit:1024*1024*5, type:'application/json'}));
+const callSizeLimit = 5;
+server.use(bodyParser.urlencoded({extended:false, limit:1024*1024*callSizeLimit, type:'application/x-www-form-urlencoding'}));
+server.use(bodyParser.json({limit:1024*1024*callSizeLimit, type:'application/json'}));
 server.use(cookieParser());
-server.use(express.static('public'))
+server.use(express.static('public'));
 
 app.prepare().then(() => {
 	// API routes
@@ -37,7 +39,7 @@ app.prepare().then(() => {
 				res.end();
 			}
 			else{
-				app.render(req, res, '/Organizer', req.query);
+				return app.render(req, res, '/Organizer', req.query);
 			}
 		});
 	});
@@ -49,7 +51,7 @@ app.prepare().then(() => {
 				res.end();
 			}
 			else{
-				app.render(req, res, '/EventCreation', req.query);
+				return app.render(req, res, '/EventCreation', req.query);
 			}
 		});
 	});
@@ -61,7 +63,7 @@ app.prepare().then(() => {
 				res.end();
 			}
 			else{
-				app.render(req, res, '/Typer', req.query);
+				return app.render(req, res, '/Typer', req.query);
 			}
 		});
 	});
@@ -73,7 +75,7 @@ app.prepare().then(() => {
 				res.end();
 			}
 			else{
-				app.render(req, res, '/Caller', req.query);
+				return app.render(req, res, '/Caller', req.query);
 			}
 		});
 	});

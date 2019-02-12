@@ -1,14 +1,11 @@
-import React from 'react';
+import React from 'react'
+import Router from 'next/router'
+import server from '../services/server'
+import Meta from '../lib/meta'
+import style from './eventCreation/EventCreation.css'
+import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import Meta from '../lib/meta';
-import Stylesheet from './eventCreation/EventCreation.css'
-
-import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
-
-import ItemService from '../services/ItemService'
-import server from '../services/server';
-
 import {faShareSquare} from '@fortawesome/fontawesome-free-solid'
 fontawesome.library.add(faShareSquare);
 
@@ -70,9 +67,9 @@ handlePost() {
 		}
 	};
 	server.post('events', {'event':eventObject})
-	.then(json => {
+	.then(() => {
 		alert("saved");
-		Router.push({pathname: '/Organizer'});
+		Router.push({pathname: '/Organizer'}).then(()=>{});
 	});
 }
 
@@ -80,7 +77,7 @@ render() {
 	return (
 		<div style={{'height':'100vh'}}>
 			<Meta/>
-			<style jsx global>{Stylesheet}</style>
+			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div onClick={this.handlePost.bind(this)} className="save-event-button">
 					<div className="save-event-button-label">
@@ -106,25 +103,25 @@ render() {
 					</div>
 					<label className="inline-label event-question">
 						<div>שאלה 1<br/>سؤال 1</div>
-						<textarea name="question1" value={this.state.question1} maxLength="50" onChange={this.handleInputChange.bind(this)}></textarea>
+						<textarea name="question1" value={this.state.question1} maxLength="50" onChange={this.handleInputChange.bind(this)}> </textarea>
 					</label>
 					<label className="event-text">
 						<div>טקסט 1<br/>نص 1</div>
-						<textarea name="text1" value={this.state.text1} onChange={this.handleInputChange.bind(this)}></textarea>
+						<textarea name="text1" value={this.state.text1} onChange={this.handleInputChange.bind(this)}> </textarea>
 					</label>
 					<label className="inline-label event-question">
 						<div>שאלה 2<br/>سؤال 2</div>
-						<textarea name="question2" value={this.state.question2} maxLength="50" onChange={this.handleInputChange.bind(this)}></textarea>
+						<textarea name="question2" value={this.state.question2} maxLength="50" onChange={this.handleInputChange.bind(this)}> </textarea>
 					</label>
 					<label className="event-text">
 						<div>טקסט 2<br/>نص 2</div>
-						<textarea name="text2" value={this.state.text2} onChange={this.handleInputChange.bind(this)}></textarea>
+						<textarea name="text2" value={this.state.text2} onChange={this.handleInputChange.bind(this)}> </textarea>
 					</label>
 				</div>
 				<div className="event-script-wrap">
 					<label>
 						<div>תסריט שיחה<br/>سيناريو الحوار</div>
-						<textarea name="callScript" value={this.state.callScript} onChange={this.handleInputChange.bind(this)}></textarea>
+						<textarea name="callScript" value={this.state.callScript} onChange={this.handleInputChange.bind(this)}> </textarea>
 					</label>
 				</div>
 			</div>

@@ -9,6 +9,11 @@ export default css
 	margin-right: 0.5em;
 	color: white;
 }
+.page-wrap{
+	height: calc(100vh - 55px);
+	width: 100%;
+	position: relative;
+}
 .contact-scan-step-wrap{
 	width: 90%;
 	margin: 0 auto 5% auto;
@@ -40,6 +45,29 @@ export default css
 	background-color: #731f72;
 }
 .post-scan-button:active{
+	background-color: #561755;
+}
+.failed-scan-popup{
+	text-align: center;
+}
+.failed-scan-popup-label{
+	margin-bottom: 5%;
+}
+.failed-scan-button{
+    color: white;
+	background-color: #90278e;
+	border: none;
+	outline: none;
+	font-size: 1.5em;
+	display: inline-block;
+	padding: 0.25em 0.5em;
+	transition: background-color 0.25s;
+	cursor: pointer;
+}
+.failed-scan-button:hover{
+	background-color: #731f72;
+}
+.failed-scan-button:active{
 	background-color: #561755;
 }
 `
