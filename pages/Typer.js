@@ -55,6 +55,11 @@ export default class Typer extends React.Component {
 				const activists = json.activists.map((activist)=>{
 					activist.locked=true;
 					activist.saved=true;
+					activist.firstNameValid=true;
+					activist.lastNameValid=true;
+					activist.phoneValid=true;
+					activist.residencyValid=true;
+					activist.emailValid=true;
 					return activist});
 				this.setState({"activists":activists});
 			}

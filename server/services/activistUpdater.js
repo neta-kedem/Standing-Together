@@ -39,6 +39,21 @@ const markTypedContactScanRows = function(res, typerId, scanId, activists, marke
             );
         });
 };
+const updateTypedActivists = function(activists){
+    let updatePromises = [];
+    for(let i=0; i<activists.length; i++){
+        const curr = activists[i];
+        const query = Activist.updateOne({'_id':curr._id}, {
+            "profile.firstName" : curr.firstName,
+            "profile.lastName" : curr.lastName,
+            "profile.phone" : curr.phone.replace(/[\-.():]/g, ''),
+            "profile.email" : curr.email,
+            "profile.residency" : curr.residency,
+        });
+        updatePromises.push(query.exec());
+    }
+    return Promise.all(updatePromises);
+};
 const insertActivists = function(req, res){
     const newActivist = new Activist(req.body);
     newActivist.save(function (err) {
@@ -69,59 +84,68 @@ const uploadTypedActivists = function (req, res){
         const typedActivists = req.body.activists;
         const scanId = mongoose.Types.ObjectId(req.body.scanId);
         const markedDone = req.body.markedDone;
-        let processedActivists = [];
+        let newActivists = [];
+        let updatedActivists = [];
         const today = new Date();
         for (let i=0; i<typedActivists.length; i++)
         {
             let curr = typedActivists[i];
-            processedActivists.push(
-                {
-                    "_id": mongoose.Types.ObjectId(),
-                    "metadata" : {
-                        "creationDate" : today,
-                        "lastUpdate" : today,
-                        "joiningMethod" : "contactPage",
-                        "typerName" : "Yaniv Cogan",
-                        "scanId": scanId,
-                        "scanRow": curr.scanRow
-                    },
-                    "profile" : {
-                        "firstName" : curr.firstName,
-                        "lastName" : curr.lastName,
-                        "phone" : curr.phone.replace(/[\-.():]/g, ''),
-                        "email" : curr.email,
-                        "residency" : curr.residency,
-                        "circle" : "תל-אביב",
-                        "isMember" : false,
-                        "isPaying" : false,
-                        "isNewsletter" : false,
-                        "participatedEvents" : []
-                    },
-                    "role" : {
-                        "isTyper" : false,
-                        "isCaller" : false,
-                        "isOrganizer" : false,
-                        "isCircleLeader" : false
-                    },
-                    "login" : {
-                        "loginCode" : null,
-                        "token" : []
+            if(!curr._id){
+                newActivists.push(
+                    {
+                        "_id": mongoose.Types.ObjectId(),
+                        "metadata" : {
+                            "creationDate" : today,
+                            "lastUpdate" : today,
+                            "joiningMethod" : "contactPage",
+                            "typerName" : "Yaniv Cogan",
+                            "scanId": scanId,
+                            "scanRow": curr.scanRow
+                        },
+                        "profile" : {
+                            "firstName" : curr.firstName,
+                            "lastName" : curr.lastName,
+                            "phone" : curr.phone.replace(/[\-.():]/g, ''),
+                            "email" : curr.email,
+                            "residency" : curr.residency,
+                            "circle" : "תל-אביב",
+                            "isMember" : false,
+                            "isPaying" : false,
+                            "isNewsletter" : false,
+                            "participatedEvents" : []
+                        },
+                        "role" : {
+                            "isTyper" : false,
+                            "isCaller" : false,
+                            "isOrganizer" : false,
+                            "isCircleLeader" : false
+                        },
+                        "login" : {
+                            "loginCode" : null,
+                            "token" : []
+                        }
                     }
-                }
-            );
-        }
-        Activist.insertMany(processedActivists).then(function (result) {
-            if (result){
-                if(scanId){
-                    markTypedContactScanRows(res, typerId, scanId, processedActivists, markedDone);
-                }
-                else{
-                    return res.json(result);
-                }
+                );
             }
             else{
-                return res.json({"error":"an unknown error has occurred, the activists were not saved"});
+                if(!curr.locked)
+                    updatedActivists.push(curr);
             }
+        }
+        updateTypedActivists(updatedActivists).then(()=>{
+            Activist.insertMany(newActivists).then(function (result) {
+                if (result){
+                    if(scanId){
+                        markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone);
+                    }
+                    else{
+                        return res.json(result);
+                    }
+                }
+                else{
+                    return res.json({"error":"an unknown error has occurred, the activists were not saved"});
+                }
+            });
         });
     });
 };
