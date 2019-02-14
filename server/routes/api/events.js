@@ -8,6 +8,9 @@ module.exports = (app) => {
 	app.post('/api/events/inviteByQuery', (req, res) => {
 		eventUpdater.inviteByQuery(req, res);
 	});
+	app.get('/api/events/eventById/:id', (req, res) => {
+		eventFetcher.getEventById(req, res);
+	});
 	app.get('/api/events/eventByCode', (req, res) => {
 		eventFetcher.getEventByCode(req, res);
 	});

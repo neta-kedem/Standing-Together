@@ -14,6 +14,7 @@ constructor(props) {
 	super(props);
 	const today = new Date();
 	this.state = {
+		_id: props.url.query.id,
 		title: "",
 		date: today.getDate()+"/"+(today.getMonth()+1)+"/"+today.getFullYear(),
 		question1: "",
@@ -22,6 +23,25 @@ constructor(props) {
 		text2: "",
 		callScript: ""
 	};
+	if(this.state["_id"]){
+		this.fetchEventDetails();
+	}
+}
+fetchEventDetails(){
+	server.get('events/eventById/'+this.state._id)
+		.then(event => {
+			const date = new Date(event.eventDetails.date);
+			const dateString = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()
+			this.setState({
+				title: event.eventDetails.name,
+				date: dateString,
+				question1: event.callInstructions.question1,
+				text1: event.callInstructions.text1,
+				question2: event.callInstructions.question2,
+				text2: event.callInstructions.text2,
+				callScript: event.callInstructions.script,
+			});
+		});
 }
 handleInputChange(event) {
 	const target = event.target;
@@ -53,6 +73,7 @@ handlePost() {
 	if(!this.validateEvent())
 		return;
 	let eventObject = {
+		"_id": this.state._id,
 		"eventDetails":{
 			"name": this.state.title,
 			"date": this.state.date,

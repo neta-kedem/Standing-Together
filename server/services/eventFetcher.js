@@ -1,7 +1,31 @@
+const mongoose = require('mongoose');
 const Authentication = require('../services/authentication');
 const Event = require('../models/eventModel');
 
-const getEventByCode= function(req, res){
+const getEventById = function(req, res){
+    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+        if(!isUser)
+            return res.json({"error":"missing token"});
+        try {
+            mongoose.Types.ObjectId(req.params.id);
+        }
+        catch(err) {
+            return res.json({success: false, error: "invalid event id"});
+        }
+        const eventId = mongoose.Types.ObjectId(req.params.id);
+        Event.findOne({"_id": eventId}, (err, eventData) => {
+            if (err) return res.json({success: false, error: err});
+            if (!eventData)
+                return res.json({"error":"couldn't find a matching event"});
+            return res.json({
+                "_id":eventData._id,
+                "eventDetails":eventData.eventDetails,
+                "callInstructions":eventData.callInstructions
+            });
+        });
+    })
+};
+const getEventByCode = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
@@ -59,6 +83,7 @@ const listEvents = function(req, res){
 };
 
 module.exports = {
+    getEventById,
     getEventByCode,
     getCampaignLess,
     listEvents

@@ -6,17 +6,21 @@ const insertEvent = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
-        var eventObject = req.body.event;
-        var today = new Date();
+        const eventObject = req.body.event;
+        const today = new Date();
+        //TODO: creationDate and creatorID should only be updated on insert
         eventObject.metadata={
             "creationDate": today,
             "lastUpdate": today,
             "creatorId": Authentication.getMyId()
         };
-        var schedule = eventObject.eventDetails.date.split("/");
+        const schedule = eventObject.eventDetails.date.split("/");
         eventObject.eventDetails.date = new Date(schedule[2], schedule[1] - 1, schedule[0]);
-        var newEvent = new Event(eventObject);
-        newEvent.save(function (err) {
+        const newEvent = new Event(eventObject);
+        /*for documentation on this approach to upserting, see: https://stackoverflow.com/a/7855281*/
+        const upsertData = newEvent.toObject();
+        delete upsertData._id;
+        Event.update({_id: newEvent._id}, upsertData, {upsert: true}, function (err) {
             if (err){
                 return res.json(err);
             }
