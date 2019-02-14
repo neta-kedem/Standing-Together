@@ -85,6 +85,9 @@ app.prepare().then(() => {
 	server.get('/ScanContacts', (req, res) => {
 		return app.render(req, res, '/ScanContacts', req.query);
 	});
+	server.get('/EventManagement', (req, res) => {
+		return app.render(req, res, '/EventManagement', req.query);
+	});
 	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
 	server.get('*', (req, res) => {
 		return handle(req, res);

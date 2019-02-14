@@ -14,4 +14,7 @@ module.exports = (app) => {
 	app.get('/api/events/getInviteless', (req, res) => {
 		eventFetcher.getCampaignLess(req, res);
 	});
+	app.get('/api/events/list', (req, res) => {
+		eventFetcher.listEvents(req, res);
+	});
 };

@@ -1,5 +1,6 @@
 const Authentication = require('../services/authentication');
 const Activist = require('../models/activistModel');
+const Event = require('../models/eventModel');
 
 const insertEvent = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
