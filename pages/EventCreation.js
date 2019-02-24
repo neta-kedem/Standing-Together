@@ -30,6 +30,8 @@ constructor(props) {
 fetchEventDetails(){
 	server.get('events/eventById/'+this.state._id)
 		.then(event => {
+			if(!event.eventDetails)
+				return;
 			const date = new Date(event.eventDetails.date);
 			const dateString = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()
 			this.setState({

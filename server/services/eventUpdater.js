@@ -2,13 +2,24 @@ const Authentication = require('../services/authentication');
 const Activist = require('../models/activistModel');
 const Event = require('../models/eventModel');
 
+const saveEvent = function(req, res){
+    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+        if(!isUser)
+            return res.json({"error":"missing token"});
+        if(req.body.event._id){
+            updateEvent(req, res);
+        }
+        else{
+            insertEvent(req, res);
+        }
+    })
+};
 const insertEvent = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const eventObject = req.body.event;
         const today = new Date();
-        //TODO: creationDate and creatorID should only be updated on insert
         eventObject.metadata={
             "creationDate": today,
             "lastUpdate": today,
@@ -17,10 +28,32 @@ const insertEvent = function(req, res){
         const schedule = eventObject.eventDetails.date.split("/");
         eventObject.eventDetails.date = new Date(schedule[2], schedule[1] - 1, schedule[0]);
         const newEvent = new Event(eventObject);
+        newEvent.save(function (err) {
+            if (err){
+                return res.json(err);
+            }
+            else
+                return res.json(req.body);
+        });
+    })
+};
+const updateEvent = function(req, res){
+    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+        if(!isUser)
+            return res.json({"error":"missing token"});
+        const eventObject = req.body.event;
+        const today = new Date();
+        const schedule = eventObject.eventDetails.date.split("/");
+        eventObject.eventDetails.date = new Date(schedule[2], schedule[1] - 1, schedule[0]);
+        const newEvent = new Event(eventObject);
         /*for documentation on this approach to upserting, see: https://stackoverflow.com/a/7855281*/
         const upsertData = newEvent.toObject();
         delete upsertData._id;
-        Event.update({_id: newEvent._id}, upsertData, {upsert: true}, function (err) {
+        Event.update({_id: newEvent._id}, {
+            "metadata.lastUpdate": today,
+            "eventDetails": upsertData.eventDetails,
+            "callInstructions": upsertData.callInstructions,
+        }, {upsert: true}, function (err) {
             if (err){
                 return res.json(err);
             }
@@ -70,7 +103,7 @@ const inviteByQuery = function(req, res){
 };
 
 module.exports = {
-    insertEvent,
+    saveEvent,
     inviteByQuery
 };
 

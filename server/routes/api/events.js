@@ -3,7 +3,7 @@ const eventFetcher = require('../../services/eventFetcher');
 
 module.exports = (app) => {
 	app.post('/api/events', (req, res) => {
-		eventUpdater.insertEvent(req, res);
+		eventUpdater.saveEvent(req, res);
 	});
 	app.post('/api/events/inviteByQuery', (req, res) => {
 		eventUpdater.inviteByQuery(req, res);
