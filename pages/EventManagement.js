@@ -3,6 +3,7 @@ import server from '../services/server'
 import Meta from '../lib/meta'
 import style from './eventManagement/eventManagement.css'
 import Router from "next/router";
+import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
 export default class EventManagement extends React.Component {
     constructor(props) {
@@ -46,6 +47,12 @@ export default class EventManagement extends React.Component {
             <div>
                 <Meta/>
                 <style jsx global>{style}</style>
+                <TopNavBar>
+                    <div className="title-wrap">
+                        <span className="title-lang">ניהול מפגשים</span>
+                        <span className="title-lang">ניהול מפגשים</span>
+                    </div>
+                </TopNavBar>
                 <table className={"event-table"}>
                     <thead>
                         <tr>

@@ -1,6 +1,18 @@
 import css from 'styled-jsx/css'
 export default css
     `
+    .title-wrap{
+		color: #fbfbfb;
+		font-size: 21px;
+		font-weight: 400;
+		line-height: 55px;
+		text-align: center;
+		margin: 0 auto;
+	}
+	.title-lang{
+        margin-left: 5%;
+		white-space: nowrap;
+	}
     .event-table{
         direction: rtl;
         border-collapse: collapse;
@@ -16,5 +28,8 @@ export default css
     }
     .event-table tbody tr:hover{
         background-color: #EEE;
+    }
+    .event-table tbody tr:active{
+        background-color: #DDD;
     }
 `
