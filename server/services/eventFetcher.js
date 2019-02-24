@@ -29,7 +29,7 @@ const getEventByCode = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
-        const eventCode = req.body.eventCode;
+        const eventCode = req.params.code;
         Event.findOne({"campaign.eventCode": eventCode}, (err, eventData) => {
             if (err) return res.json({success: false, error: err});
             if (!eventData)
@@ -75,7 +75,8 @@ const listEvents = function(req, res){
                     name: event.eventDetails.name,
                     date: event.eventDetails.date,
                     location: event.eventDetails.location,
-                    campaign: !!event.campaign
+                    campaign: !!event.campaign,
+                    campaignUrl: !!event.campaign?event.campaign.eventCode:null
                 };
             }))
         });

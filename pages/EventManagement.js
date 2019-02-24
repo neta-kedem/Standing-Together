@@ -35,12 +35,13 @@ export default class EventManagement extends React.Component {
     render() {
         const events = this.state.events.slice();
         const rows = events.map((event,i)=>{
+            const campaignLink = <a href={"/Caller/?eventCode="+event.campaignUrl}>🔗</a>;
             return <tr key={"event_"+i} onClick={()=>{this.goToEvent(event._id)}}>
                 <td>{event.date.toLocaleDateString()}</td>
                 <td>{event.name}</td>
                 <td>{event.location}</td>
                 <td>{event.creationDate.toLocaleDateString()}</td>
-                <td>{event.campaign?"V":"X"}</td>
+                <td>{event.campaign?campaignLink:"X"}</td>
             </tr>;
         });
         return (
