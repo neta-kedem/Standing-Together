@@ -3,7 +3,7 @@ const Event = require('../models/eventModel');
 const Activist = require('../models/activistModel');
 const Authentication = require('../services/authentication');
 const MongooseUpdater = require('../services/dbHelper/mongooseUpdater');
-
+const arrayFunctions = require("../services/arrayFunctions");
 
 //constants
 //how much time (in minutes) after the last ping should an activist be reserved for the caller assigned to it.
@@ -69,21 +69,21 @@ const fetchActivistsToCall = function(req, res){
             if (!eventData)
                 return res.json({"error":"couldn't find a matching event"});
             if (!eventData.campaign||!eventData.campaign.invitations.length)
-                return res.json({"message":"couldn't find any invited activists"});
+                return res.json({"message":"No Invites"});
             const now = new Date();
             const invitedActivists = eventData.campaign.invitations;
             //filter out any activists that have had their calls resolved
             const unresolvedInvitations = invitedActivists.filter(invite => !invite.resolution);
             if(!unresolvedInvitations.length)
             {
-                return res.json({"message":"All invitations have been resolved!"});
+                return res.json({"message":"All Resolved"});
             }
             //filter out any activists that are reserved for another caller
             const reservationDeadline = new Date(now.getTime()-maxReservationDuration*60000);
             const unreservedInvitations = unresolvedInvitations.filter(invite => !invite.lastPing||invite.lastPing<reservationDeadline);
             if(!unreservedInvitations.length)
             {
-                return res.json({"message":"All invitations are already being processed!"});
+                return res.json({"message":"All Processed"});
             }
             const sortedInvitations = unreservedInvitations.sort((a, b)=>{return sortCallsByPriority(a, b, callerId, now)});
             const assignedActivists = sortedInvitations.slice(0, Math.min(sortedInvitations.length, bulkSize));
@@ -93,6 +93,7 @@ const fetchActivistsToCall = function(req, res){
             Activist.find({_id:{$in:assignedActivistsIds}}, (err, activists) => {
                 if (err) return res.json({success: false, error: err});
                 let activistsList = [];
+                const invitationsById = arrayFunctions.indexByField(assignedActivists, "activistId");
                 for(let activist of activists)
                 {
                     activistsList.push({
@@ -102,7 +103,9 @@ const fetchActivistsToCall = function(req, res){
                         "firstName":activist.profile.firstName,
                         "lastName":activist.profile.lastName,
                         "city":activist.profile.residency,
-                        "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
+                        "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1],
+                        "availableAt":invitationsById[activist._id].availableAt,
+                        "lastCallAt":invitationsById[activist._id].lastCallAt
                     });
                 }
                 //this used to work, but arrayFilters doesn't have stable support yet in mongoose
@@ -151,7 +154,7 @@ const resolveCall = function(req, res){
             attendingEvent: req.body.attendingEvent,
             contributed: req.body.contributed
         };
-        return MongooseUpdater._update(Event,
+        MongooseUpdater._update(Event,
             {"_id": eventId},
             {"$set": {
                     "campaign.invitations.$[i].lastCallAt": now,
@@ -159,7 +162,9 @@ const resolveCall = function(req, res){
                 }},
             [{"i.activistId":activistId}],
             false
-        );
+        ).then(()=>{
+            res.json(true);
+        });
     });
 };
 const postponeCall = function(req, res){
@@ -169,16 +174,25 @@ const postponeCall = function(req, res){
         const eventId = mongoose.Types.ObjectId(req.body.eventId);
         const activistId = mongoose.Types.ObjectId(req.body.activistId);
         const now = new Date();
-        const availableAt = req.body.availableAt;
-        return MongooseUpdater._update(Event,
+        const availableAt = req.body.availableAt.split(":");
+        let availabilityDate = new Date();
+        try {
+            availabilityDate.setHours(availableAt[0], availableAt[1], 0, 0)
+        }
+        catch(err) {
+            res.json({"error":"hour format not supported"});
+        }
+        MongooseUpdater._update(Event,
             {"_id": eventId},
             {"$set": {
                     "campaign.invitations.$[i].lastCallAt": now,
-                    "campaign.invitations.$[i].availableAt": availableAt
+                    "campaign.invitations.$[i].availableAt": availabilityDate
                 }},
             [{"i.activistId":activistId}],
             false
-        );
+        ).then(()=>{
+            res.json(true);
+        });
     });
 };
 

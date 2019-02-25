@@ -98,7 +98,6 @@ export default css
 	}
 	.call-outcome-button{
 		box-sizing: border-box;
-		cursor: pointer;
 		transition: color 0.25s;
 	}
 	.remove-contact:hover{
@@ -144,5 +143,24 @@ export default css
 		padding: 1em;
 		box-sizing: border-box;
 		resize: none;
+	}
+	.error-message{
+	    text-align: center;
+	}
+	.error-message-try-again{
+	    cursor: pointer;
+	    display: block;
+	    text-align: center;
+	    width: 10em;
+	    margin: 0 auto;
+	    padding: 2.5%;
+	    margin-top: 2.5%;
+	}
+	.error-message-try-again:hover{
+    	background-color: #ffffff22;
+	}
+	.error-message-try-again:active{
+	    background-color: white;
+        color: rgb(144, 39, 142);
 	}
 `
