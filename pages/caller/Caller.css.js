@@ -23,7 +23,7 @@ export default css
 	.content-wrap{
 		display: flex;
 		flex-direction: row;
-		height: calc(100% - 55px);
+		min-height: calc(100% - 55px);
 		background-color: #EBEBE8;
 		position: relative;
 	}

@@ -13,6 +13,7 @@ const handle = app.getRequestHandler();
 //db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
+mongoose.set('debug', true)
 
 const authentication = require('./server/services/authentication');
 

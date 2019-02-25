@@ -41,7 +41,7 @@ export default class Caller extends React.Component {
 	}
 	componentDidMount() {
 		this.getEventDetails();
-		var callPingInterval = setInterval(this.pingCalls.bind(this), this.callPingIntervalDuration);
+		const callPingInterval = setInterval(this.pingCalls.bind(this), this.callPingIntervalDuration);
 		// store interval promise in the state so it can be cancelled later:
 		this.setState({callPingInterval: callPingInterval});
 	}
@@ -51,7 +51,7 @@ export default class Caller extends React.Component {
 	}
 
 	getEventDetails(){
-		server.get('events/eventByCode', {'eventCode':this.state.eventCode})
+		server.get('events/eventByCode/'+this.state.eventCode, {'eventCode':this.state.eventCode})
 		.then(json => {
 			if(json.error)
 			{
@@ -62,7 +62,7 @@ export default class Caller extends React.Component {
 		});
     }
 	getActivistsToCall(){
-		server.post('call/fetchActivistsToCall', {'eventId':this.state.eventData._id})
+		server.get('call/fetchActivistsToCall/'+this.state.eventData._id, {'eventId':this.state.eventData._id})
 			.then(json => {
 				if(json.error)
 				{
@@ -75,7 +75,7 @@ export default class Caller extends React.Component {
 					return;
 				}
 				let activists = json;
-				for(var i = 0; i<activists.length; i++)
+				for(let i = 0; i<activists.length; i++)
 				{
 					activists[i].contributed = false;
 					activists[i].attendingEvent = false;
@@ -89,7 +89,7 @@ export default class Caller extends React.Component {
 		});
 	}
     handleSelection(i){
-        this.setState((props) => ({selectedRowIndex : i}));
+        this.setState(() => ({selectedRowIndex : i}));
     }
 	
     toggleAttendance(value){
@@ -97,7 +97,7 @@ export default class Caller extends React.Component {
 			return;
         const activists = this.state.activists.slice();
 		activists[this.state.selectedRowIndex].attendingEvent=value;
-        this.setState((props) => ({activists : activists}));
+        this.setState(() => ({activists : activists}));
     }
 	
 	toggleContribution(value){
@@ -105,7 +105,7 @@ export default class Caller extends React.Component {
 			return;
         const activists = this.state.activists.slice();
 		activists[this.state.selectedRowIndex].contributed=value;
-        this.setState((props) => ({activists : activists}));
+        this.setState(() => ({activists : activists}));
     }
 	
 	resolveCall(){
@@ -140,18 +140,18 @@ export default class Caller extends React.Component {
 	}
 	pingCalls(){
 		//if there are no activists in the to-call list, return without doing anything
-		if(this.state.activists.length==0)
+		if(this.state.activists.length === 0)
 			return;
 		server.post('call/pingCalls', {
 			'eventId':this.state.eventData._id,
-			'activistIds': this.state.activists.map(function(value,index) {return value["_id"];})
+			'activistIds': this.state.activists.map(function(value) {return value["_id"];})
 		})
 		.then(json => {
 		});
 	}
 	render() {
 		const i = this.state.selectedRowIndex;
-		const isSelected = i!=undefined;
+		const isSelected = i !== undefined;
 		const selectedActivist = this.state.activists[i]?this.state.activists[i]:{};
 		let lastCallTime = "";
 		if(selectedActivist.lastCallAt)
@@ -244,7 +244,8 @@ export default class Caller extends React.Component {
 				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone}/>
 				<div className="content-wrap">
 					<div className="right-panel">
-						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}></SelectableTable>
+						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}>
+						</SelectableTable>
 						<div className="fetch-more-button inline-label" onClick={this.getActivistsToCall.bind(this)}>
 							<div className="label-text">
 								<div>المزيد من الاسماء</div>

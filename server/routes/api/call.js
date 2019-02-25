@@ -1,7 +1,7 @@
 const callManager = require('../../services/callManager');
 
 module.exports = (app) => {
-	app.post('/api/call/fetchActivistsToCall', (req, res) => {
+	app.get('/api/call/fetchActivistsToCall/:eventId', (req, res) => {
 		callManager.fetchActivistsToCall(req, res)
 	});
 	app.post('/api/call/pingCalls', (req, res) => {

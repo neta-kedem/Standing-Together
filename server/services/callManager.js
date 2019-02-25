@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Event = require('../models/eventModel');
 const Activist = require('../models/activistModel');
 const Authentication = require('../services/authentication');
+const MongooseUpdater = require('../services/dbHelper/mongooseUpdater');
+
 
 //constants
 //how much time (in minutes) after the last ping should an activist be reserved for the caller assigned to it.
@@ -41,19 +43,33 @@ const sortCallsByPriority = function(a, b, callerId, now){
     }
     return weightB - weightA;
 };
+const markFetchedActivists = function(eventId, assignedActivistsIds, callerId){
+    if(!eventId)
+        return false;
+    const now = new Date();
+    return MongooseUpdater._update(Event,
+        {"_id": eventId},
+        {"$set": {
+                "campaign.invitations.$[i].lastPing": now,
+                "campaign.invitations.$[i].callerId": mongoose.Types.ObjectId(callerId)
+            }},
+        [{"i.activistId":{$in : assignedActivistsIds}}],
+        true
+    );
+};
 const fetchActivistsToCall = function(req, res){
     Authentication.hasRole(req, res, "isCaller").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
-        const eventId = mongoose.Types.ObjectId(req.body.eventId);
+        const eventId = mongoose.Types.ObjectId(req.params.eventId);
         const callerId = Authentication.getMyId();
         const bulkSize= 2;
         Event.findOne({"_id": eventId}, (err, eventData) => {
             if (err) return res.json({success: false, error: err});
             if (!eventData)
                 return res.json({"error":"couldn't find a matching event"});
-            if (!eventData.campaign&&!eventData.campaign.invitations.length)
-                return res.json({"error":"couldn't find any invited activists"});
+            if (!eventData.campaign||!eventData.campaign.invitations.length)
+                return res.json({"message":"couldn't find any invited activists"});
             const now = new Date();
             const invitedActivists = eventData.campaign.invitations;
             //filter out any activists that have had their calls resolved
@@ -71,17 +87,12 @@ const fetchActivistsToCall = function(req, res){
             }
             const sortedInvitations = unreservedInvitations.sort((a, b)=>{return sortCallsByPriority(a, b, callerId, now)});
             const assignedActivists = sortedInvitations.slice(0, Math.min(sortedInvitations.length, bulkSize));
-            const assignedActivistsIds = assignedActivists.map(function(value) {return value["activistId"];});
-            Event.update(
-                {"_id": eventId},
-                {"$set": {"campaign.invitations.$[elem].lastPing": now}},
-                {"arrayFilters": [{"elem.activistId":{$in:assignedActivistsIds}}], "multi": true },
-                (err, result) => {
-                }
-            );
+            const assignedActivistsIds = assignedActivists.map((assigned)=>{
+                return assigned["activistId"];
+            });
             Activist.find({_id:{$in:assignedActivistsIds}}, (err, activists) => {
                 if (err) return res.json({success: false, error: err});
-                activistsList = [];
+                let activistsList = [];
                 for(let activist of activists)
                 {
                     activistsList.push({
@@ -94,7 +105,25 @@ const fetchActivistsToCall = function(req, res){
                         "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
                     });
                 }
-                return res.json(activistsList);
+                //this used to work, but arrayFilters doesn't have stable support yet in mongoose
+                /*Event.update(
+                    {"_id": eventId},
+                    {"$set": {"campaign.invitations.$[element].lastPing": now}},
+                    {"arrayFilters": [{"element.activistId":{$in:assignedActivistsIds}}], "multi": true },
+                    (err, result) => {
+                    }
+                );*/
+                const markFetchedQuery = markFetchedActivists(eventId, assignedActivistsIds, callerId);
+                if(!markFetchedQuery){
+                    return res.json({"error":"couldn't find a matching event"});
+                }
+                else{
+                    markFetchedQuery.then(()=>{
+                        res.json(activistsList);
+                    }).catch((result, err)=>{
+                        res.json({"result":result, "err":err});
+                    });
+                }
             });
         });
     })
@@ -103,17 +132,12 @@ const pingCalls =function(req, res){
     Authentication.hasRole(req, res, "isCaller").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
+        const callerId = Authentication.getMyId();
         const eventId = mongoose.Types.ObjectId(req.body.eventId);
         const activistIds = req.body.activistIds.map(id=>mongoose.Types.ObjectId(id));
-        const now = new Date();
-        Event.update(
-            {"_id": eventId},
-            {"$set": {"campaign.invitations.$[elem].lastPing": now}},
-            {"arrayFilters": [{"elem.activistId":{$in:activistIds}}], "multi": true },
-            (err, result) => {
-                return res.json({"err":err, "result":result});
-            }
-        );
+        markFetchedActivists(eventId, activistIds, callerId).then(()=>{
+            return res.json(true);
+        });
     });
 };
 const resolveCall = function(req, res){
@@ -127,18 +151,14 @@ const resolveCall = function(req, res){
             attendingEvent: req.body.attendingEvent,
             contributed: req.body.contributed
         };
-        Event.update(
+        return MongooseUpdater._update(Event,
             {"_id": eventId},
-            {
-                "$set": {
+            {"$set": {
                     "campaign.invitations.$[i].lastCallAt": now,
                     "campaign.invitations.$[i].resolution": resolution
-                }
-            },
-            {"arrayFilters": [{"i.activistId":activistId}], "multi": false},
-            (err, result) => {
-                return res.json({"err":err, "result":result});
-            }
+                }},
+            [{"i.activistId":activistId}],
+            false
         );
     });
 };
@@ -150,18 +170,14 @@ const postponeCall = function(req, res){
         const activistId = mongoose.Types.ObjectId(req.body.activistId);
         const now = new Date();
         const availableAt = req.body.availableAt;
-        Event.update(
+        return MongooseUpdater._update(Event,
             {"_id": eventId},
-            {
-                "$set": {
-                    "campaign.invitations.$[elem].lastCallAt": now,
-                    "campaign.invitations.$[elem].availableAt": availableAt
-                }
-            },
-            {"arrayFilters": [{"elem.activistId":activistId}], "multi": true},
-            (err, result) => {
-                return res.json({"err":err, "result":result});
-            }
+            {"$set": {
+                    "campaign.invitations.$[i].lastCallAt": now,
+                    "campaign.invitations.$[i].availableAt": availableAt
+                }},
+            [{"i.activistId":activistId}],
+            false
         );
     });
 };
