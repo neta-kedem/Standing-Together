@@ -91,6 +91,7 @@ export default css
 	}
 	.call-outcomes{
 		display: flex;
+		flex-wrap: wrap;
 		flex-direction: row;
 		justify-content: space-between;
 		color: #616B6F;
@@ -98,10 +99,21 @@ export default css
 	}
 	.call-outcome-button{
 		box-sizing: border-box;
+		width: 8em;
+		margin-bottom: 5%;
+	}
+	.remove-contact, .finish-call, .unanswered-call{
+	    cursor: pointer;
 		transition: color 0.25s;
 	}
 	.remove-contact:hover{
 		color: #a00;
+	}
+	.finish-call:hover{
+		color: #90278e;
+	}
+	.call-outcomes .unanswered-call:hover{
+		color: rgb(0, 153, 170);;
 	}
 	.availability-timer{
 		border: none;
@@ -121,9 +133,6 @@ export default css
 	.availability-timer .time-not-passed{
 		border-color: #a00;
 	}
-	.finish-call:hover{
-		color: #90278e;
-	}
 	.left-panel{
 		width: 50%;
 		padding: 5%;
@@ -139,7 +148,7 @@ export default css
 	}
 	.left-panel textarea{
 		width: 100%;
-		height: 30%;
+		height: 90%;
 		padding: 1em;
 		box-sizing: border-box;
 		resize: none;

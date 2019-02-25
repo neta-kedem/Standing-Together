@@ -146,7 +146,7 @@ export default class Caller extends React.Component {
 			'contributed': activist.contributed,
 			'attendingEvent': activist.attendingEvent,
 		})
-		.then(json => {
+		.then(() => {
 			this.effectHandler("Confirmation");
 		});
 	}
@@ -162,7 +162,7 @@ export default class Caller extends React.Component {
 			'activistId': activist._id,
 			'availableAt': val
 		})
-		.then(json => {
+		.then(() => {
 			this.effectHandler("Confirmation");
 		});
 	}
@@ -207,7 +207,7 @@ export default class Caller extends React.Component {
 				<div>בדיקה מחדש</div>
 			</div>
 		</Popup>;
-		const confirmationEffect = <Confirmation toggleVisibility={()=>{this.effectHandler("Confirmation")}} visible={this.state.effects.Confirmation}/>
+		const confirmationEffect = <Confirmation toggleVisibility={()=>{this.effectHandler("Confirmation")}} visible={this.state.effects.Confirmation}/>;
 		const actionOptions =
 		<div>
 			<div className="caller-action attendance-indication">
@@ -259,13 +259,13 @@ export default class Caller extends React.Component {
 					</div>
 				</div>
 				<div className="call-outcome-button">
-					<FontAwesomeIcon icon="microphone-slash" className="label-icon"/>
-					<div className="label-text">
+					<div className="label-text unanswered-call">
+						<FontAwesomeIcon icon="microphone-slash" className="label-icon"/>
 						לא עונים
 						<br/>
 						لا بجيب
 					</div>
-					<div>
+					<div className="label-text">
 						שיחה אחרונה ב-{lastCallTime}
 						<br/>
 						שיחה אחרונה ב-{lastCallTime}
@@ -285,7 +285,7 @@ export default class Caller extends React.Component {
 			<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}} dir="rtl">
 				<style jsx global>{style}</style>
 				<Meta/>
-				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone}/>
+				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone} event={this.state.eventData.eventDetails.name}/>
 				<div className="content-wrap">
 					<div className="right-panel">
 						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}>

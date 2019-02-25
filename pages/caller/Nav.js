@@ -14,7 +14,7 @@ export default class Nav extends React.Component {
 	}
 	render() {
 		//const itemChilds = this.state.savedViews.map(view => <div key={view.name} style={style['saved-views']}>{view.name}</div>);
-		const items = <div style={style['saved-views']}>התקשרות ל{this.props.name} {this.props.lname} בטלפון {this.props.phone} בקשר להפגנה בשבת</div>;
+		const items = <div style={style['saved-views']}>התקשרות ל{this.props.name} {this.props.lname} בטלפון {this.props.phone} בקשר ל{this.props.event}</div>;
 		return (
 			<div style={style.wrapper}>
 				<div style={style.logo}></div>
