@@ -14,6 +14,7 @@ export default class SelectableTable extends React.Component {
 		super(props);
 		this.state = {
 			rows: props.rows,
+			rowKey: props.rowKey,
 			header: props.header,
 			singleSelection: props.singleSelection,
 			onSelect: props.onSelect,
@@ -87,7 +88,7 @@ export default class SelectableTable extends React.Component {
 			</tr>;
 		const rows =
 			this.state['rows'].map((row, i) =>
-				<tr key={i} className='list-table-row' onClick={() => this.toggleRowSelection(i)}>
+				<tr key={this.state.rowKey?row[this.state.rowKey]:i} className='list-table-row' onClick={() => this.toggleRowSelection(i)}>
 					<td className={'list-table-field no-padding list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
 					{
 						this.state.header.map((field, j) =>

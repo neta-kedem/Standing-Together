@@ -178,7 +178,6 @@ export default class Caller extends React.Component {
 		activists[this.state.selectedRowIndex].callCount += 1;
 		const activist = activists[this.state.selectedRowIndex];
 		activists.splice(this.state.selectedRowIndex, 1);
-		debugger;
 		this.setState({activists : activists});
 		server.post('call/markUnanswered', {
 			'eventId': this.state.eventData._id,
@@ -311,7 +310,7 @@ export default class Caller extends React.Component {
 				<PrevCalls callCount={selectedActivist.callCount} lastCallAt={selectedActivist.lastCallAt} availableAt={selectedActivist.availableAt}/>
 				<div className="content-wrap">
 					<div className="right-panel">
-						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}>
+						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true} rowKey={"_id"}>
 						</SelectableTable>
 						<div className="fetch-more-button inline-label" onClick={this.getActivistsToCall.bind(this)}>
 							<div className="label-text">
