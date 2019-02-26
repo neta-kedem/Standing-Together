@@ -10,38 +10,29 @@ export default class TypedActivistsTable extends React.Component {
 			handleRowPost: props['handleRowPost'],
 			handleRowFocus: props['handleRowFocus'],
 			handleRowDeletion: props['handleRowDeletion'],
-			handleRowEditToggle: props['handleRowEditToggle']
+			handleRowEditToggle: props['handleRowEditToggle'],
+			fields: props['fields'],
 		};
 	}
 	render() {
 		const rows = this.props.activists.map((activist, i) =>
 			{
-				return <InputRow isFocused={i === this.props.selectedRow}
-								 handleFocus={this.state.handleRowFocus}
-								 handleChange={this.state.handleChange}
-								 handlePost={this.state.handleRowPost}
-								 handleDelete={this.state.handleRowDeletion}
-								 handleEditToggle={this.state.handleRowEditToggle}
-								 key={i} values={activist} rowIndex={i}/>
+				return <InputRow
+					fields={this.state.fields}
+					isFocused={i === this.props.selectedRow}
+					handleFocus={this.state.handleRowFocus}
+					handleChange={this.state.handleChange}
+					handlePost={this.state.handleRowPost}
+					handleDelete={this.state.handleRowDeletion}
+					handleEditToggle={this.state.handleRowEditToggle}
+					key={i} values={activist} rowIndex={i}/>
 			});
 		const titleRow =
 			<tr>
 				<th className="delete-row-wrap"> </th>
-				<th>
-					<h4>שם פרטי<br/>الاسم الشخصي</h4>
-				</th>
-				<th>
-					<h4>שם משפחה<br/>اسم العائلة</h4>
-				</th>
-				<th>
-					<h4>עיר<br/>البلد</h4>
-				</th>
-				<th>
-					<h4>טלפון<br/>رقم الهاتف</h4>
-				</th>
-				<th>
-					<h4>אימייל<br/>البريد الإلكتروني</h4>
-				</th>
+				{this.state.fields.map((f) => {
+					return <th key={"field_title_"+f.name}><h4>{f.ar}<br/>{f.he}</h4></th>
+				})}
 			</tr>;
 		return (
 			<div className="typed-table-wrap">

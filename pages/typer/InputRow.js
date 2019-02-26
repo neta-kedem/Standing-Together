@@ -8,6 +8,7 @@ export default class InputRow extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			fields: props['fields'],
 			handlePost: props['handlePost'],
 			handleChange: props['handleChange'],
 			handleFocus: props['handleFocus'],
@@ -73,38 +74,24 @@ export default class InputRow extends React.Component {
 			<td className="delete-row-wrap"> </td>;
 		return (
 			<tbody className="row-wrap">
-				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
+				<tr className="row-margin">
+					<td/>{this.state.fields.map((f, i) => {return <td key={"field_input_"+this.props.rowIndex+"_"+i}/>})}
+				</tr>
 				<tr onClick={this.handleFocus}>
 					{rowValues.locked ? editRow : rowValues.saved ? noAction : deleteRow}
-					<td className={rowValues.firstNameValid?"":"invalid"}>
-						<input value={rowValues.firstName} type="text" name="firstName"
-							   onChange={this.syncStateToInput} onFocus={this.handleFocus} ref={this.firstInput}
-							   autoFocus disabled={rowValues.locked}/>
-					</td>
-					<td className={rowValues.lastNameValid?"":"invalid"}>
-						<input value={rowValues.lastName} type="text" name="lastName"
-							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
-							   disabled={rowValues.locked}/>
-					</td>
-					<td className={rowValues.residencyValid?"":"invalid"}>
-						<input value={rowValues.residency} type="text" name="residency"
-							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
-							   disabled={rowValues.locked}/>
-					</td>
-					<td className={rowValues.phoneValid?"":"invalid"}>
-						<input value={rowValues.phone} type="tel" name="phone"
-							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
-							   disabled={rowValues.locked}/>
-					</td>
-					<td className={rowValues.emailValid?"":"invalid"}>
-						<input value={rowValues.email} onKeyDown={this.handleKeyPress} type="email" name="email"
-							   onChange={this.syncStateToInput} onFocus={this.handleFocus}
-							   disabled={rowValues.locked}/>
-					</td>
+					{this.state.fields.map((f, i) => {
+						return <td className={rowValues[f.name+"Valid"]?"":"invalid"} key={"field_input_"+this.props.rowIndex+"_"+i}>
+							<input value={rowValues[f.name]} type={f.type} name={f.name}
+								   onChange={this.syncStateToInput} onFocus={this.handleFocus} ref={this.firstInput}
+								   autoFocus disabled={rowValues.locked}
+								   onKeyDown={i===this.state.fields.length-1?this.handleKeyPress:()=>{}}/>
+						</td>
+					})}
 				</tr>
-				<tr className="row-margin"><td/><td/><td/><td/><td/><td/></tr>
+				<tr className="row-margin">
+					<td/>{this.state.fields.map((f, i) => {return <td key={"field_input_"+this.props.rowIndex+"_"+i}/>})}
+				</tr>
 			</tbody>
 		);
 	}
 }
-  

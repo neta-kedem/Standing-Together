@@ -2,14 +2,16 @@ import React from 'react';
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import TimeInput from 'react-time-input';
 import Meta from '../lib/meta';
 
 import server from '../services/server'
 
 import style from './caller/Caller.css'
 import Nav from './caller/Nav'
+import PrevCalls from './caller/PrevCalls'
+import CallPostponer from './caller/CallPostponer'
 import Popup from '../UIComponents/Popup/Popup'
+import Confirmation from '../UIComponents/Effects/Confirmation/Confirmation'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import Toggle from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
 import {faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
@@ -21,7 +23,7 @@ export default class Caller extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			eventCode: props.url.query.eventCode,
+			eventCode: props.url?props.url.query.eventCode:"",
 			eventData: {
 				callInstructions:{},
 				eventDetails:{}
@@ -33,15 +35,22 @@ export default class Caller extends React.Component {
 				{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"", type:"text", width:"25%"},
 				{title: ["البلد", "יישוב"],  visibility: true, key: "city", icon:"", type:"text", width:"25%"}
 			],
+			fetchErrors:{
+				"No Invites": {"ar":"אין הזמנות לאירוע הזה", "he":"אין הזמנות לאירוע הזה"},
+				"All Resolved": {"ar":"כל ההזמנות בוצעו", "he":"כל ההזמנות בוצעו"},
+				"All Processed": {"ar":"כל ההזמנות בטיפול - בדקו שוב מאוחר יותר", "he":"כל ההזמנות בטיפול - בדקו שוב מאוחר יותר"},
+				"def": {"ar":"שגיאה כלשהי", "he":"שגיאה כלשהי"}
+			},
 			selectedRow:{},
 			fetchActivistsMessagePopup: false,
-			fetchActivistsMessage: ""
+			fetchActivistsMessage: "",
+			effects:{Confirmation:false}
 		};
 		this.handleSelection = this.handleSelection.bind(this);
 	}
 	componentDidMount() {
 		this.getEventDetails();
-		var callPingInterval = setInterval(this.pingCalls.bind(this), this.callPingIntervalDuration);
+		const callPingInterval = setInterval(this.pingCalls.bind(this), this.callPingIntervalDuration);
 		// store interval promise in the state so it can be cancelled later:
 		this.setState({callPingInterval: callPingInterval});
 	}
@@ -51,7 +60,7 @@ export default class Caller extends React.Component {
 	}
 
 	getEventDetails(){
-		server.get('events/eventByCode', {'eventCode':this.state.eventCode})
+		server.get('events/eventByCode/'+this.state.eventCode, {'eventCode':this.state.eventCode})
 		.then(json => {
 			if(json.error)
 			{
@@ -62,7 +71,7 @@ export default class Caller extends React.Component {
 		});
     }
 	getActivistsToCall(){
-		server.post('call/fetchActivistsToCall', {'eventId':this.state.eventData._id})
+		server.get('call/fetchActivistsToCall/'+this.state.eventData._id, {'eventId':this.state.eventData._id})
 			.then(json => {
 				if(json.error)
 				{
@@ -74,11 +83,21 @@ export default class Caller extends React.Component {
 					this.setState({'fetchActivistsMessage': json.message, 'fetchActivistsMessagePopup': true});
 					return;
 				}
+				else{
+					this.setState({'fetchActivistsMessage': "", 'fetchActivistsMessagePopup': false});
+				}
 				let activists = json;
-				for(var i = 0; i<activists.length; i++)
+				for(let i = 0; i<activists.length; i++)
 				{
 					activists[i].contributed = false;
 					activists[i].attendingEvent = false;
+					if(activists[i].lastCallAt){
+						activists[i].lastCallAt = new Date(activists[i].lastCallAt);
+					}
+					if(activists[i].availableAt){
+						let availabilityDate = new Date(activists[i].availableAt);
+						activists[i].availableAt = availabilityDate.getHours()+":"+availabilityDate.getMinutes();
+					}
 				}
 				this.setState({'activists': this.state.activists.slice().concat(activists)});
 		});
@@ -88,8 +107,15 @@ export default class Caller extends React.Component {
 			'fetchActivistsMessagePopup': !this.state.fetchActivistsMessagePopup
 		});
 	}
+
+	effectHandler(name) {
+		const effects = this.state.effects;
+		effects[name] = !effects[name];
+		this.setState({effects: effects});
+	}
+
     handleSelection(i){
-        this.setState((props) => ({selectedRowIndex : i}));
+        this.setState(() => ({selectedRowIndex : i}));
     }
 	
     toggleAttendance(value){
@@ -97,7 +123,7 @@ export default class Caller extends React.Component {
 			return;
         const activists = this.state.activists.slice();
 		activists[this.state.selectedRowIndex].attendingEvent=value;
-        this.setState((props) => ({activists : activists}));
+        this.setState(() => ({activists : activists}));
     }
 	
 	toggleContribution(value){
@@ -105,7 +131,7 @@ export default class Caller extends React.Component {
 			return;
         const activists = this.state.activists.slice();
 		activists[this.state.selectedRowIndex].contributed=value;
-        this.setState((props) => ({activists : activists}));
+        this.setState(() => ({activists : activists}));
     }
 	
 	resolveCall(){
@@ -114,6 +140,8 @@ export default class Caller extends React.Component {
 		const activists = this.state.activists.slice();
 		const activist = activists[this.state.selectedRowIndex];
 		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		activists[this.state.selectedRowIndex].callCount += 1;
+		activists.splice(this.state.selectedRowIndex, 1);
 		this.setState({activists : activists});
 		server.post('call/resolveCall', {
 			'eventId':this.state.eventData._id,
@@ -121,45 +149,86 @@ export default class Caller extends React.Component {
 			'contributed': activist.contributed,
 			'attendingEvent': activist.attendingEvent,
 		})
-		.then(json => {
+		.then(() => {
+			this.effectHandler("Confirmation");
 		});
 	}
 	updateActivistAvailability(val){
+		//indicate the the activist will be available at [val] o'clock
 		const activists = this.state.activists.slice();
 		activists[this.state.selectedRowIndex].availableAt = val;
 		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		activists[this.state.selectedRowIndex].callCount += 1;
 		const activist = activists[this.state.selectedRowIndex];
+		activists.splice(this.state.selectedRowIndex, 1);
 		this.setState({activists : activists});
 		server.post('call/postponeCall', {
-			'eventId':this.state.eventData._id,
+			'eventId': this.state.eventData._id,
 			'activistId': activist._id,
 			'availableAt': val
 		})
-		.then(json => {
+		.then(() => {
+			this.effectHandler("Confirmation");
 		});
+	}
+	markUnanswered(){
+		//indicate the the activist will be available at [val] o'clock
+		const activists = this.state.activists.slice();
+		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		activists[this.state.selectedRowIndex].callCount += 1;
+		const activist = activists[this.state.selectedRowIndex];
+		activists.splice(this.state.selectedRowIndex, 1);
+		this.setState({activists : activists});
+		server.post('call/markUnanswered', {
+			'eventId': this.state.eventData._id,
+			'activistId': activist._id
+		})
+			.then(() => {
+				this.effectHandler("Confirmation");
+			});
 	}
 	pingCalls(){
 		//if there are no activists in the to-call list, return without doing anything
-		if(this.state.activists.length==0)
+		if(this.state.activists.length === 0)
 			return;
 		server.post('call/pingCalls', {
 			'eventId':this.state.eventData._id,
-			'activistIds': this.state.activists.map(function(value,index) {return value["_id"];})
+			'activistIds': this.state.activists.map(function(value) {return value["_id"];})
 		})
 		.then(json => {
 		});
 	}
 	render() {
 		const i = this.state.selectedRowIndex;
-		const isSelected = i!=undefined;
+		const isSelected = i !== undefined;
 		const selectedActivist = this.state.activists[i]?this.state.activists[i]:{};
 		let lastCallTime = "";
 		if(selectedActivist.lastCallAt)
 		{
-			const minutes = ("0" + selectedActivist.lastCallAt.getMinutes()).slice(-2);
-			const hours = ("0" + selectedActivist.lastCallAt.getHours()).slice(-2);
-			lastCallTime = hours+":"+minutes;
+			try {
+				const minutes = ("0" + selectedActivist.lastCallAt.getMinutes()).slice(-2);
+				const hours = ("0" + selectedActivist.lastCallAt.getHours()).slice(-2);
+				lastCallTime = hours+":"+minutes;
+			}
+			catch(err) {
+				lastCallTime = selectedActivist.lastCallAt;
+			}
 		}
+		const messageErrors = this.state.fetchErrors;
+		const messageCode = this.state.fetchActivistsMessage;
+		const fetchErrorMessage = messageErrors[messageCode]?messageErrors[messageCode]:messageErrors["def"];
+		const fetchErrorPopup = <Popup visibility={this.state.fetchActivistsMessagePopup}
+									   toggleVisibility={this.handleFetchActivistsMessagePopupToggle.bind(this)}>
+			<div className="error-message">
+				<div>{fetchErrorMessage.ar}</div>
+				<div>{fetchErrorMessage.he}</div>
+			</div>
+			<div className="error-message-try-again" onClick={this.getActivistsToCall.bind(this)}>
+				<div>בדיקה מחדש</div>
+				<div>בדיקה מחדש</div>
+			</div>
+		</Popup>;
+		const confirmationEffect = <Confirmation toggleVisibility={()=>{this.effectHandler("Confirmation")}} visible={this.state.effects.Confirmation}/>;
 		const actionOptions =
 		<div>
 			<div className="caller-action attendance-indication">
@@ -194,34 +263,30 @@ export default class Caller extends React.Component {
 				<div className="call-outcome-button remove-contact">
 					<FontAwesomeIcon icon="user-times" className="label-icon"/>
 					<div className="label-text">
-						הסרה מהרשימה
-						<br/>
 						ازالة من القائمة
+						<br/>
+						הסרה מהרשימה
 					</div>
 				</div>
 				<div className="call-outcome-button">
 					<FontAwesomeIcon icon="clock" className="label-icon"/>
 					<div className="label-text">
-						להתקשר בשעה
-						<br/>
 						الاتصال في الساعة
+						<br/>
+						להתקשר בשעה
 					</div>
 					<div>
-						<TimeInput
-							className="availability-timer"
-							mountFocus='true'
-							onTimeChange={this.updateActivistAvailability.bind(this)}
-						/>
+						<CallPostponer value={selectedActivist.availableAt} handlePost={this.updateActivistAvailability.bind(this)}/>
 					</div>
 				</div>
 				<div className="call-outcome-button">
-					<FontAwesomeIcon icon="microphone-slash" className="label-icon"/>
-					<div className="label-text">
-						לא עונים
-						<br/>
+					<div className="label-text unanswered-call" onClick={this.markUnanswered.bind(this)}>
+						<FontAwesomeIcon icon="microphone-slash" className="label-icon"/>
 						لا بجيب
+						<br/>
+						לא עונים
 					</div>
-					<div>
+					<div className="label-text">
 						שיחה אחרונה ב-{lastCallTime}
 						<br/>
 						שיחה אחרונה ב-{lastCallTime}
@@ -230,7 +295,7 @@ export default class Caller extends React.Component {
 				<div className="call-outcome-button finish-call" onClick={this.resolveCall.bind(this)}>
 					<FontAwesomeIcon icon="chevron-circle-left" className="label-icon"/>
 					<div className="label-text">
-						סיום שיחה
+						نهاية المكالمة
 						<br/>
 						סיום שיחה
 					</div>
@@ -241,10 +306,12 @@ export default class Caller extends React.Component {
 			<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}} dir="rtl">
 				<style jsx global>{style}</style>
 				<Meta/>
-				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone}/>
+				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone} event={this.state.eventData.eventDetails.name}/>
+				<PrevCalls callCount={selectedActivist.callCount} lastCallAt={selectedActivist.lastCallAt} availableAt={selectedActivist.availableAt}/>
 				<div className="content-wrap">
 					<div className="right-panel">
-						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}></SelectableTable>
+						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true} rowKey={"_id"}>
+						</SelectableTable>
 						<div className="fetch-more-button inline-label" onClick={this.getActivistsToCall.bind(this)}>
 							<div className="label-text">
 								<div>المزيد من الاسماء</div>
@@ -262,9 +329,8 @@ export default class Caller extends React.Component {
 						<textarea value={this.state.eventData.callInstructions.script}>
 						</textarea>
 					</div>
-					<Popup visibility={this.state.fetchActivistsMessagePopup} toggleVisibility={this.handleFetchActivistsMessagePopupToggle.bind(this)}>
-						{this.state.fetchActivistsMessage}
-					</Popup>
+					{fetchErrorPopup}
+					{confirmationEffect}
 				</div>
 			</div>
 		);

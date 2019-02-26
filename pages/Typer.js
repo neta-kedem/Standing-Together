@@ -17,21 +17,48 @@ export default class Typer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activists:[{
-				firstName:"", lastName:"", phone:"", residency:"", email:"",
-				firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
-				scanRow:0, locked: false, saved: false}],
+			activists:[],
+			profileFields: [
+				{
+					name: "firstName", type: "text", ar: "الاسم الشخصي", he: "שם פרטי",
+					validation: /^null|^.{2,}$/
+				},
+				{
+					name: "lastName", type: "text", ar: "اسم العائلة", he: "שם משפחה",
+					validation: /^null|^.{2,}$/
+				},
+				{
+					name: "phone", type: "tel", ar: "البلد", he: "עיר",
+					validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/
+				},
+				{
+					name: "residency", type: "select", ar: "رقم الهاتف", he: "טלפון",
+					validation: /^null|^.{2,}$/
+				},
+				{
+					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
+					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				},
+			],
 			cells: [],
 			selectedRowIndex: 0,
 			scanId: null,
 			scanUrl: null,
 			fullyTyped: false,
 			displayFullyTypedPopup: false,
-			postAttempted: false //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
-		}
+			postAttempted: false, //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
+			unsaved: false
+		};
 	};
+	refreshHandler = function() {
+		if(this.state.unsaved)
+			return "You Have Unsaved Data - Are You Sure You Want To Quit?";
+	}.bind(this);
 	componentDidMount() {
-		this.getContactsScan();
+		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
+		FieldValidation.setFields(this.state.profileFields.slice());
+		//confirm exit without saving
+		window.onbeforeunload = this.refreshHandler;
 	}
 	getContactsScan() {
 		server.get('contactScan', {})
@@ -53,14 +80,8 @@ export default class Typer extends React.Component {
 			if(json.activists && json.activists.length)
 			{
 				const activists = json.activists.map((activist)=>{
-					activist.locked=true;
-					activist.saved=true;
-					activist.firstNameValid=true;
-					activist.lastNameValid=true;
-					activist.phoneValid=true;
-					activist.residencyValid=true;
-					activist.emailValid=true;
-					return activist});
+					return this.generateRow(activist, true, true);
+				});
 				this.setState({"activists":activists});
 			}
 		});
@@ -74,8 +95,21 @@ export default class Typer extends React.Component {
 		.then(json => {
 		});
 	}
-	
-	addRow=function() {
+	//this function generates a new row template
+	generateRow = function(data = {}, locked = false, saved = false){
+		let row = data;
+		const fields = this.state.profileFields;
+		for(let i = 0; i<fields.length; i++){
+			row[fields[i].name] = data[fields[i].name] || "";
+			row[fields[i].name + "Valid"] = saved;
+		}
+		row.scanRow = data["scanRow"] || 0;
+		row.locked = locked;
+		row.saved = saved;
+		return row;
+	}.bind(this);
+
+	addRow = function() {
 		let activists = this.state.activists.slice();
 		const rows = activists.map(activist => activist.scanRow);
 		//generally, the new row should correspond to the n[th] line of the scan, if there are already n-1 rows
@@ -91,10 +125,7 @@ export default class Typer extends React.Component {
 		if(this.state.cells.length && nextScanRow >= this.state.cells.length){
 			return;
 		}
-		activists.push({
-			firstName:"", lastName:"", phone:"", residency:"", email:"",
-			firstNameValid:false, lastNameValid:false, phoneValid:false, residencyValid:false, emailValid:false,
-			scanRow:nextScanRow, locked: false, saved: false});
+		activists.push(this.generateRow({scanRow: nextScanRow}));
 		//if a row was added in the middle, sort it into position
 		activists.sort((a, b)=>(a.scanRow - b.scanRow));
 		//assignment into state is done in two explicit stages, in order to keep the focus on the correct row
@@ -111,7 +142,7 @@ export default class Typer extends React.Component {
 		let activists = this.state.activists.slice();
 		activists[rowIndex][name] = value;
         FieldValidation.validate(activists, rowIndex, name);
-		this.setState({activists: activists});
+		this.setState({activists: activists, unsaved: true});
 	}.bind(this);
 	
 	selectScanRow = function(index){
@@ -144,11 +175,7 @@ export default class Typer extends React.Component {
 		}
 		//if no rows are left, create a new one
 		if(!activists.length) {
-			activists.push({
-				firstName: "", lastName: "", phone: "", residency: "", email: "",
-				firstNameValid: false, lastNameValid: false, phoneValid: false, residencyValid: false, emailValid: false,
-				scanRow: 0, locked: false, saved: false
-			});
+			activists = [this.state.generateRow()];
 		}
 		//commit to state
 		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
@@ -178,7 +205,7 @@ export default class Typer extends React.Component {
 
 	handlePost=function(){
 		const activists = this.state.activists.slice();
-		if(!FieldValidation.validateAll(activists)){
+		if(!FieldValidation.validateAll(activists, this.state.profileFields)){
 			this.setState({postAttempted: true});
 			return;
 		}
@@ -188,19 +215,17 @@ export default class Typer extends React.Component {
 			"markedDone": this.state.fullyTyped
 		};
 		server.post('activists/uploadTyped', data)
-		.then(json => {
+		.then(() => {
 			this.setState({
-				activists: [{
-					firstName:"", lastName:"", phone:"", residency:"", email:"",
-					firstNameValid:"", lastNameValid:"", phoneValid:"", residencyValid:"", emailValid:"",
-					scanRow:0}],
+				activists: [this.generateRow()],
 				cells: [],
 				selectedRowIndex: 0,
 				scanId: null,
 				scanUrl: null,
 				fullyTyped: false,
 				displayFullyTypedPopup: false,
-				postAttempted: false
+				postAttempted: false,
+				unsaved: false
 			});
 			alert("the details have been stored in the system");
 			this.getContactsScan();
@@ -212,7 +237,7 @@ export default class Typer extends React.Component {
 		const scanUrl = this.state.scanUrl;
 		const selectedRowIndex = this.state.selectedRowIndex;
 		const activists = this.state.activists;
-		const selectedScanRow = activists[selectedRowIndex].scanRow;
+		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
 		const scanDisplay = <ContactScanDisplay
 			cells={cells}
 			scanUrl={scanUrl}
@@ -239,6 +264,7 @@ export default class Typer extends React.Component {
 					{scanUrl?scanDisplay:""}
 						<content className="content">
 							<TypedActivistsTable
+								fields={this.state.profileFields}
 								handleChange={this.handleTypedInput}
 								handleRowPost={this.handleRowPost}
 								handleRowFocus={this.handleRowFocus}

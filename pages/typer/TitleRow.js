@@ -1,13 +1,5 @@
-import React from 'react';
+import React from 'react'
 import styles from './TitleRow.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faBuilding, faEnvelopeOpen, faPhone, faUser } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faBuilding);
-fontawesome.library.add(faEnvelopeOpen);
-fontawesome.library.add(faPhone);
-fontawesome.library.add(faUser);
-
 
 export default class TitleRow extends React.Component {
 	render() {

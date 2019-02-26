@@ -24,6 +24,7 @@ export default css
 		display: flex;
 		flex-direction: row;
 		height: calc(100% - 55px);
+		overflow: auto;
 		background-color: #EBEBE8;
 		position: relative;
 	}
@@ -79,6 +80,7 @@ export default css
 	}
 	.label-icon{
 		font-size: 1.5em;
+		height: 1.75em;
 		display: block;
 		margin: 0 auto;
 	}
@@ -91,6 +93,7 @@ export default css
 	}
 	.call-outcomes{
 		display: flex;
+		flex-wrap: wrap;
 		flex-direction: row;
 		justify-content: space-between;
 		color: #616B6F;
@@ -98,11 +101,21 @@ export default css
 	}
 	.call-outcome-button{
 		box-sizing: border-box;
-		cursor: pointer;
+		width: 8em;
+		margin-bottom: 5%;
+	}
+	.remove-contact, .finish-call, .unanswered-call{
+	    cursor: pointer;
 		transition: color 0.25s;
 	}
 	.remove-contact:hover{
 		color: #a00;
+	}
+	.finish-call:hover{
+		color: #90278e;
+	}
+	.call-outcomes .unanswered-call:hover{
+		color: rgb(0, 153, 170);;
 	}
 	.availability-timer{
 		border: none;
@@ -122,9 +135,6 @@ export default css
 	.availability-timer .time-not-passed{
 		border-color: #a00;
 	}
-	.finish-call:hover{
-		color: #90278e;
-	}
 	.left-panel{
 		width: 50%;
 		padding: 5%;
@@ -140,9 +150,28 @@ export default css
 	}
 	.left-panel textarea{
 		width: 100%;
-		height: 30%;
+		height: 90%;
 		padding: 1em;
 		box-sizing: border-box;
 		resize: none;
+	}
+	.error-message{
+	    text-align: center;
+	}
+	.error-message-try-again{
+	    cursor: pointer;
+	    display: block;
+	    text-align: center;
+	    width: 10em;
+	    margin: 0 auto;
+	    padding: 2.5%;
+	    margin-top: 2.5%;
+	}
+	.error-message-try-again:hover{
+    	background-color: #ffffff22;
+	}
+	.error-message-try-again:active{
+	    background-color: white;
+        color: rgb(144, 39, 142);
 	}
 `

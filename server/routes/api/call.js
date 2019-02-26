@@ -1,7 +1,7 @@
 const callManager = require('../../services/callManager');
 
 module.exports = (app) => {
-	app.post('/api/call/fetchActivistsToCall', (req, res) => {
+	app.get('/api/call/fetchActivistsToCall/:eventId', (req, res) => {
 		callManager.fetchActivistsToCall(req, res)
 	});
 	app.post('/api/call/pingCalls', (req, res) => {
@@ -12,5 +12,8 @@ module.exports = (app) => {
 	});
 	app.post('/api/call/postponeCall', (req, res) => {
 		callManager.postponeCall(req, res)
+	});
+	app.post('/api/call/markUnanswered', (req, res) => {
+		callManager.markUnanswered(req, res)
 	});
 };
