@@ -101,6 +101,8 @@ const eventSchema = new mongoose.Schema({
 					},
 					//if the activist was called, when? (filled automatically, when a call outcome button is pressed)
 					lastCallAt: {type: Date},
+					//how many times the activist has been called throughout the campaign
+					callCount: {type: Number, required: true, default:0},
 					//if the activist has asked to be called at a later hour, when?
 					availableAt: {type: Date},
 					//if null - means that the activist never showed up on anyone's phone-lsit. Otherwise, contains the date of the last ping from a callers client which displayed this activist.

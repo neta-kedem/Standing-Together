@@ -61,6 +61,7 @@ export default class Confirmation extends React.Component {
                       }
                     }
 					.confirmation-icon{
+					    z-index: 1000;
 						position: fixed;
 						font-size: 20vw;
 						line-height: 20vw;

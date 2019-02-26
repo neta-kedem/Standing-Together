@@ -49,10 +49,12 @@ const markFetchedActivists = function(eventId, assignedActivistsIds, callerId){
     const now = new Date();
     return MongooseUpdater._update(Event,
         {"_id": eventId},
-        {"$set": {
-                "campaign.invitations.$[i].lastPing": now,
-                "campaign.invitations.$[i].callerId": mongoose.Types.ObjectId(callerId)
-            }},
+        {
+            "$set": {
+                    "campaign.invitations.$[i].lastPing": now,
+                    "campaign.invitations.$[i].callerId": mongoose.Types.ObjectId(callerId)
+                }
+            },
         [{"i.activistId":{$in : assignedActivistsIds}}],
         true
     );
@@ -105,7 +107,8 @@ const fetchActivistsToCall = function(req, res){
                         "city":activist.profile.residency,
                         "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1],
                         "availableAt":invitationsById[activist._id].availableAt,
-                        "lastCallAt":invitationsById[activist._id].lastCallAt
+                        "lastCallAt":invitationsById[activist._id].lastCallAt,
+                        "callCount":invitationsById[activist._id].callCount
                     });
                 }
                 //this used to work, but arrayFilters doesn't have stable support yet in mongoose
@@ -156,10 +159,13 @@ const resolveCall = function(req, res){
         };
         MongooseUpdater._update(Event,
             {"_id": eventId},
-            {"$set": {
-                    "campaign.invitations.$[i].lastCallAt": now,
-                    "campaign.invitations.$[i].resolution": resolution
-                }},
+            {
+                    "$set": {
+                        "campaign.invitations.$[i].lastCallAt": now,
+                        "campaign.invitations.$[i].resolution": resolution
+                    },
+                    "$inc": {"campaign.invitations.$[i].callCount": 1}
+                },
             [{"i.activistId":activistId}],
             false
         ).then(()=>{
@@ -185,9 +191,33 @@ const postponeCall = function(req, res){
         MongooseUpdater._update(Event,
             {"_id": eventId},
             {"$set": {
-                    "campaign.invitations.$[i].lastCallAt": now,
-                    "campaign.invitations.$[i].availableAt": availabilityDate
-                }},
+                        "campaign.invitations.$[i].lastCallAt": now,
+                        "campaign.invitations.$[i].availableAt": availabilityDate
+                    },
+                    "$inc": {"campaign.invitations.$[i].callCount": 1}
+                },
+            [{"i.activistId":activistId}],
+            false
+        ).then(()=>{
+            res.json(true);
+        });
+    });
+};
+const markUnanswered = function(req, res){
+    Authentication.hasRole(req, res, "isCaller").then(isUser=>{
+        if(!isUser)
+            return res.json({"error":"missing token"});
+        const eventId = mongoose.Types.ObjectId(req.body.eventId);
+        const activistId = mongoose.Types.ObjectId(req.body.activistId);
+        const now = new Date();
+        MongooseUpdater._update(Event,
+            {"_id": eventId},
+            {
+                    "$set": {
+                    "campaign.invitations.$[i].lastCallAt": now
+                    },
+                    "$inc": {"campaign.invitations.$[i].callCount": 1}
+                 },
             [{"i.activistId":activistId}],
             false
         ).then(()=>{
@@ -200,6 +230,7 @@ module.exports = {
     fetchActivistsToCall,
     pingCalls,
     resolveCall,
-    postponeCall
+    postponeCall,
+    markUnanswered
 };
 

@@ -23,7 +23,8 @@ export default css
 	.content-wrap{
 		display: flex;
 		flex-direction: row;
-		min-height: calc(100% - 55px);
+		height: calc(100% - 55px);
+		overflow: auto;
 		background-color: #EBEBE8;
 		position: relative;
 	}

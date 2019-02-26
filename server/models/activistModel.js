@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 const activistSchema = new mongoose.Schema({
 	metadata: {
 		creationDate: {
-			type:Date,
+			type: Date,
 			required: true,
 		},
 		lastUpdate: {
-			type:Date,
+			type: Date,
 			required: true,
 		},
 		joiningMethod: {
-			type:String,
+			type: String,
 			enum: ['webSite', 'contactPage', 'memberPage'],
 			required: true,
 		},

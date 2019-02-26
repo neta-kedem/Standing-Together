@@ -8,6 +8,7 @@ import server from '../services/server'
 
 import style from './caller/Caller.css'
 import Nav from './caller/Nav'
+import PrevCalls from './caller/PrevCalls'
 import CallPostponer from './caller/CallPostponer'
 import Popup from '../UIComponents/Popup/Popup'
 import Confirmation from '../UIComponents/Effects/Confirmation/Confirmation'
@@ -139,6 +140,8 @@ export default class Caller extends React.Component {
 		const activists = this.state.activists.slice();
 		const activist = activists[this.state.selectedRowIndex];
 		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		activists[this.state.selectedRowIndex].callCount += 1;
+		activists.splice(this.state.selectedRowIndex, 1);
 		this.setState({activists : activists});
 		server.post('call/resolveCall', {
 			'eventId':this.state.eventData._id,
@@ -155,7 +158,9 @@ export default class Caller extends React.Component {
 		const activists = this.state.activists.slice();
 		activists[this.state.selectedRowIndex].availableAt = val;
 		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		activists[this.state.selectedRowIndex].callCount += 1;
 		const activist = activists[this.state.selectedRowIndex];
+		activists.splice(this.state.selectedRowIndex, 1);
 		this.setState({activists : activists});
 		server.post('call/postponeCall', {
 			'eventId': this.state.eventData._id,
@@ -165,6 +170,23 @@ export default class Caller extends React.Component {
 		.then(() => {
 			this.effectHandler("Confirmation");
 		});
+	}
+	markUnanswered(){
+		//indicate the the activist will be available at [val] o'clock
+		const activists = this.state.activists.slice();
+		activists[this.state.selectedRowIndex].lastCallAt = new Date();
+		activists[this.state.selectedRowIndex].callCount += 1;
+		const activist = activists[this.state.selectedRowIndex];
+		activists.splice(this.state.selectedRowIndex, 1);
+		debugger;
+		this.setState({activists : activists});
+		server.post('call/markUnanswered', {
+			'eventId': this.state.eventData._id,
+			'activistId': activist._id
+		})
+			.then(() => {
+				this.effectHandler("Confirmation");
+			});
 	}
 	pingCalls(){
 		//if there are no activists in the to-call list, return without doing anything
@@ -259,7 +281,7 @@ export default class Caller extends React.Component {
 					</div>
 				</div>
 				<div className="call-outcome-button">
-					<div className="label-text unanswered-call">
+					<div className="label-text unanswered-call" onClick={this.markUnanswered.bind(this)}>
 						<FontAwesomeIcon icon="microphone-slash" className="label-icon"/>
 						לא עונים
 						<br/>
@@ -286,6 +308,7 @@ export default class Caller extends React.Component {
 				<style jsx global>{style}</style>
 				<Meta/>
 				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone} event={this.state.eventData.eventDetails.name}/>
+				<PrevCalls callCount={selectedActivist.callCount} lastCallAt={selectedActivist.lastCallAt} availableAt={selectedActivist.availableAt}/>
 				<div className="content-wrap">
 					<div className="right-panel">
 						<SelectableTable onSelect={this.handleSelection} rows={this.state.activists} header={this.state.header} singleSelection={true}>
