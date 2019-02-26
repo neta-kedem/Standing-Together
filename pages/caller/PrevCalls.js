@@ -11,11 +11,13 @@ export default class PrevCalls extends React.Component {
     render() {
         const lastCallAt = this.props.lastCallAt;
         const callCount = this.props.callCount;
+        const availableAt = this.props.availableAt;
         const banner = <div className="prev-calls-banner">
             <span>שימו לב! התקשרנו לפעיל/ה האלו כבר</span>
             {callCount>1?<span>{" "+callCount+" פעמים"}</span>:""}
             <span>, בפעם האחרונה ב-</span>
-            {lastCallAt?<span>{lastCallAt.getHours()+":"+lastCallAt.getMinutes()}</span>:""}
+            {lastCallAt?<span>{lastCallAt.getHours()+":"+lastCallAt.getMinutes()+". "}</span>:""}
+            {availableAt?<span>{"ביקשו שלא נתקשר לפני "+availableAt}</span>:""}
         </div>;
         return (
             <div>
