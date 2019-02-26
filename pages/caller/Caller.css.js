@@ -80,6 +80,7 @@ export default css
 	}
 	.label-icon{
 		font-size: 1.5em;
+		height: 1.75em;
 		display: block;
 		margin: 0 auto;
 	}

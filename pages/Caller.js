@@ -263,17 +263,17 @@ export default class Caller extends React.Component {
 				<div className="call-outcome-button remove-contact">
 					<FontAwesomeIcon icon="user-times" className="label-icon"/>
 					<div className="label-text">
-						הסרה מהרשימה
-						<br/>
 						ازالة من القائمة
+						<br/>
+						הסרה מהרשימה
 					</div>
 				</div>
 				<div className="call-outcome-button">
 					<FontAwesomeIcon icon="clock" className="label-icon"/>
 					<div className="label-text">
-						להתקשר בשעה
-						<br/>
 						الاتصال في الساعة
+						<br/>
+						להתקשר בשעה
 					</div>
 					<div>
 						<CallPostponer value={selectedActivist.availableAt} handlePost={this.updateActivistAvailability.bind(this)}/>
@@ -282,9 +282,9 @@ export default class Caller extends React.Component {
 				<div className="call-outcome-button">
 					<div className="label-text unanswered-call" onClick={this.markUnanswered.bind(this)}>
 						<FontAwesomeIcon icon="microphone-slash" className="label-icon"/>
-						לא עונים
-						<br/>
 						لا بجيب
+						<br/>
+						לא עונים
 					</div>
 					<div className="label-text">
 						שיחה אחרונה ב-{lastCallTime}
@@ -295,7 +295,7 @@ export default class Caller extends React.Component {
 				<div className="call-outcome-button finish-call" onClick={this.resolveCall.bind(this)}>
 					<FontAwesomeIcon icon="chevron-circle-left" className="label-icon"/>
 					<div className="label-text">
-						סיום שיחה
+						نهاية المكالمة
 						<br/>
 						סיום שיחה
 					</div>
