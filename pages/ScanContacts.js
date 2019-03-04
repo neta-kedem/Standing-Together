@@ -16,6 +16,7 @@ constructor(props) {
 	super(props);
 	this.state = {
 		selectedImage: false,
+		selectedImageSrc: false,
 		croppedImage: false,
 		normalizedImg: false,
 		scanUrl: null,
@@ -29,6 +30,11 @@ constructor(props) {
 	};
 }
 handleImageSelection(file) {
+	const reader = new FileReader();
+	reader.onload = ()=>{
+		this.setState({selectedImageSrc: reader.result});
+	};
+	reader.readAsDataURL(file);
 	this.setState({selectedImage: file});
 }
 handleImageCrop(img) {
@@ -46,7 +52,7 @@ handleRowSelection(rows){
 }
 handlePost(){
 	const formWrap = new FormData();
-	formWrap.append("scan", this.state.normalizedImg);
+	formWrap.append("scan", this.state.selectedImage);
 	fetch(config.serverPath+"api/contactScan/upload", {
 		headers: {
 			'Accept': 'application/json, application/xml, text/play, text/html, *.*'
@@ -71,6 +77,7 @@ publishScan(imgUrl){
 reset() {
 	this.setState ({
 		selectedImage: false,
+		selectedImageSrc: false,
 		croppedImage: false,
 		normalizedImg: false,
 		scanUrl: null,
@@ -160,11 +167,8 @@ render() {
 			</TopNavBar>
 			<div className="page-wrap">
 				{!selectedImage?imgUploadUI:""}
-				{(selectedImage&&!croppedImage)?imgCropperUI:""}
-				{!scanFailed&&croppedImage&&!cells.length?tableScannerUI:""}
-				{!scanFailed&&croppedImage&&cells.length?rowSelectorUI:""}
-				{!scanFailed&&croppedImage&&selectedCells.length?postButton:""}
-				{failedScanPopup}
+				{this.state.selectedImageSrc?<img className="img-preview" src={this.state.selectedImageSrc}/>:""}
+				{selectedImage?postButton:""}
 			</div>
 		</div>
 	)

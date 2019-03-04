@@ -29,6 +29,11 @@ export default css
 	margin: 5% auto;
 	text-align: center;
 }
+.img-preview{
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+}
 .post-scan-button{
 	color: white;
 	background-color: #90278e;
