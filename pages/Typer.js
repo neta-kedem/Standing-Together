@@ -28,17 +28,20 @@ export default class Typer extends React.Component {
 					validation: /^null|^.{2,}$/
 				},
 				{
-					name: "phone", type: "tel", ar: "البلد", he: "עיר",
+					name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",
 					validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/
 				},
 				{
-					name: "residency", type: "select", ar: "رقم الهاتف", he: "טלפון",
+					name: "residency", type: "select", ar: "البلد", he: "עיר",
 					validation: /^null|^.{2,}$/
 				},
 				{
 					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 				},
+			],
+			profileDataLists: [
+				{field:"residency", data:["תל אביב", "ירושלים", "חיפה", "עזה"]}
 			],
 			cells: [],
 			selectedRowIndex: 0,
@@ -265,6 +268,7 @@ export default class Typer extends React.Component {
 						<content className="content">
 							<TypedActivistsTable
 								fields={this.state.profileFields}
+								dataLists={this.state.profileDataLists}
 								handleChange={this.handleTypedInput}
 								handleRowPost={this.handleRowPost}
 								handleRowFocus={this.handleRowFocus}
