@@ -53,7 +53,17 @@ verifyLoginCode(code)
 		if(json.token)
 		{
 			cookie.setCookie('token', json.token, 150);
-			Router.push({pathname: '/Organizer'}).then(()=>{});
+			if(json.permissions.isOrganizer){
+				Router.push({pathname: '/Organizer'}).then(()=>{});
+				return;
+			}
+			if(json.permissions.isTyper){
+				Router.push({pathname: '/Typer'}).then(()=>{});
+				return;
+			}
+			if(json.permissions.isCaller){
+				Router.push({pathname: '/Caller'}).then(()=>{});
+			}
 		}
 		else
 		{
@@ -101,7 +111,7 @@ render() {
 		<div className='login-page-wrap' dir="rtl">
 			<Meta/>
 			<style jsx global>{stylesheet}</style>
-			<img src="../static/Logo.svg" alt="standing-together" className='logo'> </img>
+			<img src="../static/Logo.svg" alt="standing-together" className='logo'/>
 			{this.state.codeSent?loginCode:identification}
 		</div>
 	)
