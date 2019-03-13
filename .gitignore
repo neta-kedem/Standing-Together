@@ -24,4 +24,9 @@ yarn-error.log*
 #IDE
 /.idea
 /.vscode
-config.js
+
+# local config
+/services/config.js
+
+# server config
+server/config.js

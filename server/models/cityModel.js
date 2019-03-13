@@ -28,8 +28,9 @@ const citySchema = new mongoose.Schema({
         }
     },
     defaultCircle:{
-        type: String
+        type: String,
+        required: false
     }
 });
 
-module.exports = mongoose.model('city',citySchema);
+module.exports = mongoose.model('city', citySchema);

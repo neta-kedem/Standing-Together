@@ -41,7 +41,7 @@ export default class Typer extends React.Component {
 				},
 			],
 			profileDataLists: [
-				{field:"residency", data:["תל אביב", "ירושלים", "חיפה", "עזה"]}
+				{field:"residency", data:[]}
 			],
 			cells: [],
 			selectedRowIndex: 0,
@@ -58,10 +58,24 @@ export default class Typer extends React.Component {
 			return "You Have Unsaved Data - Are You Sure You Want To Quit?";
 	}.bind(this);
 	componentDidMount() {
+		this.fetchCities();
 		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
 		FieldValidation.setFields(this.state.profileFields.slice());
 		//confirm exit without saving
 		window.onbeforeunload = this.refreshHandler;
+	}
+	fetchCities(){
+		server.get('cities/', {})
+			.then(json => {
+				let dataLists = this.state.profileDataLists.slice();
+				for(let i=0; i<dataLists.length; i++){
+					if(dataLists[i].field === "residency")
+						dataLists[i].data = json.map((city)=>{
+							return city.name;
+						});
+				}
+				this.setState({profileDataLists: dataLists})
+			});
 	}
 	getContactsScan() {
 		server.get('contactScan', {})
