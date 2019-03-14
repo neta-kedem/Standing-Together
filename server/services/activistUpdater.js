@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Activist = require('../models/activistModel');
 const ContactScan = require('../models/contactScanModel');
 const Authentication = require('../services/authentication');
+const mailchimpSync = require('../services/mailchimpSync');
 const markTypedContactScanRows = function(res, typerId, scanId, activists, markedDone){
     ContactScan.findOne(
         {"_id": scanId},
@@ -40,6 +41,7 @@ const markTypedContactScanRows = function(res, typerId, scanId, activists, marke
         });
 };
 const updateTypedActivists = function(activists){
+    const today = new Date();
     let updatePromises = [];
     for(let i=0; i<activists.length; i++){
         const curr = activists[i];
@@ -49,6 +51,7 @@ const updateTypedActivists = function(activists){
             "profile.phone" : curr.phone.replace(/[\-.():]/g, ''),
             "profile.email" : curr.email,
             "profile.residency" : curr.residency,
+            "metadata.lastUpdate" : today,
         });
         updatePromises.push(query.exec());
     }
@@ -82,7 +85,7 @@ const uploadTypedActivists = function (req, res){
             return res.json({"error":"missing token"});
         const typerId = Authentication.getMyId();
         const typedActivists = req.body.activists;
-        const scanId = mongoose.Types.ObjectId(req.body.scanId);
+        const scanId = req.body.scanId?mongoose.Types.ObjectId(req.body.scanId):null;
         const markedDone = req.body.markedDone;
         let newActivists = [];
         let updatedActivists = [];
@@ -111,7 +114,7 @@ const uploadTypedActivists = function (req, res){
                             "circle" : "תל-אביב",
                             "isMember" : false,
                             "isPaying" : false,
-                            "isNewsletter" : false,
+                            "isNewsletter" : "not subscribed",
                             "participatedEvents" : []
                         },
                         "role" : {
@@ -135,12 +138,15 @@ const uploadTypedActivists = function (req, res){
         updateTypedActivists(updatedActivists).then(()=>{
             Activist.insertMany(newActivists).then(function (result) {
                 if (result){
-                    if(scanId){
-                        markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone);
-                    }
-                    else{
+                    mailchimpSync.createContacts(newActivists).then((result)=>{
                         return res.json(result);
-                    }
+                        if(scanId){
+                            markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone);
+                        }
+                        else{
+                            return res.json(result);
+                        }
+                    });
                 }
                 else{
                     return res.json({"error":"an unknown error has occurred, the activists were not saved"});

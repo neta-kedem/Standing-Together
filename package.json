@@ -27,6 +27,7 @@
     "react-image-cropper": "^1.3.0",
     "react-time-input": "^0.0.19",
     "styled-jsx": "latest",
-    "body-parser": "latest"
+    "body-parser": "latest",
+    "node-fetch": "latest"
   }
 }

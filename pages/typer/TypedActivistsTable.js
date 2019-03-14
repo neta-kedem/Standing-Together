@@ -12,6 +12,7 @@ export default class TypedActivistsTable extends React.Component {
 			handleRowDeletion: props['handleRowDeletion'],
 			handleRowEditToggle: props['handleRowEditToggle'],
 			fields: props['fields'],
+			dataLists: props['dataLists']
 		};
 	}
 	render() {
@@ -34,6 +35,15 @@ export default class TypedActivistsTable extends React.Component {
 					return <th key={"field_title_"+f.name}><h4>{f.ar}<br/>{f.he}</h4></th>
 				})}
 			</tr>;
+		const dataLists = this.state.dataLists?
+			this.state.dataLists.map((f)=>{
+				return <datalist key={f.field+"-data-list"} id={f.field+"-data-list"}>
+					{f.data.map((option)=>{
+					return <option key={f.field+"-op-"+option} value={option}/>
+				})}
+				</datalist>
+			})
+			:"";
 		return (
 			<div className="typed-table-wrap">
 				<style jsx global>{style}</style>
@@ -43,6 +53,7 @@ export default class TypedActivistsTable extends React.Component {
 					</thead>
 					{rows}
 				</table>
+				{dataLists}
 			</div>
 		);
 	}

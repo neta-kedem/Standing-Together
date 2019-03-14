@@ -1,6 +1,6 @@
 import React from 'react';
 import Meta from '../lib/meta';
-import config from '../config';
+import config from '../services/config';
 
 import ItemService from '../services/ItemService'
 import server from '../services/server';
@@ -41,11 +41,18 @@ componentDidMount() {
 	this.fetchActivistsByQuery(this.state.query);
 	this.getPotentialEvents();
 	this.getCurrFilters();
+	this.fetchMailchimpMembers();
 }
 fetchActivistsByQuery(query){
 	server.post('selectActivists', {'query':query})
 		.then(json => {
 			this.setState({activists:json});
+		});
+}
+fetchMailchimpMembers(){
+	server.post('activists/mailchimp', {})
+		.then(json => {
+			console.log(json)
 		});
 }
 getPotentialEvents(){

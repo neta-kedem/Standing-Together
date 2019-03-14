@@ -33,7 +33,7 @@ const loginViaPhone = function (req, res){
             return res.json({"error":"incorrect credentials"});
         }
         assignToken(user._id).then((token)=>{
-            return res.json({"token":token});
+            return res.json({"token":token, "permissions":user.role});
         });
     });
 };
@@ -51,7 +51,7 @@ const loginViaMail = function (req, res){
             return res.json({"error":"incorrect credentials"});
         }
         assignToken(user._id).then((token)=>{
-            return res.json({"token":token});
+            return res.json({"token":token, "permissions":user.role});
         });
     });
 };

@@ -37,7 +37,12 @@ const activistSchema = new mongoose.Schema({
 		},
 		isMember: Boolean,
 		isPaying: Boolean,
-		isNewsletter: Boolean,
+		isNewsletter: {
+			type:String,
+			required: false,
+			default: 'not subscribed',
+			enum: ['subscribed', 'unsubscribed' , 'not subscribed', 'cleaned', 'pending']
+		},
 		participatedEvents: [String],
 	},
 	role: {

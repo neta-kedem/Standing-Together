@@ -56,6 +56,54 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/EventManagement', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/EventManagement', req.query);
+			}
+		});
+	});
+	server.get('/CircleManagement', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/CircleManagement', req.query);
+			}
+		});
+	});
+	server.get('/CityManagement', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/CityManagement', req.query);
+			}
+		});
+	});
+	server.get('/ScanContacts', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/ScanContacts', req.query);
+			}
+		});
+	});
 	server.get('/Typer', (req, res) => {
 		authentication.hasRole(req, res, "isTyper").then(user=>{
 			if(!user)
@@ -82,12 +130,6 @@ app.prepare().then(() => {
 	});
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);
-	});
-	server.get('/ScanContacts', (req, res) => {
-		return app.render(req, res, '/ScanContacts', req.query);
-	});
-	server.get('/EventManagement', (req, res) => {
-		return app.render(req, res, '/EventManagement', req.query);
 	});
 	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
 	server.get('*', (req, res) => {
