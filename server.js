@@ -68,6 +68,30 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/CircleManagement', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/CircleManagement', req.query);
+			}
+		});
+	});
+	server.get('/CityManagement', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/CityManagement', req.query);
+			}
+		});
+	});
 	server.get('/ScanContacts', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
 			if(!user)
