@@ -1,5 +1,5 @@
 const City = require('../models/cityModel');
-const getCities = function (req, res){
+const getCities = function (){
     const query = City.find();
     const citiesPromise = query.exec().then((cities) => {
         let cityList = [];
