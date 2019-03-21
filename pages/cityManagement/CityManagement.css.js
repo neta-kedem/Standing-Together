@@ -13,31 +13,31 @@ export default css
         margin-left: 5%;
 		white-space: nowrap;
 	}
-    .circle-table{
+    .city-table{
         direction: rtl;
         border-collapse: collapse;
         margin: 5% auto;
         width: 80%;
         table-layout: fixed;
     }
-    .circle-table th{
+    .city-table th{
         padding: 5px 15px;
         border: 1px solid black;
     }
-    .circle-table td{
+    .city-table td{
         padding: 0px;
         border: 1px solid black;
     }
-    .circle-table td input, .circle-table td select{
+    .city-table td input, .city-table td select{
         width: 100%;
         box-sizing: border-box;
         border: none;
         outline: none;
     }
-    .circle-table tbody{
+    .city-table tbody{
         cursor: pointer;
     }
-    .add-circle-button, .save-circles-button{
+    .add-city-button, .save-cities-button{
         display: block;
         margin: 0 auto;
         padding: 1% 3%;
@@ -47,13 +47,13 @@ export default css
         border: none;
         outline: none;
     }
-    .save-circles-button{
-        margin-top: 5%;
+    .save-cities-button{
+        margin: 1.5em auto;
     }
-    .add-circle-button:hover, .save-circles-button:hover{
+    .add-city-button:hover, .save-cities-button:hover{
         background-color: #80177e;
     }
-    .add-circle-button:active, .save-circles-button:active{
+    .add-city-button:active, .save-cities-button:active{
         background-color: #70076e;
     }
 `

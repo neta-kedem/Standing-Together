@@ -41,10 +41,17 @@ export default class CircleManagement extends React.Component {
         cities[index].changed = true;
         this.setState({cities: cities})
     }
-    createCircle() {
+    createCity() {
         let cities = this.state.cities.slice();
-        cities.push({changed: true, name:"", mailchimpList:""});
+        cities.push({changed: true, name:"", defaultCircle: null});
         this.setState({cities: cities})
+    }
+    saveCities() {
+        let changedCities = this.state.cities.slice().filter((city)=>{return city.changed});
+        server.post('cities', {cities: changedCities}).then(()=>{
+            alert("saved!");
+            this.getCities();
+        })
     }
 
     render() {
@@ -70,12 +77,12 @@ export default class CircleManagement extends React.Component {
                         <span className="title-lang">ניהול ערים</span>
                     </div>
                 </TopNavBar>
-                <table className={"circle-table"}>
+                <table className={"city-table"}>
                     <thead>
                         <tr>
                             <th>
                                 <div>שם עיר</div>
-                                <div>שם עייר</div>
+                                <div>שם עיר</div>
                             </th>
                             <th>
                                 <div>שיוך אוטומטי למעגל</div>
@@ -87,8 +94,8 @@ export default class CircleManagement extends React.Component {
                         {rows}
                     </tbody>
                 </table>
-                <button type="button" className="add-circle-button" onClick={this.createCircle.bind(this)}>הוספת עיר</button>
-                <button type="button" className="save-cities-button" onClick={this.createCircle.bind(this)}>שמירה</button>
+                <button type="button" className="add-city-button" onClick={this.createCity.bind(this)}>הוספת עיר</button>
+                <button type="button" className="save-cities-button" onClick={this.saveCities.bind(this)}>שמירה</button>
             </div>
         )
     }
