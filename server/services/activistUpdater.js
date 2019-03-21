@@ -3,6 +3,10 @@ const Activist = require('../models/activistModel');
 const ContactScan = require('../models/contactScanModel');
 const Authentication = require('../services/authentication');
 const mailchimpSync = require('../services/mailchimpSync');
+const circleFetcher = require("./circleFetcher");
+const cityFetcher = require("./cityFetcher");
+const arrayFunctions = require("./arrayFunctions");
+
 const markTypedContactScanRows = function(res, typerId, scanId, activists, markedDone){
     ContactScan.findOne(
         {"_id": scanId},
@@ -79,6 +83,30 @@ const toggleActivistStatus = function(req, res){
         });
     });
 };
+const addToMailchimpCircle = function(activists){
+    if(!activists || !activists.length){
+        return true;
+    }
+    let updatePromises = [];
+    const fetchPromises = [cityFetcher.getCities(), circleFetcher.getCircles()];
+    Promise.all(fetchPromises).then((results)=>{
+            const cities = arrayFunctions.indexByField(results[0], "name");
+            const circles = arrayFunctions.indexByField(results[1], "name");
+            for(let i = 0; i < activists.length; i++){
+                let curr = activists[i];
+                if (curr.profile.residency
+                    && cities[curr.profile.residency]
+                    && cities[curr.profile.residency].defaultCircle
+                    && circles[cities[curr.profile.residency].defaultCircle]
+                    && circles[cities[curr.profile.residency].defaultCircle].mailchimpList
+                ){
+                    updatePromises.push(mailchimpSync.createContacts([curr], circles[cities[curr.profile.residency].defaultCircle].mailchimpList));
+                }
+            }
+        }
+     );
+    return Promise.all(updatePromises);
+};
 const uploadTypedActivists = function (req, res){
     Authentication.hasRole(req, res, "isTyper").then(isUser=>{
         if(!isUser)
@@ -138,15 +166,18 @@ const uploadTypedActivists = function (req, res){
         updateTypedActivists(updatedActivists).then(()=>{
             Activist.insertMany(newActivists).then(function (result) {
                 if (result){
-                    mailchimpSync.createContacts(newActivists).then((result)=>{
-                        return res.json(result);
-                        if(scanId){
-                            markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone);
-                        }
-                        else{
-                            return res.json(result);
-                        }
-                    });
+                    let tasks = [];
+                    //create a mailchimp record in the main contact list
+                    //tasks.push(mailchimpSync.createContacts(newActivists));
+                    //create a mailchimp record in the circle-specific contact list
+                    tasks.push(addToMailchimpCircle(newActivists));
+                    //mark the activist as typed in the relevant contact scan
+                    if(scanId){
+                        tasks.push(markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone));
+                    }
+                    Promise.all(tasks).then((results)=>{
+                        return res.json(results);
+                    })
                 }
                 else{
                     return res.json({"error":"an unknown error has occurred, the activists were not saved"});
