@@ -42,6 +42,7 @@ componentDidMount() {
 	this.getPotentialEvents();
 	this.getCurrFilters();
 	this.fetchMailchimpMembers();
+	this.fetchWixMembers();
 }
 fetchActivistsByQuery(query){
 	server.post('selectActivists', {'query':query})
@@ -51,6 +52,12 @@ fetchActivistsByQuery(query){
 }
 fetchMailchimpMembers(){
 	server.post('activists/mailchimp', {})
+		.then(json => {
+			console.log(json)
+		});
+}
+fetchWixMembers(){
+	server.post('activists/wix', {})
 		.then(json => {
 			console.log(json)
 		});
