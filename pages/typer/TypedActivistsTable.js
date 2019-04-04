@@ -19,6 +19,7 @@ export default class TypedActivistsTable extends React.Component {
 		const rows = this.props.activists.map((activist, i) =>
 			{
 				return <InputRow
+					dir="rtl"
 					fields={this.state.fields}
 					isFocused={i === this.props.selectedRow}
 					handleFocus={this.state.handleRowFocus}

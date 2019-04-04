@@ -148,7 +148,7 @@ export default class Typer extends React.Component {
 		//assignment into state is done in two explicit stages, in order to keep the focus on the correct row
 		//it still doesn't work most of the time
 		//not important enough to find a fix, though
-		this.setState({activists: activists}, ()=>{this.setState({selectedRowIndex:nextScanRow})});
+		this.setState({activists: activists}, ()=>{this.setState({selectedRowIndex: nextScanRow})});
 	}.bind(this);
 	
 	handleRowFocus = function(rowIndex) {
