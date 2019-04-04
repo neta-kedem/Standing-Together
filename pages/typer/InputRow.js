@@ -83,8 +83,8 @@ export default class InputRow extends React.Component {
 					{this.state.fields.map((f, i) => {
 						return <td className = {rowValues[f.name+"Valid"]?"":"invalid"} key = {"field_input_" + this.props.rowIndex + "_" + i}>
 							<input value = {rowValues[f.name]} type={f.type} name={f.name}
-								   onChange = {this.syncStateToInput} onFocus = {(event) => {this.handleFocus(event)}} ref = {this.firstInput}
-								   autoFocus = {i === 0 && this.state.isFocused} disabled = {rowValues.locked}
+								   onChange = {this.syncStateToInput} onFocus = {(event) => {this.handleFocus(event)}} ref = {i === 0 ? this.firstInput : ""}
+								   autoFocus = {i === 0} disabled = {rowValues.locked}
 								   onKeyDown = {i === this.state.fields.length - 1 ? this.handleKeyPress : () => {}}
 								   list = {f.name + "-data-list"}
 								   autoComplete = "new-password"
