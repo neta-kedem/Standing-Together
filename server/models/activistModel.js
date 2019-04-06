@@ -17,6 +17,7 @@ const activistSchema = new mongoose.Schema({
 		},
 		typerId: {type:String, required: false},
 		scanId: {type:String, required: false},
+		duplicateId: {type:String, required: false},
 	},
 	profile: {
 		firstName: {

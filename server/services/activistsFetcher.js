@@ -28,7 +28,7 @@ const queryActivists = function(req, res){
         if(!isUser)
             return res.json({"error":"missing token"});
         const query = req.body.query;
-        Activist.find(query, (err, activists) => {
+        Activist.find(query, {}, { skip: 0, limit: 50 }, (err, activists) => {
             if (err) return res.json({success: false, error: err});
             let activistsList = [];
             for(let activist of activists)
@@ -47,8 +47,24 @@ const queryActivists = function(req, res){
         });
     })
 };
-
+const searchDuplicates = function(phones, emails){
+    const query =  Activist.find({$or: [{"profile.phone":{$in:phones}}, {"profile.email":{$in:emails}}]});
+    const duplicatesPromise = query.exec().then((activists) => {
+        let activistsList = [];
+        for(let activist of activists)
+        {
+            activistsList.push({
+                "_id":activist._id,
+                "phone":activist.profile.phone,
+                "email":activist.profile.email
+            });
+        }
+        return activistsList;
+    });
+    return duplicatesPromise;
+};
 module.exports = {
     getActivists,
-    queryActivists
+    queryActivists,
+    searchDuplicates
 };

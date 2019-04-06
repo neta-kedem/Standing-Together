@@ -76,19 +76,18 @@ export default class InputRow extends React.Component {
 		return (
 			<tbody className="row-wrap">
 				<tr className="row-margin">
-					<td/>{this.state.fields.map((f, i) => {return <td key={"field_input_"+this.props.rowIndex+"_"+i}/>})}
+					<td/>{this.state.fields.map((f, i) => {return <td key = {"field_input_" + this.props.rowIndex + "_" + i}/>})}
 				</tr>
 				<tr onClick={this.handleFocus}>
 					{rowValues.locked ? editRow : rowValues.saved ? noAction : deleteRow}
 					{this.state.fields.map((f, i) => {
-						return <td className={rowValues[f.name+"Valid"]?"":"invalid"} key={"field_input_"+this.props.rowIndex+"_"+i}>
-							<input value={rowValues[f.name]} type={f.type} name={f.name}
-								   onChange={this.syncStateToInput} onFocus={(event)=>{this.handleFocus(event)}} ref={this.firstInput}
-								   autoFocus disabled={rowValues.locked}
-								   onKeyDown={i===this.state.fields.length-1?this.handleKeyPress:()=>{}}
-								   list={f.name+"-data-list"}
-								   autoComplete="new-password"
-								   readOnly
+						return <td className = {rowValues[f.name+"Valid"]?"":"invalid"} key = {"field_input_" + this.props.rowIndex + "_" + i}>
+							<input value = {rowValues[f.name]} type={f.type} name={f.name}
+								   onChange = {this.syncStateToInput} onFocus = {(event) => {this.handleFocus(event)}} ref = {i === 0 ? this.firstInput : ""}
+								   autoFocus = {i === 0} disabled = {rowValues.locked}
+								   onKeyDown = {i === this.state.fields.length - 1 ? this.handleKeyPress : () => {}}
+								   list = {f.name + "-data-list"}
+								   autoComplete = "new-password"
 							/>
 						</td>
 					})}

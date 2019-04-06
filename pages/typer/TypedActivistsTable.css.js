@@ -11,7 +11,7 @@ export default css`
 	.typed-rows-table thead tr{
 		border: none;
 		background-color: transparent;
-		color: rgba(86, 95, 108, .7);
+		color: rgba(86, 95, 108, 1);
 	}
 	.typed-rows-table tr, .typed-rows-table td{
 		border: 1px solid rgb(202, 200, 199);

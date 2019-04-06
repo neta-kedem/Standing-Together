@@ -48,7 +48,7 @@ export default css
         outline: none;
     }
     .save-circles-button{
-        margin-top: 5%;
+        margin: 1.5em auto;
     }
     .add-circle-button:hover, .save-circles-button:hover{
         background-color: #80177e;

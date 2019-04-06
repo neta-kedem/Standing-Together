@@ -46,6 +46,12 @@ export default class CircleManagement extends React.Component {
         circles.push({changed: true, name:"", mailchimpList:""});
         this.setState({circles: circles})
     }
+    saveCircles() {
+        let changedCircles = this.state.circles.slice().filter((circle)=>{return circle.changed});
+        server.post('circles', {circles: changedCircles});
+        alert("saved!");
+        this.getCircles();
+    }
 
     render() {
         const circles = this.state.circles.slice();
@@ -88,7 +94,7 @@ export default class CircleManagement extends React.Component {
                     </tbody>
                 </table>
                 <button type="button" className="add-circle-button" onClick={this.createCircle.bind(this)}>הוספת מעגל</button>
-                <button type="button" className="save-circles-button" onClick={this.createCircle.bind(this)}>שמירה</button>
+                <button type="button" className="save-circles-button" onClick={this.saveCircles.bind(this)}>שמירה</button>
             </div>
         )
     }

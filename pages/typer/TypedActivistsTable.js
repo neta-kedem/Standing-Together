@@ -19,6 +19,7 @@ export default class TypedActivistsTable extends React.Component {
 		const rows = this.props.activists.map((activist, i) =>
 			{
 				return <InputRow
+					dir="rtl"
 					fields={this.state.fields}
 					isFocused={i === this.props.selectedRow}
 					handleFocus={this.state.handleRowFocus}
@@ -47,7 +48,7 @@ export default class TypedActivistsTable extends React.Component {
 		return (
 			<div className="typed-table-wrap">
 				<style jsx global>{style}</style>
-				<table className={"typed-rows-table "+(this.props.highlightInvalidFields?"highlight-invalid-fields":"")}>
+				<table dir="rtl" className={"typed-rows-table "+(this.props.highlightInvalidFields?"highlight-invalid-fields":"")}>
 					<thead>
 						{titleRow}
 					</thead>
