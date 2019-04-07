@@ -41,25 +41,11 @@ componentDidMount() {
 	this.fetchActivistsByQuery(this.state.query);
 	this.getPotentialEvents();
 	this.getCurrFilters();
-	this.fetchMailchimpMembers();
-	this.fetchWixMembers();
 }
 fetchActivistsByQuery(query){
 	server.post('selectActivists', {'query':query})
 		.then(json => {
 			this.setState({activists:json});
-		});
-}
-fetchMailchimpMembers(){
-	server.post('activists/mailchimp', {})
-		.then(json => {
-			console.log(json)
-		});
-}
-fetchWixMembers(){
-	server.post('activists/wix', {})
-		.then(json => {
-			console.log(json)
 		});
 }
 getPotentialEvents(){

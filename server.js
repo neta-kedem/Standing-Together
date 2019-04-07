@@ -1,19 +1,16 @@
-/*
-const { createServer } = require('http');
-const { parse } = require('url');
-const router = express.Router();
-*/
 const next = require('next');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cron = require('./server/services/cron');
+
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 //db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
-mongoose.set('debug', true)
+mongoose.set('debug', true);
 
 const authentication = require('./server/services/authentication');
 
@@ -26,6 +23,8 @@ server.use(bodyParser.urlencoded({extended:false, limit:1024*1024*callSizeLimit,
 server.use(bodyParser.json({limit:1024*1024*callSizeLimit, type:'application/json'}));
 server.use(cookieParser());
 server.use(express.static('public'));
+//set cron
+cron.scheduleSync();
 
 app.prepare().then(() => {
 	// API routes
