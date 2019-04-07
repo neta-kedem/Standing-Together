@@ -28,8 +28,12 @@ const queryActivists = function(req, res){
         if(!isUser)
             return res.json({"error":"missing token"});
         const query = req.body.query;
-        Activist.find(query, {}, { skip: 0, limit: 50 }, (err, activists) => {
-            if (err) return res.json({success: false, error: err});
+        const page = req.body.page;
+        if(page < 0)
+            return res.json({"error":"illegal page"});
+        const PAGE_SIZE = 50;
+        Activist.paginate(query, { page: page + 1, limit: PAGE_SIZE }).then((result) => {
+            const activists = result.docs;
             let activistsList = [];
             for(let activist of activists)
             {
@@ -43,7 +47,7 @@ const queryActivists = function(req, res){
                     "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
                 });
             }
-            return res.json(activistsList);
+            return res.json({activists: activistsList, pageCount: result.pages});
         });
     })
 };

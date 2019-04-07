@@ -14,12 +14,15 @@ import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
+import PageNav from "../UIComponents/PageNav/PageNav";
 
 export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
 		query: {/*"profile.firstName":"Noam"*/},
+		page: 0,
+		pageCount: 1,
 		events: [],
 		activists: [],
 		currFilters: [],
@@ -38,14 +41,14 @@ constructor(props) {
 }
 
 componentDidMount() {
-	this.fetchActivistsByQuery(this.state.query);
+	this.fetchActivistsByQuery(this.state.query, this.state.page);
 	this.getPotentialEvents();
 	this.getCurrFilters();
 }
-fetchActivistsByQuery(query){
-	server.post('selectActivists', {'query':query})
+fetchActivistsByQuery(query, page){
+	server.post('selectActivists', {'query':query, 'page':page})
 		.then(json => {
-			this.setState({activists:json});
+			this.setState({activists: json.activists, pageCount: json.pageCount});
 		});
 }
 getPotentialEvents(){
@@ -59,6 +62,11 @@ getCurrFilters(){
 		.then(currFilters => {
 			this.setState({currFilters})
 		});
+}
+handlePageNavigation(page){
+	this.setState({page: page}, ()=>{
+		this.fetchActivistsByQuery(this.state.query, this.state.page);
+	});
 }
 handleActivistCallerStatusChange(activistIndex, status){
 	const activists = this.state.activists.slice();
@@ -85,6 +93,8 @@ handleEventSelection(selected){
 		});
 }
 render() {
+	const currPage = this.state.page;
+	const pageCount = this.state.pageCount;
 	const tableFieldsMultiSelect = <MultiSelect
 		values={this.state.tableFields}
 		label='key'
@@ -142,7 +152,8 @@ render() {
 					toggleEventPopup={this.handleEventPopupToggle.bind(this)}> </QueryResultsActionMenu>
 					<div className="results-wrap">
 						<div className="query-results">
-							<SelectableTable rows={this.state.activists} header={this.state.tableFields}> </SelectableTable>
+							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields}> </SelectableTable>
+							<PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
 						</div>
 					</div>
 				</div>
