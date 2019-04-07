@@ -1,15 +1,17 @@
 import React from 'react';
 
-export default class ToggleSwitch extends React.Component {
+export default class HamburgerMenu extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			content: props.content,
-			isOpen: false
+			isOpen: false,
+			leftAlignment: false
 		};
 	}
-	handleMenuToggle() {
-		this.setState({isOpen: !this.state.isOpen});
+	handleMenuToggle(event) {
+		const leftAlignment = event.target.offsetParent.offsetLeft*2>window.innerWidth;
+		this.setState({isOpen: !this.state.isOpen, leftAlignment: leftAlignment});
 	}
 	render() {
 		return (
@@ -23,7 +25,6 @@ export default class ToggleSwitch extends React.Component {
 						display: inline-block;
 						cursor: pointer;
 					}
-
 					.bar1, .bar2, .bar3 {
 						width: 25.5px;
 						height: 4px;
@@ -41,15 +42,12 @@ export default class ToggleSwitch extends React.Component {
 						transform: Scale(1, 1);
 						transition: 0.4s 0.4s;
 					}
-
 					.change .bar1 {
 						transform: rotate(45deg);
 					}
-
 					.change .bar2 {
 						transform: Scale(0, 1);
 					}
-
 					.change .bar3 {
 						transform: rotate(-45deg);
 					}
@@ -59,11 +57,16 @@ export default class ToggleSwitch extends React.Component {
 						color: rgb(100, 109, 114);
 						position: absolute;
 						width: 10vw;
-						right: 0;
+						right: auto;
+						left: 0;
 						padding: 1em;
 						border: 1px solid #ccc;
 						z-index: 1000;
 						text-align: left;
+					}
+					.menu-content.left-align{
+						left: auto;
+						right: 0;
 					}
 					.menu-content.open{
 						display: block;
@@ -75,7 +78,7 @@ export default class ToggleSwitch extends React.Component {
 					<div className="bar2"></div>
 					<div className="bar3"></div>
 				</div>
-				<div className={"menu-content " + (this.state.isOpen ? 'open' : '')}>
+				<div className={"menu-content " + (this.state.isOpen ? 'open' : '') + (this.state.leftAlignment ? 'left-align' : '')}>
 					{this.state.content}
 				</div>
 			</div>
