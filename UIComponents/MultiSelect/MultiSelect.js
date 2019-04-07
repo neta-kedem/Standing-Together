@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class ToggleSwitch extends React.Component {
+export default class MultiSelect extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -20,13 +20,23 @@ export default class ToggleSwitch extends React.Component {
 	render() {
 		const options = this.state.values.map((val, i) =>
 				<div key={i}>
-					<label>
+					<label className="multi-select-option">
 						<input type="checkbox" defaultChecked={val[this.state.selectionIndex]} onChange={(event)=>this.handleChange(event, i)}/>
 						{val[this.state.labelIndex]}
 					</label>
 				</div>);
 		return (
 			<div>
+				<style jsx global>{`
+					.multi-select-option{
+						text-align: right;
+						display: block;
+					}
+					.multi-select-option input{
+						cursor: pointer;
+					}
+				`}
+				</style>
 				{options}
 			</div>
 		)

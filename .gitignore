@@ -11,6 +11,9 @@
 /dist
 /.next
 
+#uploads
+public/**
+
 # misc
 .DS_Store
 .env
@@ -21,3 +24,9 @@ yarn-error.log*
 #IDE
 /.idea
 /.vscode
+
+# local config
+/services/config.js
+
+# server config
+server/config.js

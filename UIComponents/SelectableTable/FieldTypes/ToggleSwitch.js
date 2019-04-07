@@ -10,7 +10,6 @@ export default class ToggleSwitch extends React.Component {
 	}
 	handleChange(event)
 	{
-		this.setState({value: event.target.checked});
 		this.state.onChangeFunction(event.target.checked);
 	}
 	render() {
@@ -28,19 +27,20 @@ export default class ToggleSwitch extends React.Component {
 					}
 					
 					.switch input {
-						display:none;
+						display:inline-block;
+						width:0;
+						height: 0;
+						position: absolute;
+						visibility: none;
 					}
 					
 					.slider {
 						position: absolute;
 						cursor: pointer;
-						top: 0;
-						left: 0;
-						right: 0;
-						bottom: 0;
+						width: 3em;
+						height: calc(1.5em + 2px);
 						border-radius: 3px;
-						box-sizing: border-box;
-						border: 1px solid #888;
+						border: 1px solid #616B6F;
 						background-color: #fff;
 						-webkit-transition: .4s;
 						transition: .4s;
@@ -48,13 +48,13 @@ export default class ToggleSwitch extends React.Component {
 					
 					.slider:before {
 						position: absolute;
-						top: -1px;
-						left: -1px;
+						top: 0px;
+						left: 0px;
 						content: "";
-						height: 1.5em;
+						height: calc(1.5em + 2px);
 						width: 1.5em;
 						border-radius: 3px;
-						background-color: #888;
+						background-color: #616B6F;
 						-webkit-transition: .4s;
 						transition: .4s;
 					}
@@ -71,7 +71,7 @@ export default class ToggleSwitch extends React.Component {
 				`}
 				</style>
 				<label className="switch">
-					<input type="checkbox" defaultChecked={this.state.value} onChange={(event)=>this.handleChange(event)}/>
+					<input type="checkbox" checked={this.props.value} onChange={(event)=>this.handleChange(event)}/>
 					<span className="slider"></span>
 				</label>
 			</div>

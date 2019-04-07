@@ -25,7 +25,6 @@ export default  {
       },
       "shortcut": {
         "display": "inline-block",
-
         "color": "#fbfbfb",
         "fontSize": "21px",
         "fontWeight": "400",
@@ -33,7 +32,7 @@ export default  {
       },
       "shortcut_hb": {
         "display": "inline-block",
-        "padding": "8px 20px",
+        "padding": "5px 20px",
         "color": "#fbfbfb",
         "fontSize": "15px",
         "fontWeight": "400",
@@ -46,13 +45,6 @@ export default  {
         "fontSize": "15px",
         "fontWeight": "400",
         "textAlign": "center"
-      },
-      "shortcutblock_copy": {
-        "position": "absolute",
-        "left": "85px",
-        "top": "0px",
-        "height": "100%",
-        "minWidth": "100px"
       },
       "shortcut_ar": {
         "display": "inline-block",
@@ -67,7 +59,8 @@ export default  {
         "top": "0px",
         "right": "0px",
         "marginTop": "0px",
-        "fontSize": "10px"
+        "fontSize": "10px",
+        "cursor": "pointer"
       },
       "cloud":{
         "display": "inline-block",
@@ -75,7 +68,7 @@ export default  {
         "fontSize": "17px",
         "fontWeight": "400",
         "paddingRight": "10px",
-        "paddingTop": "5px",
+        "paddingTop": "3px",
         "textAlign": "center"
       },
       "cloud-icon":{
@@ -86,7 +79,6 @@ export default  {
         "fontWeight": "400",
         "paddingRight": "10px",
         "paddingBottom": "7px",
-        "cursor": "pointer",
         "textAlign": "center"
       }
   }

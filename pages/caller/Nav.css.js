@@ -39,12 +39,12 @@ export default {
       },
       "cloud":{
         "display": "inline-block",
-        "fontFamily": "Rubik, sans-serif",
+        
         "color": "#fbfbfb",
         "fontSize": "18px",
         "fontWeight": "400",
         "paddingRight": "10px",
-        "paddingTop": "5px",
+        "paddingTop": "2px",
         "textAlign": "center"
       },
       "cloud-icon":{

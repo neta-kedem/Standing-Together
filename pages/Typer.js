@@ -1,134 +1,302 @@
 import React from 'react';
 import Meta from '../lib/meta';
+import server from '../services/server';
 import HeaderBar from './typer/HeaderBar'
-import TableRow from './typer/TableRow'
-import TitleRow from './typer/TitleRow'
-import InputFields from './typer/InputFields'
-import InputRow from './typer/InputRow'
-import ItemService from '../services/ItemService'
-import styles from './typer/Typer.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCheckSquare } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faCheckSquare);
-import { faSave } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faSave);
-import { faTrashAlt } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faTrashAlt);
+import TypedActivistsTable from './typer/TypedActivistsTable'
+import ContactScanDisplay from './typer/ContactScanDisplay'
+import FieldValidation from './typer/FieldValidation'
+import Popup from '../UIComponents/Popup/Popup';
+import style from './typer/Typer.css'
 
 
 
 export default class Typer extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      data:
-          []
-    }
-    this.addRow = this.addRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this._handleKeyPress = this._handleKeyPress.bind(this);
-  };
+	//constants
+	scanPingIntervalDuration = 10000;
 
-  addRow() {
-    var input = document.createElement("input");
-    var fname = document.getElementById("firstName").value;
-    var lname = document.getElementById("lastName").value;
-    var mail = document.getElementById("mail").value;
-    var city = document.getElementById("city").value;
-    var phone = document.getElementById("phNo").value;
-    var item = {
-      "fname": fname,
-      "lname": lname,
-      "settlement": city,
-      "phone": phone,
-      "mail": mail
-    }
-    this.setState((prevState, props) => ({
-      data: [...prevState.data, item]
-    }));
-  };
+	constructor(props) {
+		super(props);
+		this.state = {
+			activists:[],
+			profileFields: [
+				{
+					name: "firstName", type: "text", ar: "الاسم الشخصي", he: "שם פרטי",
+					validation: /^null|^.{2,}$/
+				},
+				{
+					name: "lastName", type: "text", ar: "اسم العائلة", he: "שם משפחה",
+					validation: /^null|^.{2,}$/
+				},
+				{
+					name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",
+					validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/
+				},
+				{
+					name: "residency", type: "select", ar: "البلد", he: "עיר",
+					validation: /^null|^.{2,}$/
+				},
+				{
+					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
+					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				},
+			],
+			profileDataLists: [
+				{field:"residency", data:[]}
+			],
+			cells: [],
+			selectedRowIndex: 0,
+			scanId: null,
+			scanUrl: null,
+			fullyTyped: false,
+			displayFullyTypedPopup: false,
+			postAttempted: false, //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
+			unsaved: false
+		};
+	};
+	refreshHandler = function() {
+		if(this.state.unsaved)
+			return "You Have Unsaved Data - Are You Sure You Want To Quit?";
+	}.bind(this);
+	componentDidMount() {
+		this.fetchCities();
+		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
+		FieldValidation.setFields(this.state.profileFields.slice());
+		//confirm exit without saving
+		window.onbeforeunload = this.refreshHandler;
+	}
+	fetchCities(){
+		server.get('cities/', {})
+			.then(json => {
+				let dataLists = this.state.profileDataLists.slice();
+				for(let i=0; i<dataLists.length; i++){
+					if(dataLists[i].field === "residency")
+						dataLists[i].data = json.map((city)=>{
+							return city.name;
+						});
+				}
+				this.setState({profileDataLists: dataLists})
+			});
+	}
+	getContactsScan() {
+		server.get('contactScan', {})
+		.then(json => {
+			if(json.error)
+			{
+				if(json.error === "no pending scans are available")
+					alert("אין דפי קשר שדורשים הקלדה במערכת. תוכלו להקליד פרטי פעילים בכל מקרה");
+				return;
+			}
+			if(json.scanData)
+			{
+				const scanData = json.scanData;
+				this.setState({"scanUrl":scanData.scanUrl, "cells":scanData.rows, "scanId":scanData._id});
+				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
+				// store interval promise in the state so it can be cancelled later:
+				this.setState({callPingInterval: callPingInterval});
+			}
+			if(json.activists && json.activists.length)
+			{
+				const activists = json.activists.map((activist)=>{
+					return this.generateRow(activist, true, true);
+				});
+				this.setState({"activists":activists});
+			}
+		});
+	}
+	pingScan(){
+		if(!this.state.scanId)
+			return;
+		server.post('contactScan/pingScan', {
+			'scanId':this.state.scanId
+		})
+		.then(json => {
+		});
+	}
+	//this function generates a new row template
+	generateRow = function(data = {}, locked = false, saved = false){
+		let row = data;
+		const fields = this.state.profileFields;
+		for(let i = 0; i<fields.length; i++){
+			row[fields[i].name] = data[fields[i].name] || "";
+			row[fields[i].name + "Valid"] = saved;
+		}
+		row.scanRow = data["scanRow"] || 0;
+		row.locked = locked;
+		row.saved = saved;
+		return row;
+	}.bind(this);
 
-  myFunction = () => {
-    this.props.updateItem(this.state)
-  };
+	addRow = function() {
+		let activists = this.state.activists.slice();
+		const rows = activists.map(activist => activist.scanRow);
+		//generally, the new row should correspond to the n[th] line of the scan, if there are already n-1 rows
+		let nextScanRow = rows.length;
+		for(let i=0; i < rows.length; i++){
+			//however, if we skipped some scanned line, which can happen if we delete a row, we should add it in instead
+			if(i < rows[i]){
+				nextScanRow = i;
+				break;
+			}
+		}
+		//don't overflow the scanned rows
+		if(this.state.cells.length && nextScanRow >= this.state.cells.length){
+			return;
+		}
+		activists.push(this.generateRow({scanRow: nextScanRow}));
+		//if a row was added in the middle, sort it into position
+		activists.sort((a, b)=>(a.scanRow - b.scanRow));
+		//assignment into state is done in two explicit stages, in order to keep the focus on the correct row
+		//it still doesn't work most of the time
+		//not important enough to find a fix, though
+		this.setState({activists: activists}, ()=>{this.setState({selectedRowIndex: nextScanRow})});
+	}.bind(this);
+	
+	handleRowFocus = function(rowIndex) {
+		this.setState({selectedRowIndex: rowIndex});
+	}.bind(this);
+	
+	handleTypedInput = function (name, value, rowIndex){
+		let activists = this.state.activists.slice();
+		activists[rowIndex][name] = value;
+        FieldValidation.validate(activists, rowIndex, name);
+		this.setState({activists: activists, unsaved: true});
+	}.bind(this);
+	
+	selectScanRow = function(index){
+		if(index>=this.state.activists.length){
+			this.addRow();
+		}
+		else{
+			this.setState({selectedRowIndex: index});
+		}
+	}.bind(this);
+	
+	handleRowPost = function(rowIndex){
+		let activists = this.state.activists.slice();
+		if(rowIndex === activists.length-1)
+			this.addRow();
+		else
+		{
+			this.setState({selectedRowIndex:rowIndex+1});
+		}
+	}.bind(this);
 
-  handleChangeEvent = (value, cell, index) => {
-    let newState = this.state.data.slice(0);
-    newState[cell][index] = value;
-    this.setState({data: newState});
-  };
+	handleRowDeletion = function(index){
+		let activists = this.state.activists.slice();
+		//remove the appropriate row from the activists array
+		activists.splice(Number(index), 1);
+		//decrease selected row index if necessary
+		let selectedRowIndex = this.state.selectedRowIndex;
+		if(selectedRowIndex >= index){
+			selectedRowIndex = selectedRowIndex === 0 ? selectedRowIndex : (selectedRowIndex-1);
+		}
+		//if no rows are left, create a new one
+		if(!activists.length) {
+			activists = [this.state.generateRow()];
+		}
+		//commit to state
+		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
+	}.bind(this);
 
-  _handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      this.addRow();
-    }
-  };
+	handleRowEditToggle = function(index){
+		let activists = this.state.activists.slice();
+		activists[index].locked = !activists[index].locked;
+		this.setState({activists: activists});
+	}.bind(this);
 
-  deleteRow(index){
-    var contacts = [...this.state.data];
-    contacts.splice(Number(index), 1);
-    this.setState((props) => ({
-      data: contacts
-    }));
-  };
+	checkFullyTyped = function(){
+		const checkNeeded = this.state.scanId && this.state.cells.length===0;
+		if(checkNeeded){
+			this.setState({displayFullyTypedPopup: true});
+		}
+		else{
+			this.handlePost();
+		}
+	}.bind(this);
 
-  render() {
-    return (
-        <div>
-          <Meta/>
-          <style jsx global>{`
-          :lang(heb){
-            font-family: 'Rubik', sans-serif;
-            font-size: 13px;
-        }
+	setFullyTyped = function(isFullyTyped){
+		this.setState({fullyTyped: isFullyTyped}, () => {
+			this.handlePost();
+		})
+	}.bind(this);
 
-        :lang(ar){
-            font-family: 'Cairo', sans-serif;
-            
-        }
-
-        br {
-          display: block;
-          margin: 0px 0;
-       }
-	      	`}</style>
-          <HeaderBar></HeaderBar>
-          <section style={styles.section}>
-            <div style={styles.rightpanel}>
-              <content style={styles.content}>
-                  <TitleRow></TitleRow>
-                  <div style={styles['save-div']}>
-                    <span onClick ={this.addRow}><FontAwesomeIcon id = "save" icon="save" style={styles['save-btn']}/></span>
-                    <InputRow style={{'MarginTop':'10px'}} handleKeyPress={this._handleKeyPress}></InputRow>
-                  </div>
-                  <br/>
-                  <br/>
-
-                  <table style={styles.info_table}>
-                     <tbody style={styles.row}>
-                     {
-                       this.state.data.map((person, i) =>
-                       <div>
-                         <FontAwesomeIcon onClick ={this.deleteRow.bind(this,i)}  key={i+0.1} id="delete" icon="trash-alt" style={styles['save-btn']}/>
-                         <TableRow key={i} data={person} num={i}
-                         handleChangeEvent={this.handleChangeEvent} handleKeyPress={this._handleKeyPress}/></div>)}
-                     </tbody>
-                  </table>
-                  {/*<div style={styles.selectall}>
-                      <div style={styles.awsome_low}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
-                      <h4 style={styles.heading}>select all</h4>
-                 </div>
-                 <div style={styles.input_fields}>
-                <div style={styles.addfilter_copy}>שלח למסד הנתונים</div>
-                </div>*/}
-             </content>
-            </div>
-          </section>
-        </div>
-
-    )
-  }
-
+	handlePost=function(){
+		const activists = this.state.activists.slice();
+		if(!FieldValidation.validateAll(activists, this.state.profileFields)){
+			this.setState({postAttempted: true});
+			return;
+		}
+		const data ={
+			"activists": activists,
+			"scanId": this.state.scanId,
+			"markedDone": this.state.fullyTyped
+		};
+		server.post('activists/uploadTyped', data)
+		.then(() => {
+			this.setState({
+				activists: [this.generateRow()],
+				cells: [],
+				selectedRowIndex: 0,
+				scanId: null,
+				scanUrl: null,
+				fullyTyped: false,
+				displayFullyTypedPopup: false,
+				postAttempted: false,
+				unsaved: false
+			});
+			alert("the details have been stored in the system");
+			this.getContactsScan();
+		});
+	}.bind(this);
+	
+	render() {
+		const cells = this.state.cells;
+		const scanUrl = this.state.scanUrl;
+		const selectedRowIndex = this.state.selectedRowIndex;
+		const activists = this.state.activists;
+		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
+		const scanDisplay = <ContactScanDisplay
+			cells={cells}
+			scanUrl={scanUrl}
+			selectedRow={selectedScanRow}
+			selectScanRow={this.selectScanRow}/>;
+		const toggleFullyTypedPopup =
+				<Popup visibility={this.state.displayFullyTypedPopup} toggleVisibility={()=>{this.setState({displayFullyTypedPopup: !this.state.displayFullyTypedPopup})}}>
+					<div className="fully-typed-popup-label">
+						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
+						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
+					</div>
+					<div className="confirm-fully-typed-wrap">
+						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(true)}}>סיימתי</button>
+						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(false)}}>נותרו רשומות להקלדה</button>
+					</div>
+				</Popup>;
+		return (
+			<div dir="rtl">
+				<Meta/>
+				<style jsx global>{style}</style>
+				<HeaderBar sendFunction={this.checkFullyTyped}> </HeaderBar>
+				<section className="section">
+					<div className="main-panel">
+					{scanUrl?scanDisplay:""}
+						<content className="content">
+							<TypedActivistsTable
+								fields={this.state.profileFields}
+								dataLists={this.state.profileDataLists}
+								handleChange={this.handleTypedInput}
+								handleRowPost={this.handleRowPost}
+								handleRowFocus={this.handleRowFocus}
+								handleRowDeletion={this.handleRowDeletion}
+								handleRowEditToggle={this.handleRowEditToggle}
+								activists={activists}
+								selectedRow={selectedRowIndex}
+								highlightInvalidFields={this.state.postAttempted}/>
+						</content>
+						{toggleFullyTypedPopup}
+					</div>
+				</section>
+			</div>
+		)
+	}
 }
 

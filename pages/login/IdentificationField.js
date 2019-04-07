@@ -28,15 +28,15 @@ export default class IdentificationField extends React.Component {
 		};
 	}
 	handleKeyPress = (event) => {
-		if(event.key == 'Enter'){
+		if(event.key === 'Enter'){
 			this.handlePost();
 		}
-	}
+	};
 	
 	render() {
 		return (
 			<div>
-				<style jsx>{stylesheet}</style>
+				<style global jsx>{stylesheet}</style>
 				<div className='credentials-field-wrap'>	
 					<input onChange={(event)=>this.syncStateToInput(event)} onKeyPress={this.handleKeyPress} dir={this.state.dir} type={this.state.inputType} autoFocus minLength={this.state.minLength} maxLength={this.state.maxLength} className='credentials-field' placeholder={this.state.placeholder}></input>
 					<div className={'login-button-wrap '+(this.state.validationFunction(this.state.value)?'valid-input ':'invalid-input ')}>
