@@ -4,7 +4,8 @@ const Mailer = require('../services/mailer');
 const identifyViaPhone = function (req, res){
     let phone = req.body.phone;
     phone = phone.replace(/[\-.():]/g, '');
-    Activist.findOneAndUpdate({'profile.phone':phone}, {$set : {'login.loginCode':'123456'}}, (err, user) => {
+    let code = Math.random().toString(36).substr(2, 6);
+    Activist.findOneAndUpdate({'profile.phone':phone}, {$set : {'login.loginCode':code}}, (err, user) => {
         if (err) return res.json({success: false, error: err});
         return res.json(true);
     });
@@ -65,9 +66,9 @@ const sendCodeViaMail = function(code, email)
         text: 'Use the following code: '+code
     });
 };
-const assignToken = function(userid) {
+const assignToken = function(userId) {
     let token = generateToken();
-    let query = Activist.update({'_id':userid},{$push:{'login.token': token}});
+    let query = Activist.update({'_id':userId},{$push:{'login.token': token}});
     return query.exec().then(()=>{return token});
 };
 const generateToken = function() {

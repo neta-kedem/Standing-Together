@@ -1,19 +1,43 @@
-export default {
-	"wrapper": {
-		"position": "relative",
-		"display": "flex",
-		"alignItems": "center",
-		"height": "55px",
-		"backgroundColor": "#90278e"
-	},
-	"logo": {
-	"left": "0px",
-	"width": "80px",
-	"height": "100%",
-	"margin": "0px 15px",
-	"backgroundImage": "url(../../static/Logo.svg)",
-	"backgroundPosition": "0px 50%",
-	"backgroundSize": "contain",
-	"backgroundRepeat": "no-repeat"
+import css from 'styled-jsx/css'
+export default css`
+	.nav-bar-wrapper{
+		position: relative;
+		display: flex;
+		align-items: center;
+		height: 55px;
+		background-color: #90278e;
 	}
-}
+	.nav-bar-logo{
+		left: 0px;
+		width: 80px;
+		height: 55px;
+		margin: 0 1em;
+		background-image: url(../../static/Logo.svg);
+		background-position: 0px 50%;
+		background-size: contain;
+		backgroundR-repeat: no-repeat;
+	}
+	.nav-bar-logo-menu-wrap{
+	    position: relative;
+	}
+	.nav-bar-logo-menu{
+	    display: none;
+	    position: absolute;
+	    padding: 0.5em;
+	    background-color: #efefef;
+	    z-index: 1000;
+	    width: 10em;
+	}
+	.nav-bar-logo-menu-wrap:hover .nav-bar-logo-menu{
+	    display: block;
+	}
+	.nav-bar-logout-button{
+	    cursor: pointer;
+	    background-color: #DDD;
+	    padding: 0.25em;
+	}
+	.nav-bar-logout-button:hover{
+	    color: #eee;
+	    background-color: rgb(144, 39, 142);
+	}
+`
