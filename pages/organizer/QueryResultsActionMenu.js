@@ -1,6 +1,5 @@
 import React from 'react';
 import style from './QueryResultsActionMenu.css'
-import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 class QueryResultsActionMenu extends React.Component {
@@ -19,9 +18,9 @@ class QueryResultsActionMenu extends React.Component {
 		return(
 			<div className="query-results-wrapper">
 				<style jsx global>{style}</style>
-				<div className="results-count">20,000 פעילים נמצאו</div>
-				<div className="action-button" onClick={this.handlePhoneListClick.bind(this)}><FontAwesomeIcon className="action-button-icon" icon="phone"></FontAwesomeIcon> קמפיין טלפוני</div>
-				<div className="action-button"><FontAwesomeIcon className="action-button-icon" icon="envelope-open"></FontAwesomeIcon> מייל קבוצתי</div>
+				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>
+				<div className="action-button" onClick={this.handlePhoneListClick.bind(this)}><FontAwesomeIcon className="action-button-icon" icon="phone"> </FontAwesomeIcon> קמפיין טלפוני</div>
+				<div className="action-button"><FontAwesomeIcon className="action-button-icon" icon="envelope-open"> </FontAwesomeIcon> מייל קבוצתי</div>
 				{items}
 			</div>
 		)

@@ -47,7 +47,7 @@ const queryActivists = function(req, res){
                     "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
                 });
             }
-            return res.json({activists: activistsList, pageCount: result.pages});
+            return res.json({activists: activistsList, pageCount: result.pages, activistCount: result.total});
         });
     })
 };
