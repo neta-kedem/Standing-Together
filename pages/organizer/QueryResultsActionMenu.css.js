@@ -5,7 +5,10 @@ export default css`
 		display: -webkit-flex;
 		display: -ms-flexbox;
 		display: flex;
-		height: 50px;
+		background-color: #eee;
+		border-bottom: 1px solid #888;
+		padding: 0.6em;
+		padding-bottom: 0;
 		flex: 0 0 auto;
 	}
 	.results-count{

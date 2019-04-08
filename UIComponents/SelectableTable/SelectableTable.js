@@ -44,7 +44,7 @@ export default class SelectableTable extends React.Component {
 		//deselect all rows, if the table is limited to a single selection
 		if(this.state.singleSelection)
 		{
-			for(var i=0; i<rows.length; i++)
+			for(let i = 0; i < rows.length; i++)
 			{
 				rows[i].selected=false;
 			}
@@ -74,9 +74,9 @@ export default class SelectableTable extends React.Component {
 				<th className='list-row-selection-indicator list-table-header-field'> </th>
 				{this.state.header.map((field, i) =>
 				<th key={i} className={'list-table-header-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}}>
-					{field.icon!=""?
+					{field.icon !== ""?
 						<div className="list-table-header-icon">
-							<FontAwesomeIcon icon={field.icon}></FontAwesomeIcon>
+							<FontAwesomeIcon icon={field.icon}> </FontAwesomeIcon>
 						</div>
 					:''}
 					<div className="list-table-header-titles">
@@ -100,14 +100,14 @@ export default class SelectableTable extends React.Component {
 				</tr>);
 		const selectAll =
 			<div className='select-all-checkbox' onClick={() => this.toggleAllRowsSelection()}>
-				<div className={'checkbox '+(this.state.allSelected?'checkbox-checked':'')}><FontAwesomeIcon icon="check-square"></FontAwesomeIcon></div>
+				<div className={'checkbox '+(this.state.allSelected?'checkbox-checked':'')}><FontAwesomeIcon icon="check-square"> </FontAwesomeIcon></div>
 				<div className="checkbox-label">
 					<div>סימון הכל</div>
 					<div>סימון הכל</div>
 				</div>
 			</div>;
 		return (
-			<div>
+			<div className={'list-table-wrap'}>
 				<style jsx global>{stylesheet}</style>
 				<table className={'list-table'}>
 					<thead>
@@ -117,7 +117,7 @@ export default class SelectableTable extends React.Component {
 						{rows}
 					</tbody>
 				</table>
-				<br></br>
+				<br/>
 				{this.state.singleSelection?'':selectAll}
 			</div>
 		);
