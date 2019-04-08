@@ -14,12 +14,16 @@ import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
+import PageNav from "../UIComponents/PageNav/PageNav";
 
 export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
 		query: {/*"profile.firstName":"Noam"*/},
+		page: 0,
+		pageCount: 1,
+		activistCount: 0,
 		events: [],
 		activists: [],
 		currFilters: [],
@@ -38,28 +42,14 @@ constructor(props) {
 }
 
 componentDidMount() {
-	this.fetchActivistsByQuery(this.state.query);
+	this.fetchActivistsByQuery(this.state.query, this.state.page);
 	this.getPotentialEvents();
 	this.getCurrFilters();
-	this.fetchMailchimpMembers();
-	this.fetchWixMembers();
 }
-fetchActivistsByQuery(query){
-	server.post('selectActivists', {'query':query})
+fetchActivistsByQuery(query, page){
+	server.post('selectActivists', {'query':query, 'page':page})
 		.then(json => {
-			this.setState({activists:json});
-		});
-}
-fetchMailchimpMembers(){
-	server.post('activists/mailchimp', {})
-		.then(json => {
-			console.log(json)
-		});
-}
-fetchWixMembers(){
-	server.post('activists/wix', {})
-		.then(json => {
-			console.log(json)
+			this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
 		});
 }
 getPotentialEvents(){
@@ -73,6 +63,11 @@ getCurrFilters(){
 		.then(currFilters => {
 			this.setState({currFilters})
 		});
+}
+handlePageNavigation(page){
+	this.setState({page: page}, ()=>{
+		this.fetchActivistsByQuery(this.state.query, this.state.page);
+	});
 }
 handleActivistCallerStatusChange(activistIndex, status){
 	const activists = this.state.activists.slice();
@@ -99,6 +94,9 @@ handleEventSelection(selected){
 		});
 }
 render() {
+	const currPage = this.state.page;
+	const pageCount = this.state.pageCount;
+	const activistCount = this.state.activistCount;
 	const tableFieldsMultiSelect = <MultiSelect
 		values={this.state.tableFields}
 		label='key'
@@ -150,13 +148,15 @@ render() {
 					<QueryCreator currFilters={this.state.currFilters}> </QueryCreator>
 				</div>
 				<div className="main-panel">
-					<QueryResultsActionMenu items={[
-						{"index":1, "content":tableFieldsDropdown, "alignToEnd":true}
-					]}
-					toggleEventPopup={this.handleEventPopupToggle.bind(this)}> </QueryResultsActionMenu>
+					<QueryResultsActionMenu
+						items={[{"index": 1, "content": tableFieldsDropdown, "alignToEnd": true}]}
+						toggleEventPopup={this.handleEventPopupToggle.bind(this)}
+						activistCount={activistCount}
+					> </QueryResultsActionMenu>
 					<div className="results-wrap">
 						<div className="query-results">
-							<SelectableTable rows={this.state.activists} header={this.state.tableFields}> </SelectableTable>
+							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields}> </SelectableTable>
+							<PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
 						</div>
 					</div>
 				</div>

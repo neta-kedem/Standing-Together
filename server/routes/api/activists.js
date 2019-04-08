@@ -1,7 +1,5 @@
 const activistFetcher = require('../../services/activistsFetcher');
 const activistUpdater = require('../../services/activistUpdater');
-const mailchimpSync = require('../../services/mailchimpSync');
-const wixSync = require('../../services/wixSync');
 
 module.exports = (app) => {
 	app.get('/api/activists', (req, res) => {
@@ -18,11 +16,5 @@ module.exports = (app) => {
 	});
 	app.post('/api/activists/uploadTyped', (req, res) => {
 		activistUpdater.uploadTypedActivists(req, res);
-	});
-	app.post('/api/activists/mailchimp', (req, res) => {
-		mailchimpSync.fetchMembers(req, res);
-	});
-	app.post('/api/activists/wix', (req, res) => {
-		wixSync.fetchMembers(req, res);
 	});
 };

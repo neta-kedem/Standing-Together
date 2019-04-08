@@ -85,12 +85,12 @@ render() {
 					אימות באמצעות
 				</div>
 			</div>
-			<IdentificationField
+			{/*<IdentificationField
 				dir="ltr" inputType="tel" minLength="9" maxLength="15"
 				placeholder="Phone Number"
 				validationFunction={this.validatePhone}
 				identificationFunction={this.identifyByPhone.bind(this)}
-			/>
+			/>*/}
 			<IdentificationField
 				dir="ltr" inputType="email" minLength="5" maxLength="100"
 				placeholder="Email Address"

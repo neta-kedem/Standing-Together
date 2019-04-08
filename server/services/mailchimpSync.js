@@ -2,9 +2,9 @@ const fetch = require('node-fetch');
 const Activist = require('../models/activistModel');
 const config = require('../config');
 //the web id of the main contact list - all our contacts should appear in this list
-const mainListId = "a6f28b7b74"
+const mainListId = "a6f28b7b74";
 //a6f28b7b74 test list id
-const fetchMembers = function(req, res){
+const fetchMembers = function(){
     let date = new Date();
     date.setMonth(date.getMonth()-1);
     const url = 'https://us14.api.mailchimp.com/3.0/lists/' + mainListId + '/members?' +
@@ -20,9 +20,9 @@ const fetchMembers = function(req, res){
     }).then(res => res.json())
         .then(contacts => {
             if(!contacts || !contacts.members.length)
-                return res.json(contacts.members);
+                return false;
             updateNewsletterStatus(contacts.members).then(()=>{
-                return res.json(contacts.members);
+                return true;
             })
         });
     return promise;

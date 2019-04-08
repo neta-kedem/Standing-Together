@@ -17,7 +17,7 @@ const fetchMembers = function(){
     }).then(res => res.json())
         .then(contacts => {
             if(!contacts || !contacts.members.length)
-                return true;
+                return false;
             updateMembershipStatus(contacts.members).then(()=>{
                 return true;
             })

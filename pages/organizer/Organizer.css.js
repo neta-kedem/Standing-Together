@@ -47,10 +47,10 @@ export default css
 		box-sizing: border-box;
 		background-color: #fbfbfb;
 		text-align: center;
+		border-left: 1px solid #888;
 	}
 	.main-panel{
 		width: 80%;
-		padding: 1%;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
@@ -59,12 +59,15 @@ export default css
 	}
 	.results-wrap{
 		overflow: auto;
-		padding: 2.5% 0;
+		padding: 0;
 		position: relative;
 	}
 	.query-results{
 		box-sizing: border-box;
 		width: 99.9%;
+	}
+	.query-results .list-table-wrap{
+	    padding: 2.5%;
 	}
 	.event-selection-popup-title{
 		font-size: 1.75em;

@@ -1,4 +1,5 @@
-const loginManager = require('../../services/loginManager')
+const loginManager = require('../../services/loginManager');
+const logoutManager = require('../../services/logoutManager');
 
 module.exports = (app) => {
 	app.post('/api/identify/phone', (req, res) => {
@@ -12,5 +13,8 @@ module.exports = (app) => {
 	});
 	app.post('/api/login/email', (req, res) => {
 		loginManager.loginViaMail(req, res);
+	});
+	app.get('/api/logout', (req, res) => {
+		logoutManager.logout(req, res);
 	});
 };

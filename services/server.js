@@ -5,7 +5,7 @@ import config from './config';
 
 const apiPath='api/';
 function get(path){
-	var promise = fetch(config.serverPath+apiPath+path, {
+	const promise = fetch(config.serverPath+apiPath+path, {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
@@ -14,7 +14,7 @@ function get(path){
 	})
 	.then(res => res.json())
 	.then(json => {
-		if(json.error=="missing token")
+		if(json.error === "missing token")
 		{
 			//Router.push({pathname: '/Login'});
 			return [];
@@ -24,7 +24,7 @@ function get(path){
 	return promise;
 }
 function post(path, data){
-	var promise = fetch(config.serverPath+apiPath+path, {
+	const promise = fetch(config.serverPath+apiPath+path, {
 		method: 'post',
 		body: JSON.stringify(data),
 		headers: {
@@ -35,7 +35,7 @@ function post(path, data){
 	})
 	.then(res => res.json())
 	.then(json => {
-		if(json.error=="missing token")
+		if(json.error === "missing token")
 		{
 			Router.push({pathname: '/Login'});
 		}

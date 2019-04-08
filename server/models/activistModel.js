@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 
 const activistSchema = new mongoose.Schema({
 	metadata: {
@@ -57,5 +58,6 @@ const activistSchema = new mongoose.Schema({
 		token: [String]
 	}
 });
-
-module.exports = mongoose.model('activist',activistSchema);
+activistSchema.plugin(mongoosePaginate);
+const activistModel = mongoose.model('activist',activistSchema);
+module.exports = activistModel;
