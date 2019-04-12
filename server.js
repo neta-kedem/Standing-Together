@@ -127,6 +127,9 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/MemberRegistration', (req, res) => {
+		return app.render(req, res, '/MemberRegistration', req.query);
+	});
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);
 	});
