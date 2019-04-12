@@ -26,10 +26,12 @@ server.use(express.static('public'));
 //set cron
 cron.scheduleSync();
 
+const childProcess = require('child_process');
+
 app.prepare().then(() => {
 	// API routes
 	require('./server/routes')(server);
-	
+
 	// CUSTOM ROUTES GO HERE
 	server.get('/Organizer', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
@@ -130,7 +132,17 @@ app.prepare().then(() => {
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);
 	});
-	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
+	server.post("/webhooks/github", function (req, res) {
+		const sender = req.body.sender;
+		const branch = req.body.ref;
+
+		console.log('in webhook', branch, sender.login)
+
+		if(branch.indexOf('master') > -1){
+			deploy(res);
+		}
+	})
+	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS
 	server.get('*', (req, res) => {
 		return handle(req, res);
 	});
@@ -168,3 +180,13 @@ app.prepare().then(() => {
     console.log('> Ready on http://localhost:3000');
   })*/
 });
+
+function deploy(res){
+	childProcess.exec('cd ~/scripts && ./pullST.sh', function(err, stdout, stderr){
+		if (err) {
+			console.error(err);
+			return res.send(500);
+		}
+		res.send(200);
+	});
+}
