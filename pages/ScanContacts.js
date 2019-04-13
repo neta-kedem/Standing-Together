@@ -1,7 +1,7 @@
 import React from 'react';
 import Meta from '../lib/meta';
 
-import config from '../config';
+import config from '../services/config';
 import server from '../services/server';
 import style from './scanContacts/ScanContacts.css';
 import RowSelector from './scanContacts/TableRowSelector';
