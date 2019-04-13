@@ -4,6 +4,7 @@ import PaymentForm from './memberRegistration/PaymentForm'
 import style from './memberRegistration/MemberRegistration.css'
 import server from "../services/server";
 import FieldValidation from "../services/FieldValidation";
+import Checkbox from '../UIComponents/Checkbox/Checkbox';
 import Meta from '../lib/meta';
 
 export default class MemberRegistration extends React.Component {
@@ -73,8 +74,8 @@ export default class MemberRegistration extends React.Component {
     handlePayment = function (transactionId){
         this.setState({transactionId: transactionId});
     }.bind(this);
-    handleTermsAcceptance = function (event){
-        this.setState({termsAccepted: event.target.checked});
+    handleTermsAcceptance = function(checked){
+        this.setState({termsAccepted: checked});
     }.bind(this);
     handlePost = function(){
         const activist = this.state.activistData;
@@ -118,10 +119,7 @@ export default class MemberRegistration extends React.Component {
 
     أريد الانضمام لحراك "نقف معًا" لأني أقبل بالمبادئ الفكريّة, السّياسيّة, والتنظيمية للحراك, والذي هو حراك سياسي يعنى بالنّضال والأمل, كما ويحمل مبادئ وقيم اشتراكيّة. إني أعي أنّ الحراك يضم شركاء وشريكات من كل انحاء البلاد - شبابًا وشيبًا, يهودًا وعربًا, نساءً ورجالًا, من المركز ومن الأرياف - وأنا مستعد\ة للعمل المشترك من منطلق إيماني بأننا وفقط عندما نكون معًا يمكننا تغيير المكان الذي نعيش به. أصرّح بهذا انّي سأعمل سويةً مع رفاقي ورفيقاتي في الحراك من أجل السعي لتحقيق المساواة الكاملة لكلّ من يعيش هنا؛ من أجل العدالة الاجتماعيّة الحقيقيّة؛ من أجل السّلام, ألاستقلال والعدالة لكلا الشعبين. سأعمل من خلال الحراك من أجل تغيير السّياسات الاجتماعيّة والسّياسيّة السّائدة اليوم, والتي لا تخدم مصالح الأغلبية في المجتمع, بل تصب في مصلحة أقليّة صغيرة هي المستفيدة من الوضع القائم. أتعهد أن أكون جزءًا من النضال من أجل وضع بديل شامل لليمين, من أجل إحداث تغيير جذري في المجتمع الإسرائيلي, وتحويل هذه البلاد لمكانٍ لنا جميعًا.</span>
                     <div>
-                        <label>
-                            <input type={"checkbox"} onChange={this.handleTermsAcceptance}/>
-                            <span>אני מאשר/ת שקראתי והסכמתי</span>
-                            </label>
+                        <Checkbox onChange={this.handleTermsAcceptance} checked={this.state.termsAccepted} label={"אני מאשר/ת שקראתי והסכמתי"}/>
                     </div>
                     <button
                         className={"register-button"}

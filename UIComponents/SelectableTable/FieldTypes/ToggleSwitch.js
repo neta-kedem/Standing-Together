@@ -31,7 +31,7 @@ export default class ToggleSwitch extends React.Component {
 						width:0;
 						height: 0;
 						position: absolute;
-						visibility: none;
+						visibility: hidden;
 					}
 					
 					.slider {
