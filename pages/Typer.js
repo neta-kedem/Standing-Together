@@ -63,7 +63,8 @@ export default class Typer extends React.Component {
 	componentDidMount() {
 		this.fetchCities();
 		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
-		FieldValidation.setFields(this.state.profileFields.slice());
+		this.ActivistFieldsValidation = new FieldValidation();
+		this.ActivistFieldsValidation.setFields(this.state.profileFields.slice());
 		//confirm exit without saving
 		window.onbeforeunload = this.refreshHandler;
 	}
@@ -161,7 +162,7 @@ export default class Typer extends React.Component {
 	handleTypedInput = function (name, value, rowIndex){
 		let activists = this.state.activists.slice();
 		activists[rowIndex][name] = value;
-		activists[rowIndex][name + "Valid"] = FieldValidation.validate(value, name);
+		activists[rowIndex][name + "Valid"] = this.ActivistFieldsValidation.validate(value, name);
 		this.setState({activists: activists, unsaved: true});
 	}.bind(this);
 	
@@ -225,7 +226,7 @@ export default class Typer extends React.Component {
 
 	handlePost=function(){
 		const activists = this.state.activists.slice();
-		if(!FieldValidation.validateAll(activists, this.state.profileFields)){
+		if(!this.ActivistFieldsValidation(activists, this.state.profileFields)){
 			this.setState({postAttempted: true});
 			return;
 		}

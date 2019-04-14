@@ -1,7 +1,6 @@
 import React from 'react';
 import InputField from './InputField'
 import server from "../../services/server";
-import FieldValidation from '../../services/FieldValidation'
 import style from './RegistrationForm.css'
 
 export default class RegistrationForm extends React.Component {
@@ -19,7 +18,6 @@ export default class RegistrationForm extends React.Component {
     }
     componentDidMount() {
         this.fetchCities();
-        FieldValidation.setFields(this.state.profileFields.slice());
     }
     fetchCities(){
         server.get('cities/', {})
@@ -39,7 +37,6 @@ export default class RegistrationForm extends React.Component {
     }.bind(this);
 
     render() {
-        const highlightInvalidFields = this.props['highlightInvalidFields'];
         const activistData = this.props.activistData ? this.props.activistData : {};
         const profileFields = this.state.profileFields.slice();
         const inputFields = <div className={"input-fields-container"}>
@@ -62,7 +59,7 @@ export default class RegistrationForm extends React.Component {
             })
             :"";
         return (
-            <div className={"registration-form "+(highlightInvalidFields?"highlight-invalid-fields ":"")}>
+            <div className={"registration-form"}>
                 <style jsx global>{style}</style>
                 {inputFields}
                 {dataLists}

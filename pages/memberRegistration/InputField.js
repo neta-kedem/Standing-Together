@@ -24,7 +24,6 @@ export default class InputField extends React.Component {
 					   list = {f.name + "-data-list"}
 					   autoComplete = "new-password"
 					   className={"input-field"}
-
 				/>
 			</div>
 		);

@@ -9,41 +9,14 @@ export default class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            handlePayment: props.handlePayment,
+            handleChange: props.handleChange,
             amounts: [5.9, 18, 27, 50, 78, 100, 150, 250],
             selectedAmount: 0,
-            transactionId: null,
             displayForm: false
         };
     }
-    componentDidMount() {
-        this.paymentIframe = React.createRef();
-        window.onmessage = this.handlePaymentConfirmation;
-    }
-    handlePaymentConfirmation = function (event){
-        if (event.data) {
-            if (event.data && event.data.amount) {
-                const iframe = this.paymentIframe;
-                iframe.src = "https://secured.israeltoremet.org/iframe/omdim?step=2&currency=1&sum=" + event.data.amount + "&freq=2&successurl=https://wix.standing-together.org?tdonid={donid}"
-            }
-            if (event.data && event.data.donationSuccessful) {
-                const urlParam = event.data.donationParams.split("?");
-                const params = urlParam[1].split("&");
-                for (let i = 0; i < params.length; i++) {
-                    if (params[i].indexOf("tdonid") !== -1) {
-                        let transaction_id = (params[i].split("="))[1];
-                        this.state.handlePayment(transaction_id);
-                        this.setState({transactionId: transaction_id});
-                    }
-                }
-            }
-        }
-    }.bind(this);
-    handleTypedInput = function (name, value){
-        let activist = this.state.activistData;
-        activist[name] = value;
-        this.handleChange(activist);
-        this.setState({activistData: activist});
+    handleInputChange = function (event){
+        this.state.handleChange(event.target.name, event.target.value);
     }.bind(this);
     handleContributionAmountSelection = function (amount){
         this.setState({displayForm: true, selectedAmount: amount});
@@ -52,6 +25,7 @@ export default class PaymentForm extends React.Component {
         this.setState({displayForm: false});
     }.bind(this);
     render() {
+        const paymentData = this.props.paymentData;
         const displayForm = this.state.displayForm;
         const selectedAmount = this.state.selectedAmount;
         const contributionAmounts = this.state.amounts.slice();
@@ -63,20 +37,56 @@ export default class PaymentForm extends React.Component {
                     </div>;
             })}
         </div>;
-        const form_src = "https://secured.israeltoremet.org/iframe/omdim?step=2&currency=1&sum="+selectedAmount+"&freq=2";
-        const contributionForm = <div>
-            {!this.state.transactionId?
-                <div onClick={this.closeContributionForm} className={"close-payment-form"}>
-                    <FontAwesomeIcon icon="arrow-right" className="close-payment-form-icon"/>
-                    <div className="close-payment-form-label">בחירת סכום אחר</div>
-                </div>
-                :""}
-            <iframe
-                className={"contribution-iframe"}
-                ref = {this.paymentIframe}
-                id = "israel-gives-frame"
-                src = {form_src}
-            />
+        const contributionForm = <div className="contributionForm">
+            <div>תשלום חברות חודשי של {selectedAmount}₪ לחודש</div>
+            <div onClick={this.closeContributionForm} className={"close-payment-form"}>
+                <FontAwesomeIcon icon="arrow-right" className="close-payment-form-icon"/>
+                <div className="close-payment-form-label">בחירת סכום אחר</div>
+            </div>
+            <label>
+            <div className={"credit-card-field-title"}>אמצעי תשלום</div>
+            <select name="CardTypeId" value={paymentData.CardTypeId} onChange={this.handleInputChange}
+                    className={paymentData["CardTypeIdValid"] === false ? "invalid" : ""}>
+                <option value="0">בחרו אמצעי תשלום</option>
+                <option value="6">אמריקן אקספרס</option>
+                <option value="5">ויזה</option>
+                <option value="4">מאסטרקארד</option>
+                <option value="3">ישראכרט</option>
+            </select>
+            </label>
+            <label>
+                <div className={"credit-card-field-title"}>מספר אשראי</div>
+                <input type="text" name="CreditCardNo" size="18" value={paymentData.CreditCardNo} onChange={this.handleInputChange}
+                       className={paymentData["CreditCardNoValid"] === false ? "invalid" : ""}/>
+            </label>
+            <div className={"credit-card-field-title"}>תוקף</div>
+            <select name="month" value={paymentData.month} onChange={this.handleInputChange}
+                    className={paymentData["monthValid"] === false ? "invalid" : ""}>
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+            <select name="year" value={paymentData.year} onChange={this.handleInputChange}
+                    className={paymentData["yearValid"] === false ? "invalid" : ""}>
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
+                    const year = new Date().getUTCFullYear() + i;
+                    return <option value={year} key={"year_" + year}>{year}</option>;
+                })}
+            </select>
+            <label>
+            <div className={"credit-card-field-title"}>שלוש ספרות אחרונות על גב הכרטיס</div>
+            <input type="text" inputMode="numeric" name="CVV" maxLength="3" size="3" value={paymentData.CVV} onChange={this.handleInputChange}
+                   className={paymentData["CVVValid"] === false ? "invalid" : ""}/>
+            </label>
         </div>;
         return (
             <div className={"payment-form"}>

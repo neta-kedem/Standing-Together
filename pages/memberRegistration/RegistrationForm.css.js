@@ -31,7 +31,8 @@ export default css`
         border-color: rgba(232, 232, 232, 1);
         outline: none;
         padding: 3px 10px;
-        margin: 0.2em;
+        margin: 0.75em 0.5em;
+        padding: 0.7em 0.5em;
         max-width: 100%;
         -webkit-box-flex: 1;
         -webkit-flex: 1;
