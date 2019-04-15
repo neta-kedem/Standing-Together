@@ -73,7 +73,6 @@ verifyLoginCode(code)
 }
 
 render() {
-	console.log('check webhook')
 	/**Stage 1 - Verification Method Selection**/
 	const identification =
 		<div>
