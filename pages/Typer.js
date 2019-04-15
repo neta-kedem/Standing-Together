@@ -4,7 +4,7 @@ import server from '../services/server';
 import HeaderBar from './typer/HeaderBar'
 import TypedActivistsTable from './typer/TypedActivistsTable'
 import ContactScanDisplay from './typer/ContactScanDisplay'
-import FieldValidation from './typer/FieldValidation'
+import FieldValidation from '../services/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
 import style from './typer/Typer.css'
 
@@ -21,11 +21,13 @@ export default class Typer extends React.Component {
 			profileFields: [
 				{
 					name: "firstName", type: "text", ar: "الاسم الشخصي", he: "שם פרטי",
-					validation: /^null|^.{2,}$/
+					validation: /^.{2,}$/,
+					required: true
 				},
 				{
 					name: "lastName", type: "text", ar: "اسم العائلة", he: "שם משפחה",
-					validation: /^null|^.{2,}$/
+					validation: /^.{2,}$/,
+					required: true
 				},
 				{
 					name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",
@@ -33,7 +35,8 @@ export default class Typer extends React.Component {
 				},
 				{
 					name: "residency", type: "select", ar: "البلد", he: "עיר",
-					validation: /^null|^.{2,}$/
+					validation: /^.{2,}$/,
+					required: true
 				},
 				{
 					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
@@ -60,7 +63,8 @@ export default class Typer extends React.Component {
 	componentDidMount() {
 		this.fetchCities();
 		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
-		FieldValidation.setFields(this.state.profileFields.slice());
+		this.ActivistFieldsValidation = new FieldValidation();
+		this.ActivistFieldsValidation.setFields(this.state.profileFields.slice());
 		//confirm exit without saving
 		window.onbeforeunload = this.refreshHandler;
 	}
@@ -158,7 +162,7 @@ export default class Typer extends React.Component {
 	handleTypedInput = function (name, value, rowIndex){
 		let activists = this.state.activists.slice();
 		activists[rowIndex][name] = value;
-        FieldValidation.validate(activists, rowIndex, name);
+		activists[rowIndex][name + "Valid"] = this.ActivistFieldsValidation.validate(value, name);
 		this.setState({activists: activists, unsaved: true});
 	}.bind(this);
 	
@@ -222,7 +226,7 @@ export default class Typer extends React.Component {
 
 	handlePost=function(){
 		const activists = this.state.activists.slice();
-		if(!FieldValidation.validateAll(activists, this.state.profileFields)){
+		if(!this.ActivistFieldsValidation(activists, this.state.profileFields)){
 			this.setState({postAttempted: true});
 			return;
 		}

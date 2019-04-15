@@ -47,6 +47,37 @@ const activistSchema = new mongoose.Schema({
 		},
 		participatedEvents: [String],
 	},
+	membership:{
+		joiningDate: {
+			type: Date,
+			required: true,
+		},
+		street: {
+			type: String,
+			required: false,
+		},
+		houseNum: {
+			type: String,
+			required: false,
+		},
+		apartmentNum: {
+			type: String,
+			required: false,
+		},
+		mailbox: {
+			type: String,
+			required: false,
+		},
+		TZ: {
+			type: String,
+			required: false,
+		},
+		birthday: {
+			type: Date,
+			required: true,
+		},
+		required: false,
+	},
 	role: {
 		isTyper: Boolean,
 		isCaller: Boolean,
