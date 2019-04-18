@@ -34,8 +34,7 @@ const activistSchema = new mongoose.Schema({
 		residency: String,
 		circle: {
 			type:String,
-			required: false,
-			enum: ['חיפה', 'תל-אביב' , 'ירושלים', 'הנגב']
+			required: false
 		},
 		isMember: Boolean,
 		isPaying: Boolean,

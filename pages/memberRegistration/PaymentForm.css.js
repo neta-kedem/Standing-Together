@@ -14,11 +14,22 @@ export default css`
         padding: 0.3em 0.1em 0 0.1em;
         border-radius: 0.2em;
         color: #932581;
+        background-color: white;
+        border: none;
         margin: 2.5%;
         cursor: pointer;
         font-size: 1.75em;
         text-align: center;
-        transition: background-color 0.1s;
+        transition: background-color 0.1s linear, box-shadow 0.3s linear;
+        outline: none;
+    }
+    .contribution-value{
+        font-size: 1.5em;
+        display: block;
+        line-height: 0.8em;
+    }
+    .contribution-units{
+        font-size: 0.75em;
     }
     .contribution-button:hover{
         background-color: #efefef;
@@ -80,6 +91,9 @@ export default css`
         -webkit-flex: 1;
         flex: 1;
         text-overflow: ellipsis;
+    }
+    .contributionForm input:focus, .contributionForm select:focus, .contribution-button:focus{
+        box-shadow: 0px 3.5px 12px 1px rgba(0,0,0,0.4);
     }
     .highlight-invalid-fields .contributionForm input.invalid,
     .highlight-invalid-fields .contributionForm select.invalid{

@@ -4,16 +4,18 @@ export default css`
         font-family: 'Alef', Rubik, Cabin, sans-serif;
         font-size: 18px;
         color: #4D4D4D;
-        background-color: #932581;
+        background: none !important
+        /*background-color: #932581;
+        background-image: url(../static/purple_clouds.jpg);
+        background-size: cover;*/
     }
     .form-container{
-        width: 80%;
+        width: 60%;
         padding: 5%;
         box-sizing: border-box;
         margin: 7.5% auto;
-        margin-top: 0;
         background-color: white;
-        border-radius: 2em;
+        border-radius: 0.75em;
     }
     @media only screen and (max-device-width: 480px){
         .form-container{
@@ -48,6 +50,7 @@ export default css`
         display: block;
         margin: 5% auto;
         border: none;
+        outline: none;
         background-color: #932581;
         color: white;
         font-weight: bold;
@@ -56,6 +59,16 @@ export default css`
         cursor: pointer;
         border-radius: 0.3em;
         padding: 0.5em 1em;
+        transition: box-shadow 0.3s;
+    }
+    .register-button:focus{
+        box-shadow: 0px 3.5px 12px 1px rgba(0,0,0,0.4);
+    }
+    .register-button:hover{
+        background-color: #831561;
+    }
+    .register-button:active{
+        background-color: #630551;
     }
     button:disabled.register-button,
     button[disabled].register-button{

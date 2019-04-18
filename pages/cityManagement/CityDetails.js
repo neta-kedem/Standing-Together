@@ -41,8 +41,8 @@ export default class CityDetails extends React.Component {
 					</td>
 					<td>
 						<select value={rowValues.defaultCircle} onChange={this.setDefaultCircle}>
-							{circleOptions}
 							<option value=""> </option>
+							{circleOptions}
 						</select>
 					</td>
 				</tr>
