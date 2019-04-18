@@ -11,7 +11,6 @@ export default class PaymentForm extends React.Component {
         this.state = {
             handleChange: props.handleChange,
             amounts: [5.9, 18, 27, 50, 78, 100, 150, 250],
-            selectedAmount: 0,
             displayForm: false
         };
     }
@@ -19,7 +18,9 @@ export default class PaymentForm extends React.Component {
         this.state.handleChange(event.target.name, event.target.value);
     }.bind(this);
     handleContributionAmountSelection = function (amount){
-        this.setState({displayForm: true, selectedAmount: amount});
+        this.setState({displayForm: true});
+        this.state.handleChange("selectedAmount", amount);
+
     }.bind(this);
     closeContributionForm = function (){
         this.setState({displayForm: false});
@@ -27,18 +28,17 @@ export default class PaymentForm extends React.Component {
     render() {
         const paymentData = this.props.paymentData;
         const displayForm = this.state.displayForm;
-        const selectedAmount = this.state.selectedAmount;
         const contributionAmounts = this.state.amounts.slice();
         const contributionButtons = <div className={"contribution-options"}>
             {contributionAmounts.map((sum)=>{
-                return <div className={"contribution-button"} key={"sum_" + sum} onClick={()=>{this.handleContributionAmountSelection(sum)}}>
-                        {sum}
-                        ₪ לחודש
-                    </div>;
+                return <button  type="button" className={"contribution-button"} key={"sum_" + sum} onClick={()=>{this.handleContributionAmountSelection(sum)}}>
+                        <span className={"contribution-value"}>{sum}</span>
+                        <span className={"contribution-units"}>₪ לחודש</span>
+                    </button>;
             })}
         </div>;
         const contributionForm = <div className="contributionForm">
-            <div>תשלום חברות חודשי של {selectedAmount}₪ לחודש</div>
+            <div>תשלום חברות חודשי של {paymentData.selectedAmount}₪ לחודש</div>
             <div onClick={this.closeContributionForm} className={"close-payment-form"}>
                 <FontAwesomeIcon icon="arrow-right" className="close-payment-form-icon"/>
                 <div className="close-payment-form-label">בחירת סכום אחר</div>
@@ -62,6 +62,7 @@ export default class PaymentForm extends React.Component {
             <div className={"credit-card-field-title"}>תוקף</div>
             <select name="month" value={paymentData.month} onChange={this.handleInputChange}
                     className={paymentData["monthValid"] === false ? "invalid" : ""}>
+                <option value=""> </option>
                 <option value="01">01</option>
                 <option value="02">02</option>
                 <option value="03">03</option>
@@ -77,6 +78,7 @@ export default class PaymentForm extends React.Component {
             </select>
             <select name="year" value={paymentData.year} onChange={this.handleInputChange}
                     className={paymentData["yearValid"] === false ? "invalid" : ""}>
+                <option value=""> </option>
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
                     const year = new Date().getUTCFullYear() + i;
                     return <option value={year} key={"year_" + year}>{year}</option>;

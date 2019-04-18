@@ -11,8 +11,26 @@ export default class MemberRegistration extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activistData: {},
-            paymentInfo: {},
+            activistData: {
+                apartmentNum: "12א",
+                birthday: new Date().toUTCString(),
+                email: "new@new.new",
+                firstName: "testing",
+                houseNum: "897",
+                lastName: "new member",
+                mailbox: "תא דואר 6174",
+                phone: "0231231899",
+                residency: "כפר סבא",
+                street: "רחוב 1",
+                tz: "2121922322"
+            },
+            paymentInfo: {
+                CVV: "142",
+                CardTypeId: "5",
+                CreditCardNo: "1234789045671212",
+                month: "01",
+                year: "2020"
+            },
             termsAccepted: false,
             postAttempted: false,
             profileFields: [
@@ -69,10 +87,12 @@ export default class MemberRegistration extends React.Component {
                 },
                 {
                     name: "month", type: "select",
+                    validation: /.+$/,
                     required: true
                 },
                 {
                     name: "year", type: "select",
+                    validation: /.+$/,
                     required: true
                 },
                 {
@@ -126,19 +146,38 @@ export default class MemberRegistration extends React.Component {
             window.scrollTo(0, this.paymentFormRef.current.offsetTop);
             return;
         }
-        console.log(activist);
+        const data ={
+            "paymentData": paymentInfo,
+            "activistData": activist
+        };
+        server.post('membership', data)
+            .then(() => {
+                this.setState({
+                    activists: [this.generateRow()],
+                    cells: [],
+                    selectedRowIndex: 0,
+                    scanId: null,
+                    scanUrl: null,
+                    fullyTyped: false,
+                    displayFullyTypedPopup: false,
+                    postAttempted: false,
+                    unsaved: false
+                });
+                alert("the details have been stored in the system");
+                this.getContactsScan();
+            });
     }.bind(this);
     render() {
         return (
             <div dir={"rtl"}>
                 <Meta/>
                 <style jsx global>{style}</style>
-                <img src="../static/Logo.svg" alt="standing-together" className='logo'/>
+                {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
-                    <div className={"registration-form-title"}>
+                    {/**<div className={"registration-form-title"}>
                         <div>إنضمّوا لحراك نقف معًا</div>
                         <div>הצטרפו לתנועת עומדים ביחד</div>
-                    </div>
+                    </div>**/}
                     <span className={"section-instruction"}>1. אנא מלאו את הפרטים האישיים שלכם يرجى تعبئة تفاصيلكم/ن الشخصية:</span>
                     <br/>
                     <span>הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.</span>
