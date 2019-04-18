@@ -1,5 +1,5 @@
 import React from 'react';
-import config from '../../config';
+import config from '../../services/config';
 export default class ImageUploader extends React.Component {
 	constructor(props) {
 		super(props);
