@@ -43,6 +43,7 @@ export default class Checkbox extends React.Component {
 					    width: 20px;
 					    background: #e6e6e6;
 					    border: 0px solid #000000;
+					    transition: box-shadow 0.3s;
 					}
 					.control-radio .control_indicator {
 					    border-radius: undefined%;
@@ -54,7 +55,9 @@ export default class Checkbox extends React.Component {
 					.control input:active ~ .control_indicator {
 					    background: #aaa;
 					}
-
+					.control input:focus ~ .control_indicator {
+					    box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+					}
 					.control input:checked ~ .control_indicator {
 					    background: rgb(147, 37, 129);
 					}
