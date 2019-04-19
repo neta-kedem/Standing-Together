@@ -10,11 +10,10 @@ export default css`
         background-size: cover;*/
     }
     .form-container{
-        width: 60%;
+        width: 100%;
         padding: 5%;
         padding-top: calc(4em + 5%);
         box-sizing: border-box;
-        margin: 7.5% auto;
         background-color: white;
         border-radius: 0.75em;
     }
