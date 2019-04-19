@@ -12,10 +12,18 @@ export default css`
     .form-container{
         width: 60%;
         padding: 5%;
+        padding-top: calc(4em + 5%);
         box-sizing: border-box;
         margin: 7.5% auto;
         background-color: white;
         border-radius: 0.75em;
+    }
+    @media only screen and (max-width: 480px){
+        .form-container{
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 0;
+        }   
     }
     @media only screen and (max-device-width: 480px){
         .form-container{
