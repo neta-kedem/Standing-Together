@@ -28,8 +28,15 @@ const eventSchema = new mongoose.Schema({
 			type: Date,
 			required: true,
 		},
+		category: {
+			type: String,
+			required: true,
+		},
 		//the location where the event will take place
-		location: String
+		location: {
+			type: String,
+			required: false
+		},
 	},
 	//instructions for phone operators ("callers")
 	callInstructions: {

@@ -17,14 +17,17 @@ constructor(props) {
 		_id: props.url.query.id,
 		title: "",
 		date: today.getDate()+"/"+(today.getMonth()+1)+"/"+today.getFullYear(),
+		category: null,
 		question1: "",
 		text1: "",
 		question2: "",
 		text2: "",
-		callScript: ""
+		callScript: "",
+		categories: []
 	};
 	if(this.state["_id"]){
 		this.fetchEventDetails();
+		this.fetchCategories();
 	}
 }
 fetchEventDetails(){
@@ -37,12 +40,19 @@ fetchEventDetails(){
 			this.setState({
 				title: event.eventDetails.name,
 				date: dateString,
+				category: event.eventDetails.category,
 				question1: event.callInstructions.question1,
 				text1: event.callInstructions.text1,
 				question2: event.callInstructions.question2,
 				text2: event.callInstructions.text2,
 				callScript: event.callInstructions.script,
 			});
+		});
+}
+fetchCategories() {
+	server.get('eventCategories', {})
+		.then(eventCategories => {
+			this.setState({"categories": eventCategories});
 		});
 }
 handleInputChange(event) {
@@ -69,6 +79,11 @@ validateEvent() {
 		alert("please provide a script for the event");
 		return false;
 	}
+	if(!this.state.category)
+	{
+		alert("please provide a category for the event");
+		return false;
+	}
 	return true;
 }
 handlePost() {
@@ -80,6 +95,7 @@ handlePost() {
 			"name": this.state.title,
 			"date": this.state.date,
 			"location": "somewhere over the rainbow",
+			"category": this.state.category,
 		},
 		"callInstructions": {
 			"text1": this.state.text1,
@@ -97,6 +113,7 @@ handlePost() {
 }
 
 render() {
+	const categories = this.state.categories.slice();
 	return (
 		<div style={{'height':'100vh'}}>
 			<Meta/>
@@ -122,6 +139,16 @@ render() {
 						<label className="inline-label" id="event-date">
 							<div>תאריך<br/>التاريخ</div>
 							<input dir="ltr" type="text" name="date" value={this.state.date} onChange={this.handleInputChange.bind(this)} placeholder="DD.MM.YYYY"/>
+						</label>
+						<label className="inline-label" id="event-cat">
+							<div>קטגוריה<br/>קטגוריה</div>
+							<select dir="rtl" name="category" value={this.state.category} onChange={this.handleInputChange.bind(this)}>
+								{
+									categories.map((cat)=>{
+										return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
+									})
+								}
+							</select>
 						</label>
 					</div>
 					<label className="inline-label event-question">

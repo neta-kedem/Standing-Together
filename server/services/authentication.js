@@ -38,7 +38,7 @@ const hasRole = function(req, res, role){
 				return false;
 			else
 			{
-				return user.role[role];
+				return !!user.role[role];
 			}
 		})
 	);
