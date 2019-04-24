@@ -49,7 +49,7 @@ const activistSchema = new mongoose.Schema({
 	membership:{
 		joiningDate: {
 			type: Date,
-			required: true,
+			required: false,
 		},
 		street: {
 			type: String,
@@ -73,7 +73,7 @@ const activistSchema = new mongoose.Schema({
 		},
 		birthday: {
 			type: Date,
-			required: true,
+			required: false,
 		},
 		required: false,
 	},
