@@ -49,7 +49,6 @@ export default class Typer extends React.Component {
 			profileDataLists: [
 				{field:"residency", data:[]}
 			],
-			cells: [],
 			selectedRowIndex: 0,
 			scanId: null,
 			scanUrl: null,
@@ -96,7 +95,7 @@ export default class Typer extends React.Component {
 			if(json.scanData)
 			{
 				const scanData = json.scanData;
-				this.setState({"scanUrl":scanData.scanUrl, "cells":scanData.rows, "scanId":scanData._id});
+				this.setState({"scanUrl":scanData.scanUrl, "scanId":scanData._id});
 				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
 				// store interval promise in the state so it can be cancelled later:
 				this.setState({callPingInterval: callPingInterval});
@@ -146,10 +145,6 @@ export default class Typer extends React.Component {
 				nextScanRow = i;
 				break;
 			}
-		}
-		//don't overflow the scanned rows
-		if(this.state.cells.length && nextScanRow >= this.state.cells.length){
-			return;
 		}
 		activists.push(this.generateRow({scanRow: nextScanRow}));
 		//if a row was added in the middle, sort it into position
@@ -223,7 +218,7 @@ export default class Typer extends React.Component {
 	}.bind(this);
 
 	checkFullyTyped = function(){
-		const checkNeeded = this.state.scanId && this.state.cells.length===0;
+		const checkNeeded = this.state.scanId;
 		if(checkNeeded){
 			this.setState({displayFullyTypedPopup: true});
 		}
@@ -253,7 +248,6 @@ export default class Typer extends React.Component {
 		.then(() => {
 			this.setState({
 				activists: [this.generateRow()],
-				cells: [],
 				selectedRowIndex: 0,
 				scanId: null,
 				scanUrl: null,
@@ -268,13 +262,11 @@ export default class Typer extends React.Component {
 	}.bind(this);
 	
 	render() {
-		const cells = this.state.cells;
 		const scanUrl = this.state.scanUrl;
 		const selectedRowIndex = this.state.selectedRowIndex;
 		const activists = this.state.activists;
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
 		const scanDisplay = <ContactScanDisplay
-			cells={cells}
 			scanUrl={scanUrl}
 			selectedRow={selectedScanRow}
 			selectScanRow={this.selectScanRow}/>;

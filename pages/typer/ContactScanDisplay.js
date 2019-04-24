@@ -9,10 +9,8 @@ export default class ContactScanDisplay extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			cells: props.cells,
 			scanUrl: props.scanUrl,
 			selectedRow: (props.selectedRow==null)?0:props.selectedRow,
-			selectScanRow: props.selectScanRow
 		};
 		this.scanDisplay = React.createRef();
 		this.scanCanvas = React.createRef();
@@ -23,23 +21,12 @@ export default class ContactScanDisplay extends React.Component {
 		if (nextProps.scanUrl && !this.state.scanUrl) {
 			this.setState({scanUrl: nextProps.scanUrl});
 		}
-		if (nextProps.cells) {
-			this.setState({cells: nextProps.cells});
-		}
 		if (nextProps.selectedRow!=null && this.state.selectedRow !== nextProps.selectedRow) {
 			this.setState({selectedRow: nextProps.selectedRow});
 		}
 	}
 	handleImageLoaded({target:img}){
 		this.setState({scanWidth:img.naturalWidth, scanHeight:img.naturalHeight});
-	}
-	selectScanRow(num)
-	{
-		if(num>=0&&num<this.state.cells.length)
-		{
-			this.setState({selectedRow: num});
-			this.state.selectScanRow(num);
-		}
 	}
 	render() {
 		const scan = <img src={"../uploads/contactScans/"+this.state.scanUrl} alt="scan" className="scan-canvas" onLoad={this.handleImageLoaded.bind(this)} ref={this.scanCanvas}/>;
@@ -51,8 +38,6 @@ export default class ContactScanDisplay extends React.Component {
 			<div>
 				<style jsx global>{style}</style>
 				<div className="scan-wrap">
-					{this.state.cells != null?<div className="row-nav-wrap">
-					</div>:""}
 					<div ref={this.scanDisplayWrap} className={"scan-display-wrap full-scan-display-wrap"}>
 							{this.state.scanUrl?scan:""}
 					</div>
