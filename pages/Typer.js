@@ -39,8 +39,11 @@ export default class Typer extends React.Component {
 					required: true
 				},
 				{
-					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
+					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true,
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				},
+				{
+					name: "comments", type: "text", ar: "הערות", he: "הערות",
 				},
 			],
 			profileDataLists: [
@@ -103,7 +106,9 @@ export default class Typer extends React.Component {
 				const activists = json.activists.map((activist)=>{
 					return this.generateRow(activist, true, true);
 				});
-				this.setState({"activists":activists});
+				this.setState({"activists":activists}, ()=>{
+					this.addRow();
+				});
 			}
 		});
 	}
@@ -208,25 +213,34 @@ export default class Typer extends React.Component {
 		this.setState({activists: activists});
 	}.bind(this);
 
+	handlePost = function(){
+		const activists = this.state.activists.slice();
+		if(!this.ActivistFieldsValidation.validateAll(activists)){
+			this.setState({postAttempted: true});
+			return;
+		}
+		this.checkFullyTyped();
+	}.bind(this);
+
 	checkFullyTyped = function(){
 		const checkNeeded = this.state.scanId && this.state.cells.length===0;
 		if(checkNeeded){
 			this.setState({displayFullyTypedPopup: true});
 		}
 		else{
-			this.handlePost();
+			this.postData();
 		}
 	}.bind(this);
 
 	setFullyTyped = function(isFullyTyped){
 		this.setState({fullyTyped: isFullyTyped}, () => {
-			this.handlePost();
+			this.postData();
 		})
 	}.bind(this);
 
-	handlePost=function(){
+	postData = function(){
 		const activists = this.state.activists.slice();
-		if(!this.ActivistFieldsValidation(activists, this.state.profileFields)){
+		if(!this.ActivistFieldsValidation.validateAll(activists)){
 			this.setState({postAttempted: true});
 			return;
 		}
@@ -279,7 +293,7 @@ export default class Typer extends React.Component {
 			<div dir="rtl">
 				<Meta/>
 				<style jsx global>{style}</style>
-				<HeaderBar sendFunction={this.checkFullyTyped}> </HeaderBar>
+				<HeaderBar sendFunction={this.handlePost}> </HeaderBar>
 				<section className="section">
 					<div className="main-panel">
 					{scanUrl?scanDisplay:""}

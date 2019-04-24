@@ -1,6 +1,9 @@
 import css from 'styled-jsx/css'
 export default css
 `
+.hidden{
+    display: none;
+}
 .scan-page-title-wrap{
 	width: 100%;
 }
@@ -73,6 +76,25 @@ export default css
 	background-color: #731f72;
 }
 .failed-scan-button:active{
+	background-color: #561755;
+}
+.rotation-controls button{
+    cursor: pointer;
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    width: 1.5em;
+    height: 1.5em;
+    margin: 2%;
+	background-color: #90278e;
+	border: none;
+	outline: none;
+	transition: background-color 0.25s;
+}
+.rotation-controls button:hover{
+	background-color: #731f72;
+}
+.rotation-controls button:active{
 	background-color: #561755;
 }
 `

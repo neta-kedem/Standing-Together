@@ -22,26 +22,15 @@ const contactScanSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	rows: {
+	activists: {
 		type: [{
-			cells:{
-				type:{
-					corners: {
-						type:[
-							{
-								x: {type:Number, required: true},
-								y: {type:Number, required: true}
-							}
-						],
-						required: true
-					}
-				},
-				required: true
-			},
-			typerId: {type: String},
-			activistId: {type: String}
+			activistId: {type: String},
+			pos: {type: Number},
+			new: {type: Boolean},
+			comments: {type: String}
 		}],
-		required: true
+		required: true,
+		default: []
 	},
 	complete: {type: Boolean, default:false},
 	//if null - means that the activist never showed up on anyone's to-type-list. Otherwise, contains the date of the last ping from a typers client which displayed this activist.

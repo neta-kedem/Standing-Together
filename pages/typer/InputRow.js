@@ -85,7 +85,7 @@ export default class InputRow extends React.Component {
 							<input value = {rowValues[f.name]} type={f.type} name={f.name}
 								   onChange = {this.syncStateToInput} onFocus = {(event) => {this.handleFocus(event)}} ref = {i === 0 ? this.firstInput : ""}
 								   autoFocus = {i === 0} disabled = {rowValues.locked}
-								   onKeyDown = {i === this.state.fields.length - 1 ? this.handleKeyPress : () => {}}
+								   onKeyDown = {f.postOnTab ? this.handleKeyPress : () => {}}
 								   list = {f.name + "-data-list"}
 								   autoComplete = "new-password"
 							/>
