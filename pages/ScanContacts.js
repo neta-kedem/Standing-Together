@@ -4,12 +4,9 @@ import Meta from '../lib/meta';
 import config from '../services/config';
 import server from '../services/server';
 import style from './scanContacts/ScanContacts.css';
-import RowSelector from './scanContacts/TableRowSelector';
-import TableScanner from '../UIComponents/TableScanner/TableScanner';
 import ImageUploader from '../UIComponents/ImageUploader/ImageUploader';
-import ImageCropper from '../UIComponents/ImageCropper/ImageCropper';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
-import Popup from '../UIComponents/Popup/Popup';
+import ia from "../services/canvas/imageAdjustor";
 
 export default class ScanContacts extends React.Component {
 constructor(props) {
@@ -17,57 +14,73 @@ constructor(props) {
 	this.state = {
 		selectedImage: false,
 		selectedImageSrc: false,
-		croppedImage: false,
-		normalizedImg: false,
 		scanUrl: null,
-		horizontalBorders: [],
-		verticalBorders: [],
-		detectedCells: [],
-        dataCells: [],
-		scanFailed: false,
-		width: 1000,
-		height: 1000,
+		scanWidth: 1000, //this is a constant - the uploaded scan will be this many pixels wide
+		width: 1000, //this stays 1000 throughout
+		height: 1000, //this changes according to the aspect ratio of the uploaded picture
 	};
+	this.canvasRef = React.createRef();
+	this.imgRef = React.createRef();
+}
+loadImageToCanvasWrap() {
+	//this is the canvas we draw on
+	const canvas = this.canvasRef.current;
+	//this is the image being scanned
+	const scanImage = this.imgRef.current;
+	//initialize wrapper canvas to have the same size as the image it's wrapping
+	canvas.width = this.state.scanWidth;
+	canvas.height = Math.floor(scanImage.height/scanImage.width*this.state.scanWidth);
+	const ctx = canvas.getContext('2d');
+	//initialize canvas to have a white background to prevent transparent areas messing with the detection
+	ctx.fillStyle="#FFFFFF";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	//draw the image onto a wrapping canvas - this allows us to access the pixel data directly later on
+	ia.drawImage(ctx, scanImage, 0, 0, canvas.width, canvas.height);
+	//storing the canvases in the state. Once done, perform minor contrast/saturation adjustments.
+	this.setState({width:canvas.width, height:canvas.height});
+}
+rotateScan(dir){
+	const canvas = this.canvasRef.current;
+	const ctx = canvas.getContext('2d');
+	ia.rotateImg(ctx, dir);
 }
 handleImageSelection(file) {
 	const reader = new FileReader();
 	reader.onload = ()=>{
-		this.setState({selectedImageSrc: reader.result});
+		this.setState({selectedImageSrc: reader.result}, ()=>{
+			const scanImage = this.imgRef.current;
+			scanImage.src = this.state.selectedImageSrc;
+			if(scanImage.complete)
+				this.loadImageToCanvasWrap();
+			else
+				scanImage.onload = ()=>{
+					this.loadImageToCanvasWrap();
+				};
+		});
 	};
 	reader.readAsDataURL(file);
 	this.setState({selectedImage: file});
 }
-handleImageCrop(img) {
-	this.setState({croppedImage: img});
-}
-handleTableDetection(img, width, height, cells, horizontalBorders, verticalBorders){
-	this.setState({normalizedImg: img, width:width, height:height, detectedCells: cells, horizontalBorders:horizontalBorders, verticalBorders:verticalBorders});
-}
-handleDetectionFailure(img, width, height, cause){
-	console.log(cause);
-	this.setState({normalizedImg: img, width:width, height:height, scanFailed: true});
-}
-handleRowSelection(rows){
-    this.setState({dataCells: rows});
-}
 handlePost(){
-	const formWrap = new FormData();
-	formWrap.append("scan", this.state.selectedImage);
-	fetch(config.serverPath+"api/contactScan/upload", {
-		headers: {
-			'Accept': 'application/json, application/xml, text/play, text/html, *.*'
-		},
-		credentials: 'same-origin',
-		method: 'POST',
-		body: formWrap
-	})
-	.then(res => res.json())
-	.then(json => {
-		this.publishScan(json.url);
-	});
+	this.canvasRef.current.toBlob(file => {
+		const formWrap = new FormData();
+		formWrap.append("scan", file);
+		fetch(config.serverPath+"api/contactScan/upload", {
+			headers: {
+				'Accept': 'application/json, application/xml, text/play, text/html, *.*'
+			},
+			credentials: 'same-origin',
+			method: 'POST',
+			body: formWrap
+		})
+			.then(res => res.json())
+			.then(json => {
+				this.publishScan(json.url);
+			});
+		}, 'image/jpeg');
 }
 publishScan(imgUrl){
-	const data ={"scanUrl":imgUrl, "cells":this.state.dataCells};
+	const data ={"scanUrl":imgUrl};
 	server.post('contactScan', data)
 	.then(() => {
 		this.reset();
@@ -91,68 +104,17 @@ reset() {
 }
 render() {
 	const selectedImage = this.state.selectedImage;
-	const croppedImage = this.state.croppedImage;
-	const cells = this.state.detectedCells;
-	const selectedCells = this.state.dataCells;
-	const scanFailed = this.state.scanFailed;
 	const imgUploadUI = <div className="contact-scan-uploader">
 			<ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText="⇪ העלאת סריקת דף קשר ⇪"/>
 		</div>;
-	const imgCropperUI =
-		<div>
-			<div className="contact-scan-step-title">
-				<div>יש לחתוך את הסריקה כך שלא יישארו קצוות מעבר לנייר</div>
-				<div>יש לחתוך את הסריקה כך שלא יישארו קצוות מעבר לנייר</div>
-			</div>
-			<div className="contact-scan-step-wrap">
-                <ImageCropper file={selectedImage} onCrop={this.handleImageCrop.bind(this)}/>
-			</div>
-		</div>;
-	const tableScannerUI = 
-		<div>
-			<div className="contact-scan-step-title">
-				<div>המסמך נסרק...</div>
-				<div>המסמך נסרק...</div>
-			</div>
-			<div className="contact-scan-step-wrap">
-                <TableScanner
-                    src={croppedImage}
-                    onDetection={this.handleTableDetection.bind(this)}
-                    onFail={this.handleDetectionFailure.bind(this)}/>
-			</div>
-		</div>;
-	const rowSelectorUI = 
-		<div>
-			<div className="contact-scan-step-title">
-				<div>הסריקה הסתיימה. אם חלק מהרשומות ריקות, נא לסמן אותן</div>
-				<div>הסריקה הסתיימה. אם חלק מהרשומות ריקות, נא לסמן אותן</div>
-			</div>
-			<div className="contact-scan-step-wrap">
-                <RowSelector
-                    src={croppedImage}
-                    width={this.state.width}
-                    height={this.state.height}
-                    cells={cells}
-                    horizontalBorders={this.state.horizontalBorders}
-                    verticalBorders={this.state.verticalBorders}
-                    onSelection={this.handleRowSelection.bind(this)}
-                />
-			</div>
-		</div>;
 	const postButton = <button className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>;
-	const failedScanPopup =
-			<div className="failed-scan-popup">
-			<Popup visibility={scanFailed} toggleVisibility={()=>{}}>
-				<div className="failed-scan-popup-label">
-					<div>זיהוי אוטומטי של הטבלה לא הצליח</div>
-					<div>זיהוי אוטומטי של הטבלה לא הצליח</div>
-				</div>
-				<div>
-					<button className="failed-scan-button" onClick={this.handlePost.bind(this)}>העלאה ללא זיהוי טבלה</button>
-					<button className="failed-scan-button" onClick={this.reset.bind(this)}>בחירת קובץ אחר</button>
-				</div>
-			</Popup>
-		</div>;
+	const scanPreview = <div>
+		<div className={"rotation-controls"}>
+			<button onClick={()=>{this.rotateScan(true)}}>↻</button>
+			<button onClick={()=>{this.rotateScan(false)}}>↺</button>
+		</div>
+		<canvas ref={this.canvasRef} className="img-preview"/>
+	</div>;
 	return (
 		<div>
 			<Meta/>
@@ -167,7 +129,8 @@ render() {
 			</TopNavBar>
 			<div className="page-wrap">
 				{!selectedImage?imgUploadUI:""}
-				{this.state.selectedImageSrc?<img className="img-preview" src={this.state.selectedImageSrc}/>:""}
+				{this.state.selectedImageSrc ? scanPreview : ""}
+				<img src="" ref={this.imgRef} className="hidden"/>
 				{selectedImage?postButton:""}
 			</div>
 		</div>
