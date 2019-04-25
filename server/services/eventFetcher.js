@@ -62,13 +62,15 @@ const getCampaignLess = function(req, res){
     })
 };
 const listEvents = function(req, res){
-    //TODO move this constant elsewhere
-    const pageSize = 15;
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error" : "missing token"});
-        Event.find({}).sort({"eventDetails.name": -1}).limit(pageSize).skip(req.page*pageSize).then((events) => {
-            return res.json(events.map((event)=>{
+        const page = req.body.page;
+        if(page < 0)
+            return res.json({"error":"illegal page"});
+        const PAGE_SIZE = 15;
+        Event.paginate({}, {sort: {"metadata.creationDate": -1}, page: page + 1, limit: PAGE_SIZE }).then((result) => {
+            const events = result.docs.map((event)=>{
                 return {
                     _id: event._id,
                     creationDate: event.metadata.creationDate,
@@ -78,7 +80,8 @@ const listEvents = function(req, res){
                     campaign: !!event.campaign,
                     campaignUrl: !!event.campaign?event.campaign.eventCode:null
                 };
-            }))
+            });
+            return res.json({"events": events, "pageCount": result.pages, "eventCount": result.total});
         });
     })
 };

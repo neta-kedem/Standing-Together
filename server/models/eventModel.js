@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
+
 const eventSchema = new mongoose.Schema({
 	metadata: {
 		//timestamp for when the event was first saved
@@ -124,5 +126,6 @@ const eventSchema = new mongoose.Schema({
 		required: false
 	}
 });
-
-module.exports = mongoose.model('event',eventSchema);
+eventSchema.plugin(mongoosePaginate);
+const eventModel = mongoose.model('event', eventSchema);
+module.exports = eventModel;
