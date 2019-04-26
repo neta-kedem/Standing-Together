@@ -17,13 +17,13 @@ constructor(props) {
 		_id: props.url.query.id,
 		title: "",
 		date: today.getDate()+"/"+(today.getMonth()+1)+"/"+today.getFullYear(),
-		category: null,
+		category: "",
 		categories: []
 	};
 	if(this.state["_id"]){
 		this.fetchEventDetails();
-		this.fetchCategories();
 	}
+	this.fetchCategories();
 }
 fetchEventDetails(){
 	server.get('events/eventById/'+this.state._id)
@@ -64,7 +64,7 @@ validateEvent() {
 		alert("please provide a date for the event");
 		return false;
 	}
-	if(!this.state.category)
+	if(!this.state.category || !this.state.category.length)
 	{
 		alert("please provide a category for the event");
 		return false;
@@ -94,6 +94,9 @@ handlePost() {
 
 render() {
 	const categories = this.state.categories.slice();
+	const catOptions = categories.map((cat)=>{
+		return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
+	});
 	return (
 		<div style={{'height':'100vh'}}>
 			<Meta/>
@@ -122,11 +125,8 @@ render() {
 					<label className="label" id="event-cat">
 						<div>קטגוריה<br/>קטגוריה</div>
 						<select dir="rtl" name="category" value={this.state.category} onChange={this.handleInputChange.bind(this)}>
-							{
-								categories.map((cat)=>{
-									return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
-								})
-							}
+							<option value={""}> </option>
+							{catOptions}
 						</select>
 					</label>
 				</div>

@@ -277,7 +277,7 @@ export default class Typer extends React.Component {
 		const eventData = this.state.eventData;
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
 		const topBar = <div dir="ltr">
-			<TopNavBar>
+			<TopNavBar justification={"space-between"}>
 					<div className={"event-details"}>
 						<div>תאריך</div>
 						<div>{eventData.date}</div>

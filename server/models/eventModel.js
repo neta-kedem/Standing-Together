@@ -44,23 +44,23 @@ const eventSchema = new mongoose.Schema({
 	callInstructions: {
 		question1: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		text1: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		question2: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		text2: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		script: {
 			type: String,
-			required: true,
+			required: false,
 		},
 	},
 	//data about the phone-banking campaign associated with the event
