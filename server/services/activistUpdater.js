@@ -8,7 +8,8 @@ const cityFetcher = require("./cityFetcher");
 const activistsFetcher = require("./activistsFetcher");
 const arrayFunctions = require("./arrayFunctions");
 
-const markTypedContactScanRows = function(res, typerId, scanId, activists, markedDone){
+const markTypedContactScanRows = function(typerId, scanId, activists, markedDone){
+    const today = new Date();
     return ContactScan.findOne(
         {"_id": scanId}).exec() .then(() => {
             // link to the new activists that have been typed
@@ -16,6 +17,8 @@ const markTypedContactScanRows = function(res, typerId, scanId, activists, marke
             for(let i = 0; i < activists.length; i++){
                 const activist = activists[i];
                 associatedActivists.push({
+                    "creationDate": today,
+                    "lastUpdate": today,
                     "activistId": activist._id,
                     "new": !activist.metadata.duplicateId,
                     "pos": activist.pos,
@@ -187,7 +190,7 @@ const uploadTypedActivists = function (req, res){
                         tasks.push(addToMailchimpCircle(newActivists));
                         //mark the activist as typed in the relevant contact scan
                         if(scanId){
-                            tasks.push(markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone));
+                            tasks.push(markTypedContactScanRows(typerId, scanId, newActivists, markedDone));
                         }
                         Promise.all(tasks).then((results)=>{
                             return res.json(results);
