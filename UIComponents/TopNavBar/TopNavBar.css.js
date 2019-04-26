@@ -4,7 +4,6 @@ export default css`
 		position: relative;
 		display: flex;
 		flex-direction: row;
-		justify-items: end;
 		align-items: center;
 		height: 55px;
 		background-color: #90278e;

@@ -67,11 +67,21 @@ export default css
 		opacity: 0;
 	}
 	.event-details{
+	    display: block;
         color: #fbfbfb;
         font-size: 1.5em;
         font-weight: 400;
         text-align: center;
-        margin: 0 5%;
+    }
+    .post-button{
+        justify-self: start;
+        margin-right: 0.5em;
+        -webkit-align-self: right; /* Safari 7.0+ */
+        align-self: right;
+        color: #fbfbfb;
+        font-size: 1.5em;
+        font-weight: 400;
+        cursor: pointer;
     }
     .post-button-label{
         display: inline-block;
@@ -84,16 +94,5 @@ export default css
         margin-left: 0.3em;
         text-align: center;
         vertical-align: middle;
-    }
-    .post-button{
-        justify-self: start;
-        margin-right: 0.5em;
-        margin-left: auto;
-        -webkit-align-self: right; /* Safari 7.0+ */
-        align-self: right;
-        color: #fbfbfb;
-        font-size: 1.5em;
-        font-weight: 400;
-        cursor: pointer;
     }
 `
