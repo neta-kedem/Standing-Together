@@ -3,6 +3,8 @@ export default css`
 	.nav-bar-wrapper{
 		position: relative;
 		display: flex;
+		flex-direction: row;
+		justify-items: end;
 		align-items: center;
 		height: 55px;
 		background-color: #90278e;

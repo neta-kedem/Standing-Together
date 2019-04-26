@@ -2,28 +2,27 @@ const mongoose = require('mongoose');
 const Authentication = require('../services/authentication');
 const Event = require('../models/eventModel');
 
-const getEventById = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        try {
-            mongoose.Types.ObjectId(req.params.id);
-        }
-        catch(err) {
-            return res.json({success: false, error: "invalid event id"});
-        }
-        const eventId = mongoose.Types.ObjectId(req.params.id);
-        Event.findOne({"_id": eventId}, (err, eventData) => {
-            if (err) return res.json({success: false, error: err});
-            if (!eventData)
-                return res.json({"error":"couldn't find a matching event"});
-            return res.json({
-                "_id":eventData._id,
-                "eventDetails":eventData.eventDetails,
-                "callInstructions":eventData.callInstructions
-            });
-        });
-    })
+const getEventById = function(eventId){
+    try {
+        mongoose.Types.ObjectId(eventId);
+    }
+    catch(err) {
+        return {success: false, error: "invalid event id"};
+    }
+    const eventIdObject = mongoose.Types.ObjectId(eventId);
+    const query = Event.findOne({"_id": eventIdObject});
+    const promise = query.exec().then((res)=>{
+        if (!res || !res._id)
+            return {"error":"couldn't find a matching event"};
+        return {
+            "_id":res._id,
+            "eventDetails":res.eventDetails,
+            "callInstructions":res.callInstructions
+        };
+    }).catch((err)=>{
+        return {success: false, error: err};
+    });
+    return promise;
 };
 const getEventByCode = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
@@ -62,7 +61,7 @@ const getCampaignLess = function(req, res){
     })
 };
 const listEvents = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
         if(!isUser)
             return res.json({"error" : "missing token"});
         const page = req.body.page;

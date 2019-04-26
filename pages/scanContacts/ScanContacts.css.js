@@ -17,6 +17,18 @@ export default css
 	width: 100%;
 	position: relative;
 }
+.main-content{
+    display: flex;
+    flex-direction: row;
+}
+.scan-selection-wrap{
+    width: 60%;
+    text-align: center;
+}
+.event-selection-wrap{
+    width: 30%;
+    text-align: center;
+}
 .contact-scan-step-wrap{
 	width: 90%;
 	margin: 0 auto 5% auto;
@@ -30,6 +42,7 @@ export default css
 }
 .contact-scan-uploader{
 	margin: 5% auto;
+	margin-bottom: 0;
 	text-align: center;
 }
 .img-preview{
@@ -96,5 +109,33 @@ export default css
 }
 .rotation-controls button:active{
 	background-color: #561755;
+}
+.event-table{
+    direction: rtl;
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 100%;
+}
+.event-table tr{
+    border: 1px solid black;
+    cursor: pointer;
+    transition: background-color 0.25s;
+}
+.event-table tbody tr:hover{
+    background-color: #ddd;
+}
+.event-table td{
+    padding: 0.2em;
+    width: 33%;
+    text-align: center;
+    text-overflow: ellipsis;
+}
+.event-table tr.selected-event{
+    background-color: #90278e;
+    color: white;
+}
+.event-table tbody tr.selected-event:hover{
+    background-color: #731f72;
 }
 `

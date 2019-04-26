@@ -66,4 +66,34 @@ export default css
 	.detected-table-row:hover .detected-table-cell{
 		opacity: 0;
 	}
+	.event-details{
+        color: #fbfbfb;
+        font-size: 1.5em;
+        font-weight: 400;
+        text-align: center;
+        margin: 0 5%;
+    }
+    .post-button-label{
+        display: inline-block;
+        line-height: 1em;
+        vertical-align: middle;
+    }
+    .cloud-icon{
+        display: inline-block;
+        font-size: 1.75em;
+        margin-left: 0.3em;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .post-button{
+        justify-self: start;
+        margin-right: 0.5em;
+        margin-left: auto;
+        -webkit-align-self: right; /* Safari 7.0+ */
+        align-self: right;
+        color: #fbfbfb;
+        font-size: 1.5em;
+        font-weight: 400;
+        cursor: pointer;
+    }
 `

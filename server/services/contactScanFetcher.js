@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const ArrayFunctions = require("../services/arrayFunctions");
 const Authentication = require('../services/authentication');
+const EventFetcher = require('../services/eventFetcher');
 const ContactScan = require('../models/contactScanModel');
 const Activist = require('../models/activistModel');
 
@@ -47,8 +48,13 @@ const getContactScan = function(req, res){
                 if (err) return res.json({success: false, error: err});
                 if (!scanData)
                     return res.json({"error":"no pending scans are available"});
+                let returnData = {scanData: scanData};
                 getAssociatedActivists(scanData).then(activists=>{
-                    return res.json({scanData: scanData, activists: activists});
+                    returnData.activists = activists;
+                    EventFetcher.getEventById(scanData.eventId).then(eventData=>{
+                        returnData.eventData = eventData;
+                        return res.json(returnData);
+                    });
                 })
             });
     })

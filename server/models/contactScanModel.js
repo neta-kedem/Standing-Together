@@ -37,7 +37,8 @@ const contactScanSchema = new mongoose.Schema({
 	//as long as the las ping wasn't too long ago, the activist won't show up on any other to-type lists.
 	lastPing: {type: Date},
 	//_id of the activist who was last tasked with typing down this entry
-	typerId: {type: String}
+	typerId: {type: String},
+	eventId: {type: String, required: true},
 });
 
 module.exports = mongoose.model('contactScan',contactScanSchema);

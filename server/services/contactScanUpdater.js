@@ -7,6 +7,7 @@ const insertContactScan = function(req, res){
         if(!isUser)
             return res.json({"error":"missing token"});
         const scanUrl = req.body.scanUrl;
+        const eventId = req.body.eventId;
         const today = new Date();
         const scanObject={
             "metadata":{
@@ -14,7 +15,8 @@ const insertContactScan = function(req, res){
                 "lastUpdate": today,
                 "creatorId": Authentication.getMyId()
             },
-            "scanUrl":scanUrl
+            "scanUrl": scanUrl,
+            "eventId": eventId
         };
         const newScan = new ContactScan(scanObject);
         newScan.save(function (err) {

@@ -4,6 +4,7 @@ import Meta from '../lib/meta';
 import config from '../services/config';
 import server from '../services/server';
 import style from './scanContacts/ScanContacts.css';
+import EventPicker from './scanContacts/EventPicker';
 import ImageUploader from '../UIComponents/ImageUploader/ImageUploader';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import ia from "../services/canvas/imageAdjustor";
@@ -18,6 +19,7 @@ constructor(props) {
 		scanWidth: 1000, //this is a constant - the uploaded scan will be this many pixels wide
 		width: 1000, //this stays 1000 throughout
 		height: 1000, //this changes according to the aspect ratio of the uploaded picture
+		eventId: null,
 	};
 	this.canvasRef = React.createRef();
 	this.imgRef = React.createRef();
@@ -61,6 +63,9 @@ handleImageSelection(file) {
 	reader.readAsDataURL(file);
 	this.setState({selectedImage: file});
 }
+handleEventSelection(id){
+	this.setState({eventId: id});
+}
 handlePost(){
 	this.canvasRef.current.toBlob(file => {
 		const formWrap = new FormData();
@@ -80,7 +85,7 @@ handlePost(){
 		}, 'image/jpeg');
 }
 publishScan(imgUrl){
-	const data ={"scanUrl":imgUrl};
+	const data ={"scanUrl":imgUrl, "eventId":this.state.eventId};
 	server.post('contactScan', data)
 	.then(() => {
 		this.reset();
@@ -105,7 +110,7 @@ reset() {
 render() {
 	const selectedImage = this.state.selectedImage;
 	const imgUploadUI = <div className="contact-scan-uploader">
-			<ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText="⇪ העלאת סריקת דף קשר ⇪"/>
+			<ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText={selectedImage?"⇪ העלאה מחדש ⇪":"⇪ העלאת סריקת דף קשר ⇪"}/>
 		</div>;
 	const postButton = <button className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>;
 	const scanPreview = <div>
@@ -128,10 +133,21 @@ render() {
 				</div>
 			</TopNavBar>
 			<div className="page-wrap">
-				{!selectedImage?imgUploadUI:""}
-				{this.state.selectedImageSrc ? scanPreview : ""}
+				<div className={"main-content"}>
+					<div className="scan-selection-wrap">
+						<h3>העלו סריקה של דף הקשר</h3>
+						{imgUploadUI}
+						{this.state.selectedImageSrc ? scanPreview : ""}
+					</div>
+					<div className="event-selection-wrap">
+						<h3>בחרו את האירוע שבמסגרתו הופק דף הקשר</h3>
+						<EventPicker handleSelection={this.handleEventSelection.bind(this)} selected={this.state.eventId}/>
+					</div>
+				</div>
+				{(selectedImage && this.state.eventId) ? postButton : ""}
+				{/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.
+				 It is hidden from the user. The actual scan is displayed on a canvas **/}
 				<img src="" ref={this.imgRef} className="hidden"/>
-				{selectedImage?postButton:""}
 			</div>
 		</div>
 	)

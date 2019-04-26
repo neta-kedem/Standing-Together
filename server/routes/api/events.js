@@ -9,7 +9,13 @@ module.exports = (app) => {
 		eventUpdater.inviteByQuery(req, res);
 	});
 	app.get('/api/events/eventById/:id', (req, res) => {
-		eventFetcher.getEventById(req, res);
+		Authentication.hasRole(req, res, "isTyper").then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			eventFetcher.getEventById(req.params.id).then((res)=>{
+				return res.json(res);
+			});
+		})
 	});
 	app.get('/api/events/eventByCode/:code', (req, res) => {
 		eventFetcher.getEventByCode(req, res);

@@ -1,15 +1,12 @@
 import React from 'react'
-import server from '../services/server'
-import Meta from '../lib/meta'
-import style from './eventManagement/eventManagement.css'
-import Router from "next/router";
-import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
-import PageNav from "../UIComponents/PageNav/PageNav";
+import server from '../../services/server'
+import PageNav from "../../UIComponents/PageNav/PageNav";
 
 export default class EventManagement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            handleSelection: this.props.handleSelection,
             page: 0,
             pageCount: 0,
             events: []
@@ -36,8 +33,8 @@ export default class EventManagement extends React.Component {
             this.getListDetails();
         });
     }
-    goToEvent(id){
-        Router.push({pathname: '/EventCreation', query: {id: id}}).then(()=>{});
+    selectEvent(id){
+        this.state.handleSelection(id);
     }
 
     render() {
@@ -45,25 +42,14 @@ export default class EventManagement extends React.Component {
         const currPage = this.state.page;
         const pageCount = this.state.pageCount;
         const rows = events.map((event)=>{
-            const campaignLink = <a href={"/Caller/?eventCode="+event.campaignUrl}>🔗</a>;
-            return <tr key={"event_" + event._id} onClick={()=>{this.goToEvent(event._id)}}>
+            return <tr key={"event_" + event._id} onClick={()=>{this.selectEvent(event._id)}} className={event._id === this.props.selected ? "selected-event" : ""}>
                 <td>{event.date.toLocaleDateString()}</td>
                 <td>{event.name}</td>
                 <td>{event.location}</td>
-                <td>{event.creationDate.toLocaleDateString()}</td>
-                <td>{event.campaign?campaignLink:"X"}</td>
             </tr>;
         });
         return (
             <div>
-                <Meta/>
-                <style jsx global>{style}</style>
-                <TopNavBar>
-                    <div className="title-wrap">
-                        <span className="title-lang">ניהול מפגשים</span>
-                        <span className="title-lang">ניהול מפגשים</span>
-                    </div>
-                </TopNavBar>
                 <table className={"event-table"}>
                     <thead>
                         <tr>
@@ -78,14 +64,6 @@ export default class EventManagement extends React.Component {
                             <th>
                                 <div>מיקום</div>
                                 <div>מיקום</div>
-                            </th>
-                            <th>
-                                <div>תאריך יצירה</div>
-                                <div>תאריך יצירה</div>
-                            </th>
-                            <th>
-                                <div>קמפיין טלפנות התחיל</div>
-                                <div>קמפיין טלפנות התחיל</div>
                             </th>
                         </tr>
                     </thead>
