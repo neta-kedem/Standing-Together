@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const ArrayFunctions = require("../services/arrayFunctions");
 const Authentication = require('../services/authentication');
+const EventFetcher = require('../services/eventFetcher');
 const ContactScan = require('../models/contactScanModel');
 const Activist = require('../models/activistModel');
 
@@ -9,21 +10,23 @@ const Activist = require('../models/activistModel');
 const maxReservationDuration = 3;
 
 const getAssociatedActivists = function(scanData){
-    const idRowIndex = ArrayFunctions.indexByField(scanData.rows, "_id");
-    const query = Activist.find({"metadata.scanId": scanData._id});
+    const activistIds = scanData.activists.map((a)=>{return mongoose.Types.ObjectId(a.activistId)});
+    const query = Activist.find({"_id": {$in: activistIds}});
     const fetchPromise = query.exec().then((activists) => {
         let activistsList = [];
+        const scanDataDict = ArrayFunctions.indexByField(scanData.activists, "activistId");
         for(let i=0; i<activists.length; i++)
         {
             let activist = activists[i];
             activistsList.push({
-                "_id":activist._id,
-                "phone":activist.profile.phone,
-                "email":activist.profile.email,
-                "firstName":activist.profile.firstName,
-                "lastName":activist.profile.lastName,
-                "residency":activist.profile.residency,
-                "scanRow":idRowIndex[activist._index]||i
+                "_id" : activist._id,
+                "phone" : activist.profile.phone,
+                "email" : activist.profile.email,
+                "firstName" : activist.profile.firstName,
+                "lastName" : activist.profile.lastName,
+                "residency" : activist.profile.residency,
+                "scanRow" : scanDataDict[activist._id].pos,
+                "comments" : scanDataDict[activist._id].comments,
             });
         }
         return activistsList;
@@ -37,7 +40,7 @@ const getContactScan = function(req, res){
             return res.json({"error":"missing token"});
         const typerId = Authentication.getMyId();
         const now = new Date();
-        const reservationDeadline = new Date(now.getTime()-maxReservationDuration*60000);
+        const reservationDeadline = new Date(now.getTime() - maxReservationDuration*60000);
         ContactScan.findOneAndUpdate(
             {"complete": false, $or:[{"lastPing":null}, {"lastPing":{$lt: reservationDeadline}}, {"typerId": typerId}]},
             {"$set": {"lastPing": now, "typerId": typerId}},
@@ -45,8 +48,13 @@ const getContactScan = function(req, res){
                 if (err) return res.json({success: false, error: err});
                 if (!scanData)
                     return res.json({"error":"no pending scans are available"});
+                let returnData = {scanData: scanData};
                 getAssociatedActivists(scanData).then(activists=>{
-                    return res.json({scanData: scanData, activists: activists});
+                    returnData.activists = activists;
+                    EventFetcher.getEventById(scanData.eventId).then(eventData=>{
+                        returnData.eventData = eventData;
+                        return res.json(returnData);
+                    });
                 })
             });
     })

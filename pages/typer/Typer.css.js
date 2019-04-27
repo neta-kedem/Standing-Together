@@ -103,5 +103,34 @@ export default css
     }
     .confirm-fully-typed:active{
     	background-color: #561755;
-    }   
+    }
+	.event-details{
+	    display: block;
+        color: #fbfbfb;
+        font-size: 1.5em;
+        font-weight: 400;
+        text-align: center;
+    }
+    .post-button{
+        justify-self: start;
+        margin-right: 0.5em;
+        -webkit-align-self: right; /* Safari 7.0+ */
+        align-self: right;
+        color: #fbfbfb;
+        font-size: 1.5em;
+        font-weight: 400;
+        cursor: pointer;
+    }
+    .post-button-label{
+        display: inline-block;
+        line-height: 1em;
+        vertical-align: middle;
+    }
+    .cloud-icon{
+        display: inline-block;
+        font-size: 1.75em;
+        margin-left: 0.3em;
+        text-align: center;
+        vertical-align: middle;
+    }
 `

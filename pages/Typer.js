@@ -1,12 +1,17 @@
 import React from 'react';
 import Meta from '../lib/meta';
 import server from '../services/server';
-import HeaderBar from './typer/HeaderBar'
+import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import TypedActivistsTable from './typer/TypedActivistsTable'
 import ContactScanDisplay from './typer/ContactScanDisplay'
 import FieldValidation from '../services/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
 import style from './typer/Typer.css'
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faCloudUploadAlt } from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faCloudUploadAlt);
+
 
 
 
@@ -39,14 +44,17 @@ export default class Typer extends React.Component {
 					required: true
 				},
 				{
-					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
+					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true,
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				},
+				{
+					name: "comments", type: "text", ar: "הערות", he: "הערות",
 				},
 			],
 			profileDataLists: [
 				{field:"residency", data:[]}
 			],
-			cells: [],
+			eventData: {},
 			selectedRowIndex: 0,
 			scanId: null,
 			scanUrl: null,
@@ -93,7 +101,10 @@ export default class Typer extends React.Component {
 			if(json.scanData)
 			{
 				const scanData = json.scanData;
-				this.setState({"scanUrl":scanData.scanUrl, "cells":scanData.rows, "scanId":scanData._id});
+				let eventData = json.eventData;
+				const eventDate = new Date(eventData.eventDetails.date);
+				eventData.eventDetails.date = eventDate.getFullYear()+"-"+eventDate.getMonth()+1+"-"+eventDate.getDate();
+				this.setState({"scanUrl": scanData.scanUrl, "scanId": scanData._id, "eventData": eventData.eventDetails});
 				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
 				// store interval promise in the state so it can be cancelled later:
 				this.setState({callPingInterval: callPingInterval});
@@ -103,7 +114,9 @@ export default class Typer extends React.Component {
 				const activists = json.activists.map((activist)=>{
 					return this.generateRow(activist, true, true);
 				});
-				this.setState({"activists":activists});
+				this.setState({"activists":activists}, ()=>{
+					this.addRow();
+				});
 			}
 		});
 	}
@@ -141,10 +154,6 @@ export default class Typer extends React.Component {
 				nextScanRow = i;
 				break;
 			}
-		}
-		//don't overflow the scanned rows
-		if(this.state.cells.length && nextScanRow >= this.state.cells.length){
-			return;
 		}
 		activists.push(this.generateRow({scanRow: nextScanRow}));
 		//if a row was added in the middle, sort it into position
@@ -208,25 +217,34 @@ export default class Typer extends React.Component {
 		this.setState({activists: activists});
 	}.bind(this);
 
+	handlePost = function(){
+		const activists = this.state.activists.slice();
+		if(!this.ActivistFieldsValidation.validateAll(activists)){
+			this.setState({postAttempted: true});
+			return;
+		}
+		this.checkFullyTyped();
+	}.bind(this);
+
 	checkFullyTyped = function(){
-		const checkNeeded = this.state.scanId && this.state.cells.length===0;
+		const checkNeeded = this.state.scanId;
 		if(checkNeeded){
 			this.setState({displayFullyTypedPopup: true});
 		}
 		else{
-			this.handlePost();
+			this.postData();
 		}
 	}.bind(this);
 
 	setFullyTyped = function(isFullyTyped){
 		this.setState({fullyTyped: isFullyTyped}, () => {
-			this.handlePost();
+			this.postData();
 		})
 	}.bind(this);
 
-	handlePost=function(){
+	postData = function(){
 		const activists = this.state.activists.slice();
-		if(!this.ActivistFieldsValidation(activists, this.state.profileFields)){
+		if(!this.ActivistFieldsValidation.validateAll(activists)){
 			this.setState({postAttempted: true});
 			return;
 		}
@@ -239,7 +257,6 @@ export default class Typer extends React.Component {
 		.then(() => {
 			this.setState({
 				activists: [this.generateRow()],
-				cells: [],
 				selectedRowIndex: 0,
 				scanId: null,
 				scanUrl: null,
@@ -254,13 +271,33 @@ export default class Typer extends React.Component {
 	}.bind(this);
 	
 	render() {
-		const cells = this.state.cells;
 		const scanUrl = this.state.scanUrl;
 		const selectedRowIndex = this.state.selectedRowIndex;
 		const activists = this.state.activists;
+		const eventData = this.state.eventData;
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
+		const topBar = <div dir="ltr">
+			<TopNavBar justification={"space-between"}>
+					<div className={"event-details"}>
+						<div>תאריך</div>
+						<div>{eventData.date}</div>
+					</div>
+					<div className={"event-details"}>
+						<div>ארוע ההחתמה</div>
+						<div>{eventData.name}</div>
+					</div>
+					<div onClick={this.handlePost} className={"post-button"}>
+						<div className={"post-button-label"}>
+							<div>שלח</div>
+							<div>ارسل</div>
+						</div>
+						<div className={"cloud-icon"}>
+							<FontAwesomeIcon icon="cloud-upload-alt"/>
+						</div>
+					</div>
+			</TopNavBar>
+		</div>;
 		const scanDisplay = <ContactScanDisplay
-			cells={cells}
 			scanUrl={scanUrl}
 			selectedRow={selectedScanRow}
 			selectScanRow={this.selectScanRow}/>;
@@ -279,7 +316,7 @@ export default class Typer extends React.Component {
 			<div dir="rtl">
 				<Meta/>
 				<style jsx global>{style}</style>
-				<HeaderBar sendFunction={this.checkFullyTyped}> </HeaderBar>
+				{topBar}
 				<section className="section">
 					<div className="main-panel">
 					{scanUrl?scanDisplay:""}

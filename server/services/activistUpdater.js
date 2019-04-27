@@ -8,42 +8,32 @@ const cityFetcher = require("./cityFetcher");
 const activistsFetcher = require("./activistsFetcher");
 const arrayFunctions = require("./arrayFunctions");
 
-const markTypedContactScanRows = function(res, typerId, scanId, activists, markedDone){
-    ContactScan.findOne(
-        {"_id": scanId},
-        (err, scanData) => {
-            if (err) return res.json({success: false, error: err});
-            //iterate over new activist entries, and insert typer id and activist id details to appropriate rows
-            for(let i=0; i<activists.length; i++){
-                let activist = activists[i];
-                if(activist.metadata.scanRow) {
-                    scanData.rows[activist.metadata.scanRow].typerId = typerId;
-                    scanData.rows[activist.metadata.scanRow].activistId = activist._id;
-                }
+const markTypedContactScanRows = function(typerId, scanId, activists, markedDone){
+    const today = new Date();
+    return ContactScan.findOne(
+        {"_id": scanId}).exec() .then(() => {
+            // link to the new activists that have been typed
+            let associatedActivists = [];
+            for(let i = 0; i < activists.length; i++){
+                const activist = activists[i];
+                associatedActivists.push({
+                    "creationDate": today,
+                    "lastUpdate": today,
+                    "activistId": activist._id,
+                    "new": !activist.metadata.duplicateId,
+                    "pos": activist.pos,
+                    "comments": activist.profile.comments
+                });
             }
-            //iterate over all scan rows - if all have an activist id associated with them, mark the scan as completed
-            let allRowsTyped = true;
-            for(let i=0; i<scanData.rows.length; i++){
-                if(!scanData.rows[i].activistId)
-                {
-                    allRowsTyped=false;
-                    break;
-                }
-            }
-            // if the scan went through row detection, mark it as finished IFF all rows have a corresponding typed in data.
-            // otherwise, mark it as finished IFF the typer has indicated it to be
-            scanData.complete=(scanData.rows.length&&allRowsTyped)||markedDone;
-            ContactScan.replaceOne(
+            const updateQuery = ContactScan.updateOne(
                 {"_id": scanId},
-                scanData,
-                (err, result) => {
-                    if (err){
-                        return res.json(err);
-                    }
-                    return res.json({"result":"aha!", "scanData": scanData, "activists": activists});
-                }
-            );
-        });
+                {"complete": markedDone, $push: { activists: { $each: associatedActivists } } }
+            ).exec().then(()=> {
+                return true;
+            });
+            return updateQuery;
+        }
+    );
 };
 const updateTypedActivists = function(activists){
     const today = new Date();
@@ -132,9 +122,12 @@ const uploadTypedActivists = function (req, res){
             return res.json({"error":"missing token"});
         const typerId = Authentication.getMyId();
         const typedActivists = req.body.activists;
-        const scanId = req.body.scanId?mongoose.Types.ObjectId(req.body.scanId):null;
+        const scanId = req.body.scanId ? mongoose.Types.ObjectId(req.body.scanId) : null;
         const markedDone = req.body.markedDone;
+        //activists who don't have an id attached
         let newActivists = [];
+        //activists whose records have already been typed and submitted as part of this specific scan page,
+        //and have subsequently been updated by some typer.
         let updatedActivists = [];
         const today = new Date();
         for (let i=0; i<typedActivists.length; i++)
@@ -158,6 +151,7 @@ const uploadTypedActivists = function (req, res){
                             "phone" : curr.phone.replace(/[\-.():]/g, ''),
                             "email" : curr.email,
                             "residency" : curr.residency,
+                            "comments" : curr.comments,
                             "circle" : "תל-אביב",
                             "isMember" : false,
                             "isPaying" : false,
@@ -173,13 +167,15 @@ const uploadTypedActivists = function (req, res){
                         "login" : {
                             "loginCode" : null,
                             "token" : []
-                        }
+                        },
+                        "pos": i
                     }
                 );
             }
             else{
-                if(!curr.locked)
+                if(!curr.locked) {
                     updatedActivists.push(curr);
+                }
             }
         }
         updateTypedActivists(updatedActivists).then(()=>{
@@ -194,7 +190,7 @@ const uploadTypedActivists = function (req, res){
                         tasks.push(addToMailchimpCircle(newActivists));
                         //mark the activist as typed in the relevant contact scan
                         if(scanId){
-                            tasks.push(markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone));
+                            tasks.push(markTypedContactScanRows(typerId, scanId, newActivists, markedDone));
                         }
                         Promise.all(tasks).then((results)=>{
                             return res.json(results);

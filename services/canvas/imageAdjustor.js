@@ -134,10 +134,28 @@ function setImageBrightness(img, brightness){
     // overwrite original image
 	img.putImageData(imageData, 0 ,0);
 }
+function rotateImg(ctx, clockwise){
+	const canvas = 	ctx.canvas;
+	const myImageData = new Image();
+	myImageData.src = canvas.toDataURL();
+	myImageData.onload = () => {
+		//original dimensions of the canvas
+		const oWidth = canvas.width;
+		canvas.width = canvas.height;
+		canvas.height = oWidth;
+		ctx.rotate(Math.PI / 2 * (clockwise ? 1 : -1));
+		if(clockwise)
+			ctx.drawImage(myImageData, 0, -canvas.width);
+		else
+			ctx.drawImage(myImageData, -canvas.height, 0);
+		ctx.restore();
+	};
+}
 export default {
 	threshold,
 	drawImage,
     desaturateImage,
 	contrastImage,
-	setImageBrightness
+	setImageBrightness,
+	rotateImg
 }

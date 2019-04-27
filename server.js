@@ -93,6 +93,18 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/EventCategoriesManagement', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/EventCategoriesManagement', req.query);
+			}
+		});
+	});
 	server.get('/ScanContacts', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
 			if(!user)

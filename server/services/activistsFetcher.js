@@ -1,4 +1,5 @@
 const Activist = require('../models/activistModel');
+const mongoose = require('mongoose');
 const Authentication = require('../services/authentication');
 const getActivists = function (req, res){
     Authentication.isUser(req, res).then(isUser=>{
@@ -22,6 +23,13 @@ const getActivists = function (req, res){
             return res.json(activistsList);
         });
     })
+};
+const getActivistsByIds = function (ids){
+    const query = Activist.find({"_id":{$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}});
+    const activistsPromise = query.exec().then((activists) => {
+        return activists
+    });
+    return activistsPromise;
 };
 const queryActivists = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
@@ -70,5 +78,6 @@ const searchDuplicates = function(phones, emails){
 module.exports = {
     getActivists,
     queryActivists,
-    searchDuplicates
+    searchDuplicates,
+    getActivistsByIds
 };

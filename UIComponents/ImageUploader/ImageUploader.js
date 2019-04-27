@@ -1,5 +1,4 @@
 import React from 'react';
-import config from '../../services/config';
 export default class ImageUploader extends React.Component {
 	constructor(props) {
 		super(props);
@@ -7,6 +6,11 @@ export default class ImageUploader extends React.Component {
 			onSelect: props.onSelect,
 			labelText: props.labelText?props.labelText:"Upload a File"
 		}
+	}
+	componentWillReceiveProps(nextProps){
+		this.setState(
+			{labelText: nextProps.labelText}
+		);
 	}
 	fileSelectionHandler(event)
 	{
@@ -38,7 +42,7 @@ export default class ImageUploader extends React.Component {
 						font-size: 1.5em;
 					}
 					.upload-btn-wrapper input[type=file] {
-						font-size: 100px;
+					    height: 3.5em;
 						position: absolute;
 						left: 0;
 						top: 0;

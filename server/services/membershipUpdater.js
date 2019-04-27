@@ -80,6 +80,8 @@ const registerMember = function (activistData, paymentData){
             ExpirationMonth: paymentData.month,
             LanguageId: "1"
         };
+        console.log(paymentObject);
+        return;
         //detect activists in our system that share a phone/email with the new member
         return activistDuplicateDetector.checkForDuplicates([activistObject]).then(()=>{
             //if there is a circle corresponding to the member's city, add it to their details

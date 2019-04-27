@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
+
 const eventSchema = new mongoose.Schema({
 	metadata: {
 		//timestamp for when the event was first saved
@@ -28,30 +30,37 @@ const eventSchema = new mongoose.Schema({
 			type: Date,
 			required: true,
 		},
+		category: {
+			type: String,
+			required: true,
+		},
 		//the location where the event will take place
-		location: String
+		location: {
+			type: String,
+			required: false
+		},
 	},
 	//instructions for phone operators ("callers")
 	callInstructions: {
 		question1: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		text1: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		question2: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		text2: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		script: {
 			type: String,
-			required: true,
+			required: false,
 		},
 	},
 	//data about the phone-banking campaign associated with the event
@@ -117,5 +126,6 @@ const eventSchema = new mongoose.Schema({
 		required: false
 	}
 });
-
-module.exports = mongoose.model('event',eventSchema);
+eventSchema.plugin(mongoosePaginate);
+const eventModel = mongoose.model('event', eventSchema);
+module.exports = eventModel;

@@ -7,18 +7,7 @@ const insertContactScan = function(req, res){
         if(!isUser)
             return res.json({"error":"missing token"});
         const scanUrl = req.body.scanUrl;
-        //the cells info as received from the client (i.e. [[{x,y},{x,y},{x,y},{x,y}]...]
-        const cells = req.body.cells;
-        //constructing the cells info as required by the schema (i.e. [{corners:[{x,y},{x,y},{x,y},{x,y}]}...]
-        let cellsObject = [];
-        for (let i=0; i<cells.length; i++)
-        {
-            cellsObject[i]={"cells":[]};
-            for(let j=0; j<cells[i].length; j++)
-            {
-                cellsObject[i].cells.push({"corners":cells[i][j]});
-            }
-        }
+        const eventId = req.body.eventId;
         const today = new Date();
         const scanObject={
             "metadata":{
@@ -26,8 +15,8 @@ const insertContactScan = function(req, res){
                 "lastUpdate": today,
                 "creatorId": Authentication.getMyId()
             },
-            "scanUrl":scanUrl,
-            "rows":cellsObject
+            "scanUrl": scanUrl,
+            "eventId": eventId
         };
         const newScan = new ContactScan(scanObject);
         newScan.save(function (err) {
