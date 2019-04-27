@@ -2,6 +2,15 @@ const mongoose = require('mongoose');
 const Authentication = require('../services/authentication');
 const Event = require('../models/eventModel');
 
+//used internally by other server-side functions
+const getEventsByIds = function (ids){
+    const query = Event.find({"_id":{$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}});
+    const eventsPromise = query.exec().then((events) => {
+        return events
+    });
+    return eventsPromise;
+};
+//used externally by API
 const getEventById = function(eventId){
     try {
         mongoose.Types.ObjectId(eventId);
@@ -89,6 +98,7 @@ module.exports = {
     getEventById,
     getEventByCode,
     getCampaignLess,
-    listEvents
+    listEvents,
+    getEventsByIds
 };
 
