@@ -3,13 +3,14 @@ const activistsFetcher = require("./activistsFetcher");
 const eventFetcher = require("./eventFetcher");
 const arrayFunctions = require("./arrayFunctions");
 
-const COVERED_PERIOD = 24*60*60*1000;
+const COVERED_PERIOD = 3*24*60*60*1000;
 const EMAIL_TO = ["yanivcogan89@gmail.com"];
 const sendDailySummary = function(){
-    fetchRecentContactSheets().then((sheets)=>{
-        fetchEventsAndActivistsByContactSheets(sheets).then((events)=>{
+    return fetchRecentContactSheets().then((sheets)=>{
+        return fetchEventsAndActivistsByContactSheets(sheets).then((events)=>{
             const emailBody = compileSummary(events);
             //TODO - send email to everyone on the EMAIL_TO list.
+            return emailBody;
         })
     })
 };
@@ -34,8 +35,7 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
             activists.add(activist.activistId)
         }
     }
-    let eventsData = {};
-    const activistsPromise = activistsFetcher.getActivistsByIds(activists.values()).then((activistsData)=>{
+    const activistsPromise = activistsFetcher.getActivistsByIds(Array.from(activists)).then((activistsData)=>{
         const activistDict = arrayFunctions.indexByField(activistsData, "_id");
         for(let i = 0; i < sheets.length; i++) {
             let sheet = sheets[i];
@@ -48,7 +48,8 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
         }
         return true;
     });
-    const eventsPromise = eventFetcher.getEventsByIds(events.values()).then((events)=>{
+    const eventsPromise = eventFetcher.getEventsByIds(Array.from(events)).then((events)=>{
+        let eventsData;
         eventsData = arrayFunctions.indexByField(events, "_id");
         for(let i = 0; i < sheets.length; i++) {
             let sheet = sheets[i];
@@ -58,16 +59,14 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
                 console.log("error! this shouldn't happen. Some event wasn't fetched properly when compiling daily email");
             }
             if(eventsData[eventId].sheets === undefined){
-                eventsData[eventId].sheets = [sheet];
+                eventsData[eventId].sheets = [];
             }
-            else{
-                eventsData[eventId].sheets.push(sheet);
-            }
+            eventsData[eventId].sheets.push(sheet);
         }
-        return true;
+        return eventsData;
     });
-    return Promise.all([eventsPromise, activistsPromise]).then(()=>{
-        return eventsData.values;
+    return Promise.all([eventsPromise, activistsPromise]).then((results)=>{
+        return Object.values(results[0]);
     });
 };
 
@@ -83,21 +82,25 @@ compileSummary = function(events){
     //iterate over contact events
     for(let k = 0; k < events.length; k++)
     {
+        //there are two "levels" named eventDetails - we have to go through both.
+        //the first one distinguishes data from the events collection from data from the sheets collection
+        //the second is simply the eventDetails sub-document specified in the event model.
         let event = events[k];
         let contactSheets = event.sheets;
         let eventName = event.eventDetails.name;
         let eventDate = new Date(event.eventDetails.date).toISOString().split('T')[0];
         let eventLocation = event.eventDetails.location;
-        result += "סיכום הפעילות היומית בנוגע לאירוע " + eventName + "שנערך ב-" + eventDate + ", ב" + eventLocation + ":\n";
+        result += "סיכום הפעילות היומית בנוגע לאירוע " + eventName + " שנערך ב-" + eventDate + ", ב" + eventLocation + ": \n";
         //iterate over contact sheets
         for(let i = 0; i < contactSheets.length; i++){
             sheetCount++;
             let contactSheet = contactSheets[i];
+            //TODO - replace with more relevant info
             let uploader = contactSheet.metadata.creatorId;
             let uploadDate = new Date(contactSheet.metadata.creationDate).toISOString().split('T')[0];
             let uploadTime = new Date(contactSheet.metadata.creationDate).toTimeString().split(' ')[0];
             if(contactSheet.metadata.creationDate > cutoff){
-                result += "הועלה דף קשר חדש למערכת ע\"י " + uploader + ", בשעה " + uploadTime + ", במסגרת האירוע " + event.eventDetails.name + "\n";
+                result += "הועלה דף קשר חדש למערכת ע\"י " + uploader + ", בשעה " + uploadTime + "\n";
             }
             else{
                 result += "הוקלדו אנשי קשר מדף שהועלה ע\"י " + uploader + ", בתאריך " + uploadDate + ", במסגרת האירוע " + event.eventDetails.name + "\n";
@@ -114,7 +117,9 @@ compileSummary = function(events){
                     if(isNew){
                         newContactsInSheet.push(activist);
                         newContactsCount++;
-                        cityCounter[activistDetails.city] = cityCounter[activistDetails.city] === undefined ? 1 : cityCounter[activistDetails.city] +1;
+                        let currCity = activist.activistDetails.profile.residency;
+                        if(currCity && currCity.length > 1)
+                            cityCounter[currCity] = cityCounter[currCity] === undefined ? 1 : cityCounter[currCity] +1;
                     }
                     else{
                         existingContactsInSheet.push(activist);
@@ -137,7 +142,7 @@ compileSummary = function(events){
                     let activistDetails = activist.activistDetails;
                     //the comments left by the typer when inputting the data about the contact
                     let comments = activist.comments;
-                    result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.firstName + "מ" + activistDetails.residency;
+                    result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
                     if(comments && comments.length){
                         result += " (הערה - " + comments + ")"
                     }
@@ -147,30 +152,30 @@ compileSummary = function(events){
             if(existingContactsInSheet.length)
             {
                 result += "משתתפות שכבר הופיעו במערכת בעבר:" + "\n";
-                for(let j = 0; j < newContactsInSheet.length; j++){
-                    let activist = newContactsInSheet[j];
+                for(let j = 0; j < existingContactsInSheet.length; j++){
+                    let activist = existingContactsInSheet[j];
                     let activistDetails = activist.activistDetails;
-                    result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.firstName + "מ" + activistDetails.residency + "\n";
+                    result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
                 }
             }
-            result += "\n\n";
+            result += "\n";
         }
-        result += "\n\n\n";
+        result += "\n";
     }
-    result += "\n\n\n\n";
-    result += "**************************\n";
-    result += "לסיכום, במהלך היום הוקלדו " + sheetCount + "דפי קשר, ";
-    if(eventCount > 1)
-        result += "מ" + eventCount + "אירועים שונים, ";
-    result += "בסך הכל הפרטים של " + contactCount + "משתתפות הוקלדו, מתוכן " + newContactsCount + "שנוספו למערכת לראשונה";
     result += "\n";
-    const citiesByPopularity = cityCounter.keys.map((city)=>{
+    result += "**************************\n";
+    result += "לסיכום, במהלך היום הוקלדו " + sheetCount + " דפי קשר, ";
+    if(eventCount > 1)
+        result += "מ" + eventCount + " אירועים שונים, ";
+    result += "בסך הכל הפרטים של " + contactCount + " משתתפות הוקלדו, מתוכן " + newContactsCount + " שנוספו למערכת לראשונה";
+    result += "\n";
+    const citiesByPopularity = Object.keys(cityCounter).map((city)=>{
         return {city: city, numOfNewContacts: cityCounter[city]};
     }).sort((a, b)=>{
         return b.numOfNewContacts - a.numOfNewContacts;
     });
     result += "מבין אלו שנוספו לראשונה היום למערכת: " + "\n";
-    for(let i = 0; i < min(citiesByPopularity.length, 3); i++){
+    for(let i = 0; i < Math.min(citiesByPopularity.length, 3); i++){
         let city = citiesByPopularity[i];
         result += city.numOfNewContacts + " מ" + city.city + "\n";
     }
@@ -178,4 +183,5 @@ compileSummary = function(events){
 };
 
 module.exports = {
+    sendDailySummary
 };
