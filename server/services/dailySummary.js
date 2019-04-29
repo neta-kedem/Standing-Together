@@ -110,6 +110,7 @@ compileSummary = function(events){
             else{
                 result += "הוקלדו אנשי קשר מדף שהועלה ע\"י " + uploader + ", בתאריך " + uploadDate + ", במסגרת האירוע " + event.eventDetails.name + "\n";
             }
+            result += "<a href=\"" + "http://localhost:3000/Typer?contactScan=" + contactSheet._id + "\">" + "לינק לעמוד הקלדנים" + "</a>\n"
             //lists the details of contacts who were typed in *as part of to the current contact sheet*
             let newContactsInSheet = [];
             let existingContactsInSheet = [];

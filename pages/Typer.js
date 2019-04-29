@@ -56,7 +56,7 @@ export default class Typer extends React.Component {
 			],
 			eventData: {},
 			selectedRowIndex: 0,
-			scanId: null,
+			scanId: props.url.query.contactScan ? props.url.query.contactScan: "",
 			scanUrl: null,
 			fullyTyped: false,
 			displayFullyTypedPopup: false,
@@ -90,7 +90,7 @@ export default class Typer extends React.Component {
 			});
 	}
 	getContactsScan() {
-		server.get('contactScan', {})
+		server.get('contactScan?scanId='+this.state.scanId, {})
 		.then(json => {
 			if(json.error)
 			{
