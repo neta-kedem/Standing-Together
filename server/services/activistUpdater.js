@@ -19,6 +19,7 @@ const markTypedContactScanRows = function(typerId, scanId, activists, markedDone
                 associatedActivists.push({
                     "creationDate": today,
                     "lastUpdate": today,
+                    "typerId": typerId,
                     "activistId": activist._id,
                     "new": !activist.metadata.duplicateId,
                     "pos": activist.pos,

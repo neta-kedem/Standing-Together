@@ -27,6 +27,7 @@ const contactScanSchema = new mongoose.Schema({
 			creationDate: {type: Date},
 			lastUpdate: {type: Date},
 			activistId: {type: String},
+			typerId: {type: String},
 			pos: {type: Number},
 			new: {type: Boolean},
 			comments: {type: String}
