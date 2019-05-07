@@ -72,8 +72,27 @@ const getContactScan = function(req, res){
             });
     })
 };
+const getById = function(scanId){
+    let scanObjectId;
+    try{
+        scanObjectId = mongoose.Types.ObjectId(scanId);
+    }
+    catch{
+        return {error: "incorrect id supplied"};
+    }
+    const query = ContactScan.findOne({"_id": scanObjectId});
+    const promise = query.exec().then((res)=>{
+        if (!res || !res._id)
+            return {"error":"couldn't find a matching scan"};
+        return res;
+    }).catch((err)=>{
+        return {success: false, error: err};
+    });
+    return promise;
+};
 
 module.exports = {
-    getContactScan
+    getContactScan,
+    getById
 };
 

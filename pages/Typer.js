@@ -135,7 +135,7 @@ export default class Typer extends React.Component {
 		const fields = this.state.profileFields;
 		for(let i = 0; i<fields.length; i++){
 			row[fields[i].name] = data[fields[i].name] || "";
-			row[fields[i].name + "Valid"] = saved;
+			row[fields[i].name + "Valid"] = saved || !fields[i].validation;
 		}
 		row.scanRow = data["scanRow"] || 0;
 		row.locked = locked;
