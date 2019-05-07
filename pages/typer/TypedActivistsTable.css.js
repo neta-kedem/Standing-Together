@@ -13,10 +13,6 @@ export default css`
 		background-color: transparent;
 		color: rgba(86, 95, 108, 1);
 	}
-	.typed-rows-table tr, .typed-rows-table td{
-		border: 1px solid rgb(202, 200, 199);
-		padding: 0px
-	}
 	.typed-rows-table input{
 		border: none;
 		background-color: transparent;
@@ -28,11 +24,13 @@ export default css`
 	    background-color: #DDD;
 	    color: #555;
 	}
-	.typed-rows-table tr{
+	.typed-rows-table td{
+	    border: 1px solid rgb(202, 200, 199);
+		padding: 0px !important;
 		transition: background-color 0.25s ease-in-out;
 		background-color: rgb(247, 245, 246);
 	}
-	.typed-rows-table tr:focus-within{
+	.typed-rows-table tr:focus-within td{
 		background-color: #fffa;
 	}
 	.typed-rows-table .row-margin, .typed-rows-table .row-margin td{
@@ -49,6 +47,11 @@ export default css`
 	}
 	.typed-rows-table .row-wrap:first-of-type .row-margin:first-child{
 		height: 0px !important;
+	}
+	.typed-rows-table .col-margin{
+		width: 5px;
+		display: block;
+		opacity: 0;
 	}
 	
 	.typed-rows-table .delete-row-wrap{

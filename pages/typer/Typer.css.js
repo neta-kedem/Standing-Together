@@ -2,6 +2,7 @@ import css from 'styled-jsx/css'
 export default css
 `
 	.content{
+	    overflow: auto;
 		height: 100%;
 		padding: 20px;
 		padding-top: 40px;
