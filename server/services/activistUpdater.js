@@ -121,6 +121,7 @@ const addToMailchimpCircle = function(activists){
                     updatePromises.push(mailchimpSync.createContacts([curr], circles[cities[curr.profile.residency].defaultCircle].mailchimpList));
                 }
             }
+            updatePromises.push(mailchimpSync.createContacts(activists));
         }
      );
     return Promise.all(updatePromises);
