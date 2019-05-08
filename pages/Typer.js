@@ -289,10 +289,13 @@ export default class Typer extends React.Component {
 				displayFullyTypedPopup: false,
 				postAttempted: false,
 				postInProcess: false,
-				unsaved: false
+				unsaved: false,
+				displayTyperForm: false,
+				displayScanUploadForm: false,
+				displayLoadingMessage: true
+			}, ()=>{
+				this.getContactsScan();
 			});
-			alert("the details have been stored in the system");
-			this.getContactsScan();
 		});
 	}.bind(this);
 	
@@ -366,7 +369,6 @@ export default class Typer extends React.Component {
 					selectedRow={selectedRowIndex}
 					highlightInvalidFields={this.state.postAttempted}/>
 			</content>
-			{toggleFullyTypedPopup}
 		</div>;
 		const scanUploadForm = <div className={"scan-uploader-form-wrap"}>
 			<div className={"scan-uploader-message"}>
@@ -385,6 +387,7 @@ export default class Typer extends React.Component {
 						{this.state.displayScanUploadForm?scanUploadForm:null}
 						{this.state.displayTyperForm?typerForm:null}
 						{this.state.displayLoadingMessage?loadingMessage:null}
+						{toggleFullyTypedPopup}
 					</div>
 				</section>
 			</div>
