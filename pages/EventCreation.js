@@ -18,12 +18,15 @@ constructor(props) {
 		title: "",
 		date: today.getDate()+"/"+(today.getMonth()+1)+"/"+today.getFullYear(),
 		category: "",
-		categories: []
+		location: "",
+		categories: [],
+		cities: []
 	};
 	if(this.state["_id"]){
 		this.fetchEventDetails();
 	}
 	this.fetchCategories();
+	this.fetchCities();
 }
 fetchEventDetails(){
 	server.get('events/eventById/'+this.state._id)
@@ -43,6 +46,12 @@ fetchCategories() {
 	server.get('eventCategories', {})
 		.then(eventCategories => {
 			this.setState({"categories": eventCategories});
+		});
+}
+fetchCities(){
+	server.get('cities/', {})
+		.then(json => {
+			this.setState({cities: json.map((city)=>{return city.name;})})
 		});
 }
 handleInputChange(event) {
@@ -79,7 +88,7 @@ handlePost() {
 		"eventDetails":{
 			"name": this.state.title,
 			"date": this.state.date,
-			"location": "somewhere over the rainbow",
+			"location": this.state.location,
 			"category": this.state.category,
 		},
 		"callInstructions": {
@@ -122,6 +131,10 @@ render() {
 						<div>תאריך<br/>التاريخ</div>
 						<input size="80" dir="ltr" type="text" name="date" value={this.state.date} onChange={this.handleInputChange.bind(this)} placeholder="DD.MM.YYYY"/>
 					</label>
+					<label className="label" id="event-date">
+						<div>מיקום<br/>التاريخ</div>
+						<input type="text" name="location" list="city-data-list" value={this.state.location} onChange={this.handleInputChange.bind(this)}/>
+					</label>
 					<label className="label" id="event-cat">
 						<div>קטגוריה<br/>קטגוריה</div>
 						<select dir="rtl" name="category" value={this.state.category} onChange={this.handleInputChange.bind(this)}>
@@ -129,6 +142,13 @@ render() {
 							{catOptions}
 						</select>
 					</label>
+					<datalist id="city-data-list">
+						<option value={"מקוון"}/>
+						<option value={"השטחים הכבושים"}/>
+						{this.state.cities.map((city)=>{
+							return <option key={"city-op-"+city} value={city}/>
+						})}
+					</datalist>
 				</div>
 			</div>
 		</div>
