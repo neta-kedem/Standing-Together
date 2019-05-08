@@ -134,4 +134,10 @@ export default css
         text-align: center;
         vertical-align: middle;
     }
+    .scan-uploader-form-wrap{
+        direction: ltr;
+    }
+    .scan-uploader-message{
+        text-align: center;
+    }
 `

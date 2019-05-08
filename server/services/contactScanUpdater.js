@@ -10,6 +10,7 @@ const insertContactScan = function(req, res){
         const eventId = req.body.eventId;
         const today = new Date();
         const scanObject={
+            "_id": mongoose.Types.ObjectId(),
             "metadata":{
                 "creationDate": today,
                 "lastUpdate": today,
@@ -21,10 +22,10 @@ const insertContactScan = function(req, res){
         const newScan = new ContactScan(scanObject);
         newScan.save(function (err) {
             if (err){
-                return res.json(err);
+                return res.json({"err": err});
             }
             else
-                return res.json(req.body);
+                return res.json({"id": scanObject._id});
         });
     })
 };

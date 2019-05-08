@@ -10,6 +10,7 @@ import style from './typer/Typer.css'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { faCloudUploadAlt } from '@fortawesome/fontawesome-free-solid'
+import ScanForm from "./scanContacts/ScanForm";
 fontawesome.library.add(faCloudUploadAlt);
 
 
@@ -57,10 +58,14 @@ export default class Typer extends React.Component {
 			eventData: {},
 			selectedRowIndex: 0,
 			scanId: props.url.query.contactScan ? props.url.query.contactScan: "",
+			displayTyperForm: false,
+			displayScanUploadForm: false,
+			displayLoadingMessage: true,
 			scanUrl: null,
 			fullyTyped: false,
 			displayFullyTypedPopup: false,
 			postAttempted: false, //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
+			postInProcess: false,
 			unsaved: false
 		};
 	};
@@ -90,12 +95,15 @@ export default class Typer extends React.Component {
 			});
 	}
 	getContactsScan() {
+		this.setState({displayLoadingMessage: true});
 		server.get('contactScan?scanId='+this.state.scanId, {})
 		.then(json => {
+			this.setState({displayLoadingMessage: false});
 			if(json.error)
 			{
 				if(json.error === "no pending scans are available")
-					alert("אין דפי קשר שדורשים הקלדה במערכת. תוכלו להקליד פרטי פעילים בכל מקרה");
+					//request that the typer uploads a contact scan
+					this.setState({displayScanUploadForm: true});
 				return;
 			}
 			if(json.scanData)
@@ -104,7 +112,13 @@ export default class Typer extends React.Component {
 				let eventData = json.eventData;
 				const eventDate = new Date(eventData.eventDetails.date);
 				eventData.eventDetails.date = eventDate.getFullYear()+"-"+eventDate.getMonth()+1+"-"+eventDate.getDate();
-				this.setState({"scanUrl": scanData.scanUrl, "scanId": scanData._id, "eventData": eventData.eventDetails});
+				this.setState({
+					"scanUrl": scanData.scanUrl,
+					"scanId": scanData._id,
+					"eventData": eventData.eventDetails,
+					"displayScanUploadForm": false,
+					"displayTyperForm": true,
+				});
 				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
 				// store interval promise in the state so it can be cancelled later:
 				this.setState({callPingInterval: callPingInterval});
@@ -124,11 +138,18 @@ export default class Typer extends React.Component {
 		if(!this.state.scanId)
 			return;
 		server.post('contactScan/pingScan', {
-			'scanId':this.state.scanId
+			'scanId': this.state.scanId
 		})
 		.then(json => {
 		});
 	}
+
+	handleScanUpload = function(scanId){
+		this.setState({scanId: scanId}, ()=>{
+			this.getContactsScan();
+		})
+	}.bind(this);
+
 	//this function generates a new row template
 	generateRow = function(data = {}, locked = false, saved = false){
 		let row = data;
@@ -243,6 +264,10 @@ export default class Typer extends React.Component {
 	}.bind(this);
 
 	postData = function(){
+		//safety measure to prevent the same data getting posted multiple times when the post button is repeatedly pressed
+		if(this.state.postInProcess)
+			return;
+		this.setState({postInProcess: true});
 		const activists = this.state.activists.slice();
 		if(!this.ActivistFieldsValidation.validateAll(activists)){
 			this.setState({postAttempted: true});
@@ -263,6 +288,7 @@ export default class Typer extends React.Component {
 				fullyTyped: false,
 				displayFullyTypedPopup: false,
 				postAttempted: false,
+				postInProcess: false,
 				unsaved: false
 			});
 			alert("the details have been stored in the system");
@@ -276,25 +302,34 @@ export default class Typer extends React.Component {
 		const activists = this.state.activists;
 		const eventData = this.state.eventData;
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
+		const typerFormTopBar = <React.Fragment>
+			<div className={"event-details"}>
+				<div>תאריך</div>
+				<div>{eventData.date}</div>
+			</div>
+			<div className={"event-details"}>
+				<div>ארוע ההחתמה</div>
+				<div>{eventData.name}</div>
+			</div>
+			<div onClick={this.handlePost} className={"post-button"}>
+				<div className={"post-button-label"}>
+					<div>שלח</div>
+					<div>ارسل</div>
+				</div>
+				<div className={"cloud-icon"}>
+					<FontAwesomeIcon icon="cloud-upload-alt"/>
+				</div>
+			</div>
+		</React.Fragment>;
+		const scanUploaderFormTopBar = <div>
+			העלאת תמונה
+		</div>;
+		const loadingTopBar = <div>
+			טעינה...
+		</div>;
 		const topBar = <div dir="ltr">
 			<TopNavBar justification={"space-between"}>
-					<div className={"event-details"}>
-						<div>תאריך</div>
-						<div>{eventData.date}</div>
-					</div>
-					<div className={"event-details"}>
-						<div>ארוע ההחתמה</div>
-						<div>{eventData.name}</div>
-					</div>
-					<div onClick={this.handlePost} className={"post-button"}>
-						<div className={"post-button-label"}>
-							<div>שלח</div>
-							<div>ارسل</div>
-						</div>
-						<div className={"cloud-icon"}>
-							<FontAwesomeIcon icon="cloud-upload-alt"/>
-						</div>
-					</div>
+				{this.state.displayLoadingMessage?loadingTopBar:this.state.displayTyperForm?typerFormTopBar:scanUploaderFormTopBar}
 			</TopNavBar>
 		</div>;
 		const scanDisplay = <ContactScanDisplay
@@ -312,6 +347,34 @@ export default class Typer extends React.Component {
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(false)}}>נותרו רשומות להקלדה</button>
 					</div>
 				</Popup>;
+		const loadingMessage = <div>
+			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
+			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
+		</div>;
+		const typerForm = <div>
+			{scanDisplay}
+			<content>
+				<TypedActivistsTable
+					fields={this.state.profileFields}
+					dataLists={this.state.profileDataLists}
+					handleChange={this.handleTypedInput}
+					handleRowPost={this.handleRowPost}
+					handleRowFocus={this.handleRowFocus}
+					handleRowDeletion={this.handleRowDeletion}
+					handleRowEditToggle={this.handleRowEditToggle}
+					activists={activists}
+					selectedRow={selectedRowIndex}
+					highlightInvalidFields={this.state.postAttempted}/>
+			</content>
+			{toggleFullyTypedPopup}
+		</div>;
+		const scanUploadForm = <div className={"scan-uploader-form-wrap"}>
+			<div className={"scan-uploader-message"}>
+				<h2>לא מצאנו דפי קשר במערכת - תוכלו להעלות סריקה או תמונה של דף קשר</h2>
+				<h2>לא מצאנו דפי קשר במערכת - תוכלו להעלות סריקה או תמונה של דף קשר</h2>
+			</div>
+			<ScanForm onPublish={this.handleScanUpload}/>
+		</div>;
 		return (
 			<div dir="rtl">
 				<Meta/>
@@ -319,21 +382,9 @@ export default class Typer extends React.Component {
 				{topBar}
 				<section className="section">
 					<div className="main-panel">
-					{scanUrl?scanDisplay:""}
-						<content className="content">
-							<TypedActivistsTable
-								fields={this.state.profileFields}
-								dataLists={this.state.profileDataLists}
-								handleChange={this.handleTypedInput}
-								handleRowPost={this.handleRowPost}
-								handleRowFocus={this.handleRowFocus}
-								handleRowDeletion={this.handleRowDeletion}
-								handleRowEditToggle={this.handleRowEditToggle}
-								activists={activists}
-								selectedRow={selectedRowIndex}
-								highlightInvalidFields={this.state.postAttempted}/>
-						</content>
-						{toggleFullyTypedPopup}
+						{this.state.displayScanUploadForm?scanUploadForm:null}
+						{this.state.displayTyperForm?typerForm:null}
+						{this.state.displayLoadingMessage?loadingMessage:null}
 					</div>
 				</section>
 			</div>
