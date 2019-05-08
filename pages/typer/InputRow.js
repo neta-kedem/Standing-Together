@@ -32,11 +32,29 @@ export default class InputRow extends React.Component {
 	syncStateToInput=function(event){
 		this.state.handleChange(event.target.name, event.target.value, this.state.rowIndex);
 	}.bind(this);
-	
-	handleKeyPress=function(event){
+
+	handleKeyPress=function(event, field){
+		console.log(event.key);
 		if(event.key === 'Enter' || event.key === 'Tab'){
-			this.handlePost(this.state.rowIndex);
-			event.preventDefault();
+			if(field.postOnTab){
+				this.handlePost(this.state.rowIndex);
+				event.preventDefault();
+			}
+		}
+		if(event.key === 'Backspace'){
+			if(this.state.fields[0] === field){
+				let isEmpty = true;
+				for(let i = 0; i < this.state.fields.length; i++){
+					if(this.props.values[this.state.fields[i].name]){
+						isEmpty = false;
+						break;
+					}
+				}
+				if(isEmpty){
+					this.handleDelete();
+					event.preventDefault();
+				}
+			}
 		}
 	}.bind(this);
 	
@@ -82,17 +100,17 @@ export default class InputRow extends React.Component {
 					{rowValues.locked ? editRow : rowValues.saved ? noAction : deleteRow}
 					{this.state.fields.map((f, i) => {
 						return <React.Fragment key = {"field_input_" + this.props.rowIndex + "_" + i}>
-							{f.margin?<td className="col-margin"/>:''}
+							{f.margin?<td className="col-margin"/>:null}
 							<td className = {rowValues[f.name+"Valid"]?"":"invalid"}>
 								<input value = {rowValues[f.name]} type={f.type} name={f.name}
 									   onChange = {this.syncStateToInput} onFocus = {(event) => {this.handleFocus(event)}} ref = {i === 0 ? this.firstInput : ""}
 									   autoFocus = {i === 0} disabled = {rowValues.locked}
-									   onKeyDown = {f.postOnTab ? this.handleKeyPress : () => {}}
+									   onKeyDown = {(event)=>{this.handleKeyPress(event, f)}}
 									   list = {f.name + "-data-list"}
 									   autoComplete = "new-password"
 								/>
 							</td>
-							{f.margin?<td className="col-margin"/>:''}
+							{f.margin?<td className="col-margin"/>:null}
 						</React.Fragment>;
 					})}
 				</tr>

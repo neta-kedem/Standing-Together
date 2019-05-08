@@ -7,6 +7,7 @@ export default css`
 		align-items: center;
 		height: 55px;
 		background-color: #90278e;
+		font-size: 0.7em;
 	}
 	.nav-bar-logo{
 		left: 0px;

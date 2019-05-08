@@ -48,7 +48,7 @@ export default class Typer extends React.Component {
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 				},
 				{
-					name: "comments", type: "text", ar: "הערות", he: "הערות", margin: "true"
+					name: "comments", type: "text", ar: "הערות", he: "הערות", margin: "true", postOnTab: true,
 				},
 			],
 			profileDataLists: [

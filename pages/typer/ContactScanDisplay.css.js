@@ -1,10 +1,26 @@
 import css from 'styled-jsx/css'
 export default css
 `
+    /*Scroll Bar*/
+	::-webkit-scrollbar {
+		width: 6px;
+	}
+	/* Track */
+	::-webkit-scrollbar-track {
+		background: #999; 
+	}
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: #4D4D4D; 
+	}
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+		background: #555; 
+	}
 	.scan-wrap{
 		display: flex;
 		flex-direction: row;
-		background-color: #90278e;
+		background-color: rgb(114, 19, 112);
 	}
 	.row-nav-wrap{
 		width: 10%;

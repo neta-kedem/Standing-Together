@@ -34,11 +34,11 @@ export default class TypedActivistsTable extends React.Component {
 				<th className="delete-row-wrap"> </th>
 				{this.state.fields.map((f) => {
 					return <React.Fragment key={"field_title_"+f.name}>
-						{f.margin?<th className="col-margin"/>:''}
+						{f.margin?<th className="col-margin"/>:null}
 						<th>
 							<h4>{f.ar}<br/>{f.he}</h4>
 						</th>
-						{f.margin?<th className="col-margin"/>:''}
+						{f.margin?<th className="col-margin"/>:null}
 					</React.Fragment>;
 				})}
 			</tr>;
