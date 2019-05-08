@@ -13,24 +13,34 @@ const markTypedContactScanRows = function(typerId, scanId, activists, markedDone
     const today = new Date();
     const scanObjectId = mongoose.Types.ObjectId(scanId);
     return ContactScan.findOne(
-        {"_id": scanObjectId}).exec() .then(() => {
+        {"_id": scanObjectId}).exec() .then((scanData) => {
             // link to the new activists that have been typed
-            let associatedActivists = [];
+            let associatedActivists = arrayFunctions.indexByField(scanData.activists, "activistId");
             for(let i = 0; i < activists.length; i++){
                 const activist = activists[i];
-                associatedActivists.push({
-                    "creationDate": today,
-                    "lastUpdate": today,
-                    "typerId": typerId,
-                    "activistId": activist._id,
-                    "new": activist.new,
-                    "pos": activist.pos,
-                    "comments": activist.comments
-                });
+                //update data on newly typed activists (again, here "new" means "new to the scan", not "new to the system")
+                if(!associatedActivists[activist._id]){
+                    associatedActivists[activist._id]={
+                        "creationDate": today,
+                        "lastUpdate": today,
+                        "typerId": typerId,
+                        "activistId": activist._id,
+                        "new": activist.new,
+                        "pos": activist.pos,
+                        "comments": activist.comments
+                    };
+                }
+                //update data on existing activists (i.e. activists whose details were already typed as part of this scan, and were edited retroactively.
+                else{
+                    associatedActivists[activist._id].lastUpdate = today;
+                    associatedActivists[activist._id].comments = activist.comments;
+                    associatedActivists[activist._id].typerId = typerId;
+                }
             }
+            associatedActivists = Object.values(associatedActivists);
             const updateQuery = ContactScan.updateOne(
                 {"_id": scanObjectId},
-                {"complete": markedDone, $push: { activists: { $each: associatedActivists } } }
+                {"complete": markedDone, activists: associatedActivists}
             ).exec().then(()=> {
                 return true;
             });
@@ -38,6 +48,7 @@ const markTypedContactScanRows = function(typerId, scanId, activists, markedDone
         }
     );
 };
+
 const updateTypedActivists = function(activists){
     const today = new Date();
     let updatePromises = [];
@@ -219,7 +230,7 @@ const uploadTypedActivists = function (req, res){
                         //create a mailchimp record in the circle-specific contact list
                         tasks.push(addToMailchimpCircle(nonDuplicates));
                         //mark the activist as typed in the relevant contact scan
-                        let newActivistIds = duplicates.map((a)=>{
+                        let activistRows = duplicates.map((a)=>{
                             return {
                                 _id: a._id,
                                 new: false,
@@ -233,10 +244,14 @@ const uploadTypedActivists = function (req, res){
                                 pos: a.pos,
                                 comments: a.profile.comments
                             };
+                        })).concat(updatedActivists.map((a)=>{
+                            return {
+                                _id: a._id,
+                                comments: a.comments,
+                            };
                         }));
-                        newActivistIds.concat(nonDuplicates.map((a)=>{return a._id}));
                         if(scanId){
-                            tasks.push(markTypedContactScanRows(typerId, scanId, newActivistIds, markedDone));
+                            tasks.push(markTypedContactScanRows(typerId, scanId, activistRows, markedDone));
                         }
                         Promise.all(tasks).then((results)=>{
                             return res.json(results);
