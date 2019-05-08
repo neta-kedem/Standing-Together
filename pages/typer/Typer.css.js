@@ -111,6 +111,7 @@ export default css
         font-size: 1.5em;
         font-weight: 400;
         text-align: center;
+        margin: 5%;
     }
     .post-button{
         justify-self: start;

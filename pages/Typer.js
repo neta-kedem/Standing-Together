@@ -321,10 +321,10 @@ export default class Typer extends React.Component {
 				</div>
 			</div>
 		</React.Fragment>;
-		const scanUploaderFormTopBar = <div>
+		const scanUploaderFormTopBar = <div className={"event-details"}>
 			העלאת תמונה
 		</div>;
-		const loadingTopBar = <div>
+		const loadingTopBar = <div className={"event-details"}>
 			טעינה...
 		</div>;
 		const topBar = <div dir="ltr">
