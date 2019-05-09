@@ -11,6 +11,7 @@ import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { faCloudUploadAlt } from '@fortawesome/fontawesome-free-solid'
 import ScanForm from "./scanContacts/ScanForm";
+import SuccessfulUpload from "./typer/SuccessfulUpload";
 fontawesome.library.add(faCloudUploadAlt);
 
 
@@ -66,6 +67,7 @@ export default class Typer extends React.Component {
 			displayFullyTypedPopup: false,
 			postAttempted: false, //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
 			postInProcess: false,
+			postSuccessful: false,
 			unsaved: false
 		};
 	};
@@ -283,20 +285,23 @@ export default class Typer extends React.Component {
 			this.setState({
 				activists: [this.generateRow()],
 				selectedRowIndex: 0,
-				scanId: null,
+				scanId: "",
 				scanUrl: null,
 				fullyTyped: false,
 				displayFullyTypedPopup: false,
 				postAttempted: false,
 				postInProcess: false,
+				postSuccessful: true,
 				unsaved: false,
 				displayTyperForm: false,
 				displayScanUploadForm: false,
-				displayLoadingMessage: true
-			}, ()=>{
-				this.getContactsScan();
+				displayLoadingMessage: false,
 			});
 		});
+	}.bind(this);
+	refetchScans = function(){
+		this.getContactsScan();
+		this.setState({postSuccessful: false});
 	}.bind(this);
 	
 	render() {
@@ -377,6 +382,7 @@ export default class Typer extends React.Component {
 			</div>
 			<ScanForm onPublish={this.handleScanUpload}/>
 		</div>;
+		const successfulUpload = <SuccessfulUpload refetchScans={this.refetchScans}/>;
 		return (
 			<div dir="rtl">
 				<Meta/>
@@ -387,6 +393,7 @@ export default class Typer extends React.Component {
 						{this.state.displayScanUploadForm?scanUploadForm:null}
 						{this.state.displayTyperForm?typerForm:null}
 						{this.state.displayLoadingMessage?loadingMessage:null}
+						{this.state.postSuccessful?successfulUpload:null}
 						{toggleFullyTypedPopup}
 					</div>
 				</section>
