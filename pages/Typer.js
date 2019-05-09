@@ -50,7 +50,7 @@ export default class Typer extends React.Component {
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 				},
 				{
-					name: "comments", type: "text", ar: "הערות", he: "הערות", margin: "true", postOnTab: true,
+					name: "comments", type: "text", ar: "ملاحظات", he: "הערות", margin: "true", postOnTab: true,
 				},
 			],
 			profileDataLists: [
@@ -348,7 +348,7 @@ export default class Typer extends React.Component {
 				<Popup visibility={this.state.displayFullyTypedPopup} toggleVisibility={()=>{this.setState({displayFullyTypedPopup: !this.state.displayFullyTypedPopup})}}>
 					<div className="fully-typed-popup-label">
 						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
-						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
+						<div>هل انتهيت من ملئ كل الاسطر بالصفحة؟</div>
 					</div>
 					<div className="confirm-fully-typed-wrap">
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(true)}}>סיימתי</button>
@@ -377,7 +377,7 @@ export default class Typer extends React.Component {
 		</div>;
 		const scanUploadForm = <div className={"scan-uploader-form-wrap"}>
 			<div className={"scan-uploader-message"}>
-				<h2>לא מצאנו דפי קשר במערכת - תוכלו להעלות סריקה או תמונה של דף קשר</h2>
+				<h2>لم نجد صفحات تواصل بالمنظومة - أتستطيعون تحميل مسح او صورة صفحة التواصل</h2>
 				<h2>לא מצאנו דפי קשר במערכת - תוכלו להעלות סריקה או תמונה של דף קשר</h2>
 			</div>
 			<ScanForm onPublish={this.handleScanUpload}/>

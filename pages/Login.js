@@ -78,9 +78,9 @@ render() {
 		<div>
 			<div className='identification-input-title'>
 				<div>
-					אימות באמצעות
-				<div>
+					مصادقة عبر
 				</div>
+				<div>
 					אימות באמצעות
 				</div>
 			</div>

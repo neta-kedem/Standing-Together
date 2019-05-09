@@ -21,7 +21,7 @@ export default class SuccessfulUpload extends React.Component {
             <div>
                 <style jsx global>{style}</style>
                 <div className={"upload-successful-message"}>
-                    <h2>מצויין, הפרטים נקלטו במערכת</h2>
+                    <h2>ممتاز، تم استيعاب التفاصيل بالمنظومة</h2>
                     <h2>מצויין, הפרטים נקלטו במערכת</h2>
                 </div>
                 <br/>

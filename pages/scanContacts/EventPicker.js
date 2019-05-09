@@ -54,15 +54,15 @@ export default class EventManagement extends React.Component {
                     <thead>
                         <tr>
                             <th>
-                                <div>תאריך אירוע</div>
+                                <div>تاريخ الحدث</div>
                                 <div>תאריך אירוע</div>
                             </th>
                             <th>
-                                <div>שם אירוע</div>
+                                <div>اسم الحدث</div>
                                 <div>שם אירוע</div>
                             </th>
                             <th>
-                                <div>מיקום</div>
+                                <div>مكان الحدث</div>
                                 <div>מיקום</div>
                             </th>
                         </tr>
