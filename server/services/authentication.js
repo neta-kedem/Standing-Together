@@ -36,10 +36,18 @@ const hasRole = function(req, res, role){
 		.then(user=>{
 			if(user.error)
 				return false;
-			else
-			{
-				return !!user.role[role];
+			let roles = [];
+			if(Array.isArray(role)){
+				roles = role;
 			}
+			else{
+				roles.push(role);
+			}
+			for(let i = 0; i < roles.length; i++){
+				if(!!user.role[roles[i]])
+					return true;
+			}
+			return false;
 		})
 	);
 	return promise;

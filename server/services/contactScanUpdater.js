@@ -3,7 +3,7 @@ const Authentication = require('../services/authentication');
 const ContactScan = require('../models/contactScanModel');
 
 const insertContactScan = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, res, ["isOrganizer", "isTyper"]).then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const scanUrl = req.body.scanUrl;
