@@ -1,6 +1,8 @@
 const Activist = require('../models/activistModel');
 const Mailer = require('../services/mailer');
 
+const MAX_FAILED_LOGINS = 3;
+
 const identifyViaPhone = function (req, res){
     let phone = req.body.phone;
     phone = phone.replace(/[\-.():]/g, '');
@@ -41,6 +43,7 @@ const loginViaPhone = function (req, res){
 const loginViaMail = function (req, res){
     let email = req.body.email;
     let code = req.body.code;
+    const now = new Date();
     if(!code||code.length===0)
         return res.json({"error":"incorrect credentials"});
     if(!email)
@@ -49,11 +52,35 @@ const loginViaMail = function (req, res){
         if (err) return res.json({success: false, error: err});
         if(!user)
         {
-            return Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode': null}}, (err) => {
+            return Activist.findOneAndUpdate({'profile.email':email},
+                {
+                    $inc: {'login.failedLoginCount': 1},
+                    'login.lastLoginAttempt': now,
+                },
+                (err) => {
                 if (err) return res.json({success: false, error: err});
                 return res.json({"error":"incorrect credentials"});
             });
         }
+        if(user.login.failedLoginCount > MAX_FAILED_LOGINS){
+            return Activist.findOneAndUpdate({'profile.email':email},
+                {
+                    'login.lastLoginAttempt': now,
+                },
+                (err) => {
+                    if (err) return res.json({success: false, error: err});
+                    return res.json({"error":"you've been locked out of the system due to too many failed login attempts, please contact an organizer"});
+                });
+        }
+        Activist.findOneAndUpdate({'profile.email':email},
+            {
+                'login.lastLoginAttempt': now,
+                'login.failedLoginCount': 0
+            },
+            (err) => {
+                if (err) return res.json({success: false, error: err});
+                return res.json({"error":"you've been locked out of the system due to too many failed login attempts, please contact an organizer"});
+            });
         assignToken(user._id).then((token)=>{
             return res.json({"token":token, "permissions":user.role});
         });
@@ -70,8 +97,9 @@ const sendCodeViaMail = function(code, email)
     });
 };
 const assignToken = function(userId) {
+    const now = new Date();
     let token = generateToken();
-    let query = Activist.update({'_id':userId},{$push:{'login.token': token}});
+    let query = Activist.update({'_id':userId},{$push:{'login.token': {token: token, issuedAt: now, lastUsage: now}}});
     return query.exec().then(()=>{return token});
 };
 const generateToken = function() {

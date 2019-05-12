@@ -1,7 +1,8 @@
 const Activist = require('../models/activistModel');
+const MongooseUpdater = require('../services/dbHelper/mongooseUpdater');
 
 let myId = "";
-const getUserByToken=function(req){
+const getUserByToken = function(req){
 	const token = req.cookies.token;
 	if(!token)
 	{
@@ -9,8 +10,9 @@ const getUserByToken=function(req){
 			return {"error":"missing token"};
 		});
 	}
-	const query = Activist.findOne({'login.token':token});
+	const query = Activist.findOne({'login.token.token': token});
 	const userPromise = query.exec().then((user) => {
+		updateLastTokenUsage(user["_id"], token);
 		if(!user)
 		{
 			return {"error":"missing token"};
@@ -19,6 +21,20 @@ const getUserByToken=function(req){
 		return user;
 	});
 	return userPromise;
+};
+
+const updateLastTokenUsage = function(id, token){
+	const now = new Date();
+	MongooseUpdater._update(Activist,
+		{"_id": id},
+		{
+			"$set": {
+				"login.token.$[i].lastUsage": now,
+			}
+		},
+		[{"i.token": token}],
+		false
+	);
 };
 
 const isUser = function(req, res){
