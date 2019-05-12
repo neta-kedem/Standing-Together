@@ -40,7 +40,7 @@ const markTypedContactScanRows = function(typerId, scanId, activists, markedDone
             associatedActivists = Object.values(associatedActivists);
             const updateQuery = ContactScan.updateOne(
                 {"_id": scanObjectId},
-                {"complete": markedDone, activists: associatedActivists}
+                {"complete": markedDone, activists: associatedActivists, "metadata.lastUpdate": today}
             ).exec().then(()=> {
                 return true;
             });

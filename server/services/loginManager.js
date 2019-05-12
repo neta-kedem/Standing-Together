@@ -49,7 +49,10 @@ const loginViaMail = function (req, res){
         if (err) return res.json({success: false, error: err});
         if(!user)
         {
-            return res.json({"error":"incorrect credentials"});
+            return Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode': null}}, (err) => {
+                if (err) return res.json({success: false, error: err});
+                return res.json({"error":"incorrect credentials"});
+            });
         }
         assignToken(user._id).then((token)=>{
             return res.json({"token":token, "permissions":user.role});
@@ -60,10 +63,10 @@ const loginViaMail = function (req, res){
 const sendCodeViaMail = function(code, email)
 {
     Mailer.sendEmail({
-        from: 'yanivcogan89@gmail.com',
+        from: 'noreply@gmail.com',
         to: email,
         subject: 'Your login code for Standing Together',
-        text: 'Use the following code: '+code
+        text: 'Use the following code: ' + code
     });
 };
 const assignToken = function(userId) {

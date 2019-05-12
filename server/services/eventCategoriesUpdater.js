@@ -4,13 +4,18 @@ const EventCategory = require('../models/eventCategoryModel');
 const saveEventCategories = function(categories){
     let toInsert = [];
     let toUpdate = [];
+    const today = new Date();
     for (let i = 0; i< categories.length; i++){
         //the best part of have to program categories is having a good reason to name a variable 'cat'
         let cat = categories[i];
-        if(cat._id)
+        if(cat._id){
+            cat["metadata.lastUpdate"] = today;
             toUpdate.push(cat);
-        else
+        }
+        else{
+            cat.metadata = {"creationDate": today, "lastUpdate": today};
             toInsert.push(cat);
+        }
     }
     const updatePromises = [insertCategories(toInsert), updateCategories(toUpdate)];
     return Promise.all(updatePromises);
