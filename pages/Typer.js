@@ -113,7 +113,7 @@ export default class Typer extends React.Component {
 				const scanData = json.scanData;
 				let eventData = json.eventData;
 				const eventDate = new Date(eventData.eventDetails.date);
-				eventData.eventDetails.date = eventDate.getFullYear()+"-"+eventDate.getMonth()+1+"-"+eventDate.getDate();
+				eventData.eventDetails.date = eventDate.getFullYear()+"-"+(eventDate.getMonth()+1)+"-"+eventDate.getDate();
 				this.setState({
 					"scanUrl": scanData.scanUrl,
 					"scanId": scanData._id,
