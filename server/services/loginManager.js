@@ -15,9 +15,9 @@ const identifyViaPhone = function (req, res){
 const identifyViaEmail = function (req, res){
     let email = req.body.email;
     let code = Math.random().toString(36).substr(2, 6);
-    Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode':code}}, (err, user) => {
+    Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode': code}}, (err, user) => {
         if (err) return res.json({success: false, error: err});
-        sendCodeViaMail(code, email);
+        //sendCodeViaMail(code, email);
         return res.json(true);
     });
 };
@@ -68,7 +68,6 @@ const loginViaMail = function (req, res){
                     'login.lastLoginAttempt': now,
                 },
                 (err) => {
-                    if (err) return res.json({success: false, error: err});
                     return res.json({"error":"you've been locked out of the system due to too many failed login attempts, please contact an organizer"});
                 });
         }
@@ -79,11 +78,10 @@ const loginViaMail = function (req, res){
             },
             (err) => {
                 if (err) return res.json({success: false, error: err});
-                return res.json({"error":"you've been locked out of the system due to too many failed login attempts, please contact an organizer"});
+                assignToken(user._id).then((token)=>{
+                    return res.json({"token":token, "permissions":user.role});
+                });
             });
-        assignToken(user._id).then((token)=>{
-            return res.json({"token":token, "permissions":user.role});
-        });
     });
 };
 
@@ -99,8 +97,10 @@ const sendCodeViaMail = function(code, email)
 const assignToken = function(userId) {
     const now = new Date();
     let token = generateToken();
-    let query = Activist.update({'_id':userId},{$push:{'login.token': {token: token, issuedAt: now, lastUsage: now}}});
-    return query.exec().then(()=>{return token});
+    let query = Activist.updateOne({'_id': userId}, {$push:{'login.tokens': {"token": token, "issuedAt": now, "lastUsage": now}}});
+    return query.exec().then(()=>{
+        return token
+    });
 };
 const generateToken = function() {
     let tokenLength = 32;

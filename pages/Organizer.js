@@ -49,13 +49,15 @@ componentDidMount() {
 fetchActivistsByQuery(query, page){
 	server.post('selectActivists', {'query':query, 'page':page})
 		.then(json => {
-			this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
+			if(json.activists)
+				this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
 		});
 }
 getPotentialEvents(){
 	server.get('events/getInviteless')
 		.then(json => {
-			this.setState({events:json});
+			if(json.events)
+				this.setState({events:json});
 		});
 }
 getCurrFilters(){

@@ -10,13 +10,13 @@ const getUserByToken = function(req){
 			return {"error":"missing token"};
 		});
 	}
-	const query = Activist.findOne({'login.token.token': token});
+	const query = Activist.findOne({'login.tokens.token': token});
 	const userPromise = query.exec().then((user) => {
-		updateLastTokenUsage(user["_id"], token);
 		if(!user)
 		{
 			return {"error":"missing token"};
 		}
+		updateLastTokenUsage(user["_id"], token);
 		myId = user["_id"];
 		return user;
 	});

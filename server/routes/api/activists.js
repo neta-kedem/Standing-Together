@@ -8,9 +8,6 @@ module.exports = (app) => {
 		activistFetcher.getActivists(req, res);
 	});
 	app.post('/api/selectActivists', (req, res) => {
-		dailySummary.sendDailySummary().then((result)=>{
-			console.log(result)
-		});
 		activistFetcher.queryActivists(req, res);
 	});
 	app.post('/api/activists', (req, res) => {
