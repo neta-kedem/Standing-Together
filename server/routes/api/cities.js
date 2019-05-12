@@ -5,9 +5,7 @@ const Authentication = require('../../services/authentication');
 module.exports = (app) => {
     app.get('/api/cities', (req, res) => {
          cityFetcher.getCities().then(cities=>{
-             SQLSync.sync().then(()=>{
-                 return res.json(cities);
-             });
+             return res.json(cities);
          });
     });
     app.post('/api/cities', (req, res) => {
