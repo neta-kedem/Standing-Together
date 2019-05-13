@@ -85,7 +85,16 @@ const activistSchema = new mongoose.Schema({
 	},
 	login: {
 		loginCode: String,
-		token: [String]
+		tokens: [{
+			token: {type: String},
+			issuedAt: {type: Date},
+			lastUsage: {type: Date}
+		}],
+		failedLoginCount:{
+			type: Number,
+			default: 0
+		},
+		lastLoginAttempt: Date
 	}
 });
 activistSchema.plugin(mongoosePaginate);

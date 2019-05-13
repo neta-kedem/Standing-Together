@@ -1,6 +1,8 @@
 const activistFetcher = require('../../services/activistsFetcher');
 const activistUpdater = require('../../services/activistUpdater');
 
+const dailySummary = require('../../services/dailySummary');
+
 module.exports = (app) => {
 	app.get('/api/activists', (req, res) => {
 		activistFetcher.getActivists(req, res);

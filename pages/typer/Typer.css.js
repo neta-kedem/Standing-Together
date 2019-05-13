@@ -2,6 +2,7 @@ import css from 'styled-jsx/css'
 export default css
 `
 	.content{
+	    overflow: auto;
 		height: 100%;
 		padding: 20px;
 		padding-top: 40px;
@@ -110,6 +111,7 @@ export default css
         font-size: 1.5em;
         font-weight: 400;
         text-align: center;
+        margin: 5%;
     }
     .post-button{
         justify-self: start;
@@ -132,5 +134,11 @@ export default css
         margin-left: 0.3em;
         text-align: center;
         vertical-align: middle;
+    }
+    .scan-uploader-form-wrap{
+        direction: ltr;
+    }
+    .scan-uploader-message{
+        text-align: center;
     }
 `

@@ -15,21 +15,24 @@ const saveCities = function(cities){
     return Promise.all(updatePromises);
 };
 const insertCities = function(cities){
+    const today = new Date();
     if(!cities || !cities.length)
         return Promise.resolve(true);
     const citiesObject = cities.map((c)=>{
-        return {name: {he: c.name}, defaultCircle: c.defaultCircle};
+        return {name: {he: c.name}, defaultCircle: c.defaultCircle, metadata:{"creationDate": today, "lastUpdate": today}};
     });
     const query = City.insertMany(citiesObject);
     return query;
 };
 const updateCities = function(cities){
+    const today = new Date();
     let updatePromises = [];
     for(let i=0; i<cities.length; i++){
         const curr = cities[i];
         const query = City.updateOne({'_id': mongoose.Types.ObjectId(curr._id)}, {
             "name.he" : curr.name,
-            "defaultCircle" : curr.defaultCircle
+            "defaultCircle" : curr.defaultCircle,
+            "metadata.lastUpdate": today
         });
         updatePromises.push(query.exec());
     }

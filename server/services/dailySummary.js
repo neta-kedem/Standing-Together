@@ -3,7 +3,7 @@ const activistsFetcher = require("./activistsFetcher");
 const eventFetcher = require("./eventFetcher");
 const arrayFunctions = require("./arrayFunctions");
 
-const COVERED_PERIOD = 3*24*60*60*1000;
+const COVERED_PERIOD = 5*24*60*60*1000;
 const EMAIL_TO = ["yanivcogan89@gmail.com"];
 const sendDailySummary = function(){
     return fetchRecentContactSheets().then((sheets)=>{
@@ -29,21 +29,26 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
     for(let i = 0; i < sheets.length; i++) {
         let sheet = sheets[i];
         events.add(sheet.eventId);
+        activists.add(sheet.metadata.creatorId);
         for(let j = 0; j < sheet.activists.length; j++)
         {
             let activist = sheet.activists[j];
-            activists.add(activist.activistId)
+            activists.add(activist.activistId);
+            activists.add(activist.typerId);
+            console.log(activist.typerId);
         }
     }
     const activistsPromise = activistsFetcher.getActivistsByIds(Array.from(activists)).then((activistsData)=>{
         const activistDict = arrayFunctions.indexByField(activistsData, "_id");
         for(let i = 0; i < sheets.length; i++) {
             let sheet = sheets[i];
-            events.add(sheet.eventId);
+            sheet.creator = activistDict[sheet.metadata.creatorId];
             for(let j = 0; j < sheet.activists.length; j++)
             {
                 let activist = sheet.activists[j];
                 activist.activistDetails = activistDict[activist.activistId];
+                activist.typerDetails = activistDict[activist.typerId];
+                console.log(activist.typerDetails);
             }
         }
         return true;
@@ -71,7 +76,9 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
 };
 
 compileSummary = function(events){
-    let result = "";
+    let result = "<head title='daily-summary'> <style>" +
+        "p{margin: 0;}" +
+        "</style> </head> <body dir='rtl'>";
     const today = new Date();
     const cutoff = new Date(today.valueOf()-COVERED_PERIOD);
     const eventCount = events.length;
@@ -90,21 +97,22 @@ compileSummary = function(events){
         let eventName = event.eventDetails.name;
         let eventDate = new Date(event.eventDetails.date).toISOString().split('T')[0];
         let eventLocation = event.eventDetails.location;
-        result += "סיכום הפעילות היומית בנוגע לאירוע " + eventName + " שנערך ב-" + eventDate + ", ב" + eventLocation + ": \n";
+        result += "<h3>" + "סיכום הפעילות היומית בנוגע לאירוע " + eventName + " שנערך ב-" + eventDate + ", ב" + eventLocation + ":" + "</h3>";
         //iterate over contact sheets
         for(let i = 0; i < contactSheets.length; i++){
             sheetCount++;
             let contactSheet = contactSheets[i];
             //TODO - replace with more relevant info
-            let uploader = contactSheet.metadata.creatorId;
+            let uploader = contactSheet.creator.profile.firstName + " " + contactSheet.creator.profile.lastName;
             let uploadDate = new Date(contactSheet.metadata.creationDate).toISOString().split('T')[0];
             let uploadTime = new Date(contactSheet.metadata.creationDate).toTimeString().split(' ')[0];
             if(contactSheet.metadata.creationDate > cutoff){
-                result += "הועלה דף קשר חדש למערכת ע\"י " + uploader + ", בשעה " + uploadTime + "\n";
+                result += "<b><p>" + "הועלה דף קשר חדש למערכת ע\"י " + uploader + ", בשעה " + uploadTime + "</p></b>";
             }
             else{
-                result += "הוקלדו אנשי קשר מדף שהועלה ע\"י " + uploader + ", בתאריך " + uploadDate + ", במסגרת האירוע " + event.eventDetails.name + "\n";
+                result += "<b><p>" + "הוקלדו אנשי קשר מדף שהועלה ע\"י " + uploader + ", בתאריך " + uploadDate + "</p></b>";
             }
+            result += "<a href=\"" + "http://localhost:3000/Typer?contactScan=" + contactSheet._id + "\">" + "לינק לעמוד הקלדנים" + "</a><br/>";
             //lists the details of contacts who were typed in *as part of to the current contact sheet*
             let newContactsInSheet = [];
             let existingContactsInSheet = [];
@@ -128,11 +136,11 @@ compileSummary = function(events){
             }
             if(newContactsInSheet.length || existingContactsInSheet.length)
             {
-                result += "בסה\"כ הוקלדו הפרטים של " + (newContactsInSheet.length + existingContactsInSheet.length) +
-                    " משתתפות באירוע. מתוכן, " + newContactsInSheet.length + " הוזנו למערכת בפעם הראשונה." + "\n";
+                result += "<p>" + "בסה\"כ הוקלדו הפרטים של " + (newContactsInSheet.length + existingContactsInSheet.length) +
+                    " משתתפות באירוע. מתוכן, " + newContactsInSheet.length + " הוזנו למערכת בפעם הראשונה." + "</p>";
             }
             else{
-                result += "טרם הוקלדו רשומות לפי דף הקשר הזה" + "\n";
+                result += "<p>טרם הוקלדו רשומות לפי דף הקשר הזה</p>";
             }
             if(newContactsInSheet.length)
             {
@@ -140,45 +148,51 @@ compileSummary = function(events){
                 for(let j = 0; j < newContactsInSheet.length; j++){
                     let activist = newContactsInSheet[j];
                     let activistDetails = activist.activistDetails;
+                    let typerDetails = activist.typerDetails;
                     //the comments left by the typer when inputting the data about the contact
                     let comments = activist.comments;
+                    result += "<p>";
                     result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
+                    result += ", הפרטים הוקלדו על ידי " + typerDetails.profile.firstName + " " + typerDetails.profile.lastName;
                     if(comments && comments.length){
                         result += " (הערה - " + comments + ")"
                     }
-                    result += "\n";
+                    result += "</p>";
                 }
             }
             if(existingContactsInSheet.length)
             {
-                result += "משתתפות שכבר הופיעו במערכת בעבר:" + "\n";
+                result += "<p>משתתפות שכבר הופיעו במערכת בעבר:</p>";
                 for(let j = 0; j < existingContactsInSheet.length; j++){
                     let activist = existingContactsInSheet[j];
                     let activistDetails = activist.activistDetails;
+                    let typerDetails = activist.typerDetails;
                     result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
+                    result += ", הפרטים הוקלדו על ידי " + typerDetails.profile.firstName + " " + typerDetails.profile.lastName;
                 }
             }
-            result += "\n";
+            result += "<br/>";
         }
-        result += "\n";
+        result += "<br/>";
     }
-    result += "\n";
-    result += "**************************\n";
-    result += "לסיכום, במהלך היום הוקלדו " + sheetCount + " דפי קשר, ";
+    result += "<br/>";
+    result += "<p>**************************</p>";
+    result += "לסיכום, במהלך היום הוקלדו <p>" + sheetCount + " דפי קשר, ";
     if(eventCount > 1)
         result += "מ" + eventCount + " אירועים שונים, ";
     result += "בסך הכל הפרטים של " + contactCount + " משתתפות הוקלדו, מתוכן " + newContactsCount + " שנוספו למערכת לראשונה";
-    result += "\n";
+    result += "</p>";
     const citiesByPopularity = Object.keys(cityCounter).map((city)=>{
         return {city: city, numOfNewContacts: cityCounter[city]};
     }).sort((a, b)=>{
         return b.numOfNewContacts - a.numOfNewContacts;
     });
-    result += "מבין אלו שנוספו לראשונה היום למערכת: " + "\n";
+    result += "<p>מבין אלו שנוספו לראשונה היום למערכת:</p>";
     for(let i = 0; i < Math.min(citiesByPopularity.length, 3); i++){
         let city = citiesByPopularity[i];
-        result += city.numOfNewContacts + " מ" + city.city + "\n";
+        result += city.numOfNewContacts + " מ" + city.city + "<br/>";
     }
+    result += "</body>";
     return result;
 };
 

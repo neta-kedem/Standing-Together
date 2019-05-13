@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const ArrayFunctions = require("../services/arrayFunctions");
 const Authentication = require('../services/authentication');
 const EventFetcher = require('../services/eventFetcher');
@@ -38,11 +38,24 @@ const getContactScan = function(req, res){
     Authentication.hasRole(req, res, "isTyper").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
+        const requestedId = req.query.scanId;
         const typerId = Authentication.getMyId();
         const now = new Date();
         const reservationDeadline = new Date(now.getTime() - maxReservationDuration*60000);
+        let query = {};
+        if(requestedId && requestedId.length){
+            try{
+                query = {"_id": mongoose.Types.ObjectId(requestedId)}
+            }
+            catch{
+                return res.json({success: false, error: "incorrect id supplied"});
+            }
+        }
+        else{
+            query = {"complete": false, $or:[{"lastPing":null}, {"lastPing":{$lt: reservationDeadline}}, {"typerId": typerId}]};
+        }
         ContactScan.findOneAndUpdate(
-            {"complete": false, $or:[{"lastPing":null}, {"lastPing":{$lt: reservationDeadline}}, {"typerId": typerId}]},
+            query,
             {"$set": {"lastPing": now, "typerId": typerId}},
             (err, scanData) => {
                 if (err) return res.json({success: false, error: err});
@@ -59,8 +72,27 @@ const getContactScan = function(req, res){
             });
     })
 };
+const getById = function(scanId){
+    let scanObjectId;
+    try{
+        scanObjectId = mongoose.Types.ObjectId(scanId);
+    }
+    catch{
+        return {error: "incorrect id supplied"};
+    }
+    const query = ContactScan.findOne({"_id": scanObjectId});
+    const promise = query.exec().then((res)=>{
+        if (!res || !res._id)
+            return {"error":"couldn't find a matching scan"};
+        return res;
+    }).catch((err)=>{
+        return {success: false, error: err};
+    });
+    return promise;
+};
 
 module.exports = {
-    getContactScan
+    getContactScan,
+    getById
 };
 
