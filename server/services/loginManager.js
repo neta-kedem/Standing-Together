@@ -2,11 +2,13 @@ const Activist = require('../models/activistModel');
 const Mailer = require('../services/mailer');
 
 const MAX_FAILED_LOGINS = 3;
+const LOGIN_CODE_LENGTH = 12;
+const TOKEN_LENGTH = 32;
 
 const identifyViaPhone = function (req, res){
     let phone = req.body.phone;
     phone = phone.replace(/[\-.():]/g, '');
-    let code = Math.random().toString(36).substr(2, 6);
+    let code = Math.random().toString(36).substr(2, LOGIN_CODE_LENGTH);
     Activist.findOneAndUpdate({'profile.phone':phone}, {$set : {'login.loginCode':code}}, (err, user) => {
         if (err) return res.json({success: false, error: err});
         return res.json(true);
@@ -14,7 +16,7 @@ const identifyViaPhone = function (req, res){
 };
 const identifyViaEmail = function (req, res){
     let email = req.body.email;
-    let code = Math.random().toString(36).substr(2, 6);
+    let code = Math.random().toString(36).substr(2, LOGIN_CODE_LENGTH);
     Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode': code}}, (err, user) => {
         if (err) return res.json({success: false, error: err});
         //sendCodeViaMail(code, email);
@@ -103,10 +105,9 @@ const assignToken = function(userId) {
     });
 };
 const generateToken = function() {
-    let tokenLength = 32;
     let token = "";
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for(let i = 0; i < tokenLength; i++) {
+    for(let i = 0; i < TOKEN_LENGTH; i++) {
         token += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return token;

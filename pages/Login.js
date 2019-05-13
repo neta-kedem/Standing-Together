@@ -11,6 +11,7 @@ export default class Login extends React.Component {
 state = {
 	phone: "",
 	email: "",
+	code: "",
 	codeSent: false
 };
 
@@ -39,9 +40,20 @@ identifyByEmail(email){
 		this.setState({codeSent: true, identificationMethod: "Email", email: email});
 	});
 }
-
-verifyLoginCode(code)
+setLoginCode = function (event){
+	this.setState({code: event.target.value})
+}.bind(this);
+handleCodeKeyDown = function(event){
+	if(event.key === 'Enter'){
+		this.verifyLoginCode();
+	}
+}.bind(this);
+resendCode = function(){
+	this.setState({codeSent: false});
+}.bind(this);
+verifyLoginCode()
 {
+	const code = this.state.code;
 	const method = this.state.identificationMethod === "Email" ? "login/email" : "login/phone";
 	const data ={'phone':this.state.phone, 'email':this.state.email, 'code':code};
 	server.post(method, data)
@@ -64,10 +76,6 @@ verifyLoginCode(code)
 			if(json.permissions.isCaller){
 				Router.push({pathname: '/Caller'}).then(()=>{});
 			}
-		}
-		else
-		{
-			this.setState({codeSent: false, identificationMethod: ""});
 		}
 	});
 }
@@ -102,10 +110,12 @@ render() {
 		<div>
 			<br/>
 			<div className='code-input-title'>
-				{"הזינו את הקוד שנשלח אליכם ב- "+this.state.identificationMethod}
+				{"הזינו את הקוד שנשלח אליכם במייל"}
 			</div>
 			<br/>
-			<CodeInput verificationFunction={this.verifyLoginCode.bind(this)}/>
+			<input className={"login-code"} value={this.state.code} onChange={(event) => {this.setLoginCode(event)}} onKeyDown={(event)=>{this.handleCodeKeyDown(event)}}/>
+
+			<div className={"back-to-identification"} onClick={this.resendCode}>חזרה</div>
 		</div>;
 	return (
 		<div className='login-page-wrap' dir="rtl">
