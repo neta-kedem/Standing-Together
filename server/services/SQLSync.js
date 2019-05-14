@@ -54,8 +54,10 @@ const generateSQLQuery = function(updated){
                 //close of last query (don't close if this is the very first iteration, and the query string is empty
                 if(query.length){
                     query +=  values.join(", ") + "ON DUPLICATE KEY UPDATE data = VALUES(data);";
+                    queries.push(query);
+                    query = "";
                 }
-                let values = [];
+                values = [];
                 query += "INSERT INTO "+schema.tableName+" (id, data) VALUES ";
             }
             values.push("('" + updated[i][j]._id + "', ''" + mysql.escape(JSON.stringify(updated[i][j])) + "'')");
@@ -68,7 +70,6 @@ const generateSQLQuery = function(updated){
 
 const updateMysql = function(queries){
     const con = mysql.createConnection(connectionConfig);
-    console.log(queries);
     con.connect((err) => {
         if(err){
             console.log(err);
