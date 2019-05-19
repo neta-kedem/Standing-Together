@@ -22,6 +22,19 @@ const callSizeLimit = 5;
 server.use(bodyParser.urlencoded({extended:false, limit:1024*1024*callSizeLimit, type:'application/x-www-form-urlencoding'}));
 server.use(bodyParser.json({limit:1024*1024*callSizeLimit, type:'application/json'}));
 server.use(cookieParser());
+const auth = function(req, res, next) {
+	authentication.isUser(req, res).then((isUser)=>{
+		if (isUser) {
+			next();
+		}
+		else{
+			res.redirect('/Login');
+			next(false);
+			res.end();
+		}
+	});
+};
+server.use('/uploads', auth);
 server.use(express.static('public'));
 //set cron
 cron.scheduleSync();
