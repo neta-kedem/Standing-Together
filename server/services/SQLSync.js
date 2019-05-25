@@ -25,25 +25,30 @@ const connectionConfig = {
 };
 
 
-const fetchUpdated = function(){
+const fetchUpdated = function(syncAll = false){
     let updated = [];
     const now = new Date();
     const updateCutoff = new Date(now.getTime() - SYNC_LAST_HOURS * 3600000);
+    const toSyncQuery = syncAll ? {} : {"metadata.lastUpdate": {$gt: updateCutoff}};
     for(let i = 0; i < schemas.length; i++){
         let schema = schemas[i];
-        const query = schema.model.find({"metadata.lastUpdate": {$gt: updateCutoff}});
+        const query = schema.model.find(toSyncQuery);
         updated.push(query.exec());
     }
     return Promise.all(updated);
 };
-const generateSQLQuery = function(updated){
+const generateSQLQuery = function(updated, emptyFirst){
     let queries = [];
     for(let i = 0; i < schemas.length; i++){
+        //the current schema for which an update query is generated
+        let schema = schemas[i];
+        //empty tables if attempting a full sync
+        if(emptyFirst)
+            queries.push("DELETE FROM " + schema.tableName + ";");
+
         //if the collection matching the schema contains recently updated rows
         if(!updated[i] || !updated[i].length)
             continue;
-        //the current schema for which an update query is generated
-        let schema = schemas[i];
         //accumulate the VALUES part of the insert query
         let values = [];
         let query = "";
@@ -91,7 +96,14 @@ const sync = function(){
         return true;
     })
 };
+const syncAll = function(){
+    return fetchUpdated(true).then((results)=>{
+        updateMysql(generateSQLQuery(results, true));
+        return true;
+    })
+};
 
 module.exports = {
-    sync
+    sync,
+    syncAll
 };

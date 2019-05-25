@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 mongoose.set('debug', true);
 
 const authentication = require('./server/services/authentication');
+const SQLSync = require("./server/services/SQLSync");
 
 mongoose.connect(MONGODB_URI).then(()=>{});
 mongoose.Promise = global.Promise;
@@ -149,6 +150,20 @@ app.prepare().then(() => {
 			}
 			else{
 				return app.render(req, res, '/Caller', req.query);
+			}
+		});
+	});
+	server.get('/admin/sync', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				SQLSync.syncAll().then(()=>{
+					return app.render(req, res, '/Organizer', req.query);
+				});
 			}
 		});
 	});
