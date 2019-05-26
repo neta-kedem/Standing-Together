@@ -90,9 +90,16 @@ const getById = function(scanId){
     });
     return promise;
 };
+const getByActivistId = function(activistId){
+    const query = ContactScan.find({"activists.activistId": activistId});
+    return query.exec().then(results=>{
+        return results;
+    });
+};
 
 module.exports = {
     getContactScan,
-    getById
+    getById,
+    getByActivistId
 };
 

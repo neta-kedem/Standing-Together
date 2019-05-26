@@ -57,6 +57,18 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/Activist', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/Activist', req.query);
+			}
+		});
+	});
 	server.get('/EventCreation', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
 			if(!user)
