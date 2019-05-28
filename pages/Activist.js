@@ -143,15 +143,13 @@ export default class EventCreation extends React.Component {
     }.bind(this);
     validateActivist() {
     }
-    handlePost() {
-        if(!this.validateEvent())
-            return;/*
-        server.post('events', {'event':eventObject})
+    handlePost = function() {
+        server.post('activists', {'activists': [this.state.activist]})
             .then(() => {
                 alert("saved");
                 Router.push({pathname: '/Organizer'}).then(()=>{});
-            });*/
-    }
+            });
+    }.bind(this);
 
     render() {
         const activist = this.state.activist;
@@ -168,7 +166,7 @@ export default class EventCreation extends React.Component {
                             <div>שמירה</div>
                             <div>שמירה</div>
                         </div>
-                        <div className="save-event-button-icon">
+                        <div className="save-event-button-icon" onClick={this.handlePost}>
                             <FontAwesomeIcon icon="save"/>
                         </div>
                     </div>
@@ -184,7 +182,7 @@ export default class EventCreation extends React.Component {
                             dataLists={this.state.profileDataLists}
                             fields={profileFields}
                             values={activist.profile}
-                            handleChange={this.handleContactTypedInput}
+                            handleChange={this.handleTypedInput}
                         />:null
                     }
                     <h2>הרשאות</h2>

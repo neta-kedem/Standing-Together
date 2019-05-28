@@ -20,7 +20,13 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/activists', (req, res) => {
-		activistUpdater.insertActivists(req, res);
+		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			activistUpdater.updateActivists(req.body.activists).then(() => {
+				return res.json(true)
+			});
+		})
 	});
 	app.post('/api/activists/toggleStatus', (req, res) => {
 		activistUpdater.toggleActivistStatus(req, res);
