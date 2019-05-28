@@ -7,8 +7,8 @@ import FormSegment from './activist/formSegment'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faShareSquare} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faShareSquare);
+import {faSave} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faSave);
 
 export default class EventCreation extends React.Component {
     constructor(props) {
@@ -169,7 +169,7 @@ export default class EventCreation extends React.Component {
                             <div>שמירה</div>
                         </div>
                         <div className="save-event-button-icon">
-                            <FontAwesomeIcon icon="share-square"/>
+                            <FontAwesomeIcon icon="save"/>
                         </div>
                     </div>
                 </TopNavBar>
