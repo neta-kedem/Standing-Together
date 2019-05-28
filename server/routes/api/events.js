@@ -1,6 +1,6 @@
 const eventUpdater = require('../../services/eventUpdater');
 const eventFetcher = require('../../services/eventFetcher');
-
+const Authentication = require('../../services/authentication');
 module.exports = (app) => {
 	app.post('/api/events', (req, res) => {
 		eventUpdater.saveEvent(req, res);

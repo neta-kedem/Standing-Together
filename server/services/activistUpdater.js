@@ -9,6 +9,17 @@ const cityFetcher = require("./cityFetcher");
 const activistsFetcher = require("./activistsFetcher");
 const arrayFunctions = require("./arrayFunctions");
 
+const updateActivists = function(activists){
+    let updateQueries = [];
+    for(let i = 0; i < activists.length; i++)
+    {
+        let a = activists[i];
+        updateQueries.push(Activist.updateOne({_id: mongoose.Types.ObjectId(a._id)},
+            {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": new Date()}).exec());
+    }
+    return Promise.all(updateQueries);
+};
+
 const markTypedContactScanRows = function(typerId, scanId, activists, markedDone){
     const today = new Date();
     const scanObjectId = mongoose.Types.ObjectId(scanId);
@@ -79,7 +90,7 @@ const updateDuplicateActivists = function(activists){
     }
     return Promise.all(updatePromises);
 };
-const insertActivists = function(req, res){
+/*const insertActivists = function(req, res){
     const newActivist = new Activist(req.body);
     newActivist.save(function (err) {
         if (err){
@@ -88,7 +99,7 @@ const insertActivists = function(req, res){
         else
             return res.json(req.body);
     });
-};
+};*/
 const toggleActivistStatus = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
         if(!isUser)
@@ -270,5 +281,5 @@ const uploadTypedActivists = function (req, res){
 module.exports = {
     uploadTypedActivists,
     toggleActivistStatus,
-    insertActivists
+    updateActivists
 };

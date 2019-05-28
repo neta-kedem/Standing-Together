@@ -11,8 +11,8 @@ const getUserByToken = function(req){
 	const token = req.cookies.token;
 	if(!token)
 	{
-		return new Promise(()=>{
-			return {"error":"missing token"};
+		return new Promise((resolve, reject)=>{
+			resolve({"error":"missing token"});
 		});
 	}
 	const query = Activist.findOne({'login.tokens.token': token});
@@ -39,7 +39,7 @@ const getUserByToken = function(req){
 const retireExpiredTokens = function(user){
 	let validTokens = [];
 	let now = new Date();
-	console.log(user.login);
+	//console.log(user.login);
 	for(let i = 0; i < user.login.tokens.length; i++){
 		let token = user.login.tokens[i];
 		if(token.issuedAt >= (now - TOKEN_EXPIRATION) || token.lastUsage >= (now - LAST_TOKEN_USAGE))
@@ -67,12 +67,9 @@ const updateLastTokenUsage = function(id, token){
 };
 
 const isUser = function(req, res){
-	const promise = (
-		getUserByToken(req, res)
-		.then(user=>{
+	const promise = getUserByToken(req, res).then((user)=>{
 			return !user.error;
-		})
-	);
+		});
 	return promise;
 };
 const hasRole = function(req, res, role){

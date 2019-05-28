@@ -15,6 +15,7 @@ import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
 import PageNav from "../UIComponents/PageNav/PageNav";
+import Router from "next/router";
 
 export default class Organizer extends React.Component {
 constructor(props) {
@@ -35,7 +36,6 @@ constructor(props) {
 			{title: ["אימייל", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text"},
 			{title: ["נראתה לאחרונה", "נראתה לאחרונה"],  visibility: true, key: "lastSeen", icon:"calendar", type:"text"},
 			{title: ["אירוע אחרון", "אירוע אחרון"],  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
-			{title: ["טלפנית?", "טלפנית?"],  visibility: true, noPadding:true, width:"3em", key: "isCaller", icon:"", type:"toggle", handleChange:this.handleActivistCallerStatusChange.bind(this)}
 		],
 		displayEventSelectionPopup: false
 	};
@@ -71,12 +71,6 @@ handlePageNavigation(page){
 		this.fetchActivistsByQuery(this.state.query, this.state.page);
 	});
 }
-handleActivistCallerStatusChange(activistIndex, status){
-	const activists = this.state.activists.slice();
-	activists[activistIndex].isCaller=status;
-	this.setState({activists: activists});
-	server.post('activists/toggleStatus', {'status':status, 'activistId':this.state.activists[activistIndex]._id});
-}
 handleFieldDisplayToggle(fieldIndex, status){
 	const tableFields = this.state.tableFields.slice();
 	tableFields[fieldIndex].visibility=status;
@@ -94,6 +88,9 @@ handleEventSelection(selected){
 			this.setState({campaignCreated: true, selectedEventCode: json.eventCode});
 			this.getPotentialEvents();
 		});
+}
+goToActivistPage(activist){
+	Router.push({pathname: '/Activist', query: {id: activist._id}}).then(()=>{});
 }
 render() {
 	const currPage = this.state.page;
@@ -141,8 +138,10 @@ render() {
 			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="saved-views-wrap">
-					<div className="saved-views">שאילתה 1</div>
-					<div className="saved-views">שאילתה 2</div>
+					{/**<div className="saved-views">שאילתה 1</div>
+					<div className="saved-views">שאילתה 2</div>**/}
+					<a className="saved-views" href={"./EventCreation"}>create a new event</a>
+					<a className="saved-views" href={"./ScanContacts"}>scan contacts</a>
 				</div>
 			</TopNavBar>
 			<div className="content-wrap">
@@ -157,7 +156,7 @@ render() {
 					> </QueryResultsActionMenu>
 					<div className="results-wrap">
 						<div className="query-results">
-							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields}> </SelectableTable>
+							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields} onDoubleClick={this.goToActivistPage}> </SelectableTable>
 							<PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
 						</div>
 					</div>

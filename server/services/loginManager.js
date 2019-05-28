@@ -19,7 +19,7 @@ const identifyViaEmail = function (req, res){
     let code = Math.random().toString(36).substr(2, LOGIN_CODE_LENGTH);
     Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode': code}}, (err, user) => {
         if (err) return res.json({success: false, error: err});
-        //sendCodeViaMail(code, email);
+        sendCodeViaMail(code, email);
         return res.json(true);
     });
 };
