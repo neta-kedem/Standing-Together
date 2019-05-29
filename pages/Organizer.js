@@ -21,7 +21,7 @@ export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
-		query: {/*"profile.firstName":"Noam"*/},
+		query: "",
 		page: 0,
 		pageCount: 1,
 		activistCount: 0,
@@ -42,16 +42,28 @@ constructor(props) {
 }
 
 componentDidMount() {
-	this.fetchActivistsByQuery(this.state.query, this.state.page);
+	this.fetchActivistsByQuery();
 	this.getPotentialEvents();
 	this.getCurrFilters();
 }
-fetchActivistsByQuery(query, page){
-	server.post('selectActivists', {'query':query, 'page':page})
+fetchActivistsByQuery(){
+	let query = "";
+	try{
+		query = JSON.parse("{"+this.state.query+"}");
+	}
+	catch(err){
+		console.log(err);
+		alert("check your syntax!");
+		return;
+	}
+	server.post('selectActivists', {'query': query, 'page': this.state.page})
 		.then(json => {
 			if(json.activists)
 				this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
 		});
+}
+handleQueryChange(event){
+	this.setState({query: event.target.value});
 }
 getPotentialEvents(){
 	server.get('events/getInviteless')
@@ -68,7 +80,7 @@ getCurrFilters(){
 }
 handlePageNavigation(page){
 	this.setState({page: page}, ()=>{
-		this.fetchActivistsByQuery(this.state.query, this.state.page);
+		this.fetchActivistsByQuery();
 	});
 }
 handleFieldDisplayToggle(fieldIndex, status){
@@ -146,7 +158,9 @@ render() {
 			</TopNavBar>
 			<div className="content-wrap">
 				<div className="left-panel">
-					<QueryCreator currFilters={this.state.currFilters}> </QueryCreator>
+					{/*<QueryCreator currFilters={this.state.currFilters}> </QueryCreator>*/}
+					<input type={"text"} value={this.state.query} onChange={this.handleQueryChange.bind(this)}/>
+					<button type={"button"} onClick={this.fetchActivistsByQuery.bind(this)}>filter</button>
 				</div>
 				<div className="main-panel">
 					<QueryResultsActionMenu
