@@ -2,28 +2,36 @@ const mongoose = require('mongoose');
 const Authentication = require('../services/authentication');
 const Event = require('../models/eventModel');
 
-const getEventById = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        try {
-            mongoose.Types.ObjectId(req.params.id);
-        }
-        catch(err) {
-            return res.json({success: false, error: "invalid event id"});
-        }
-        const eventId = mongoose.Types.ObjectId(req.params.id);
-        Event.findOne({"_id": eventId}, (err, eventData) => {
-            if (err) return res.json({success: false, error: err});
-            if (!eventData)
-                return res.json({"error":"couldn't find a matching event"});
-            return res.json({
-                "_id":eventData._id,
-                "eventDetails":eventData.eventDetails,
-                "callInstructions":eventData.callInstructions
-            });
-        });
-    })
+//used internally by other server-side functions
+const getEventsByIds = function (ids){
+    const query = Event.find({"_id":{$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}});
+    const eventsPromise = query.exec().then((events) => {
+        return events
+    });
+    return eventsPromise;
+};
+//used externally by API
+const getEventById = function(eventId){
+    try {
+        mongoose.Types.ObjectId(eventId);
+    }
+    catch(err) {
+        return {success: false, error: "invalid event id"};
+    }
+    const eventIdObject = mongoose.Types.ObjectId(eventId);
+    const query = Event.findOne({"_id": eventIdObject});
+    const promise = query.exec().then((res)=>{
+        if (!res || !res._id)
+            return {"error":"couldn't find a matching event"};
+        return {
+            "_id":res._id,
+            "eventDetails":res.eventDetails,
+            "callInstructions":res.callInstructions
+        };
+    }).catch((err)=>{
+        return {success: false, error: err};
+    });
+    return promise;
 };
 const getEventByCode = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
@@ -62,13 +70,15 @@ const getCampaignLess = function(req, res){
     })
 };
 const listEvents = function(req, res){
-    //TODO move this constant elsewhere
-    const pageSize = 15;
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
         if(!isUser)
             return res.json({"error" : "missing token"});
-        Event.find({}).sort({"eventDetails.name": -1}).limit(pageSize).skip(req.page*pageSize).then((events) => {
-            return res.json(events.map((event)=>{
+        const page = req.body.page;
+        if(page < 0)
+            return res.json({"error":"illegal page"});
+        const PAGE_SIZE = 15;
+        Event.paginate({}, {sort: {"metadata.creationDate": -1}, page: page + 1, limit: PAGE_SIZE }).then((result) => {
+            const events = result.docs.map((event)=>{
                 return {
                     _id: event._id,
                     creationDate: event.metadata.creationDate,
@@ -78,7 +88,8 @@ const listEvents = function(req, res){
                     campaign: !!event.campaign,
                     campaignUrl: !!event.campaign?event.campaign.eventCode:null
                 };
-            }))
+            });
+            return res.json({"events": events, "pageCount": result.pages, "eventCount": result.total});
         });
     })
 };
@@ -87,6 +98,7 @@ module.exports = {
     getEventById,
     getEventByCode,
     getCampaignLess,
-    listEvents
+    listEvents,
+    getEventsByIds
 };
 

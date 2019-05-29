@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 mongoose.set('debug', true);
 
 const authentication = require('./server/services/authentication');
+const SQLSync = require("./server/services/SQLSync");
 
 mongoose.connect(MONGODB_URI).then(()=>{});
 mongoose.Promise = global.Promise;
@@ -22,6 +23,19 @@ const callSizeLimit = 5;
 server.use(bodyParser.urlencoded({extended:false, limit:1024*1024*callSizeLimit, type:'application/x-www-form-urlencoding'}));
 server.use(bodyParser.json({limit:1024*1024*callSizeLimit, type:'application/json'}));
 server.use(cookieParser());
+const auth = function(req, res, next) {
+	authentication.isUser(req, res).then((isUser)=>{
+		if (isUser) {
+			next();
+		}
+		else{
+			res.redirect('/Login');
+			next(false);
+			res.end();
+		}
+	});
+};
+server.use('/uploads', auth);
 server.use(express.static('public'));
 //set cron
 cron.scheduleSync();
@@ -40,6 +54,18 @@ app.prepare().then(() => {
 			}
 			else{
 				return app.render(req, res, '/Organizer', req.query);
+			}
+		});
+	});
+	server.get('/Activist', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/Activist', req.query);
 			}
 		});
 	});
@@ -91,6 +117,18 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/EventCategoriesManagement', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/EventCategoriesManagement', req.query);
+			}
+		});
+	});
 	server.get('/ScanContacts', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
 			if(!user)
@@ -126,6 +164,23 @@ app.prepare().then(() => {
 				return app.render(req, res, '/Caller', req.query);
 			}
 		});
+	});
+	server.get('/admin/sync', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				SQLSync.syncAll().then(()=>{
+					return app.render(req, res, '/Organizer', req.query);
+				});
+			}
+		});
+	});
+	server.get('/MemberRegistration', (req, res) => {
+		return app.render(req, res, '/MemberRegistration', req.query);
 	});
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);

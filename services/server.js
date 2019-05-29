@@ -38,6 +38,7 @@ function post(path, data){
 		if(json.error === "missing token")
 		{
 			Router.push({pathname: '/Login'});
+			return null;
 		}
 		return json;
 	});

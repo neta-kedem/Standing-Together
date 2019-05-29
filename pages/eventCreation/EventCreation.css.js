@@ -43,9 +43,9 @@ export default css
 		margin-bottom: 0.5em;
 		margin-left: 2em;
 		white-space: nowrap;
-		align-self: center;
+		align-self: right;
 		line-height: 1.2em;
-		color: #90969E;
+		color: #60666E;
 		font-weight: bold;
 	}
 	label.inline-label{
@@ -68,28 +68,22 @@ export default css
 	}
 	.content-wrap{
 		height: calc(100vh - 55px);
-		padding: 4em 8em;
+		padding: 2em 4em;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: row;
 		overflow-y: auto;
 	}
 	.event-details-wrap{
+	    width: 100%;
 		box-sizing: border-box;
-		width: 50%;
-		padding-left: 5em;
 		vertical-align: top;
 	}
-	.event-details-wrap input{
-		text-align:center;
+	.event-details-wrap input, .event-details-wrap select{
+	    width: 40%;
+		text-align: right;
 		padding: 0.25em;
 		box-sizing: border-box;
-	}
-	#event-name{
-		width: 60%;
-	}
-	#event-date{
-		width: 40%;
 	}
 	.event-identification{
 		height:4em;
@@ -99,23 +93,6 @@ export default css
 	}
 	.event-text{
 		height: 13em;
-	}
-	.event-script-wrap{
-		display: flex;
-		flex-direction: column;
-		width:50%;
-		height: 28.75em;
-		vertical-align: top;
-	}
-	.event-script-wrap label{
-		height: 100%;
-	}
-	.event-script-wrap textarea{
-		height: 100%;
-		width: 100%;
-		padding: 0.5em;
-		border: none;
-		overflow-y: scroll;
 	}
 	.save-event-button{
 		color: white;

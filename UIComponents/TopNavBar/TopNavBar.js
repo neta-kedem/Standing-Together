@@ -6,6 +6,7 @@ import server from '../../services/server';
 export default class TopNavBar extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {justification: this.props.justification || "end"}
 	}
 	logout(){
 		server.get('logout', {})
@@ -15,7 +16,7 @@ export default class TopNavBar extends React.Component {
 	}
 	render() {
 		return (
-			<div className="nav-bar-wrapper">
+			<div className="nav-bar-wrapper" style={{"justifyContent":this.state.justification}}>
 				<style jsx global>{style}</style>
                 <div className="nav-bar-logo-menu-wrap">
 				    <div className="nav-bar-logo"> </div>

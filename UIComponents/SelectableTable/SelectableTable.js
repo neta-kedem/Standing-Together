@@ -18,6 +18,7 @@ export default class SelectableTable extends React.Component {
 			header: props.header,
 			singleSelection: props.singleSelection,
 			onSelect: props.onSelect,
+			onDoubleClick: props.onDoubleClick,
 			allSelected: false
 		};
 	}
@@ -32,7 +33,7 @@ export default class SelectableTable extends React.Component {
 	
 	toggleAllRowsSelection() {
 		const rows = this.state.rows.slice();
-		for (var i=0; i<rows.length; i++)
+		for (let i = 0; i < rows.length; i++)
 		{
 			rows[i].selected = !this.state.allSelected;
 		}
@@ -53,6 +54,9 @@ export default class SelectableTable extends React.Component {
 		this.setState({rows: rows});
 		if(this.state.onSelect)
 			this.state.onSelect(rowIndex);
+	}
+	onDoubleClick(rowIndex) {
+		this.state.onDoubleClick(this.state.rows.slice()[rowIndex])
 	}
 
 	cellConstructor(type, val, onChangeFunction) {
@@ -88,7 +92,7 @@ export default class SelectableTable extends React.Component {
 			</tr>;
 		const rows =
 			this.state['rows'].map((row, i) =>
-				<tr key={this.state.rowKey?row[this.state.rowKey]:i} className='list-table-row' onClick={() => this.toggleRowSelection(i)}>
+				<tr key={this.state.rowKey?row[this.state.rowKey]:i} className='list-table-row' onClick={() => this.toggleRowSelection(i)} onDoubleClick={()=>this.onDoubleClick(i)}>
 					<td className={'list-table-field no-padding list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
 					{
 						this.state.header.map((field, j) =>

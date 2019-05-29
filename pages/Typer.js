@@ -1,12 +1,19 @@
 import React from 'react';
 import Meta from '../lib/meta';
 import server from '../services/server';
-import HeaderBar from './typer/HeaderBar'
+import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import TypedActivistsTable from './typer/TypedActivistsTable'
 import ContactScanDisplay from './typer/ContactScanDisplay'
-import FieldValidation from './typer/FieldValidation'
+import FieldValidation from '../services/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
 import style from './typer/Typer.css'
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faCloudUploadAlt } from '@fortawesome/fontawesome-free-solid'
+import ScanForm from "./scanContacts/ScanForm";
+import SuccessfulUpload from "./typer/SuccessfulUpload";
+fontawesome.library.add(faCloudUploadAlt);
+
 
 
 
@@ -21,11 +28,13 @@ export default class Typer extends React.Component {
 			profileFields: [
 				{
 					name: "firstName", type: "text", ar: "الاسم الشخصي", he: "שם פרטי",
-					validation: /^null|^.{2,}$/
+					validation: /^.{2,}$/,
+					required: true
 				},
 				{
 					name: "lastName", type: "text", ar: "اسم العائلة", he: "שם משפחה",
-					validation: /^null|^.{2,}$/
+					validation: /^.{2,}$/,
+					required: true
 				},
 				{
 					name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",
@@ -33,23 +42,32 @@ export default class Typer extends React.Component {
 				},
 				{
 					name: "residency", type: "select", ar: "البلد", he: "עיר",
-					validation: /^null|^.{2,}$/
+					validation: /^.{2,}$/,
+					required: true
 				},
 				{
-					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
+					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true,
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				},
+				{
+					name: "comments", type: "text", ar: "ملاحظات", he: "הערות", margin: "true", postOnTab: true,
 				},
 			],
 			profileDataLists: [
 				{field:"residency", data:[]}
 			],
-			cells: [],
+			eventData: {},
 			selectedRowIndex: 0,
-			scanId: null,
+			scanId: props.url.query.contactScan ? props.url.query.contactScan: "",
+			displayTyperForm: false,
+			displayScanUploadForm: false,
+			displayLoadingMessage: true,
 			scanUrl: null,
 			fullyTyped: false,
 			displayFullyTypedPopup: false,
 			postAttempted: false, //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
+			postInProcess: false,
+			postSuccessful: false,
 			unsaved: false
 		};
 	};
@@ -60,7 +78,8 @@ export default class Typer extends React.Component {
 	componentDidMount() {
 		this.fetchCities();
 		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
-		FieldValidation.setFields(this.state.profileFields.slice());
+		this.ActivistFieldsValidation = new FieldValidation();
+		this.ActivistFieldsValidation.setFields(this.state.profileFields.slice());
 		//confirm exit without saving
 		window.onbeforeunload = this.refreshHandler;
 	}
@@ -78,18 +97,30 @@ export default class Typer extends React.Component {
 			});
 	}
 	getContactsScan() {
-		server.get('contactScan', {})
+		this.setState({displayLoadingMessage: true});
+		server.get('contactScan?scanId='+this.state.scanId, {})
 		.then(json => {
+			this.setState({displayLoadingMessage: false});
 			if(json.error)
 			{
 				if(json.error === "no pending scans are available")
-					alert("אין דפי קשר שדורשים הקלדה במערכת. תוכלו להקליד פרטי פעילים בכל מקרה");
+					//request that the typer uploads a contact scan
+					this.setState({displayScanUploadForm: true});
 				return;
 			}
 			if(json.scanData)
 			{
 				const scanData = json.scanData;
-				this.setState({"scanUrl":scanData.scanUrl, "cells":scanData.rows, "scanId":scanData._id});
+				let eventData = json.eventData;
+				const eventDate = new Date(eventData.eventDetails.date);
+				eventData.eventDetails.date = eventDate.getFullYear()+"-"+(eventDate.getMonth()+1)+"-"+eventDate.getDate();
+				this.setState({
+					"scanUrl": scanData.scanUrl,
+					"scanId": scanData._id,
+					"eventData": eventData.eventDetails,
+					"displayScanUploadForm": false,
+					"displayTyperForm": true,
+				});
 				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
 				// store interval promise in the state so it can be cancelled later:
 				this.setState({callPingInterval: callPingInterval});
@@ -99,7 +130,9 @@ export default class Typer extends React.Component {
 				const activists = json.activists.map((activist)=>{
 					return this.generateRow(activist, true, true);
 				});
-				this.setState({"activists":activists});
+				this.setState({"activists":activists}, ()=>{
+					this.addRow();
+				});
 			}
 		});
 	}
@@ -107,18 +140,25 @@ export default class Typer extends React.Component {
 		if(!this.state.scanId)
 			return;
 		server.post('contactScan/pingScan', {
-			'scanId':this.state.scanId
+			'scanId': this.state.scanId
 		})
 		.then(json => {
 		});
 	}
+
+	handleScanUpload = function(scanId){
+		this.setState({scanId: scanId}, ()=>{
+			this.getContactsScan();
+		})
+	}.bind(this);
+
 	//this function generates a new row template
 	generateRow = function(data = {}, locked = false, saved = false){
 		let row = data;
 		const fields = this.state.profileFields;
 		for(let i = 0; i<fields.length; i++){
 			row[fields[i].name] = data[fields[i].name] || "";
-			row[fields[i].name + "Valid"] = saved;
+			row[fields[i].name + "Valid"] = saved || !fields[i].validation;
 		}
 		row.scanRow = data["scanRow"] || 0;
 		row.locked = locked;
@@ -138,10 +178,6 @@ export default class Typer extends React.Component {
 				break;
 			}
 		}
-		//don't overflow the scanned rows
-		if(this.state.cells.length && nextScanRow >= this.state.cells.length){
-			return;
-		}
 		activists.push(this.generateRow({scanRow: nextScanRow}));
 		//if a row was added in the middle, sort it into position
 		activists.sort((a, b)=>(a.scanRow - b.scanRow));
@@ -158,7 +194,7 @@ export default class Typer extends React.Component {
 	handleTypedInput = function (name, value, rowIndex){
 		let activists = this.state.activists.slice();
 		activists[rowIndex][name] = value;
-        FieldValidation.validate(activists, rowIndex, name);
+		activists[rowIndex][name + "Valid"] = this.ActivistFieldsValidation.validate(value, name);
 		this.setState({activists: activists, unsaved: true});
 	}.bind(this);
 	
@@ -204,25 +240,38 @@ export default class Typer extends React.Component {
 		this.setState({activists: activists});
 	}.bind(this);
 
+	handlePost = function(){
+		const activists = this.state.activists.slice();
+		if(!this.ActivistFieldsValidation.validateAll(activists)){
+			this.setState({postAttempted: true});
+			return;
+		}
+		this.checkFullyTyped();
+	}.bind(this);
+
 	checkFullyTyped = function(){
-		const checkNeeded = this.state.scanId && this.state.cells.length===0;
+		const checkNeeded = this.state.scanId;
 		if(checkNeeded){
 			this.setState({displayFullyTypedPopup: true});
 		}
 		else{
-			this.handlePost();
+			this.postData();
 		}
 	}.bind(this);
 
 	setFullyTyped = function(isFullyTyped){
 		this.setState({fullyTyped: isFullyTyped}, () => {
-			this.handlePost();
+			this.postData();
 		})
 	}.bind(this);
 
-	handlePost=function(){
+	postData = function(){
+		//safety measure to prevent the same data getting posted multiple times when the post button is repeatedly pressed
+		if(this.state.postInProcess)
+			return;
+		this.setState({postInProcess: true});
 		const activists = this.state.activists.slice();
-		if(!FieldValidation.validateAll(activists, this.state.profileFields)){
+		if(!this.ActivistFieldsValidation.validateAll(activists)){
 			this.setState({postAttempted: true});
 			return;
 		}
@@ -235,28 +284,63 @@ export default class Typer extends React.Component {
 		.then(() => {
 			this.setState({
 				activists: [this.generateRow()],
-				cells: [],
 				selectedRowIndex: 0,
-				scanId: null,
+				scanId: "",
 				scanUrl: null,
 				fullyTyped: false,
 				displayFullyTypedPopup: false,
 				postAttempted: false,
-				unsaved: false
+				postInProcess: false,
+				postSuccessful: true,
+				unsaved: false,
+				displayTyperForm: false,
+				displayScanUploadForm: false,
+				displayLoadingMessage: false,
 			});
-			alert("the details have been stored in the system");
-			this.getContactsScan();
 		});
+	}.bind(this);
+	refetchScans = function(){
+		this.getContactsScan();
+		this.setState({postSuccessful: false});
 	}.bind(this);
 	
 	render() {
-		const cells = this.state.cells;
 		const scanUrl = this.state.scanUrl;
 		const selectedRowIndex = this.state.selectedRowIndex;
 		const activists = this.state.activists;
+		const eventData = this.state.eventData;
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
+		const typerFormTopBar = <React.Fragment>
+			<div className={"event-details"}>
+				<div>תאריך</div>
+				<div>{eventData.date}</div>
+			</div>
+			<div className={"event-details"}>
+				<div>ארוע ההחתמה</div>
+				<div>{eventData.name}</div>
+			</div>
+			<div onClick={this.handlePost} className={"post-button"}>
+				<div className={"post-button-label"}>
+					<div>שלח</div>
+					<div>ارسل</div>
+				</div>
+				<div className={"cloud-icon"}>
+					<FontAwesomeIcon icon="cloud-upload-alt"/>
+				</div>
+			</div>
+		</React.Fragment>;
+		const scanUploaderFormTopBar = <div className={"event-details"}>
+			העלאת תמונה
+		</div>;
+		const loadingTopBar = <div className={"event-details"}>
+			טעינה...
+		</div>;
+		const topBar = <div dir="ltr">
+			<TopNavBar justification={"space-between"}>
+				{this.state.displayLoadingMessage?loadingTopBar:this.state.displayTyperForm?typerFormTopBar:scanUploaderFormTopBar}
+			</TopNavBar>
+		</div>;
 		const scanDisplay = <ContactScanDisplay
-			cells={cells}
 			scanUrl={scanUrl}
 			selectedRow={selectedScanRow}
 			selectScanRow={this.selectScanRow}/>;
@@ -264,34 +348,52 @@ export default class Typer extends React.Component {
 				<Popup visibility={this.state.displayFullyTypedPopup} toggleVisibility={()=>{this.setState({displayFullyTypedPopup: !this.state.displayFullyTypedPopup})}}>
 					<div className="fully-typed-popup-label">
 						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
-						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
+						<div>هل انتهيت من ملئ كل الاسطر بالصفحة؟</div>
 					</div>
 					<div className="confirm-fully-typed-wrap">
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(true)}}>סיימתי</button>
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(false)}}>נותרו רשומות להקלדה</button>
 					</div>
 				</Popup>;
+		const loadingMessage = <div>
+			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
+			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
+		</div>;
+		const typerForm = <div>
+			{scanDisplay}
+			<content>
+				<TypedActivistsTable
+					fields={this.state.profileFields}
+					dataLists={this.state.profileDataLists}
+					handleChange={this.handleTypedInput}
+					handleRowPost={this.handleRowPost}
+					handleRowFocus={this.handleRowFocus}
+					handleRowDeletion={this.handleRowDeletion}
+					handleRowEditToggle={this.handleRowEditToggle}
+					activists={activists}
+					selectedRow={selectedRowIndex}
+					highlightInvalidFields={this.state.postAttempted}/>
+			</content>
+		</div>;
+		const scanUploadForm = <div className={"scan-uploader-form-wrap"}>
+			<div className={"scan-uploader-message"}>
+				<h2>لم نجد صفحات تواصل بالمنظومة - أتستطيعون تحميل مسح او صورة صفحة التواصل</h2>
+				<h2>לא מצאנו דפי קשר במערכת - תוכלו להעלות סריקה או תמונה של דף קשר</h2>
+			</div>
+			<ScanForm onPublish={this.handleScanUpload}/>
+		</div>;
+		const successfulUpload = <SuccessfulUpload refetchScans={this.refetchScans}/>;
 		return (
 			<div dir="rtl">
 				<Meta/>
 				<style jsx global>{style}</style>
-				<HeaderBar sendFunction={this.checkFullyTyped}> </HeaderBar>
+				{topBar}
 				<section className="section">
 					<div className="main-panel">
-					{scanUrl?scanDisplay:""}
-						<content className="content">
-							<TypedActivistsTable
-								fields={this.state.profileFields}
-								dataLists={this.state.profileDataLists}
-								handleChange={this.handleTypedInput}
-								handleRowPost={this.handleRowPost}
-								handleRowFocus={this.handleRowFocus}
-								handleRowDeletion={this.handleRowDeletion}
-								handleRowEditToggle={this.handleRowEditToggle}
-								activists={activists}
-								selectedRow={selectedRowIndex}
-								highlightInvalidFields={this.state.postAttempted}/>
-						</content>
+						{this.state.displayScanUploadForm?scanUploadForm:null}
+						{this.state.displayTyperForm?typerForm:null}
+						{this.state.displayLoadingMessage?loadingMessage:null}
+						{this.state.postSuccessful?successfulUpload:null}
 						{toggleFullyTypedPopup}
 					</div>
 				</section>

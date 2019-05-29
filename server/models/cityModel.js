@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 
 const citySchema = new mongoose.Schema({
+    metadata: {
+        creationDate: {
+            type: Date,
+            required: true,
+        },
+        lastUpdate: {
+            type: Date,
+            required: true,
+        }
+    },
     name: {
         he: {
             type: String,

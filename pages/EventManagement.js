@@ -4,29 +4,37 @@ import Meta from '../lib/meta'
 import style from './eventManagement/eventManagement.css'
 import Router from "next/router";
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
+import PageNav from "../UIComponents/PageNav/PageNav";
 
 export default class EventManagement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             page: 0,
+            pageCount: 0,
             events: []
         }
     }
     componentDidMount() {
         this.getListDetails();
     }
-    getListDetails(event) {
-        server.get('events/list', {'page':this.state.page})
-            .then(events => {
+    getListDetails() {
+        server.post('events/list', {'page':this.state.page})
+            .then(result => {
+                const events = result.events;
                 this.setState({events: events.map((event)=>{
                     let e = event;
                     e.date = new Date(e.date);
                     e.creationDate = new Date(e.creationDate);
                     return e;
                 }
-                )});
+                ), pageCount: result.pageCount});
             });
+    }
+    handlePageNavigation(page){
+        this.setState({page: page}, ()=>{
+            this.getListDetails();
+        });
     }
     goToEvent(id){
         Router.push({pathname: '/EventCreation', query: {id: id}}).then(()=>{});
@@ -34,9 +42,11 @@ export default class EventManagement extends React.Component {
 
     render() {
         const events = this.state.events.slice();
-        const rows = events.map((event,i)=>{
+        const currPage = this.state.page;
+        const pageCount = this.state.pageCount;
+        const rows = events.map((event)=>{
             const campaignLink = <a href={"/Caller/?eventCode="+event.campaignUrl}>🔗</a>;
-            return <tr key={"event_"+i} onClick={()=>{this.goToEvent(event._id)}}>
+            return <tr key={"event_" + event._id} onClick={()=>{this.goToEvent(event._id)}}>
                 <td>{event.date.toLocaleDateString()}</td>
                 <td>{event.name}</td>
                 <td>{event.location}</td>
@@ -83,6 +93,7 @@ export default class EventManagement extends React.Component {
                         {rows}
                     </tbody>
                 </table>
+                <PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
             </div>
         )
     }

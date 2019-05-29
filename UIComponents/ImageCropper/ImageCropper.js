@@ -20,7 +20,7 @@ export default class ImageCropper extends React.Component {
 						src: reader.result,
 					}),
 				false
-			)
+			);
 			reader.readAsDataURL(props.file)
 		}
 	}

@@ -3,39 +3,29 @@ const Authentication = require('../services/authentication');
 const ContactScan = require('../models/contactScanModel');
 
 const insertContactScan = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, res, ["isOrganizer", "isTyper"]).then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const scanUrl = req.body.scanUrl;
-        //the cells info as received from the client (i.e. [[{x,y},{x,y},{x,y},{x,y}]...]
-        const cells = req.body.cells;
-        //constructing the cells info as required by the schema (i.e. [{corners:[{x,y},{x,y},{x,y},{x,y}]}...]
-        let cellsObject = [];
-        for (let i=0; i<cells.length; i++)
-        {
-            cellsObject[i]={"cells":[]};
-            for(let j=0; j<cells[i].length; j++)
-            {
-                cellsObject[i].cells.push({"corners":cells[i][j]});
-            }
-        }
+        const eventId = req.body.eventId;
         const today = new Date();
         const scanObject={
+            "_id": mongoose.Types.ObjectId(),
             "metadata":{
                 "creationDate": today,
                 "lastUpdate": today,
                 "creatorId": Authentication.getMyId()
             },
-            "scanUrl":scanUrl,
-            "rows":cellsObject
+            "scanUrl": scanUrl,
+            "eventId": eventId
         };
         const newScan = new ContactScan(scanObject);
         newScan.save(function (err) {
             if (err){
-                return res.json(err);
+                return res.json({"err": err});
             }
             else
-                return res.json(req.body);
+                return res.json({"id": scanObject._id});
         });
     })
 };

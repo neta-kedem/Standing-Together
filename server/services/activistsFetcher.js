@@ -1,5 +1,8 @@
 const Activist = require('../models/activistModel');
-const Authentication = require('../services/authentication');
+const mongoose = require('mongoose');
+const Authentication = require('./authentication');
+const EventFetcher = require("./eventFetcher");
+const contactScanFetcher = require("./contactScanFetcher");
 const getActivists = function (req, res){
     Authentication.isUser(req, res).then(isUser=>{
         if(!isUser)
@@ -22,6 +25,38 @@ const getActivists = function (req, res){
             return res.json(activistsList);
         });
     })
+};
+const getActivistsByIds = function (ids){
+    const query = Activist.find({"_id":{$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}});
+    const activistsPromise = query.exec().then((activists) => {
+        // this array holds promises to queries fetching information about events and contact scans relevant to the activists
+        const additionalDataPromises = [];
+        for(let i = 0; i < activists.length; i++){
+            const a = activists[i];
+            if(a.profile.participatedEvents && a.profile.participatedEvents.length){
+                const getEvents = EventFetcher.getEventsByIds(a.profile.participatedEvents).then(events=>{
+                    a.profile.participatedEvents = events.map((event)=>{return {
+                        _id: event._id, date: event.eventDetails.date, location: event.eventDetails.location
+                    }});
+                    console.log(a.profile.participatedEvents);
+                });
+                additionalDataPromises.push(getEvents);
+            }
+            /*const getScans = contactScanFetcher.getByActivistId(a._id).then((scans) => {
+                a.profile.scans = scans.map((scan)=>{return {_id:scan._id, url:scan.scanUrl}});
+                console.log("console.log(Object.keys(a.profile));");
+                console.log(Object.keys(a.profile));
+                console.log("console.log(JSON.stringify(a.profile))");
+                console.log(JSON.stringify(a.profile));
+                console.log(typeof a.profile.scans);
+            });
+            additionalDataPromises.push(getScans);*/
+        }
+        return Promise.all(additionalDataPromises).then(() => {
+            return activists;
+        })
+    });
+    return activistsPromise;
 };
 const queryActivists = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
@@ -70,5 +105,6 @@ const searchDuplicates = function(phones, emails){
 module.exports = {
     getActivists,
     queryActivists,
-    searchDuplicates
+    searchDuplicates,
+    getActivistsByIds
 };
