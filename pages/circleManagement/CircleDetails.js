@@ -40,7 +40,7 @@ export default class CircleDetails extends React.Component {
 						<input value={rowValues.name} type="text" onChange={this.setName}/>
 					</td>
 					<td>
-						<select value={rowValues.mailchimpList} onChange={this.setMailchimpList}>
+						<select value={rowValues.mailchimpList || ""} onChange={this.setMailchimpList}>
 							{mailchimpOptions}
 							<option value=""> </option>
 						</select>

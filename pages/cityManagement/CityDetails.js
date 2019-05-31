@@ -32,7 +32,7 @@ export default class CityDetails extends React.Component {
 		const rowValues = this.props.values;
 		const circles = this.state.circles?this.state.circles.slice():[];
 		const circleOptions = circles.map((circle)=>{
-			return <option key={"circle_"+this.state.rowIndex+"_list_"+circle.name} value={circle.name}>{circle.name}</option>;
+			return <option key={"circle_"+this.state.rowIndex+"_list_"+circle.name} value={circle.name || ""}>{circle.name}</option>;
 		});
 		return (
 				<tr>
@@ -40,7 +40,7 @@ export default class CityDetails extends React.Component {
 						<input value={rowValues.name} type="text" onChange={this.setName}/>
 					</td>
 					<td>
-						<select value={rowValues.defaultCircle} onChange={this.setDefaultCircle}>
+						<select value={rowValues.defaultCircle || ""} onChange={this.setDefaultCircle}>
 							<option value=""> </option>
 							{circleOptions}
 						</select>
