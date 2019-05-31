@@ -152,7 +152,7 @@ render() {
 				<div className="saved-views-wrap">
 					{/**<div className="saved-views">שאילתה 1</div>
 					<div className="saved-views">שאילתה 2</div>**/}
-					<a className="saved-views" href={"./EventCreation"}>create a new event</a>
+					<a className="saved-views" href={"./EventManagement"}>manage events</a>
 					<a className="saved-views" href={"./ScanContacts"}>scan contacts</a>
 				</div>
 			</TopNavBar>

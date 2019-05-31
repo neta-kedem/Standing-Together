@@ -98,7 +98,7 @@ export default css
 		color: white;
 		display: inline-block;
 		cursor: pointer;
-		margin-left: auto;
+		margin-right: auto;
 	}
 	.save-event-button-label{
 		display: inline-block;

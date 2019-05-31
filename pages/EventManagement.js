@@ -55,7 +55,7 @@ export default class EventManagement extends React.Component {
             </tr>;
         });
         return (
-            <div>
+            <div  dir={"rtl"}>
                 <Meta/>
                 <style jsx global>{style}</style>
                 <TopNavBar>

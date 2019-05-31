@@ -1,18 +1,6 @@
 import css from 'styled-jsx/css'
 export default css
     `
-    .title-wrap{
-		color: #fbfbfb;
-		font-size: 21px;
-		font-weight: 400;
-		line-height: 55px;
-		text-align: center;
-		margin: 0 auto;
-	}
-	.title-lang{
-        margin-left: 5%;
-		white-space: nowrap;
-	}
     .circle-table{
         direction: rtl;
         border-collapse: collapse;
