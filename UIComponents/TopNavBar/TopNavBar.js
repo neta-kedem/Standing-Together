@@ -2,13 +2,29 @@ import React from 'react';
 import Router from 'next/router';
 import style from './TopNavBar.css';
 import server from '../../services/server';
+import cookie from 'js-cookie';
 
 export default class TopNavBar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			justification: this.props.justification || "end",
-			menuOpened: false
+			menuOpened: false,
+			permissions: {}
+		}
+	}
+	componentDidMount() {
+		this.setState({permissions: this.getPermissions()})
+	}
+	getPermissions(){
+		const json = cookie.get("permissions");
+		if(!json)
+			return {};
+		try{
+			return JSON.parse(json);
+		}
+		catch (e) {
+			return {}
 		}
 	}
 	logout(){
@@ -26,6 +42,7 @@ export default class TopNavBar extends React.Component {
 	}.bind(this);
 
 	render() {
+		const permissions = this.state.permissions;
 		return (
 			<div className="nav-bar-wrapper" style={{"justifyContent":this.state.justification}} dir={"rtl"}>
 				<style jsx global>{style}</style>
@@ -41,30 +58,30 @@ export default class TopNavBar extends React.Component {
 								<div className="sidebar-item button" onClick={this.logout.bind(this)}>
 									התנתקות מהמערכת
 								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("Organizer")}}>
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("Organizer")}}>
 									ניהול אנשי קשר
-								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("EventManagement")}}>
+								</div>:""}
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("EventManagement")}}>
 									ניהול אירועים
-								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("EventCreation")}}>
+								</div>:""}
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("EventCreation")}}>
 									אירוע חדש
-								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("CityManagement")}}>
+								</div>:""}
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("CityManagement")}}>
 									ניהול ערים
-								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("CircleManagement")}}>
+								</div>:""}
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("CircleManagement")}}>
 									ניהול מעגלים
-								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("EventCategoriesManagement")}}>
+								</div>:""}
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("EventCategoriesManagement")}}>
 									ניהול קטגוריות אירועים
-								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("Typer")}}>
+								</div>:""}
+								{permissions.isOrganizer || permissions.isTyper?<div className="sidebar-item button" onClick={()=>{this.goToPage("Typer")}}>
 									עמוד קלדנות
-								</div>
-								<div className="sidebar-item button" onClick={()=>{this.goToPage("ScanContacts")}}>
+								</div>:""}
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("ScanContacts")}}>
 									סריקת דפי קשר
-								</div>
+								</div>:""}
 							</div>
 						</div>
                 	</div>

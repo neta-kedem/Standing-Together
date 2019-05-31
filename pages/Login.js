@@ -2,9 +2,8 @@ import React from 'react';
 import Router from 'next/router';
 import Meta from '../lib/meta';
 import server from '../services/server';
-import cookie from '../services/cookieManager';
+import cookie from 'js-cookie';
 import IdentificationField from './login/IdentificationField';
-import CodeInput from './login/CodeInput';
 import stylesheet from './login/Login.css';
 
 export default class Login extends React.Component {
@@ -64,7 +63,8 @@ verifyLoginCode()
 		}
 		if(json.token)
 		{
-			cookie.setCookie('token', json.token, 150);
+			cookie.set('token', json.token, {expires: 30});
+			cookie.set('permissions', JSON.stringify(json.permissions), {expires: 30});
 			if(json.permissions.isOrganizer){
 				Router.push({pathname: '/Organizer'}).then(()=>{});
 				return;

@@ -1,4 +1,3 @@
-import cookie from './cookieManager';
 import Router from 'next/router';
 import fetch from 'node-fetch';
 import config from './config';
