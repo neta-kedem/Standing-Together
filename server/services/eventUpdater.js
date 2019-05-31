@@ -25,7 +25,7 @@ const insertEvent = function(req, res){
             "lastUpdate": today,
             "creatorId": Authentication.getMyId()
         };
-        const schedule = eventObject.eventDetails.date.split("/");
+        const schedule = eventObject.eventDetails.date.split(/[.,\/ -]/);
         eventObject.eventDetails.date = new Date(schedule[2], schedule[1] - 1, schedule[0]);
         const newEvent = new Event(eventObject);
         newEvent.save(function (err) {
