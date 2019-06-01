@@ -55,7 +55,7 @@ export default class EventManagement extends React.Component {
             </tr>;
         });
         return (
-            <div>
+            <div  dir={"rtl"}>
                 <Meta/>
                 <style jsx global>{style}</style>
                 <TopNavBar>
@@ -94,6 +94,11 @@ export default class EventManagement extends React.Component {
                     </tbody>
                 </table>
                 <PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
+                <a href={"./EventCreation"} className={"new-event-link"}>
+                <div>
+                    יצירת אירוע חדש
+                </div>
+                </a>
             </div>
         )
     }

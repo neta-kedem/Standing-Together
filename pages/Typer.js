@@ -312,20 +312,20 @@ export default class Typer extends React.Component {
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
 		const typerFormTopBar = <React.Fragment>
 			<div className={"event-details"}>
-				<div>תאריך</div>
-				<div>{eventData.date}</div>
-			</div>
-			<div className={"event-details"}>
 				<div>ארוע ההחתמה</div>
 				<div>{eventData.name}</div>
 			</div>
+			<div className={"event-details"}>
+				<div>תאריך</div>
+				<div>{eventData.date}</div>
+			</div>
 			<div onClick={this.handlePost} className={"post-button"}>
+				<div className={"cloud-icon"}>
+					<FontAwesomeIcon icon="cloud-upload-alt"/>
+				</div>
 				<div className={"post-button-label"}>
 					<div>שלח</div>
 					<div>ارسل</div>
-				</div>
-				<div className={"cloud-icon"}>
-					<FontAwesomeIcon icon="cloud-upload-alt"/>
 				</div>
 			</div>
 		</React.Fragment>;
@@ -335,7 +335,7 @@ export default class Typer extends React.Component {
 		const loadingTopBar = <div className={"event-details"}>
 			טעינה...
 		</div>;
-		const topBar = <div dir="ltr">
+		const topBar = <div dir="rtl">
 			<TopNavBar justification={"space-between"}>
 				{this.state.displayLoadingMessage?loadingTopBar:this.state.displayTyperForm?typerFormTopBar:scanUploaderFormTopBar}
 			</TopNavBar>

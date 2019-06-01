@@ -19,11 +19,9 @@ render() {
 			<Meta/>
 			<style jsx global>{style}</style>
 			<TopNavBar>
-				<div className="scan-page-title-wrap">
-					<div className="scan-page-title">
-						<div>סריקת דף קשר</div>
-						<div>סריקת דף קשר</div>
-					</div>
+				<div className="title-wrap">
+					<span className="title-lang">סריקת דפי קשר</span>
+					<span className="title-lang">סריקת דפי קשר</span>
 				</div>
 			</TopNavBar>
 			<div className="page-wrap">

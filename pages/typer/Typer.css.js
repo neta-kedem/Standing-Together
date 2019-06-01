@@ -115,7 +115,7 @@ export default css
     }
     .post-button{
         justify-self: start;
-        margin-right: 0.5em;
+        margin-left: 0.5em;
         -webkit-align-self: right; /* Safari 7.0+ */
         align-self: right;
         color: #fbfbfb;

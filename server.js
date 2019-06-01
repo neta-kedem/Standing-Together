@@ -187,6 +187,18 @@ app.prepare().then(() => {
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);
 	});
+	server.get('/', (req, res) => {
+		authentication.isUser(req, res).then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/Welcome', req.query);
+			}
+		});
+	});
 	server.post("/webhooks/github", function (req, res) {
 		const sender = req.body.sender;
 		const branch = req.body.ref;
@@ -207,33 +219,6 @@ app.prepare().then(() => {
 		if (err) throw err;
 		console.log(`> Ready on port ${port}...`);
 	});
-  // use this to query the db
-  // mongoose.connect(MONGODB_URI);
-  // const db = mongoose.connection;
-  // db.on('error', console.error.bind(console, 'connection error:'));
-  // db.once('open').then(...query...)
-  /*createServer((req, res) => {
-    // This tells it to parse the query portion of the URL.
-    const parsedUrl = parse(req.url, true);
-
-    const { pathname, query } = parsedUrl;
-    if (pathname === '/Organizer') {
-      app.render(req, res, '/Organizer', query);
-    } else if (pathname === '/Typer') {
-      app.render(req, res, '/Typer', query)
-    } else if (pathname === '/') {
-      app.render(req, res, '/', query)
-    } else if (pathname === '/Login') {
-      app.render(req, res, '/Login', query)
-    } else if (pathname === '/EventCreation') {
-      app.render(req, res, '/EventCreation', query)
-    } else {
-      handle(req, res, parsedUrl)
-    }
-  }).listen(port, err => {
-    if (err) throw err;
-    console.log('> Ready on http://localhost:3000');
-  })*/
 });
 
 function deploy(res){
