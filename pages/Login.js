@@ -82,7 +82,7 @@ verifyLoginCode()
 
 render() {
 	/**Stage 1 - Verification Method Selection**/
-	const identification = 
+	const identification =
 		<div>
 			<div className='identification-input-title'>
 				<div>

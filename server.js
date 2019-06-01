@@ -40,10 +40,12 @@ server.use(express.static('public'));
 //set cron
 cron.scheduleSync();
 
+const childProcess = require('child_process');
+
 app.prepare().then(() => {
 	// API routes
 	require('./server/routes')(server);
-	
+
 	// CUSTOM ROUTES GO HERE
 	server.get('/Organizer', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
@@ -197,7 +199,17 @@ app.prepare().then(() => {
 			}
 		});
 	});
-	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
+	server.post("/webhooks/github", function (req, res) {
+		const sender = req.body.sender;
+		const branch = req.body.ref;
+
+		console.log('in webhook', branch, sender.login)
+
+		if(branch.indexOf('master') > -1){
+			deploy(res);
+		}
+	})
+	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS
 	server.get('*', (req, res) => {
 		return handle(req, res);
 	});
@@ -207,31 +219,14 @@ app.prepare().then(() => {
 		if (err) throw err;
 		console.log(`> Ready on port ${port}...`);
 	});
-  // use this to query the db
-  // mongoose.connect(MONGODB_URI);
-  // const db = mongoose.connection;
-  // db.on('error', console.error.bind(console, 'connection error:'));
-  // db.once('open').then(...query...)
-  /*createServer((req, res) => {
-    // This tells it to parse the query portion of the URL.
-    const parsedUrl = parse(req.url, true);
-
-    const { pathname, query } = parsedUrl;
-    if (pathname === '/Organizer') {
-      app.render(req, res, '/Organizer', query);
-    } else if (pathname === '/Typer') {
-      app.render(req, res, '/Typer', query)
-    } else if (pathname === '/') {
-      app.render(req, res, '/', query)
-    } else if (pathname === '/Login') {
-      app.render(req, res, '/Login', query)
-    } else if (pathname === '/EventCreation') {
-      app.render(req, res, '/EventCreation', query)
-    } else {
-      handle(req, res, parsedUrl)
-    }
-  }).listen(port, err => {
-    if (err) throw err;
-    console.log('> Ready on http://localhost:3000');
-  })*/
 });
+
+function deploy(res){
+	childProcess.exec('cd ~/scripts && ./pullST.sh', function(err, stdout, stderr){
+		if (err) {
+			console.error(err);
+			return res.send(500);
+		}
+		res.send(200);
+	});
+}
