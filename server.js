@@ -185,6 +185,18 @@ app.prepare().then(() => {
 	server.get('/Login', (req, res) => {
 		return app.render(req, res, '/Login', req.query);
 	});
+	server.get('/', (req, res) => {
+		authentication.isUser(req, res).then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/Welcome', req.query);
+			}
+		});
+	});
 	// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS 
 	server.get('*', (req, res) => {
 		return handle(req, res);
