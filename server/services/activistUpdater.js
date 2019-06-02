@@ -69,7 +69,7 @@ const updateTypedActivists = function(activists){
             "profile.firstName" : curr.firstName,
             "profile.lastName" : curr.lastName,
             "profile.phone" : curr.phone.replace(/[\-.():]/g, ''),
-            "profile.email" : curr.email,
+            "profile.email" : curr.email.toLowerCase(),
             "profile.residency" : curr.residency,
             "metadata.lastUpdate" : today,
         });
@@ -139,8 +139,8 @@ const addToMailchimpCircle = function(activists){
 };
 const checkForDuplicates = function (activists, scanId){
     return contactScanFetcher.getById(scanId).then((scanData)=>{
-        const phones = activists.map((a)=>{return a.profile.phone}).filter(phone => phone && phone.length > 3);
-        const emails = activists.map((a)=>{return a.profile.email}).filter(email => email && email.length > 3);
+        const phones = activists.map((a)=>{return a.profile.phone.replace(/[\-.():]/g, '')}).filter(phone => phone && phone.length > 3);
+        const emails = activists.map((a)=>{return a.profile.email.toLowerCase()}).filter(email => email && email.length > 3);
         let oldActivists = [];
         const duplicates = activistsFetcher.searchDuplicates(phones, emails).then(duplicates => {
             const duplicatesByPhone = arrayFunctions.indexByField(duplicates, "phone");
@@ -197,7 +197,7 @@ const uploadTypedActivists = function (req, res){
                             "firstName" : curr.firstName,
                             "lastName" : curr.lastName,
                             "phone" : curr.phone.replace(/[\-.():]/g, ''),
-                            "email" : curr.email,
+                            "email" : curr.email.toLowerCase(),
                             "residency" : curr.residency,
                             "comments" : curr.comments,
                             "circle" : "תל-אביב",
