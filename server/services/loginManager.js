@@ -15,7 +15,7 @@ const identifyViaPhone = function (req, res){
     });
 };
 const identifyViaEmail = function (req, res){
-    let email = req.body.email;
+    let email = req.body.email.toLowerCase();
     let code = Math.random().toString(36).substr(2, LOGIN_CODE_LENGTH);
     Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode': code}}, (err, user) => {
         if (err) return res.json({success: false, error: err});
@@ -43,8 +43,8 @@ const loginViaPhone = function (req, res){
     });
 };
 const loginViaMail = function (req, res){
-    let email = req.body.email;
-    let code = req.body.code;
+    let email = req.body.email.toLowerCase();
+    let code = req.body.code.toLowerCase();
     const now = new Date();
     if(!code||code.length===0)
         return res.json({"error":"incorrect credentials"});
