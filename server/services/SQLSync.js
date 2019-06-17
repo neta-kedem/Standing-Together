@@ -18,10 +18,10 @@ const schemas = [
 const SYNC_LAST_HOURS = 240;
 const QUERY_INSERT_LIMIT = 100;
 const connectionConfig = {
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "StandingTogether"
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASS,
+    database: process.env.MYSQL_DB
 };
 
 
