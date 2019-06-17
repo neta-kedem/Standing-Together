@@ -15,10 +15,10 @@ const getSettingByName = function (name){
     const query = Setting.findOne({"name": name});
     const settingPromise = query.exec().then((setting) => {
         if(!setting)
-            return {"error": "no setting found with key " + name};
+            return [];
         if(setting.singleValue)
             setting.values = setting.values[0];
-        return setting;
+        return setting.values;
     });
     return settingPromise;
 };

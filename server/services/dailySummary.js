@@ -2,25 +2,32 @@ const ContactScan = require('../models/contactScanModel');
 const activistsFetcher = require("./activistsFetcher");
 const eventFetcher = require("./eventFetcher");
 const arrayFunctions = require("./arrayFunctions");
+const settingsManager = require("./settingsManager");
 const mailer = require("./mailer");
 
 const COVERED_PERIOD = 5*24*60*60*1000;
-const EMAIL_TO = ["yanivcogan89@gmail.com"];
-const sendDailySummary = function(){
+const getDailySummary = function(){
     return fetchRecentContactSheets().then((sheets)=>{
         return fetchEventsAndActivistsByContactSheets(sheets).then((events)=>{
             const emailBody = compileSummary(events);
+            return emailBody;
+        })
+    })
+};
+const sendDailySummary = function(){
+    settingsManager.getSettingByName("dailySummaryRecipients").then(emailTo=>{
+        this.getDailySummary().then(emailBody => {
             //TODO - send email to everyone on the EMAIL_TO list.
             mailer.sendEmail({
                 from: 'noreply@gmail.com',
-                to: EMAIL_TO.join(", "),
+                to: emailTo.join(", "),
                 subject: '✊✊🏼✊🏾✊✊🏼 Daily Summary of Typing Activity ✊🏽✊🏾✊🏼✊🏿✊🏼',
                 text: emailBody,
                 html: emailBody
             });
             return emailBody;
-        })
-    })
+        });
+    });
 };
 fetchRecentContactSheets = function(){
     const today = new Date();
@@ -205,5 +212,6 @@ compileSummary = function(events){
 };
 
 module.exports = {
-    sendDailySummary
+    sendDailySummary,
+    getDailySummary
 };
