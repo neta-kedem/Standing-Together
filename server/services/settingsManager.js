@@ -1,13 +1,11 @@
 const Setting = require('../models/settingModel');
 const getSettings = function (){
-    const query = Setting.findMany({});
+    const query = Setting.find({});
     const settingPromise = query.exec().then((settings) => {
         if (!settings || !settings.length)
             return {"error": "no settings found"};
         for (let i = 0; i < settings.length; i++) {
             let setting = settings[i];
-            if (setting.singleValue)
-                setting.values = setting.values[0];
         }
         return settings;
     });
@@ -24,7 +22,17 @@ const getSettingByName = function (name){
     });
     return settingPromise;
 };
+const setSettings = function (settings){
+    const query = Setting.deleteMany({});
+    const settingPromise = query.exec().then(() => {
+        Setting.insertMany(settings, ()=>{
+            return true;
+        })
+    });
+    return settingPromise;
+};
 module.exports = {
     getSettingByName,
-    getSettings
+    getSettings,
+    setSettings
 };

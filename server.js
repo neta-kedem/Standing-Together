@@ -131,6 +131,18 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/Settings', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/Settings', req.query);
+			}
+		});
+	});
 	server.get('/ScanContacts', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
 			if(!user)
