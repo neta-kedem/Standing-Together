@@ -6,8 +6,8 @@ import style from './eventCreation/EventCreation.css'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faShareSquare} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faShareSquare);
+import {faSave} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faSave);
 
 export default class EventCreation extends React.Component {
 constructor(props) {
@@ -96,7 +96,7 @@ handlePost() {
 	};
 	server.post('events', {'event':eventObject})
 	.then(() => {
-		alert("saved");
+		alert("האירוע נשמר!");
 		Router.push({pathname: '/Organizer'}).then(()=>{});
 	});
 }
@@ -111,37 +111,40 @@ render() {
 			<Meta/>
 			<style jsx global>{style}</style>
 			<TopNavBar>
-				<div onClick={this.handlePost.bind(this)} className="save-event-button">
-					<div className="save-event-button-label">
-						<div>שמירה</div>
-						<div>שמירה</div>
-					</div>
-					<div className="save-event-button-icon">
-						<FontAwesomeIcon icon="share-square"/>
-					</div>
+				<div className="title-wrap">
+					<span className="title-lang">יצירת אירוע</span>
 				</div>
 			</TopNavBar>
 			<div dir="rtl" className="content-wrap">
 				<div className="event-details-wrap">
 					<label className="label" id="event-name">
-						<div>שם האירוע<br/>اسم الحدث</div>
+						<div>اسم الحدث<br/>שם האירוע</div>
 						<input size="80" type="text" name="title" value={this.state.title} onChange={this.handleInputChange.bind(this)}/>
 					</label>
 					<label className="label" id="event-date">
-						<div>תאריך<br/>التاريخ</div>
+						<div>التاريخ<br/>תאריך</div>
 						<input size="80" dir="ltr" type="text" name="date" value={this.state.date} onChange={this.handleInputChange.bind(this)} placeholder="DD.MM.YYYY"/>
 					</label>
 					<label className="label" id="event-date">
-						<div>מיקום<br/>التاريخ</div>
+						<div>التاريخ<br/>מיקום</div>
 						<input type="text" name="location" list="city-data-list" value={this.state.location} onChange={this.handleInputChange.bind(this)}/>
 					</label>
 					<label className="label" id="event-cat">
-						<div>קטגוריה<br/>קטגוריה</div>
+						<div>فئة<br/>קטגוריה</div>
 						<select dir="rtl" name="category" value={this.state.category} onChange={this.handleInputChange.bind(this)}>
 							<option value={""}> </option>
 							{catOptions}
 						</select>
 					</label>
+					<div onClick={this.handlePost.bind(this)} className="save-event-button">
+						<div className="save-event-button-label">
+							<div>حفظ</div>
+							<div>שמירה</div>
+						</div>
+						<div className="save-event-button-icon">
+							<FontAwesomeIcon icon="save"/>
+						</div>
+					</div>
 					<datalist id="city-data-list">
 						<option value={"מקוון"}/>
 						<option value={"השטחים הכבושים"}/>

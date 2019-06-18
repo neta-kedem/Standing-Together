@@ -4,6 +4,11 @@ import style from './TopNavBar.css';
 import server from '../../services/server';
 import cookie from 'js-cookie';
 
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faBars);
+
 export default class TopNavBar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -47,13 +52,19 @@ export default class TopNavBar extends React.Component {
 			<div className="nav-bar-wrapper" style={{"justifyContent":this.state.justification}} dir={"rtl"}>
 				<style jsx global>{style}</style>
                 <div className={"nav-bar-logo-menu-wrap " + (this.state.menuOpened ? "sidebar-open" : "")}>
-				    <div className="nav-bar-logo" onClick={this.toggleMenu}> </div>
+					<div className="nav-bar-icon" onClick={this.toggleMenu}>
+						<FontAwesomeIcon icon="bars"/>
+						<span className={"menu-label"}>
+							<div>قائمة</div>
+							<div>תפריט</div>
+						</span>
+					</div>
 					<div className="sidebar-background" onClick={this.toggleMenu}> </div>
 					<div className={"sidebar-wrap"}>
 						<div className={"sidebar"}>
 							<div className="sidebar-options">
 								<div className="sidebar-title">
-									תפריט
+									قائمة - תפריט
 								</div>
 								<div className="sidebar-item button" onClick={this.logout.bind(this)}>
 									התנתקות מהמערכת
