@@ -12,8 +12,8 @@ module.exports = (app) => {
 		Authentication.hasRole(req, res, "isTyper").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
-			eventFetcher.getEventById(req.params.id).then((res)=>{
-				return res.json(res);
+			eventFetcher.getEventById(req.params.id).then((result)=>{
+				return res.json(result);
 			});
 		})
 	});
