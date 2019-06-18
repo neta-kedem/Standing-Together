@@ -64,7 +64,7 @@ export default css
 		font-size: 1em;
 	}
 	body{
-		background-color: #F9F9F9;
+		background-color: #f9f7fb;
 	}
 	.content-wrap{
 		height: calc(100vh - 55px);
@@ -95,11 +95,24 @@ export default css
 		height: 13em;
 	}
 	.save-event-button{
-		color: white;
-		display: inline-block;
-		cursor: pointer;
-		margin-right: auto;
-	}
+	    cursor: pointer;
+        display: block;
+        width: 15em;
+        text-align: center;
+        margin: 5em auto;
+        padding: 0.75% 2%;
+        font-size: 1em;
+        color: white;
+        background-color: #90278e;
+        border: none;
+        outline: none;
+	}	
+	.save-event-button:hover{
+        background-color: #80177e;
+    }
+    .save-event-button:active{
+        background-color: #70076e;
+    }
 	.save-event-button-label{
 		display: inline-block;
 		vertical-align: middle;

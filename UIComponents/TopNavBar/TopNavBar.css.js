@@ -8,6 +8,7 @@ export default css`
 		height: 55px;
 		background-color: #90278e;
 		font-size: 0.7em;
+		box-shadow: 0px 0px 5px #00000099;
 	}
 	.nav-bar-logo{
 		left: 0px;
@@ -18,6 +19,24 @@ export default css`
 		background-position: 0px 50%;
 		background-size: contain;
 		backgroundR-repeat: no-repeat;
+	}
+	.nav-bar-icon{
+		left: 0px;
+		line-height: 55px;
+		padding: 0 1em;
+		font-size: 25px;
+		color: #efefef;
+		cursor: pointer;
+	}
+	.menu-label{
+	    line-height: 1.1em;
+	    margin: 0 1em;
+	    font-size: 0.7em;
+	    display: inline-block;
+        vertical-align: sub;
+	}
+	.nav-bar-icon:hover{
+	    text-shadow: 0 0 3px 3px white;
 	}
 	.nav-bar-logo-menu-wrap{
 	    position: relative;
@@ -56,6 +75,7 @@ export default css`
 	-o-transition: width 1s ease;
 	width: 0;
 	overflow: hidden;
+	box-shadow: 0px 0px 5px #444444aa;
 }
 
 .sidebar-open .sidebar-wrap{
@@ -107,13 +127,18 @@ export default css`
 .sidebar-title{
     display: block;
     width: 100%;
+    height: 55px;
     text-align: center;
-    padding: 5%;
+    padding: 10px;
     box-sizing: border-box;
-    font-size: 1.25em;
+    font-size: 1.5em;
     background-color: rgb(104, 0, 102);
     color: white;
     font-weight: bold;
+    text-overflow: clip;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 0px 0px 5px #000000aa;
 }
 .sidebar-item.button{
     cursor: pointer;
