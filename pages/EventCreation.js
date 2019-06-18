@@ -37,6 +37,7 @@ fetchEventDetails(){
 			const dateString = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()
 			this.setState({
 				title: event.eventDetails.name,
+				location: event.eventDetails.location,
 				date: dateString,
 				category: event.eventDetails.category
 			});
@@ -125,7 +126,7 @@ render() {
 						<div>التاريخ<br/>תאריך</div>
 						<input size="80" dir="ltr" type="text" name="date" value={this.state.date} onChange={this.handleInputChange.bind(this)} placeholder="DD.MM.YYYY"/>
 					</label>
-					<label className="label" id="event-date">
+					<label className="label" id="event-location">
 						<div>التاريخ<br/>מיקום</div>
 						<input type="text" name="location" list="city-data-list" value={this.state.location} onChange={this.handleInputChange.bind(this)}/>
 					</label>
