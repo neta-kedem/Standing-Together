@@ -35,3 +35,25 @@ module.exports = (app) => {
 		activistUpdater.uploadTypedActivists(req, res);
 	});
 };
+
+//TODO neta
+function queryToMongo(query){
+	console.log('query', query)
+	let toSend = `{$and:[`;
+	(query.conditions||[]).forEach(cond => {
+		switch(cond.filterPrefix){
+			case 'Is ': toSend += '{'
+		}
+		switch(cond.filterName){
+			case 'Residency': toSend += 'profile.residency:'
+		}
+		toSend += `"${cond.filterMain}"`;
+		switch(cond.filterPrefix){
+			case 'Is ': toSend += '}'
+		}
+		toSend += `]`;
+	})
+	toSend += `}`;
+	console.log('toSend', toSend);
+	return {};
+}

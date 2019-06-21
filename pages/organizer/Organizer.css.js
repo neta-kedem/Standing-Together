@@ -33,7 +33,7 @@ export default css
 		height:100vh;
 		display: flex;
 		flex-direction: column;
-		background: #fbfbfb;
+		// background: #fbfbfb;
 	}
 	.content-wrap{
 		display: flex;
@@ -42,7 +42,7 @@ export default css
 		position: relative;
 	}
 	.left-panel{
-		width: 20%;
+		// width: 20%;
 		padding: 1%;
 		box-sizing: border-box;
 		background-color: #fbfbfb;

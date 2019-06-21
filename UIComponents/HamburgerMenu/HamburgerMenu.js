@@ -18,7 +18,7 @@ export default class HamburgerMenu extends React.Component {
 			<div className="menu-wrapper">
 				<style jsx global>
 				{`
-					.menu-wrapper{
+					.menu-wrapper {
 						position: relative;
 					}
 					.hamburger {

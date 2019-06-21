@@ -2,7 +2,7 @@ import React from 'react';
 import Meta from '../lib/meta';
 import config from '../services/config';
 
-import ItemService from '../services/ItemService'
+import ItemService from '../services/ItemService';
 import server from '../services/server';
 
 import Popup from '../UIComponents/Popup/Popup'
