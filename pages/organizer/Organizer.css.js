@@ -24,16 +24,16 @@ export default css
 		font-size: 21px;
 		font-weight: 400;
 		line-height: 55px;
-	},
+	}
 	.saved-views-wrap{
 		overflow-x: auto;
 		white-space: nowrap;
-	},
+	}
 	.page-wrap{
 		height:100vh;
 		display: flex;
 		flex-direction: column;
-		// background: #fbfbfb;
+		background: #fbfbfb;
 	}
 	.content-wrap{
 		display: flex;
@@ -42,7 +42,7 @@ export default css
 		position: relative;
 	}
 	.left-panel{
-		// width: 20%;
+		width: 20%;
 		padding: 1%;
 		box-sizing: border-box;
 		background-color: #fbfbfb;
@@ -134,5 +134,8 @@ export default css
 	}
 	.event-link-ok:hover{
 		opacity:1;
+	}
+	.textualQuery {
+	  margin-bottom: 20px;
 	}
 `

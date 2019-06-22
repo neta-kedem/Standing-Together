@@ -36,8 +36,8 @@ module.exports = (app) => {
 	});
 };
 
-//TODO neta
-function queryToMongo(query){
+//TODO neta- what did I try to do here?
+/*function queryToMongo(query){
 	console.log('query', query)
 	let toSend = `{$and:[`;
 	(query.conditions||[]).forEach(cond => {
@@ -56,4 +56,4 @@ function queryToMongo(query){
 	toSend += `}`;
 	console.log('toSend', toSend);
 	return {};
-}
+}*/

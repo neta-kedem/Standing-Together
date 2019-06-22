@@ -10,8 +10,8 @@ function delay(val, timeout=0) {
     });
 }
 
-function getCurrFilters() {
-    return delay(currFilters, 10);
+async function getCurrFilters() {
+    return await delay(currFilters, 10);
 }
 export default {
     getCurrFilters

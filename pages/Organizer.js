@@ -158,9 +158,11 @@ render() {
 			</TopNavBar>
 			<div className="content-wrap">
 				<div className="left-panel">
+					<div className="textualQuery">
+						<input type={"text"} value={this.state.query} onChange={this.handleQueryChange.bind(this)}/>
+						<button type={"button"} onClick={this.fetchActivistsByQuery.bind(this)}>filter</button>
+					</div>
 					{/*<QueryCreator currFilters={this.state.currFilters}> </QueryCreator>*/}
-					<input type={"text"} value={this.state.query} onChange={this.handleQueryChange.bind(this)}/>
-					<button type={"button"} onClick={this.fetchActivistsByQuery.bind(this)}>filter</button>
 				</div>
 				<div className="main-panel">
 					<QueryResultsActionMenu

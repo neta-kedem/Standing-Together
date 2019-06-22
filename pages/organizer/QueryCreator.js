@@ -23,12 +23,14 @@ class QueryCreator extends React.Component {
 			currLogicalOperator: orIcon,
 			isAddFilterBtnActive: false,
 			isAddGroupBtnActive: false,
-			currFilters: {operator:"", conditions:[]},
+			currFilters: [],
 			shownFilter: -1,
 			newFilter: props.newFilter
 		};
 
-    this.filters = ItemService.getPossibleFilters();
+    ItemService.getCurrFilters().then((filters) => {
+      this.state.currFilters = filters
+    })
 
 		// react-beautiful-dnd needs that in order to support server side rendering
 		resetServerContext();
@@ -59,7 +61,7 @@ class QueryCreator extends React.Component {
   onDragStart(result){
 		const oldIndex = result.source.index;
     const newIndex = result.destination.index;
-    this.state.currFilters.conditions.splice(newIndex, 0, this.state.currFilters.conditions.splice(oldIndex, 1)[0]);
+    this.state.currFilters.splice(newIndex, 0, this.state.currFilters.splice(oldIndex, 1)[0]);
   }
 	_exploreFilter(key){
   	if(this.state.shownFilter === key) this.setState({shownFilter:-1});
@@ -73,9 +75,9 @@ class QueryCreator extends React.Component {
 	}
 
   render() {
-    const possibleFilters = this.filters.map((filter, key) => {
+    const possibleFilters = this.state.currFilters.map((filter, key) => {
       return (<div onClick={this._exploreFilter.bind(this, key)} style={style["filter-title"]} key={key}>
-				<FontAwesomeIcon style={style["filter-icon"]} icon={filter.icon}/>{filter.label}
+				{/*<FontAwesomeIcon style={style["filter-icon"]} icon={filter.icon}/>{filter.label}*/}
 				<div>
 					<CreateFilter index={key} newFilter={this.newFilter.bind(this, filter.label)} filter={filter} show={this.state.shownFilter === key} />
 				</div>
@@ -109,7 +111,7 @@ class QueryCreator extends React.Component {
 					<Droppable droppableId="droppable">
 						{provided => (
 								<Queries provided={provided} innerRef={provided.innerRef} {...provided.droppableProps}>
-									{this.state.currFilters.conditions.map((filter, index) => {
+									{this.state.currFilters.map((filter, index) => {
 										if(index) {return  (
 												<div style={style.query} key={index}>
 													<img className="filterIcon" src={this.state.currLogicalOperator} style={{alignSelf:"center"}} alt="logical operator" onMouseDown={() => this._toggleLogicalOperator()}/>
@@ -143,7 +145,7 @@ class QueryCreator extends React.Component {
 
 
         <AddFiltersBtn text="Add Filter" type="single" onClick={this._addFilter}></AddFiltersBtn>
-        {/*<AddFiltersBtn text="Add Group" type="group"></AddFiltersBtn>*/}
+        <AddFiltersBtn text="Add Group" type="group"></AddFiltersBtn>
         {possibleFilters}
       </section>
     )
