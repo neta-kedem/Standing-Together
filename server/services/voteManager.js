@@ -13,26 +13,21 @@ function delay(val, timeout = 1000) {
   });
 }
 
-function shuffle(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function sortByName(candidates) {
+  return candidates.sort((a,b) => a.firstName - b.firstName)
 }
 
 const fetchAllCandidates = async function(req, res) {
   const query = Candidates.find({});
   let candidates = await query;
-  candidates = shuffle(candidates);
+  candidates = sortByName(candidates);
   return res.json(candidates);
 };
 
 const placeVote = async function(req, res) {
   const code = req.body.code;
   const votes = req.body.votes;
-  const query = Codes.findOne({ code, isUsed: { $in: [null, false] } });
-  const isCodeValidPromise = query;
+  const isCodeValidPromise = Codes.findOne({ code, isUsed: { $in: [null, false] } });
   const codeDb = await isCodeValidPromise;
   if (!codeDb || codeDb.isUsed) return res.json(false);
 
@@ -50,16 +45,20 @@ const placeVote = async function(req, res) {
 
 const validateCode = async function(req, res) {
   const code = req.body.code;
-  const query = Codes.findOne({ code });
-  const getCode = query;
+  const getCode = Codes.findOne({ code: { $regex : new RegExp(code, "i") } });
   const dbCode = await getCode;
   const isCodeValid = dbCode && !dbCode.isUsed;
   await delay(() => {});
   return res.json(isCodeValid);
 };
+const fetchAllVotes = async function(req, res) {
+  let votes = await Votes.find({});
+  return res.json(votes);
+};
 
 module.exports = {
   fetchAllCandidates,
   placeVote,
-  validateCode
+  validateCode,
+  fetchAllVotes
 };

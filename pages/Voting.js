@@ -7,7 +7,7 @@ import Modal from "react-modal";
 
 const MAX_VOTES = 1;
 
-export default class Caller extends React.Component {
+export default class Voting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -97,8 +97,10 @@ export default class Caller extends React.Component {
             style={{
               backgroundImage: `url(${candidate.photo})`
             }}
-          ></div>
-          <div className="candidate_name">{candidate.firstName +' '+ candidate.lastName}</div>
+          />
+          <div className="candidate_name">
+            {candidate.firstName + " " + candidate.lastName}
+          </div>
           <div className="candidate_name">{candidate.circle}</div>
         </div>
         <div>
@@ -130,16 +132,16 @@ export default class Caller extends React.Component {
         </h2>
         <h3 className="voting-title">
           {
-            "באסיפה הארצית ייבחרו 20 איש לצוות התיאום הארצי, ואליהם יצטרפו עוד נציגים מכל המעגלים בתנועה (מעגל שיש בו מעט חברים רשומים - ישלח מעט נציגים לצוות התיאום הארצי, ומעגל שיש בו מספר גדול של חברים רשומים - ישלח יותר נציגים לצוות התיאום הארצי). בסך הכל, יורכב צוות התיאום הארצי מכמה עשרות חברות וחברים מרחבי הארץ, שבמהלך השנה הקרובה ייפגשו מדי חודש, ויקבלו החלטות לגבי הפעולות הארציות שהתנועה תיזום."
+            "ההנהגה הארצית מורכבת משני גופים: צוות התיאום הארצי והמזכירות. צוות התיאום הארצי הוא גוף רחב, הנפגש אחת לחודשיים ומורכב מנציגים מהמעגלים המקומיים של התנועה וכן מ-25 נציגים שנבחרים בבחירות ישירות וחשאיות באסיפה הארצית. תפקידו לייצג את החברים והחברות בתנועה במהלך השנה, להתוות אסטרטגיה ארוכת טווח לתנועה, הכוללת קביעת סדרי עדיפויות והחלטה על קמפיינים יזומים ארוכי-טווח, ולבקר את עבודת המזכירות. מזכירות התנועה הוא גוף מצומצם אשר נבחר מתוך צוות התיאום הארצי, במטרה להוציא אל הפועל את האסטרטגיה התנועתית ולנהל את התנועה ברמה היומיומית. "
           }
         </h3>
         <h3 className="voting-title">
           {
-            "سوف يتم انتخاب 20 مندوبا لطاقم التنسيق القطري في الاجتماع القطري، وسينضم اليهم مندوبين اضافيين من جميع دوائر الحراك (دائرة التي تشمل القليل من الاعضاء المسجّلين- سترسل القليل من المندوبين، دائرة التي تشمل االعديد من الاعضاء المسجّلين- سترسل عدد اكبر من المندوبين لطاقم التنسيق القطري). في نهاية الامر، سيكوّن طاقم التنسيق القطري من عشرات من الاعضاء من جميع انحاء البلاد، والذين سوف يلتقون كل شهر خلال السنة القادمة، وسيتخذوا قرارات حول النشاطات القطرية التي يقوم بها الحراك."
+            "تتكون القيادة القطرية من جسمين: طاقم التنسيق القطري والسكرتارية. طاقم التنسيق القطري هو جسم واسع يلتقي أعضاؤه كل شهرين ويتألف من ممثلين وممثلات عن الحلقات المحلية للحراك، بالإضافة إلى ٢٥ ممثلاً وممثلة منتخبون ومنتخبات بانتخابات مباشرة وسرية في الاجتماع القطري. يهدف طاقم التنسيق القطري لتمثيل أعضاء الحراك خلال العام، بناء استراتيجية طويلة الأمد للحراك - تشمل تحديد وترتيب الأولويات واتخاذ القرارات بشأن الحملات طويلة الأمد التي يبادر لها الحراك - والإشراف على عمل السكرتارية. سكرتارية الحراك هي جسم مصغّر منتخَب من طاقم التنسيق القطري، من أجل تنفيذ استراتيجية الحراك وإدارته على أساس يومي."
           }
         </h3>
         <div className="code_validation">
-          <form>
+          <form className="form">
             <input
               type="button"
               value="האם הקוד שלי תקף"
@@ -151,6 +153,8 @@ export default class Caller extends React.Component {
               name="code"
               placeholder={"123456"}
               className="code_input"
+              maxLength="6"
+              size="8"
               onChange={e => this.setState({ code: e.target.value })}
             />
           </form>
@@ -159,7 +163,7 @@ export default class Caller extends React.Component {
         <div className="candidates">
           {this.state.candidates.map(this.generateCandidate)}
         </div>
-        <div>
+        <div className="center-content">
           <input
             className="vote_button"
             type="submit"
@@ -176,22 +180,22 @@ export default class Caller extends React.Component {
               backgroundColor: "rgba(60,60,60,0.8)"
             },
             content: {
-              height: 'max-content'
+              height: "max-content"
             }
           }}
         >
           <div>
-          <button onClick={this.handleEventPopupToggle.bind(this)}>
-            close
-          </button>
-          <h3 className="hebrew">
-            {
-              "אני פופ אפ חברותי שמוודא שהלחיצה הייתה בכוונה. פשוט אי אפשר לתקן לאחר האישור"
-            }
-          </h3>
-          <button className="code_button" onClick={this.sendVote.bind(this)}>
-            {"כן כן, זו ההצבעה שאני רוצה"}
-          </button>
+            <button onClick={this.handleEventPopupToggle.bind(this)}>
+              close
+            </button>
+            <h3 className="hebrew">
+              {
+                "אני פופ אפ חברותי שמוודא שהלחיצה הייתה בכוונה. פשוט אי אפשר לתקן לאחר האישור"
+              }
+            </h3>
+            <button className="code_button" onClick={this.sendVote.bind(this)}>
+              {"כן כן, זו ההצבעה שאני רוצה"}
+            </button>
           </div>
         </Modal>
       </div>

@@ -214,19 +214,18 @@ app.prepare().then(() => {
 	server.get('/voting', (req, res) => {
 		return app.render(req, res, '/Voting', req.query);
 	});
-	// coming soon!
-	// server.get('/votingResults', (req, res) => {
-	// 	authentication.hasRole(req, res, "isOrganizer").then(user=>{
-	// 		if(!user)
-	// 		{
-	// 			res.redirect('/Login');
-	// 			res.end();
-	// 		}
-	// 		else{
-	// 			return app.render(req, res, '/ScanContacts', req.query);
-	// 		}
-	// 	});
-	// });
+	server.get('/votingResults', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/VotingResults', req.query);
+			}
+		});
+	});
 	server.post("/webhooks/github", function (req, res) {
 		const sender = req.body.sender;
 		const branch = req.body.ref;

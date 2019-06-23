@@ -90,18 +90,25 @@ export default css`
   background-color: rgba(144, 39, 142, 1);
   color: white;
   margin-right: 5px;
-  font-size: 1.1em;
+  font-size: 1.3em;
   padding: 5px;
 }
 .vote_button {
   background-color: rgba(144, 39, 142, 1);
   color: white;
   margin-right: 5px;
-  font-size: 1.5em;
+  font-size: 2em;
   margin-left: 10px;
 }
 .hebrew {
-    direction: ltr;
-    text-align: right;
+  direction: ltr;
+  text-align: right;
+}
+.center-content {
+  display: flex;
+  justify-content: center;
+}
+.form{
+  display: flex;
 }
 `;

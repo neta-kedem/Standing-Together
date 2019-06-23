@@ -10,4 +10,7 @@ module.exports = (app) => {
 	app.post('/api/candidates/validateCode', (req, res) => {
 		voteManager.validateCode(req, res)
 	});
+	app.get('/api/votes/fetchAllVotes', (req, res) => {
+		voteManager.fetchAllVotes(req, res)
+	});
 };
