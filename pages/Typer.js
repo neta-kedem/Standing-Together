@@ -38,7 +38,8 @@ export default class Typer extends React.Component {
 				},
 				{
 					name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",
-					validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/
+					validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/,
+					required: false
 				},
 				{
 					name: "residency", type: "select", ar: "البلد", he: "עיר",
@@ -47,7 +48,8 @@ export default class Typer extends React.Component {
 				},
 				{
 					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true,
-					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+					required: false
 				},
 				{
 					name: "comments", type: "text", ar: "ملاحظات", he: "הערות", margin: "true", postOnTab: true,
