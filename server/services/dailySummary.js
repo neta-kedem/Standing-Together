@@ -5,7 +5,7 @@ const arrayFunctions = require("./arrayFunctions");
 const settingsManager = require("./settingsManager");
 const mailer = require("./mailer");
 
-const COVERED_PERIOD = 5*24*60*60*1000;
+const COVERED_PERIOD = 24*60*60*1000;
 const getDailySummary = function(){
     return fetchRecentContactSheets().then((sheets)=>{
         return fetchEventsAndActivistsByContactSheets(sheets).then((events)=>{
