@@ -9,6 +9,8 @@ const candidateSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  firstNameAr: String,
+  lastNameAr: String,
   circle: String,
   text1: String,
   text2: String,
