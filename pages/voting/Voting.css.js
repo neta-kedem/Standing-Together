@@ -85,6 +85,7 @@ export default css`
     border: 2px solid #90278e;
     border-radius: 10px;
     background-color: #fff;
+    transition: background-color 0.5s;
     color: #90278e;
     font-weight: 700;
     font-size: 24px;
@@ -168,17 +169,24 @@ export default css`
     height: 60px;
     background: none;
     outline: none;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.5s;
     font-size: 2em;
     line-height: 100%;
 }
 .candidate-selection-button.selected{
     border: 2px solid #fff;
-    background-color: #90278e;
+    background-color: #90278e !important;
 }
 .candidate-selection-button.disabled{
-    background-color: #ddd;
+    background-color: #ddd !important;
     cursor: not-allowed;
+}
+.candidate-selection-button:hover{
+    background-color: #eee;
+    box-shadow: 0px 0px 8px #00000030 inset;
+}
+.candidate-selection-button:active{
+    background-color: #ccc;
 }
 .candidate_description {
   overflow: hidden;
@@ -195,6 +203,7 @@ export default css`
     border: 2px solid #90278e;
     border-radius: 10px;
     background-color: #fff;
+    transition: background-color 0.5s;
     color: #90278e;
     font-weight: 700;
     font-size: 24px;
@@ -209,5 +218,25 @@ export default css`
 .center-content {
   display: flex;
   justify-content: center;
+}
+.close-popup-button{
+    display: block;
+    cursor: pointer;
+    background-color: rgb(144, 39, 142);
+    color: white;
+    font-size: 2em;
+    line-height: 0.5em;
+    font-weight: 700;
+    text-align: center;
+    padding: 9px 15px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+.vote_button:hover, .code_button:hover{
+    background-color: #90278e15;
+}
+.vote_button:hover, .code_button:active{
+    background-color: #90278e25;
 }
 `;

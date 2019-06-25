@@ -193,8 +193,8 @@ export default class Voting extends React.Component {
                     }}
                 >
                     <div>
-                        <button onClick={this.handleEventPopupToggle.bind(this)}>
-                            close
+                        <button onClick={this.handleEventPopupToggle.bind(this)} className={"close-popup-button"}>
+                            ⬅
                         </button>
                         <h3 className="hebrew">
                             {
