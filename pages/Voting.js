@@ -73,6 +73,12 @@ export default class Voting extends React.Component {
                 } else {
                     alert("הקוד שלך כבר לא תקף. ההצבעה לא נקלטה");
                 }
+                this.setState({
+                    selected: [],
+                    finishedSelecting: false,
+                    code: "",
+                    openPopup: false
+                });
             });
     }
 
