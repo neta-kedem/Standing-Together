@@ -69,8 +69,10 @@ export default class Voting extends React.Component {
     }.bind(this);
 
     sendVote() {
-        server
-            .post("candidates/placeVote", {
+        if(this.state.attemptedPost)
+            return;
+        this.setState({attemptedPost: true}, ()=>{
+            server.post("candidates/placeVote", {
                 votes: this.state.selected,
                 code: this.state.code
             })
@@ -84,9 +86,11 @@ export default class Voting extends React.Component {
                     selected: [],
                     finishedSelecting: false,
                     code: "",
-                    openPopup: false
+                    openPopup: false,
+                    attemptedPost: false
                 });
             });
+        });
     }
 
     generateCandidate(candidate, index) {
@@ -261,7 +265,7 @@ export default class Voting extends React.Component {
                         <div className="popup-candidate-picture" style={{backgroundImage: `url(${focusedCandidatePhoto})`}}/>
                         <div className="popup-candidate-description">
                         {
-                            focusedCandidate.text1
+                            focusedCandidate.text1?focusedCandidate.text1.split("\n").map(paragraph=><p>{paragraph}</p>):""
                         }
                         </div>
                     </div>

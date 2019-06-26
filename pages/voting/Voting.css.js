@@ -23,7 +23,7 @@ export default css`
     font-family: Assistant, Cairo, Rubik, sans-serif !important;
 }
 .voting-logo{
-    margin: 100px auto 25px;
+    margin: 30px auto 25px;
     display: block;
 }
 .voting-title {
