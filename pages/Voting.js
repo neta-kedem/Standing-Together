@@ -194,8 +194,8 @@ export default class Voting extends React.Component {
                             maxLength="6"
                             size="8"
                             value = {this.state.code}
-                            onChange={e => this.setState({code: e.target.value})}
-                            onKeyDown={e => {if(e.key === 'Enter'){this.validateCode();} e.preventDefault(); return false;}}
+                            onChange={e => {this.setState({code: e.target.value});}}
+                            onKeyDown={e => {if(e.key === 'Enter'){this.validateCode(); e.preventDefault(); return false;}}}
                         />
                         </div>
                         <input
@@ -265,7 +265,7 @@ export default class Voting extends React.Component {
                         <div className="popup-candidate-picture" style={{backgroundImage: `url(${focusedCandidatePhoto})`}}/>
                         <div className="popup-candidate-description">
                         {
-                            focusedCandidate.text1?focusedCandidate.text1.split("\n").map((paragraph, i)=><p key={i}>{paragraph}</p>):""
+                            focusedCandidate.text1 ? focusedCandidate.text1.split("\n").map((paragraph, i)=><p key={"paragraph_" + i}>{paragraph}</p>) : ""
                         }
                         </div>
                     </div>
