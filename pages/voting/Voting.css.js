@@ -144,13 +144,14 @@ export default css`
 .candidate_name {
   display: flex;
   flex-direction: row;
+  text-align: center;
   color: black;
-  font-size: 18px;
+  font-size: 22px;
   line-height: 36px;
   font-weight: 400;
 }
 .candidate_name_lang:first-child{
-    margin-left: 1em;
+    margin-left: 0.5em;
 }
 .candidate_circle{
     margin-top: 10px;
