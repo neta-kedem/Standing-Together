@@ -30,14 +30,12 @@ const placeVote = async function(req, res) {
   const isCodeValidPromise = Codes.findOne({ code, isUsed: { $in: [null, false] } });
   const codeDb = await isCodeValidPromise;
   if (!codeDb || codeDb.isUsed) return res.json(false);
-
   let updateCodePromise = Codes.updateOne(
     { _id: mongoose.Types.ObjectId(codeDb._id) },
     { isUsed: true }
-  )
-  let vote = new Votes({ voterCode: code, votes: votes })
-  let updateVotePromise = vote.save()
-
+  );
+  let vote = new Votes({ voterCode: code, votes: votes });
+  let updateVotePromise = vote.save();
   return Promise.all([updateCodePromise, updateVotePromise])
       .then(() => res.json(true))
       .catch(e =>res.json(false))
@@ -45,11 +43,11 @@ const placeVote = async function(req, res) {
 
 const validateCode = async function(req, res) {
   const code = req.body.code;
-  const getCode = Codes.findOne({ code: { $regex : new RegExp(code, "i") } });
+  const getCode = Codes.findOne({"code": code.toUpperCase()});
   const dbCode = await getCode;
   const isCodeValid = dbCode && !dbCode.isUsed;
   await delay(() => {});
-  return res.json(isCodeValid);
+  return res.json(!!isCodeValid);
 };
 const fetchAllVotes = async function(req, res) {
   let votes = await Votes.find({});

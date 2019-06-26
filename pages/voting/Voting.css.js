@@ -23,7 +23,7 @@ export default css`
     font-family: Assistant, Cairo, Rubik, sans-serif !important;
 }
 .voting-logo{
-    margin: 100px auto 25px;
+    margin: 30px auto 25px;
     display: block;
 }
 .voting-title {
@@ -80,6 +80,8 @@ export default css`
 .code_button {
     display: block;
     padding: 9px 15px;
+    max-width: 100%;
+    white-space: pre-line;
     margin: 0 auto;
     cursor: pointer;
     border: 2px solid #90278e;
@@ -95,13 +97,17 @@ export default css`
 }
 .candidates {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   margin: 0 20px;
 }
 .candidate {
   display: flex;
-  flex: 0 0 calc(50% - 20px);
-  padding: 20px 10px 20px;
+  flex-direction: column;
+  width: 18em;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 15px;
   border: none;
   border-bottom: 2px solid #90278e;
   transition: background-color 0.2s, box-shadow 0.5s;
@@ -111,30 +117,40 @@ export default css`
   box-shadow: 0px 0px 30px #90278e15 inset;
 }
 .candidate.disabled {
-  background-color: rgba(144, 144, 144, 0.1);
-  box-shadow: 0px 0px 30px #00000015 inset;
+  background-color: rgba(144, 144, 144, 0.05);
+  box-shadow: 0px 0px 30px #00000010 inset;
 }
 .candidate-member {
   flex: 0 0 100%;
 }
-.candidate_picture {
-  width: 100px;
-  height: 100px;
-  background-size: cover;
+.candidate-picture-wrap{
+    width: 10em;
+    height: 10em;
+    overflow: hidden;
 }
-.candidate_details{
-    padding: 13px;
+.candidate_picture {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: border-box;
+    transition: transform 0.25s ease-out;
+}
+.candidate_picture:hover{
+    transform: scale(1.1);
 }
 .candidate_name {
   display: flex;
   flex-direction: row;
   color: black;
-  font-size: 32px;
+  font-size: 18px;
   line-height: 36px;
   font-weight: 400;
 }
-.candidate_name_lang{
-    margin-left: 20px;
+.candidate_name_lang:first-child{
+    margin-left: 1em;
 }
 .candidate_circle{
     margin-top: 10px;
@@ -147,8 +163,10 @@ export default css`
     display: flex;
     flex-direction: row;
     align-items: center;
-    text-align: left;
+    text-align: center;
     margin-right: auto;
+    width: 100%;
+    justify-content: center;
 }
 .candidate-selection-label{
     cursor: pointer;
@@ -169,7 +187,7 @@ export default css`
     height: 60px;
     background: none;
     outline: none;
-    transition: background-color 0.3s, box-shadow 0.5s;
+    transition: background-color 0.3s, box-shadow 0.5s, text-shadow 0.5s;
     font-size: 2em;
     line-height: 100%;
 }
@@ -185,6 +203,12 @@ export default css`
     background-color: #eee;
     box-shadow: 0px 0px 8px #00000030 inset;
 }
+.candidate-selection-button.selected:hover{
+    border: 2px solid #eee;
+    background-color: #70076e !important;
+    box-shadow: 0px 0px 8px #00000030 inset;
+    text-shadow: 0px 0px 8px #ffffff;
+}
 .candidate-selection-button:active{
     background-color: #ccc;
 }
@@ -198,7 +222,7 @@ export default css`
 .vote_button {
     display: block;
     padding: 9px 15px;
-    margin: 2.5% auto;
+    margin: 1em auto;
     cursor: pointer;
     border: 2px solid #90278e;
     border-radius: 10px;
@@ -232,6 +256,24 @@ export default css`
     border: none;
     border-radius: 5px;
     outline: none;
+}
+.popup-candidate-picture{
+    margin: 0 auto;
+    width: 10em;
+    height: 10em;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 100%;
+}
+.popup-candidate-description{
+    max-height: calc(100vh - 120px - 20vw - 4em);
+    padding: 0 2em;
+    box-sizing: border-box;
+    overflow: auto;
+    direction: rtl;
+    text-align: right;
+    margin-top: 2em;
 }
 .vote_button:hover, .code_button:hover{
     background-color: #90278e15;
