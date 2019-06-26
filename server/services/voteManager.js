@@ -14,7 +14,7 @@ function delay(val, timeout = 1000) {
 }
 
 function sortByName(candidates) {
-  return candidates.sort((a,b) => a.firstName - b.firstName)
+  return candidates.sort((a,b) => a.firstName.localeCompare(b.firstName))
 }
 
 const fetchAllCandidates = async function(req, res) {
