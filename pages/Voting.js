@@ -95,11 +95,12 @@ export default class Voting extends React.Component {
         const finishedSelecting = this.state.finishedSelecting;
         const isDisabled = finishedSelecting && !isSelected;
         const disabledClass = isDisabled ? "disabled" : "";
+        const photo = candidate.photo ? candidate.photo.replace(" ", "%20") : "";
         return (
             <div className={"candidate " + selectedClass + disabledClass}
                 key={candidate._id}>
                 <div className="candidate-picture-wrap">
-                    <div className="candidate_picture" style={{backgroundImage: `url(${candidate.photo})`}} onClick={()=>{this.handleCandidatePopupToggle(index)}}/>
+                    <div className="candidate_picture" style={{backgroundImage: `url(${photo})`}} onClick={()=>{this.handleCandidatePopupToggle(index)}}/>
                 </div>
                 <div className="candidate_name">
                     <span className="candidate_name_lang">{candidate.firstName + " " + candidate.lastName}</span>
@@ -136,6 +137,7 @@ export default class Voting extends React.Component {
         const candidates = this.state.candidates.slice();
         const focusedCandidateIndex = this.state.focusedCandidate;
         const focusedCandidate = candidates[focusedCandidateIndex] ? candidates[focusedCandidateIndex] : {};
+        const focusedCandidatePhoto = focusedCandidate.photo ? focusedCandidate.photo.replace(" ", "%20") : "";
         return (
             <div className="page">
                 <Meta/>
@@ -255,7 +257,7 @@ export default class Voting extends React.Component {
                         <button onClick={this.handleCandidatePopupToggle} className={"close-popup-button"}>
                             ⬅
                         </button>
-                        <div className="popup-candidate-picture" style={{backgroundImage: `url(${focusedCandidate.photo})`}}/>
+                        <div className="popup-candidate-picture" style={{backgroundImage: `url(${focusedCandidatePhoto})`}}/>
                         <div className="popup-candidate-description">
                         {
                             focusedCandidate.text1

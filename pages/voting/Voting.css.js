@@ -132,7 +132,7 @@ export default css`
     cursor: pointer;
     width: 100%;
     height: 100%;
-    background-size: 100%;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-origin: border-box;
@@ -259,9 +259,11 @@ export default css`
 }
 .popup-candidate-picture{
     margin: 0 auto;
-    width: 20vw;
-    height: 20vw;
+    width: 10em;
+    height: 10em;
     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     border-radius: 100%;
 }
 .popup-candidate-description{
