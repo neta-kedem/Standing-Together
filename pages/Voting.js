@@ -14,7 +14,9 @@ export default class Voting extends React.Component {
             selected: [],
             finishedSelecting: false,
             code: "",
-            openPopup: false
+            openPopup: false,
+            openCandidateDetails: false,
+            focusedCandidate: 0
         };
 
         server.get("candidates/fetchCandidates", {}).then(candidates => {
@@ -61,6 +63,11 @@ export default class Voting extends React.Component {
         this.setState({openPopup: !openPopup});
     }
 
+    handleCandidatePopupToggle = function(focusedCandidate) {
+        let openPopup = this.state.openCandidateDetails;
+        this.setState({openCandidateDetails: !openPopup, focusedCandidate: focusedCandidate ? focusedCandidate : 0});
+    }.bind(this);
+
     sendVote() {
         server
             .post("candidates/placeVote", {
@@ -82,17 +89,16 @@ export default class Voting extends React.Component {
             });
     }
 
-    generateCandidate(candidate) {
+    generateCandidate(candidate, index) {
         const isSelected = this.state.selected.includes(candidate._id);
         const selectedClass = isSelected ? "selected" : "";
         const finishedSelecting = this.state.finishedSelecting;
         const isDisabled = finishedSelecting && !isSelected;
         const disabledClass = isDisabled ? "disabled" : "";
-
         return (
             <div className={"candidate " + selectedClass + disabledClass}
                 key={candidate._id}>
-                <div className="candidate_picture" style={{backgroundImage: `url(${candidate.photo})`}}/>
+                <div className="candidate_picture" style={{backgroundImage: `url(${candidate.photo})`}} onClick={()=>{this.handleCandidatePopupToggle(index)}}/>
                 <div className={"candidate_details " + selectedClass + disabledClass}>
                     <div className="candidate_name">
                         <span className="candidate_name_lang">{candidate.firstName + " " + candidate.lastName}</span>
@@ -128,6 +134,9 @@ export default class Voting extends React.Component {
     }
 
     render() {
+        const candidates = this.state.candidates.slice();
+        const focusedCandidateIndex = this.state.focusedCandidate;
+        const focusedCandidate = candidates[focusedCandidateIndex] ? candidates[focusedCandidateIndex] : {};
         return (
             <div className="page">
                 <Meta/>
@@ -175,7 +184,7 @@ export default class Voting extends React.Component {
                     </form>
                 </div>
                 <div className="candidates">
-                    {this.state.candidates.map(this.generateCandidate)}
+                    {this.state.candidates.map((x, i)=>{return this.generateCandidate(x, i)})}
                 </div>
                 <div className="center-content">
                     <input
@@ -210,6 +219,31 @@ export default class Voting extends React.Component {
                         <button className="code_button" onClick={this.sendVote.bind(this)}>
                             {"כן כן, זו ההצבעה שאני רוצה"}
                         </button>
+                    </div>
+                </Modal>
+                <Modal
+                    isOpen={this.state.openCandidateDetails}
+                    onRequestClose={this.handleCandidatePopupToggle}
+                    ariaHideApp={false}
+                    style={{
+                        overlay: {
+                            backgroundColor: "rgba(60,60,60,0.8)"
+                        },
+                        content: {
+                            height: "max-content"
+                        }
+                    }}
+                >
+                    <div>
+                        <button onClick={this.handleCandidatePopupToggle} className={"close-popup-button"}>
+                            ⬅
+                        </button>
+                        <div className="popup-candidate-picture" style={{backgroundImage: `url(${focusedCandidate.photo})`}}/>
+                        <div className="popup-candidate-description">
+                        {
+                            focusedCandidate.text1
+                        }
+                        </div>
                     </div>
                 </Modal>
             </div>

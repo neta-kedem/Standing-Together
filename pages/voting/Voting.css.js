@@ -233,6 +233,22 @@ export default css`
     border-radius: 5px;
     outline: none;
 }
+.popup-candidate-picture{
+    margin: 0 auto;
+    width: 20vw;
+    height: 20vw;
+    background-size: cover;
+    border-radius: 100%;
+}
+.popup-candidate-description{
+    max-height: calc(100vh - 120px - 20vw - 4em);
+    padding: 0 2em;
+    box-sizing: border-box;
+    overflow: auto;
+    direction: rtl;
+    text-align: right;
+    margin-top: 2em;
+}
 .vote_button:hover, .code_button:hover{
     background-color: #90278e15;
 }
