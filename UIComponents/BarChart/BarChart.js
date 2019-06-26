@@ -12,7 +12,7 @@ export default class BarChart extends React.Component {
         <HorizontalBar
           data={{ labels, datasets }}
           width={100}
-          height={50}
+          height={400}
           options={{
             maintainAspectRatio: false,
           }}
