@@ -265,7 +265,7 @@ export default class Voting extends React.Component {
                         <div className="popup-candidate-picture" style={{backgroundImage: `url(${focusedCandidatePhoto})`}}/>
                         <div className="popup-candidate-description">
                         {
-                            focusedCandidate.text1?focusedCandidate.text1.split("\n").map(paragraph=><p>{paragraph}</p>):""
+                            focusedCandidate.text1?focusedCandidate.text1.split("\n").map((paragraph, i)=><p key={i}>{paragraph}</p>):""
                         }
                         </div>
                     </div>
