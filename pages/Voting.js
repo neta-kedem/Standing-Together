@@ -4,7 +4,7 @@ import Meta from "../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";
 
-const MAX_VOTES = 1;
+const MAX_VOTES = 15;
 
 export default class Voting extends React.Component {
     constructor(props) {
