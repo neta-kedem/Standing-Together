@@ -191,6 +191,7 @@ export default class Voting extends React.Component {
                             size="8"
                             value = {this.state.code}
                             onChange={e => this.setState({code: e.target.value})}
+                            onKeyDown={e => {if(e.key === 'Enter'){this.validateCode();} e.preventDefault(); return false;}}
                         />
                         </div>
                         <input
