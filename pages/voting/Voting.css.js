@@ -63,6 +63,7 @@ export default css`
     font-size: 24px;
     line-height: 30px;
     font-weight: 700;
+    text-align: right;
 }
 .code_input{
     display: inline-block;
