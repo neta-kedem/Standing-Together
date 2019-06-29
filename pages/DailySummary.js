@@ -22,6 +22,7 @@ export default class DailySummary extends React.Component {
             });
     }
     render() {
+        const summary = this.state.summary ? this.state.summary : "לא התבצעה פעילות היום";
         const htmlToReactParser = new HtmlToReactParser();
         return (
             <div>
@@ -40,7 +41,7 @@ export default class DailySummary extends React.Component {
                     </div>
                 </TopNavBar>
                 <div className={"summary-wrap"}>
-                    {htmlToReactParser.parse(this.state.summary)}
+                    {htmlToReactParser.parse(summary)}
                 </div>
             </div>
         )

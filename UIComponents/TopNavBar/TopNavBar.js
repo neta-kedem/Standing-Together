@@ -96,7 +96,7 @@ export default class TopNavBar extends React.Component {
 								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("DailySummary")}}>
 									סיכום פעילות יומי
 								</div>:""}
-								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("ScanContacts")}}>
+								{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("Settings")}}>
 									הגדרות
 								</div>:""}
 							</div>
