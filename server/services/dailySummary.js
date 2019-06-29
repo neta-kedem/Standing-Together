@@ -9,22 +9,22 @@ const COVERED_PERIOD = 24*60*60*1000;
 const getDailySummary = function(){
     return fetchRecentContactSheets().then((sheets)=>{
         return fetchEventsAndActivistsByContactSheets(sheets).then((events)=>{
-            const emailBody = compileSummary(events);
-            return emailBody;
+            return compileSummary(events);
         })
     })
 };
 const sendDailySummary = function(){
     settingsManager.getSettingByName("dailySummaryRecipients").then(emailTo=>{
         this.getDailySummary().then(emailBody => {
-            //TODO - send email to everyone on the EMAIL_TO list.
-            mailer.sendEmail({
-                from: 'noreply@gmail.com',
-                to: emailTo.join(", "),
-                subject: '✊✊🏼✊🏾✊✊🏼 Daily Summary of Typing Activity ✊🏽✊🏾✊🏼✊🏿✊🏼',
-                text: emailBody,
-                html: emailBody
-            });
+            if(emailBody){
+                mailer.sendEmail({
+                    from: 'noreply@gmail.com',
+                    to: emailTo.join(", "),
+                    subject: '*** Daily Summary of Typing Activity ***',
+                    text: emailBody,
+                    html: emailBody
+                });
+            }
             return emailBody;
         });
     });
@@ -118,7 +118,7 @@ compileSummary = function(events){
             sheetCount++;
             let contactSheet = contactSheets[i];
             //TODO - replace with more relevant info
-            let uploader = contactSheet.creator.profile.firstName + " " + contactSheet.creator.profile.lastName;
+            let uploader = contactSheet.creator ? contactSheet.creator.profile.firstName + " " + contactSheet.creator.profile.lastName : "?";
             let uploadDate = new Date(contactSheet.metadata.creationDate).toISOString().split('T')[0];
             let uploadTime = new Date(contactSheet.metadata.creationDate).toTimeString().split(' ')[0];
             if(contactSheet.metadata.creationDate > cutoff){
@@ -162,8 +162,8 @@ compileSummary = function(events){
                 result += "משתתפות שלא הופיעו במערכת עד עכשיו:" + "\n";
                 for(let j = 0; j < newContactsInSheet.length; j++){
                     let activist = newContactsInSheet[j];
-                    let activistDetails = activist.activistDetails;
-                    let typerDetails = activist.typerDetails;
+                    let activistDetails = activist.activistDetails ? activist.activistDetails : {profile:{}};
+                    let typerDetails = activist.typerDetails ? activist.typerDetails : {profile:{}};
                     //the comments left by the typer when inputting the data about the contact
                     let comments = activist.comments;
                     result += "<p>";
@@ -208,6 +208,8 @@ compileSummary = function(events){
         result += city.numOfNewContacts + " מ" + city.city + "<br/>";
     }
     result += "</body>";
+    if(eventCount === 0 && contactCount === 0)
+        return false;
     return result;
 };
 

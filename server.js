@@ -143,6 +143,18 @@ app.prepare().then(() => {
 			}
 		});
 	});
+	server.get('/DailySummary', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/DailySummary', req.query);
+			}
+		});
+	});
 	server.get('/ScanContacts', (req, res) => {
 		authentication.hasRole(req, res, "isOrganizer").then(user=>{
 			if(!user)

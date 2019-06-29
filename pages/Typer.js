@@ -37,14 +37,14 @@ export default class Typer extends React.Component {
 					required: true
 				},
 				{
-					name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",
-					validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/,
+					name: "residency", type: "select", ar: "البلد", he: "עיר",
+					validation: /^.{2,}$/,
 					required: false
 				},
 				{
-					name: "residency", type: "select", ar: "البلد", he: "עיר",
-					validation: /^.{2,}$/,
-					required: true
+					name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",
+					validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/,
+					required: false
 				},
 				{
 					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true,
