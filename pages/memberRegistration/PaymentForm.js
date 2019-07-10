@@ -14,9 +14,11 @@ export default class PaymentForm extends React.Component {
             displayForm: false
         };
     }
+
     handleInputChange = function (event){
         this.state.handleChange(event.target.name, event.target.value);
     }.bind(this);
+
     handleContributionAmountSelection = function (amount){
         this.setState({displayForm: true});
         this.state.handleChange("selectedAmount", amount);
@@ -49,8 +51,8 @@ export default class PaymentForm extends React.Component {
                     className={paymentData["CardTypeIdValid"] === false ? "invalid" : ""}>
                 <option value="0">בחרו אמצעי תשלום</option>
                 <option value="6">אמריקן אקספרס</option>
-                <option value="5">ויזה</option>
-                <option value="4">מאסטרקארד</option>
+                <option value="1">ויזה</option>
+                <option value="2">מאסטרקארד</option>
                 <option value="3">ישראכרט</option>
             </select>
             </label>
