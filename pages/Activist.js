@@ -59,10 +59,7 @@ export default class EventCreation extends React.Component {
                 },
                 {
                     name: "isCaller", type: "checkbox", he: "טלפנות",
-                },
-                {
-                    name: "isOrganizer", type: "checkbox", he: "ארגון",
-                },
+                }
             ],
             memberFields: [
                 {
