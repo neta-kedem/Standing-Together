@@ -28,9 +28,9 @@ export default class FormSegment extends React.Component {
                           onChange = {this.syncStateToInput}/>;
         case "select":
             return <select value = {values[f.name]} name={f.name} onChange = {this.syncStateToInput}>
-                <option value={0}></option>
-                {this.state.dataLists[f.name].data.map((o)=>{
-                    return <option value={o}>{o}</option>
+                <option value={0}> </option>
+                {this.state.dataLists[f.name].data.map((o, i)=>{
+                    return <option value={o} key={o + "_" + i}>{o}</option>
                 })}
             </select>;
         default:
@@ -47,8 +47,8 @@ export default class FormSegment extends React.Component {
             Object.entries(this.state.dataLists).map((field)=>{
                 let f = field[1];
                 return <datalist key={f.field+"-data-list"} id={f.field+"-data-list"}>
-                    {f.data.map((option)=>{
-                        return <option key={f.field+"-op-"+option} value={option}/>
+                    {f.data.map((option, i)=>{
+                        return <option key={f.field+"-op-"+option+"-"+i} value={option}/>
                     })}
                 </datalist>
             })
@@ -58,7 +58,7 @@ export default class FormSegment extends React.Component {
                 {
                     this.state.fields.map((f, i) => {
                     return (
-                        <label className={"label " + (f.type === "checkbox" ? "checkbox-label" : "")} key={f.name}>
+                        <label className={"label " + (f.type === "checkbox" ? "checkbox-label" : "")} key={f.name + "_" + i}>
                             <div>{f.name}</div>
                             {
                                 this.getInputField(f, values)
