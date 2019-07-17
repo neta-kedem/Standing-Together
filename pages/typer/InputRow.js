@@ -34,7 +34,6 @@ export default class InputRow extends React.Component {
 	}.bind(this);
 
 	handleKeyPress=function(event, field){
-		console.log(event.key);
 		if(event.key === 'Enter' || event.key === 'Tab'){
 			if(field.postOnTab){
 				this.handlePost(this.state.rowIndex);

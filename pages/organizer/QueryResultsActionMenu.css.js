@@ -36,5 +36,7 @@ export default css`
 	}
 	.action-button-icon{
 		font-size: 14px;
+		height: 14px;
+		margin-left: 5px;
 	}
 `

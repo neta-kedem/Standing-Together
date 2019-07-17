@@ -1,14 +1,29 @@
 const activistFetcher = require('../../services/activistsFetcher');
 const activistUpdater = require('../../services/activistUpdater');
 const Authentication = require('../../services/authentication');
-const dailySummary = require('../../services/dailySummary');
+const excelExport = require('../../services/excelExport');
 
 module.exports = (app) => {
 	app.get('/api/activists', (req, res) => {
 		activistFetcher.getActivists(req, res);
 	});
 	app.post('/api/selectActivists', (req, res) => {
-		activistFetcher.queryActivists(req, res);
+		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			return activistFetcher.queryActivists(req.body.query, req.body.page, (result)=>{return res.json(result)})
+		})
+	});
+	app.post('/api/queryToXLSX', (req, res) => {
+		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+			if(!isUser)
+				return res.json({"error":"missing token"});
+			res.setHeader('Content-Type', 'text/csv');
+			res.setHeader('Content-Disposition', 'attachment; filename=\"' + 'download-' + Date.now() + '.csv\"');
+			activistFetcher.downloadActivistsByQuery(req.body.query, (result) => {
+				return res.json({"csv":excelExport.getCSV(result.activists, ["name", "phone", "email", ""])});
+			});
+		})
 	});
 	app.get('/api/activists/:id', (req, res) => {
 		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{

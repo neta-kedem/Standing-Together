@@ -1,5 +1,6 @@
 import React from 'react';
-export default class ImageUploader extends React.Component {
+import readXLSXFile from 'read-excel-file';
+export default class ExcelUploader extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state={
@@ -14,7 +15,23 @@ export default class ImageUploader extends React.Component {
 	}
 	fileSelectionHandler(event)
 	{
-		this.state.onSelect(event.target.files[0], "scan");
+		const file = event.target.files[0];
+		if(file.name.indexOf("xlsx") !== -1) {
+			readXLSXFile(file).then(data => {
+				this.state.onSelect(data);
+			});
+		}
+		else if(file.name.indexOf("csv") !== -1){
+			const reader = new FileReader();
+			reader.onload = ()=>{
+				const result = reader.result;
+				//TODO: replace with more robust CSV parsing
+				const rows = result.split("\n");
+				const cells = rows.map(row => row.split(","));
+				this.state.onSelect(cells);
+			};
+			reader.readAsText(file, "UTF-8");
+		}
 	}
 	render() {
 		return (
@@ -53,7 +70,7 @@ export default class ImageUploader extends React.Component {
 					<form method="post">
 						<div className="upload-btn-wrapper">
 							<button className="upload-btn">{this.state.labelText}</button>
-							<input required type="file" accept="image/*" onChange={this.fileSelectionHandler.bind(this)}/>
+							<input required type="file" accept=".csv, application/vnd.ms-excel" onChange={this.fileSelectionHandler.bind(this)}/>
 						</div>
 					</form>
 				</div>

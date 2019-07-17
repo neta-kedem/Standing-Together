@@ -58,33 +58,48 @@ const getActivistsByIds = function (ids){
     });
     return activistsPromise;
 };
-const queryActivists = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        const query = req.body.query;
-        const page = req.body.page;
-        if(page < 0)
-            return res.json({"error":"illegal page"});
-        const PAGE_SIZE = 50;
-        Activist.paginate(query, { page: page + 1, limit: PAGE_SIZE }).then((result) => {
-            const activists = result.docs;
-            let activistsList = [];
-            for(let activist of activists)
-            {
-                activistsList.push({
-                    "_id":activist._id,
-                    "phone":activist.profile.phone,
-                    "email":activist.profile.email,
-                    "name":activist.profile.firstName+" "+activist.profile.lastName,
-                    "city":activist.profile.residency,
-                    "isCaller":activist.role.isCaller,
-                    "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
-                });
-            }
-            return res.json({activists: activistsList, pageCount: result.pages, activistCount: result.total});
-        });
-    })
+const queryActivists = function(query, page, callback){
+    if(page < 0)
+        return callback({"error":"illegal page"});
+    const PAGE_SIZE = 50;
+    return Activist.paginate(query, { page: page + 1, limit: PAGE_SIZE }).then((result) => {
+        const activists = result.docs;
+        let activistsList = [];
+        for(let activist of activists)
+        {
+            activistsList.push({
+                "_id":activist._id,
+                "phone":activist.profile.phone,
+                "email":activist.profile.email,
+                "name":activist.profile.firstName+" "+activist.profile.lastName,
+                "city":activist.profile.residency,
+                "isCaller":activist.role.isCaller,
+                "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
+            });
+        }
+        return callback({activists: activistsList, pageCount: result.pages, activistCount: result.total});
+    });
+};
+const downloadActivistsByQuery = function(query, callback){
+    return Activist.find(query).then((activists) => {
+        let activistsList = [];
+        for(let activist of activists)
+        {
+            activistsList.push({
+                "phone":activist.profile.phone,
+                "email":activist.profile.email,
+                "name":activist.profile.firstName+" "+activist.profile.lastName,
+                "city":activist.profile.residency,
+                "isCaller":activist.role.isCaller,
+                "creationDate":activist.metadata.creationDate,
+                "circle":activist.profile.circle,
+                "isMember": activist.profile.isMember,
+                "isPaying": activist.profile.isPaying,
+                "isNewsletter": activist.profile.isNewsletter
+            });
+        }
+        return callback({activists: activistsList});
+    });
 };
 const searchDuplicates = function(phones, emails){
     const query =  Activist.find({$or: [{"profile.phone":{$in:phones}}, {"profile.email":{$in:emails}}]});
@@ -106,5 +121,6 @@ module.exports = {
     getActivists,
     queryActivists,
     searchDuplicates,
-    getActivistsByIds
+    getActivistsByIds,
+    downloadActivistsByQuery
 };

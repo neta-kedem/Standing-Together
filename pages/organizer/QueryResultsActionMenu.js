@@ -7,7 +7,8 @@ class QueryResultsActionMenu extends React.Component {
 		super(props);
 		this.state = {
 			items: props['items'],
-			toggleEventPopup: props['toggleEventPopup']
+			toggleEventPopup: props['toggleEventPopup'],
+			downloadActivistsByQuery: props['downloadActivistsByQuery']
 		};
 	}
 	handlePhoneListClick() {
@@ -19,8 +20,18 @@ class QueryResultsActionMenu extends React.Component {
 			<div className="query-results-wrapper">
 				<style jsx global>{style}</style>
 				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>
-				<div className="action-button" onClick={this.handlePhoneListClick.bind(this)}><FontAwesomeIcon className="action-button-icon" icon="phone"> </FontAwesomeIcon> קמפיין טלפוני</div>
-				<div className="action-button"><FontAwesomeIcon className="action-button-icon" icon="envelope-open"> </FontAwesomeIcon> מייל קבוצתי</div>
+				<div className="action-button" onClick={this.handlePhoneListClick.bind(this)}>
+					<FontAwesomeIcon className="action-button-icon" icon="phone"/>
+					קמפיין טלפוני
+				</div>
+				<div className="action-button">
+					<FontAwesomeIcon className="action-button-icon" icon="envelope-open"/>
+					מייל קבוצתי
+				</div>
+				<div className="action-button" onClick={this.state.downloadActivistsByQuery}>
+					<img className="action-button-icon" src={"../static/excel.svg"}/>
+					ייצוא לאקסל
+				</div>
 				{items}
 			</div>
 		)
