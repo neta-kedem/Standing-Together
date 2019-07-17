@@ -21,9 +21,6 @@ const addToCircle = function(activists){
         return Promise.all(updatePromises);
     });
 };
-const handlePayment = function (){
-
-};
 const registerMember = function (activistData, paymentData){
         const today = new Date();
         const activistObject = {
