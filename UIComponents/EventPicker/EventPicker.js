@@ -1,6 +1,7 @@
 import React from 'react'
 import server from '../../services/server'
-import PageNav from "../../UIComponents/PageNav/PageNav";
+import PageNav from "../PageNav/PageNav"
+import style from "./EventPicker.css"
 
 export default class EventManagement extends React.Component {
     constructor(props) {
@@ -50,6 +51,7 @@ export default class EventManagement extends React.Component {
         });
         return (
             <div>
+                <style jsx global>{style}</style>
                 <table className={"event-table"}>
                     <thead>
                         <tr>

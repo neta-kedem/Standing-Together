@@ -3,7 +3,7 @@ import React from 'react';
 import config from '../../services/config';
 import server from '../../services/server';
 import style from './ScanContacts.css';
-import EventPicker from './EventPicker';
+import EventPicker from '../../UIComponents/EventPicker/EventPicker';
 import ImageUploader from '../../UIComponents/ImageUploader/ImageUploader';
 import ia from "../../services/canvas/imageAdjustor";
 
