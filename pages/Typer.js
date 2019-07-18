@@ -77,6 +77,7 @@ export default class Typer extends React.Component {
 		if(this.state.unsaved)
 			return "You Have Unsaved Data - Are You Sure You Want To Quit?";
 	}.bind(this);
+
 	componentDidMount() {
 		this.fetchCities();
 		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});

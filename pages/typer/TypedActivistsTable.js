@@ -58,6 +58,8 @@ export default class TypedActivistsTable extends React.Component {
 					<thead>
 						{titleRow}
 					</thead>
+				</table>
+				<table dir="rtl" className={"typed-rows-table main-body "+(this.props.highlightInvalidFields?"highlight-invalid-fields":"")}>
 					{rows}
 				</table>
 				{dataLists}

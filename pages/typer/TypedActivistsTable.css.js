@@ -4,14 +4,27 @@ export default css`
 		display: block;
 		width: fit-content;
 		margin: 0 auto;
+		margin-bottom: 2.5%;
 	}
 	.typed-rows-table{
 		border-collapse: collapse;
+	}
+	.typed-rows-table thead{
+	    display: block;
 	}
 	.typed-rows-table thead tr{
 		border: none;
 		background-color: transparent;
 		color: rgba(86, 95, 108, 1);
+	}
+	.typed-rows-table.main-body{
+	    height: calc(90vh - 300px - 6em);
+        overflow-y: auto;
+	    display: block;
+	    border: 1px solid rgb(202, 200, 199);
+	    border-collapse: collapse;
+	    border-right: none;
+	    border-left: none;
 	}
 	.typed-rows-table input{
 		border: none;
@@ -19,10 +32,16 @@ export default css`
 		outline: none;
 		margin: 0;
 		padding: 5px;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
 	}
 	.typed-rows-table input:disabled{
 	    background-color: #DDD;
 	    color: #555;
+	}
+	.typed-rows-table td, .typed-rows-table th{
+	    width: 10em;
 	}
 	.typed-rows-table td{
 	    border: 1px solid rgb(202, 200, 199);
@@ -73,7 +92,7 @@ export default css`
 		bottom: 0;
 		cursor: pointer;
 	}
-	.typed-rows-table  .row-wrap:hover .delete-row-wrap .delete-row, .typed-rows-table  .row-wrap:focus-within .delete-row-wrap .delete-row{
+	.typed-rows-table .row-wrap:hover .delete-row-wrap .delete-row, .typed-rows-table  .row-wrap:focus-within .delete-row-wrap .delete-row{
 		display: block;
 	}
 	.delete-row:hover{
