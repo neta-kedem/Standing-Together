@@ -1,50 +1,43 @@
 const mongoose = require('mongoose');
 const Authentication = require('../services/authentication');
 const ContactScan = require('../models/contactScanModel');
+const ActivitUpdater = require('./activistUpdater');
 
-const insertContactScan = function(req, res){
-    Authentication.hasRole(req, res, ["isOrganizer", "isTyper"]).then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        const scanUrl = req.body.scanUrl;
-        const eventId = req.body.eventId;
-        const today = new Date();
-        const scanObject={
-            "_id": mongoose.Types.ObjectId(),
-            "metadata":{
-                "creationDate": today,
-                "lastUpdate": today,
-                "creatorId": Authentication.getMyId()
-            },
-            "scanUrl": scanUrl,
-            "eventId": eventId
-        };
-        const newScan = new ContactScan(scanObject);
-        newScan.save(function (err) {
-            if (err){
-                return res.json({"err": err});
-            }
-            else
-                return res.json({"id": scanObject._id});
+const insertContactScan = function(scanUrl, eventId){
+  const today = new Date();
+   const scanObject={
+       "_id": mongoose.Types.ObjectId(),
+       "metadata":{
+           "creationDate": today,
+           "lastUpdate": today,
+           "creatorId": Authentication.getMyId()
+       },
+       "scanUrl": scanUrl,
+       "eventId": eventId
+   };
+   const newScan = new ContactScan(scanObject);
+   return ContactScan.create(scanObject).then(()=>{
+       return {"id": scanObject._id};
+   });
+};
+const pingScan = function(scanId){
+    scanId = mongoose.Types.ObjectId(scanId);
+    const now = new Date();
+    const query = ContactScan.update(
+        {"_id": scanId},
+        {"$set": {"lastPing": now}});
+    return query.exec().then(
+        (err, result) => {
+            return {"err":err, "result":result};
         });
+};
+const importContacts = function(eventId, activists){
+    insertContactScan("fromCSV", eventId).then((res)=>{
+        if(res.err)
+            return {"err": res.err};
+        const scanId = res.id;
     })
 };
-const pingScan = function(req, res){
-    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        const scanId = mongoose.Types.ObjectId(req.body.scanId);
-        const now = new Date();
-        ContactScan.update(
-            {"_id": scanId},
-            {"$set": {"lastPing": now}},
-            (err, result) => {
-                return res.json({"err":err, "result":result});
-            }
-        );
-    });
-};
-
 module.exports = {
     insertContactScan,
     pingScan

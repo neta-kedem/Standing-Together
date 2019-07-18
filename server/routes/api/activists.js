@@ -47,7 +47,13 @@ module.exports = (app) => {
 		activistUpdater.toggleActivistStatus(req, res);
 	});
 	app.post('/api/activists/uploadTyped', (req, res) => {
-		activistUpdater.uploadTypedActivists(req, res);
+		Authentication.hasRole(req, res, "isTyper").then(isUser=> {
+			if (!isUser)
+				return res.json({"error": "missing token"});
+			activistUpdater.uploadTypedActivists(req.body.activists, req.body.scanId, req.body.markedDone).then((result)=>{
+				return res.json(result);
+			});
+		});
 	});
 };
 

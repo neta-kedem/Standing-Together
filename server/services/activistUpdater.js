@@ -164,118 +164,111 @@ const checkForDuplicates = function (activists, scanId){
         return duplicates;
     });
 };
-const uploadTypedActivists = function (req, res){
-    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        const typerId = Authentication.getMyId();
-        const typedActivists = req.body.activists;
-        const scanId = req.body.scanId ? req.body.scanId : null;
-        const markedDone = req.body.markedDone;
-        //activists who don't have an id attached
-        let newActivists = [];
-        //activists whose records have already been typed and submitted as part of this specific scan page,
-        //and have subsequently been updated by some typer.
-        let updatedActivists = [];
-        const today = new Date();
-        for (let i=0; i<typedActivists.length; i++)
-        {
-            let curr = typedActivists[i];
-            if(!curr._id){
-                newActivists.push(
-                    {
-                        "_id": mongoose.Types.ObjectId(),
-                        "metadata" : {
-                            "creationDate" : today,
-                            "lastUpdate" : today,
-                            "joiningMethod" : "contactPage",
-                            "typerId" : typerId,
-                            "scanId": scanId,
-                            "scanRow": curr.scanRow
-                        },
-                        "profile" : {
-                            "firstName" : curr.firstName,
-                            "lastName" : curr.lastName,
-                            "phone" : curr.phone.replace(/[\-.():]/g, ''),
-                            "email" : curr.email.toLowerCase(),
-                            "residency" : curr.residency,
-                            "comments" : curr.comments,
-                            "circle" : "תל-אביב",
-                            "isMember" : false,
-                            "isPaying" : false,
-                            "isNewsletter" : "not subscribed",
-                            "participatedEvents" : []
-                        },
-                        "role" : {
-                            "isTyper" : false,
-                            "isCaller" : false,
-                            "isOrganizer" : false,
-                            "isCircleLeader" : false
-                        },
-                        "login" : {
-                            "loginCode" : null,
-                            "token" : []
-                        },
-                        "pos": i
-                    }
-                );
-            }
-            else{
-                if(!curr.locked) {
-                    updatedActivists.push(curr);
-                }
+const uploadTypedActivists = function (activists, scanId, markedDone){
+    const typerId = Authentication.getMyId();
+    //activists who don't have an id attached
+    let newActivists = [];
+    //activists whose records have already been typed and submitted as part of this specific scan page,
+    //and have subsequently been updated by some typer.
+    let updatedActivists = [];
+    const today = new Date();
+    for (let i=0; i<typedActivists.length; i++)
+    {
+        let curr = typedActivists[i];
+        if(!curr._id){
+            newActivists.push(
+                {
+                    "_id": mongoose.Types.ObjectId(),
+                    "metadata" : {
+                        "creationDate" : today,
+                        "lastUpdate" : today,
+                        "joiningMethod" : "contactPage",
+                        "typerId" : typerId,
+                        "scanId": scanId,
+                        "scanRow": curr.scanRow
+                    },
+                    "profile" : {
+                        "firstName" : curr.firstName,
+                        "lastName" : curr.lastName,
+                        "phone" : curr.phone.replace(/[\-.():]/g, ''),
+                        "email" : curr.email.toLowerCase(),
+                        "residency" : curr.residency,
+                        "comments" : curr.comments,
+                        "circle" : "תל-אביב",
+                        "isMember" : false,
+                        "isPaying" : false,
+                        "isNewsletter" : "not subscribed",
+                        "participatedEvents" : []
+                    },
+                    "role" : {
+                        "isTyper" : false,
+                        "isCaller" : false,
+                        "isOrganizer" : false,
+                        "isCircleLeader" : false
+                    },
+                    "login" : {
+                        "loginCode" : null,
+                        "token" : []
+                    },
+                    "pos": i
+                });
+        }
+        else{
+            if(!curr.locked) {
+                updatedActivists.push(curr);
             }
         }
-        //update activists whose rows were previously submitted as part of this scan, and subsequently edited
-        updateTypedActivists(updatedActivists).then(()=>{
-            //mark activists whose phones or emails are already stored
-            checkForDuplicates(newActivists, scanId).then((result)=>{
-                const nonDuplicates = result.nonDuplicates;
-                const duplicates = result.duplicates;
-                const insertDuplicates = updateDuplicateActivists(duplicates);
-                const insertNonDuplicates = Activist.insertMany(nonDuplicates);
-                Promise.all([insertDuplicates, insertNonDuplicates]).then(function (result) {
-                    if (result){
-                        let tasks = [];
-                        //create a mailchimp record in the main contact list
-                        //tasks.push(mailchimpSync.createContacts(newActivists));
-                        //create a mailchimp record in the circle-specific contact list
-                        tasks.push(addToMailchimpCircle(nonDuplicates));
-                        //mark the activist as typed in the relevant contact scan
-                        let activistRows = duplicates.map((a)=>{
-                            return {
-                                _id: a._id,
-                                new: false,
-                                pos: a.pos,
-                                comments: a.profile.comments
-                            };
-                        }).concat(nonDuplicates.map((a)=>{
-                            return {
-                                _id: a._id,
-                                new: true,
-                                pos: a.pos,
-                                comments: a.profile.comments
-                            };
-                        })).concat(updatedActivists.map((a)=>{
-                            return {
-                                _id: a._id,
-                                comments: a.comments,
-                            };
-                        }));
-                        if(scanId){
-                            tasks.push(markTypedContactScanRows(typerId, scanId, activistRows, markedDone));
-                        }
-                        Promise.all(tasks).then((results)=>{
-                            return res.json(results);
-                        })
+    }
+    //update activists whose rows were previously submitted as part of this scan, and subsequently edited
+    const query = updateTypedActivists(updatedActivists).then(()=>{
+        //mark activists whose phones or emails are already stored
+        checkForDuplicates(newActivists, scanId).then((result)=>{
+            const nonDuplicates = result.nonDuplicates;
+            const duplicates = result.duplicates;
+            const insertDuplicates = updateDuplicateActivists(duplicates);
+            const insertNonDuplicates = Activist.insertMany(nonDuplicates);
+            Promise.all([insertDuplicates, insertNonDuplicates]).then(function (result) {
+                if (result){
+                    let tasks = [];
+                    //create a mailchimp record in the main contact list
+                    //tasks.push(mailchimpSync.createContacts(newActivists));
+                    //create a mailchimp record in the circle-specific contact list
+                    tasks.push(addToMailchimpCircle(nonDuplicates));
+                    //mark the activist as typed in the relevant contact scan
+                    let activistRows = duplicates.map((a)=>{
+                        return {
+                            _id: a._id,
+                            new: false,
+                            pos: a.pos,
+                            comments: a.profile.comments
+                        };
+                    }).concat(nonDuplicates.map((a)=>{
+                        return {
+                            _id: a._id,
+                            new: true,
+                            pos: a.pos,
+                            comments: a.profile.comments
+                        };
+                    })).concat(updatedActivists.map((a)=>{
+                        return {
+                            _id: a._id,
+                            comments: a.comments,
+                        };
+                    }));
+                    if(scanId){
+                        tasks.push(markTypedContactScanRows(typerId, scanId, activistRows, markedDone));
                     }
-                    else{
-                        return res.json({"error":"an unknown error has occurred, the activists were not saved"});
-                    }
-                });
+                    Promise.all(tasks).then((results)=>{
+                        return results;
+                    })
+                }
+                else{
+                    return {"error":"an unknown error has occurred, the activists were not saved"};
+                }
             });
         });
     });
+    return query;
 };
 
 module.exports = {
