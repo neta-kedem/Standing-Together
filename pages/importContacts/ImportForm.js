@@ -12,11 +12,11 @@ export default class ImportForm extends React.Component {
             eventId: null,
             contacts: [],
             fields: [
-                    {key: "firstName", he: "שם פרטי", ar: "שם פרטי", dir: "right", width: 5},
-                    {key: "lastName", he: "שם משפחה", ar: "שם משפחה", dir: "right", width: 5},
-                    {key: "residency", he: "יישוב", ar: "יישוב", dir: "right", width: 10},
-                    {key: "phone", he: "טלפון", ar: "טלפון", dir: "left", width: 7},
-                    {key: "email", he: "אימייל", ar: "אימייל", dir: "left", width: 14}
+                    {key: "firstName", he: "שם פרטי", ar: "שם פרטי", dir: "right", width: 15},
+                    {key: "lastName", he: "שם משפחה", ar: "שם משפחה", dir: "right", width: 15},
+                    {key: "residency", he: "יישוב", ar: "יישוב", dir: "right", width: 25},
+                    {key: "phone", he: "טלפון", ar: "טלפון", dir: "left", width: 15},
+                    {key: "email", he: "אימייל", ar: "אימייל", dir: "left", width: 30}
                 ],
             selectedFile: false
         };
@@ -92,7 +92,7 @@ export default class ImportForm extends React.Component {
                         return <tr key={"contact_" + i}>
                             {
                                 fields.map(f=>{
-                                    return <td key={"contact_" + i + "_" + f.key} style={{"textAlign":f.dir, "width":f.width+"em"}}>
+                                    return <td key={"contact_" + i + "_" + f.key} style={{"textAlign":f.dir, "width":f.width+"%"}}>
                                         <input value={contact[f.key]} onChange={(e)=>{this.handleTypedInput(e, i, f.key)}}/>
                                     </td>
                                 })

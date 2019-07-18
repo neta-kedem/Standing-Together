@@ -20,7 +20,7 @@ export default css
 .main-content{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     padding: 0 1em;
     height: 100%;
     overflow: auto;
@@ -35,21 +35,21 @@ export default css
 }
 .contact-scan-uploader{
 	margin: 5% auto;
-	margin-bottom: 0;
 	text-align: center;
 }
 .post-scan-wrap{
     position: fixed;
     bottom: 0;
     box-sizing: border-box;
-	height: 0px;
+	height: 4em;
     width: 100%;
 	background-color: #90278e;
 	overflow: hidden;
-	transition: height 0.5s ease-out;
+	transition: transform 0.5s ease-out;
+	transform: TranslateY(4em);
 }
 .post-scan-wrap.active{
-    height: 4em;
+	transform: TranslateY(0);
     box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 5px;
 }
 .post-scan-button{
@@ -76,7 +76,7 @@ export default css
     border-collapse: collapse;
     display: block;
     margin: 0 auto;
-    width: fit-content;
+    width: 100%;
 }
 .contacts-table td, .contacts-table tr, .contacts-table th{
     border: 1px solid black;
