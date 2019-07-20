@@ -335,12 +335,19 @@ export default class Typer extends React.Component {
 		const scanUploaderFormTopBar = <div className={"event-details"}>
 			העלאת תמונה
 		</div>;
+		const doneTopBar = <div className={"event-details"}>
+			הנתונים נקלטו
+		</div>;
 		const loadingTopBar = <div className={"event-details"}>
 			טעינה...
 		</div>;
 		const topBar = <div dir="rtl">
 			<TopNavBar justification={"space-between"}>
-				{this.state.displayLoadingMessage?loadingTopBar:this.state.displayTyperForm?typerFormTopBar:scanUploaderFormTopBar}
+				{
+					this.state.displayLoadingMessage?loadingTopBar:
+					this.state.displayTyperForm?typerFormTopBar:
+					this.state.postSuccessful?doneTopBar :scanUploaderFormTopBar
+				}
 			</TopNavBar>
 		</div>;
 		const scanDisplay = <ContactScanDisplay

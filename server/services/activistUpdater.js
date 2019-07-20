@@ -164,7 +164,7 @@ const checkForDuplicates = function (activists, scanId){
         return duplicates;
     });
 };
-const uploadTypedActivists = function (activists, scanId, markedDone){
+const uploadTypedActivists = function (typedActivists, scanId, markedDone){
     const typerId = Authentication.getMyId();
     //activists who don't have an id attached
     let newActivists = [];
@@ -219,56 +219,56 @@ const uploadTypedActivists = function (activists, scanId, markedDone){
             }
         }
     }
-    //update activists whose rows were previously submitted as part of this scan, and subsequently edited
-    const query = updateTypedActivists(updatedActivists).then(()=>{
-        //mark activists whose phones or emails are already stored
-        checkForDuplicates(newActivists, scanId).then((result)=>{
-            const nonDuplicates = result.nonDuplicates;
-            const duplicates = result.duplicates;
-            const insertDuplicates = updateDuplicateActivists(duplicates);
-            const insertNonDuplicates = Activist.insertMany(nonDuplicates);
-            Promise.all([insertDuplicates, insertNonDuplicates]).then(function (result) {
-                if (result){
-                    let tasks = [];
-                    //create a mailchimp record in the main contact list
-                    //tasks.push(mailchimpSync.createContacts(newActivists));
-                    //create a mailchimp record in the circle-specific contact list
-                    tasks.push(addToMailchimpCircle(nonDuplicates));
-                    //mark the activist as typed in the relevant contact scan
-                    let activistRows = duplicates.map((a)=>{
-                        return {
-                            _id: a._id,
-                            new: false,
-                            pos: a.pos,
-                            comments: a.profile.comments
-                        };
-                    }).concat(nonDuplicates.map((a)=>{
-                        return {
-                            _id: a._id,
-                            new: true,
-                            pos: a.pos,
-                            comments: a.profile.comments
-                        };
-                    })).concat(updatedActivists.map((a)=>{
-                        return {
-                            _id: a._id,
-                            comments: a.comments,
-                        };
-                    }));
-                    if(scanId){
-                        tasks.push(markTypedContactScanRows(typerId, scanId, activistRows, markedDone));
+    return new Promise((resolve, reject)=> {
+        //update activists whose rows were previously submitted as part of this scan, and subsequently edited
+        updateTypedActivists(updatedActivists).then(() => {
+            //mark activists whose phones or emails are already stored
+            checkForDuplicates(newActivists, scanId).then((result) => {
+                const nonDuplicates = result.nonDuplicates;
+                const duplicates = result.duplicates;
+                const insertDuplicates = updateDuplicateActivists(duplicates);
+                const insertNonDuplicates = Activist.insertMany(nonDuplicates);
+                return Promise.all([insertDuplicates, insertNonDuplicates]).then(function (result) {
+                    if (result) {
+                        let tasks = [];
+                        //create a mailchimp record in the main contact list
+                        //tasks.push(mailchimpSync.createContacts(newActivists));
+                        //create a mailchimp record in the circle-specific contact list
+                        tasks.push(addToMailchimpCircle(nonDuplicates));
+                        //mark the activist as typed in the relevant contact scan
+                        let activistRows = duplicates.map((a) => {
+                            return {
+                                _id: a._id,
+                                new: false,
+                                pos: a.pos,
+                                comments: a.profile.comments
+                            };
+                        }).concat(nonDuplicates.map((a) => {
+                            return {
+                                _id: a._id,
+                                new: true,
+                                pos: a.pos,
+                                comments: a.profile.comments
+                            };
+                        })).concat(updatedActivists.map((a) => {
+                            return {
+                                _id: a._id,
+                                comments: a.comments,
+                            };
+                        }));
+                        if (scanId) {
+                            tasks.push(markTypedContactScanRows(typerId, scanId, activistRows, markedDone));
+                        }
+                        return Promise.all(tasks).then((results) => {
+                            resolve(true);
+                        })
+                    } else {
+                        resolve({"error": "an unknown error has occurred, the activists were not saved"});
                     }
-                    Promise.all(tasks).then((results)=>{
-                        return results;
-                    })
-                }
-                else{
-                    return {"error":"an unknown error has occurred, the activists were not saved"};
-                }
+                });
             });
         });
     });
-    return query;
 };
 
 module.exports = {

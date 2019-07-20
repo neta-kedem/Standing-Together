@@ -21,10 +21,6 @@ export default css`
 	    height: calc(90vh - 300px - 6em);
         overflow-y: auto;
 	    display: block;
-	    border: 1px solid rgb(202, 200, 199);
-	    border-collapse: collapse;
-	    border-right: none;
-	    border-left: none;
 	}
 	.typed-rows-table input{
 		border: none;
