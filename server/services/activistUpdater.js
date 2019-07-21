@@ -194,7 +194,7 @@ const uploadTypedActivists = function (typedActivists, scanId, markedDone){
                         "email" : curr.email.toLowerCase(),
                         "residency" : curr.residency,
                         "comments" : curr.comments,
-                        "circle" : "תל-אביב",
+                        "circle" : "",
                         "isMember" : false,
                         "isPaying" : false,
                         "isNewsletter" : "not subscribed",

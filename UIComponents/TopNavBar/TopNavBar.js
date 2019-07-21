@@ -94,6 +94,9 @@ export default class TopNavBar extends React.Component {
 									{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("ScanContacts")}}>
 										סריקת דפי קשר
 									</div>:""}
+									{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("ImportContacts")}}>
+										ייבוא אנשי קשר
+									</div>:""}
 									{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("DailySummary")}}>
 										סיכום פעילות יומי
 									</div>:""}

@@ -16,12 +16,12 @@ export default class ExcelUploader extends React.Component {
 	fileSelectionHandler(event)
 	{
 		const file = event.target.files[0];
-		if(file.name.indexOf("xlsx") !== -1) {
+		if(file.name.indexOf(".xls") !== -1) {
 			readXLSXFile(file).then(data => {
 				this.state.onSelect(data);
 			});
 		}
-		else if(file.name.indexOf("csv") !== -1){
+		else if(file.name.indexOf(".csv") !== -1){
 			const reader = new FileReader();
 			reader.onload = ()=>{
 				const result = reader.result;
@@ -70,7 +70,7 @@ export default class ExcelUploader extends React.Component {
 					<form method="post">
 						<div className="upload-btn-wrapper">
 							<button className="upload-btn">{this.state.labelText}</button>
-							<input required type="file" accept=".csv, application/vnd.ms-excel" onChange={this.fileSelectionHandler.bind(this)}/>
+							<input required type="file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={this.fileSelectionHandler.bind(this)}/>
 						</div>
 					</form>
 				</div>

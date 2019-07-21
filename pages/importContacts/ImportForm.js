@@ -12,11 +12,11 @@ export default class ImportForm extends React.Component {
             eventId: null,
             contacts: [],
             fields: [
-                    {key: "firstName", he: "שם פרטי", ar: "שם פרטי", dir: "right", width: 15},
-                    {key: "lastName", he: "שם משפחה", ar: "שם משפחה", dir: "right", width: 15},
-                    {key: "residency", he: "יישוב", ar: "יישוב", dir: "right", width: 25},
-                    {key: "phone", he: "טלפון", ar: "טלפון", dir: "left", width: 15},
-                    {key: "email", he: "אימייל", ar: "אימייל", dir: "left", width: 30}
+                    {key: "firstName", he: "שם פרטי", ar: "الاسم الشخصي", dir: "right", width: 15},
+                    {key: "lastName", he: "שם משפחה", ar: "اسم العائلة", dir: "right", width: 15},
+                    {key: "residency", he: "יישוב", ar: "البلد", dir: "right", width: 25},
+                    {key: "phone", he: "טלפון", ar: "رقم الهاتف", dir: "left", width: 15},
+                    {key: "email", he: "אימייל", ar: "البريد الإلكتروني", dir: "left", width: 30}
                 ],
             selectedFile: false
         };
@@ -27,14 +27,15 @@ export default class ImportForm extends React.Component {
         }
         data.splice(0, 1);
         const fields = this.state.fields.slice();
-        const contacts = data.map(row=>{
+        const contacts = data.map((row, i)=>{
             const contact = {};
-            for(let i = 0; i < fields.length; i++){
-                if(row[i])
-                    contact[fields[i].key] = row[i].trim();
+            for(let j = 0; j < fields.length; j++){
+                if(row[j])
+                    contact[fields[j].key] = row[j].toString().trim();
                 else
-                    contact[fields[i].key] = "";
+                    contact[fields[j].key] = "";
             }
+            contact.scanRow = i;
             return contact
         });
         this.setState({selectedFile: true, contacts: contacts});
@@ -47,21 +48,23 @@ export default class ImportForm extends React.Component {
     handleEventSelection(id){
         this.setState({eventId: id});
     }
-    publishScan(imgUrl){
-        const data ={"scanUrl":imgUrl, "eventId":this.state.eventId};
-        server.post('contactScan', data)
+    publishScan(){
+        const data ={"eventId": this.state.eventId, "activists": this.state.contacts.slice()};
+        server.post('contactScan/importActivists', data)
             .then((res) => {
                 if(res.err){
                     alert(res.err);
                     return;
                 }
                 this.reset();
-                this.state.onPublish(res.id);
+                this.state.onPublish();
             });
     }
     reset() {
         this.setState ({
-            selectedFile: false
+            selectedFile: false,
+            eventId: null,
+            contacts: [],
         });
     }
     render() {
@@ -73,7 +76,7 @@ export default class ImportForm extends React.Component {
             <ExcelUploader onSelect={this.handleDataSelection.bind(this)} labelText={selectedFile ? "⇪ העלאה מחדש ⇪" : "⇪ העלאת אנשי קשר ⇪" }/>
         </div>;
         const postButton = <div className={"post-scan-wrap " + (contacts.length > 0 && eventId ? "active " : "")}>
-            <button className="post-scan-button" onClick={()=>{}}>העלאת המסמך למערכת</button>
+            <button className="post-scan-button" onClick={this.publishScan.bind(this)}>העלאת המסמך למערכת</button>
         </div>;
         const contactsPreview = <div>{
             <table className={"contacts-table"}>

@@ -32,14 +32,20 @@ const pingScan = function(scanId){
         });
 };
 const importContacts = function(eventId, activists){
-    insertContactScan("fromCSV", eventId).then((res)=>{
-        if(res.err)
-            return {"err": res.err};
-        const scanId = res.id;
+    return new Promise((resolve, reject)=> {
+        insertContactScan("fromCSV", eventId).then((res) => {
+            if (res.err)
+                resolve({"err": res.err});
+            const scanId = res.id;
+            ActivitUpdater.uploadTypedActivists(activists, scanId, true).then((result) => {
+                resolve(result);
+            });
+        })
     })
 };
 module.exports = {
     insertContactScan,
-    pingScan
+    pingScan,
+    importContacts
 };
 

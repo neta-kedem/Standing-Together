@@ -24,4 +24,13 @@ module.exports = (app) => {
 			});
 		});
 	});
+	app.post('/api/contactScan/importActivists', (req, res) => {
+		Authentication.hasRole(req, res, "isTyper").then(isUser=>{
+			if (!isUser)
+				return res.json({"error": "missing token"});
+			ContactScanUpdater.importContacts(req.body.eventId, req.body.activists).then((result)=>{
+				return res.json(result);
+			});
+		});
+	});
 };

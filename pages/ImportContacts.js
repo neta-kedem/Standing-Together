@@ -10,7 +10,7 @@ constructor(props) {
 	this.state = {
 	};
 }
-handleUploadSuccess(id){
+handleUploadSuccess(){
 	alert("אנשי הקשר נשמרו במערכת");
 }
 render() {

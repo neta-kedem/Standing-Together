@@ -88,7 +88,8 @@ const downloadActivistsByQuery = function(query, callback){
             activistsList.push({
                 "phone":activist.profile.phone,
                 "email":activist.profile.email,
-                "name":activist.profile.firstName+" "+activist.profile.lastName,
+                "firstName":activist.profile.firstName,
+                "lastName":activist.profile.lastName,
                 "city":activist.profile.residency,
                 "isCaller":activist.role.isCaller,
                 "creationDate":activist.metadata.creationDate,
