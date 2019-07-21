@@ -14,9 +14,6 @@ import ScanForm from "./scanContacts/ScanForm";
 import SuccessfulUpload from "./typer/SuccessfulUpload";
 fontawesome.library.add(faCloudUploadAlt);
 
-
-
-
 export default class Typer extends React.Component {
 	//constants
 	scanPingIntervalDuration = 10000;
@@ -92,9 +89,16 @@ export default class Typer extends React.Component {
 				let dataLists = this.state.profileDataLists.slice();
 				for(let i=0; i<dataLists.length; i++){
 					if(dataLists[i].field === "residency")
-						dataLists[i].data = json.map((city)=>{
-							return city.name;
+					{
+						const hebrewCities = json.map((city)=>{
+							return city.nameHe;
 						});
+						const arabicCities = json.map((city)=>{
+							return city.nameAr;
+						});
+						const allCities = arabicCities.concat(hebrewCities);
+						dataLists[i].data = allCities;
+					}
 				}
 				this.setState({profileDataLists: dataLists})
 			});
@@ -411,4 +415,3 @@ export default class Typer extends React.Component {
 		)
 	}
 }
-

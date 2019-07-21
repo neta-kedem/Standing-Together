@@ -8,7 +8,8 @@ export default class CityDetails extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			setName: props['setName'],
+			setHeName: props['setHeName'],
+			setArName: props['setArName'],
 			setDefaultCircle: props['setDefaultCircle'],
 			circles: props['circles'],
 			rowIndex: props['rowIndex'],
@@ -20,8 +21,12 @@ export default class CityDetails extends React.Component {
 		}
 	}
 
-	setName=function(event){
-		this.state.setName(event.target.value, this.state.rowIndex);
+	setHeName=function(event){
+		this.state.setHeName(event.target.value, this.state.rowIndex);
+	}.bind(this);
+
+	setArName=function(event){
+		this.state.setArName(event.target.value, this.state.rowIndex);
 	}.bind(this);
 
 	setDefaultCircle=function(event){
@@ -37,7 +42,10 @@ export default class CityDetails extends React.Component {
 		return (
 				<tr>
 					<td>
-						<input value={rowValues.name} type="text" onChange={this.setName}/>
+						<input value={rowValues.nameHe} type="text" onChange={this.setHeName}/>
+					</td>
+					<td>
+						<input value={rowValues.nameAr} type="text" onChange={this.setArName}/>
 					</td>
 					<td>
 						<select value={rowValues.defaultCircle || ""} onChange={this.setDefaultCircle}>

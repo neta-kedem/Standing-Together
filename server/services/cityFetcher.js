@@ -7,7 +7,8 @@ const getCities = function (){
         {
             cityList.push({
                 "_id":city._id,
-                "name":city.name.he,
+                "nameHe":city.name.he,
+                "nameAr":city.name.ar,
                 "defaultCircle":city.defaultCircle
             });
         }
