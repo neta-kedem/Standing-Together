@@ -80,12 +80,12 @@ export default class InputRow extends React.Component {
 	render() {
 		const rowValues = this.props.values;
 		const deleteRow =
-			<td className="delete-row-wrap">
-				<FontAwesomeIcon className="delete-row" icon="trash-alt" onClick={this.handleDelete}/>
+			<td className="delete-row-wrap" onClick={this.handleDelete}>
+				<FontAwesomeIcon className="delete-row" icon="trash-alt"/>
 			</td>;
 		const editRow =
-			<td className="delete-row-wrap">
-				<FontAwesomeIcon className="delete-row" icon="pen-square" onClick={this.handleEditToggle}/>
+			<td className="delete-row-wrap" onClick={this.handleEditToggle}>
+				<FontAwesomeIcon className="delete-row" icon="pen-square"/>
 			</td>;
 		//filler tag in case no row action is appropriate - without it, the layout gets all messed up
 		const noAction =

@@ -71,30 +71,31 @@ export default css`
 	
 	.typed-rows-table .delete-row-wrap{
 		background-color: transparent;
-		width: 0px;
+		width: 2em;
 		height: 0px;
 		border: none;
 		overflow: visible;
 		position: relative;
 		padding: 0px;
+		cursor: pointer;
+		overflow: hidden;
 	}
 	.delete-row{
 		display: none;
 		position: absolute;
 		color: rgba(86, 95, 108, .7);
 		padding-left: 2em;
-		right: -2em;
+		right: 0;
 		top: 0.4em;
 		bottom: 0;
-		cursor: pointer;
 	}
 	.typed-rows-table .row-wrap:hover .delete-row-wrap .delete-row, .typed-rows-table  .row-wrap:focus-within .delete-row-wrap .delete-row{
 		display: block;
 	}
-	.delete-row:hover{
+	.delete-row-wrap:hover .delete-row{
 		color: rgba(86,95,108,1);
 	}
-	.delete-row:active{
+	.delete-row-wrap:active .delete-row{
 		color: #444;
 	}
 	.highlight-invalid-fields .invalid{

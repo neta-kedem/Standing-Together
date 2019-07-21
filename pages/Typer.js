@@ -97,7 +97,7 @@ export default class Typer extends React.Component {
 							return city.nameAr;
 						});
 						const allCities = arabicCities.concat(hebrewCities);
-						dataLists[i].data = allCities;
+						dataLists[i].data = [...new Set(allCities)];
 					}
 				}
 				this.setState({profileDataLists: dataLists})
