@@ -44,7 +44,7 @@ export default class Typer extends React.Component {
 					required: false
 				},
 				{
-					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true,
+					name: "email", type: "text", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true, forceEnglish: true,
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 					required: false
 				},
