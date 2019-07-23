@@ -160,7 +160,7 @@ export default class EventCreation extends React.Component {
                 <TopNavBar>
                     <div onClick={this.handlePost.bind(this)} className="save-event-button">
                         <div className="save-event-button-label">
-                            <div>שמירה</div>
+                            <div>حفظ</div>
                             <div>שמירה</div>
                         </div>
                         <div className="save-event-button-icon" onClick={this.handlePost}>
