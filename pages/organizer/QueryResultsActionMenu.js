@@ -20,6 +20,7 @@ class QueryResultsActionMenu extends React.Component {
 			<div className="query-results-wrapper">
 				<style jsx global>{style}</style>
 				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>
+				{/*
 				<div className="action-button" onClick={this.handlePhoneListClick.bind(this)}>
 					<FontAwesomeIcon className="action-button-icon" icon="phone"/>
 					קמפיין טלפוני
@@ -28,6 +29,7 @@ class QueryResultsActionMenu extends React.Component {
 					<FontAwesomeIcon className="action-button-icon" icon="envelope-open"/>
 					מייל קבוצתי
 				</div>
+				*/}
 				<div className="action-button" onClick={this.state.downloadActivistsByQuery}>
 					<img className="action-button-icon" src={"../static/excel.svg"}/>
 					ייצוא לאקסל
