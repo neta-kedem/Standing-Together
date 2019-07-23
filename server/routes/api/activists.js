@@ -43,9 +43,6 @@ module.exports = (app) => {
 			});
 		})
 	});
-	app.post('/api/activists/toggleStatus', (req, res) => {
-		activistUpdater.toggleActivistStatus(req, res);
-	});
 	app.post('/api/activists/uploadTyped', (req, res) => {
 		Authentication.hasRole(req, res, "isTyper").then(isUser=> {
 			if (!isUser)
