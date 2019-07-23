@@ -60,23 +60,23 @@ export default class EventManagement extends React.Component {
                 <style jsx global>{style}</style>
                 <TopNavBar>
                     <div className="title-wrap">
-                        <span className="title-lang">ניהול מפגשים</span>
-                        <span className="title-lang">ניהול מפגשים</span>
+                        <span className="title-lang">ניהול אירועים</span>
+                        <span className="title-lang">ניהול אירועים</span>
                     </div>
                 </TopNavBar>
                 <table className={"event-table"}>
                     <thead>
                         <tr>
                             <th>
-                                <div>תאריך אירוע</div>
+                                <div>التاريخ</div>
                                 <div>תאריך אירוע</div>
                             </th>
                             <th>
-                                <div>שם אירוע</div>
+                                <div>اسم الحدث</div>
                                 <div>שם אירוע</div>
                             </th>
                             <th>
-                                <div>מיקום</div>
+                                <div>التاريخ</div>
                                 <div>מיקום</div>
                             </th>
                             <th>

@@ -319,11 +319,17 @@ export default class Typer extends React.Component {
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
 		const typerFormTopBar = <React.Fragment>
 			<div className={"event-details"}>
-				<div>ארוע ההחתמה</div>
+				<div className={"event-details-label"}>
+					<div>اسم الحدث</div>
+					<div>ארוע ההחתמה</div>
+				</div>
 				<div>{eventData.name}</div>
 			</div>
 			<div className={"event-details"}>
-				<div>תאריך</div>
+				<div className={"event-details-label"}>
+					<div>التاريخ</div>
+					<div>תאריך</div>
+				</div>
 				<div>{eventData.date}</div>
 			</div>
 			<div onClick={this.handlePost} className={"post-button"}>
@@ -331,19 +337,22 @@ export default class Typer extends React.Component {
 					<FontAwesomeIcon icon="cloud-upload-alt"/>
 				</div>
 				<div className={"post-button-label"}>
-					<div>שלח</div>
 					<div>ارسل</div>
+					<div>שלח</div>
 				</div>
 			</div>
 		</React.Fragment>;
-		const scanUploaderFormTopBar = <div className={"event-details"}>
-			העלאת תמונה
+		const scanUploaderFormTopBar = <div className={"event-details event-details-label"}>
+			<div>העלאת תמונה</div>
+			<div>העלאת תמונה</div>
 		</div>;
-		const doneTopBar = <div className={"event-details"}>
-			הנתונים נקלטו
+		const doneTopBar = <div className={"event-details event-details-label"}>
+			<div>הנתונים נקלטו</div>
+			<div>הנתונים נקלטו</div>
 		</div>;
-		const loadingTopBar = <div className={"event-details"}>
-			טעינה...
+		const loadingTopBar = <div className={"event-details event-details-label"}>
+			<div>טעינה...</div>
+			<div>טעינה...</div>
 		</div>;
 		const topBar = <div dir="rtl">
 			<TopNavBar justification={"space-between"}>
@@ -369,7 +378,7 @@ export default class Typer extends React.Component {
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(false)}}>נותרו רשומות להקלדה</button>
 					</div>
 				</Popup>;
-		const loadingMessage = <div>
+		const loadingMessage = <div className={"loading-message"}>
 			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
 			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
 		</div>;

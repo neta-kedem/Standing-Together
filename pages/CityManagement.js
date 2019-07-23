@@ -106,7 +106,10 @@ export default class CircleManagement extends React.Component {
                     </tbody>
                 </table>
                 <button type="button" className="add-city-button" onClick={this.createCity.bind(this)}>הוספת עיר</button>
-                <button type="button" className="save-cities-button" onClick={this.saveCities.bind(this)}>שמירה</button>
+                <button type="button" className="save-cities-button" onClick={this.saveCities.bind(this)}>
+                    حفظ
+                    שמירה
+                </button>
             </div>
         )
     }

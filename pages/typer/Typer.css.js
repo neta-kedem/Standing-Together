@@ -112,6 +112,16 @@ export default css
         font-weight: 400;
         text-align: center;
         margin: 5%;
+        line-height: 1.25em;
+    }
+    .event-details-label div{
+        display: inline-block;
+        margin: 0 0.3em;
+        font-size: 0.9em;
+        opacity: 0.8
+    }
+    .loading-message{
+        margin-right: 2em;
     }
     .post-button{
         float: left;
