@@ -139,16 +139,11 @@ const determineActivistsCircles = function(activists){
     return cityFetcher.getCities().then((cities)=>{
             const cityDict = arrayFunctions.indexByField(cities, "nameHe");
             for(let i = 0; i < activists.length; i++){
-                console.log("1***");
                 let curr = activists[i];
-                console.log(curr);
-                console.log("city");
-                console.log(cityDict[curr.profile.residency]);
                 if (curr.profile.residency
                     && cityDict[curr.profile.residency]
                     && cityDict[curr.profile.residency].defaultCircle
                 ){
-                    console.log("here");
                     curr.profile.circle = cityDict[curr.profile.residency].defaultCircle;
                 }
             }
@@ -307,7 +302,6 @@ const uploadTypedActivists = function (typedRows, scanId, markedDone){
                 const duplicates = result.duplicates;
                 //update the nonDuplicates array with circle data, determined for each activist based on their residency
                 determineActivistsCircles(nonDuplicates).then(result => {
-                    console.log(result);
                     nonDuplicates = result;
                     let tasks = [];
                     //update metadata on preexisting activists (+ add the current event to their list of participatedEvents)
