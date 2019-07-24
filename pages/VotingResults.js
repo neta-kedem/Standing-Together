@@ -71,6 +71,13 @@ export default class VotingResults extends React.Component {
           data={this.state.votingSet}
           votesTotal={this.state.votesTotal}
         />
+        <div>
+          {
+            this.state.candidateNames.map((candidate, i) => {
+              return <div>{candidate},{((this.state.votingSet[0] || {data:[0]})).data[i]}</div>
+            })
+          }
+        </div>
       </div>
     );
   }

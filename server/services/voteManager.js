@@ -27,7 +27,7 @@ const fetchAllCandidates = async function(req, res) {
 const placeVote = async function(req, res) {
   const code = req.body.code;
   const votes = req.body.votes;
-  const isCodeValidPromise = Codes.findOne({ code, isUsed: { $in: [null, false] } });
+  const isCodeValidPromise = Codes.findOne({ "code": code.toUpperCase(), isUsed: { $in: [null, false] } });
   const codeDb = await isCodeValidPromise;
   if (!codeDb || codeDb.isUsed) return res.json(false);
   let updateCodePromise = Codes.updateOne(

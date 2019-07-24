@@ -7,8 +7,6 @@ class AddFiltersBtn extends React.Component {
     super(props)
     this.state = {
 			isActive: false,
-      onclick: props.saveFilter
-
 		}
   }
 
@@ -49,7 +47,7 @@ class AddFiltersBtn extends React.Component {
         </style>
         <div
             className={"addBtn "+ this.state.class}
-            onClick={this.state.onclick}
+            onClick={this.props.onClick}
         >
           {this.props.text}
           </div>
