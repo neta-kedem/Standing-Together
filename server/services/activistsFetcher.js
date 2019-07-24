@@ -59,6 +59,12 @@ const getActivistsByIds = function (ids){
     return activistsPromise;
 };
 const queryActivists = function(query, page, callback){
+    try{
+      query = JSON.parse(query);
+    }
+    catch(err){
+      console.log(err);
+    }
     if(page < 0)
         return callback({"error":"illegal page"});
     const PAGE_SIZE = 50;
@@ -81,6 +87,12 @@ const queryActivists = function(query, page, callback){
     });
 };
 const downloadActivistsByQuery = function(query, callback){
+    try{
+      query = JSON.parse(query);
+    }
+    catch(err){
+      console.log(err);
+    }
     return Activist.find(query).then((activists) => {
         let activistsList = [];
         for(let activist of activists)
