@@ -36,8 +36,8 @@ import server from "../../services/server";
 import GroupCondition from "./GroupCondition";
 
 // icons
-const orIcon = require("../../static/or.png");
-const andIcon = require("../../static/and.png");
+const orIcon = "./static/or.png";
+const andIcon = "./static/and.png";
 
 class QueryCreator extends React.Component {
   constructor(props) {

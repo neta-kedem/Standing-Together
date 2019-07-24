@@ -6,8 +6,8 @@ import AddFiltersBtn from "./AddFiltersBtn";
 import QueryService from '../../services/queryService'
 import CreateFilter from './CreateFilter'
 // icons
-const orIcon = require("../../static/or.png");
-const andIcon = require("../../static/and.png");
+const orIcon = "./static/or.png";
+const andIcon = "./static/and.png";
 
 class GroupCondition extends React.Component {
   constructor(props) {
