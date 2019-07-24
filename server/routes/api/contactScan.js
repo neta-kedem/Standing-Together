@@ -1,6 +1,6 @@
 const ContactScanUpdater = require('../../services/contactScanUpdater');
 const ContactScanFetcher = require('../../services/contactScanFetcher');
-const Authentication = require('../../services/Authentication');
+const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
 	app.get('/api/contactScan', (req, res) => {
