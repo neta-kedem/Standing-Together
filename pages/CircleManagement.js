@@ -94,7 +94,10 @@ export default class CircleManagement extends React.Component {
                     </tbody>
                 </table>
                 <button type="button" className="add-circle-button" onClick={this.createCircle.bind(this)}>הוספת מעגל</button>
-                <button type="button" className="save-circles-button" onClick={this.saveCircles.bind(this)}>שמירה</button>
+                <button type="button" className="save-circles-button" onClick={this.saveCircles.bind(this)}>
+                    حفظ
+                    שמירה
+                </button>
             </div>
         )
     }

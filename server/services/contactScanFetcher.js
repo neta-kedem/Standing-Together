@@ -45,7 +45,7 @@ const getContactScan = function(req, res){
         let query = {};
         if(requestedId && requestedId.length){
             try{
-                query = {"_id": mongoose.Types.ObjectId(requestedId)}
+                query = {"_id": mongoose.Types.ObjectId(requestedId)};
             }
             catch{
                 return res.json({success: false, error: "incorrect id supplied"});

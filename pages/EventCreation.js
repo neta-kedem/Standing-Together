@@ -113,6 +113,7 @@ render() {
 			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="title-wrap">
+					<span className="title-lang">انشاء حدث</span>
 					<span className="title-lang">יצירת אירוע</span>
 				</div>
 			</TopNavBar>

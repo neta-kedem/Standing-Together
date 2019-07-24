@@ -83,19 +83,37 @@ export default css
 		overflow-y: auto;
 	}
 	.save-event-button{
+	    float: left;
+        left: 0;
+        position: absolute;
+        justify-self: start;
+        -webkit-align-self: right; /* Safari 7.0+ */
+        align-self: right;
+        height: 100%;
+        padding: calc(25px - 1em) 1.25em;
+        box-sizing: border-box;
 		color: white;
 		display: inline-block;
 		cursor: pointer;
-		margin-left: auto;
+		transition: background-color 0.2s;
 	}
+	.save-event-button:hover{
+        background-color: #00000033;
+        color: #eee;
+    }
+    .save-event-button:active{
+        background-color: #00000066;
+        color: #bbb;
+    }
 	.save-event-button-label{
 		display: inline-block;
 		vertical-align: middle;
+		line-height: 1em;
 	}
 	.save-event-button-icon{
 		display: inline-block;
 		vertical-align: middle;
 		font-size: 2em;
-		margin: 0 0.5em;
+		margin-right: 0.5em;
 	}
 `

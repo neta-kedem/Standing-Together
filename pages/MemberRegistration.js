@@ -4,6 +4,7 @@ import PaymentForm from './memberRegistration/PaymentForm'
 import style from './memberRegistration/MemberRegistration.css'
 import server from "../services/server";
 import FieldValidation from "../services/FieldValidation";
+import IsraelGivesDonator from "../services/IsraelGivesDonator";
 import Checkbox from '../UIComponents/Checkbox/Checkbox';
 import Meta from '../lib/meta';
 
@@ -20,14 +21,15 @@ export default class MemberRegistration extends React.Component {
                 lastName: "new member",
                 mailbox: "תא דואר 6174",
                 phone: "0231231899",
-                residency: "כפר סבא",
+                residency: "תל אביב",
                 street: "רחוב 1",
                 tz: "2121922322"
             },
             paymentInfo: {
-                CVV: "142",
-                CardTypeId: "5",
-                CreditCardNo: "1234789045671212",
+                CVV: "123",
+                CardTypeId: "1",
+                CreditCardNo: "",
+                selectedAmount: 0,
                 month: "01",
                 year: "2020"
             },
@@ -146,26 +148,27 @@ export default class MemberRegistration extends React.Component {
             window.scrollTo(0, this.paymentFormRef.current.offsetTop);
             return;
         }
-        const data ={
-            "paymentData": paymentInfo,
-            "activistData": activist
-        };
-        server.post('membership', data)
-            .then(() => {
-                this.setState({
-                    activists: [this.generateRow()],
-                    cells: [],
-                    selectedRowIndex: 0,
-                    scanId: null,
-                    scanUrl: null,
-                    fullyTyped: false,
-                    displayFullyTypedPopup: false,
-                    postAttempted: false,
-                    unsaved: false
+        IsraelGivesDonator.donate(activist, paymentInfo).then((result => {
+            const data ={
+                "activistData": activist
+            };
+            server.post('membership', data)
+                .then(() => {
+                    this.setState({
+                        activists: [this.generateRow()],
+                        cells: [],
+                        selectedRowIndex: 0,
+                        scanId: null,
+                        scanUrl: null,
+                        fullyTyped: false,
+                        displayFullyTypedPopup: false,
+                        postAttempted: false,
+                        unsaved: false
+                    });
+                    alert("the details have been stored in the system");
+                    this.getContactsScan();
                 });
-                alert("the details have been stored in the system");
-                this.getContactsScan();
-            });
+        }));
     }.bind(this);
     render() {
         return (

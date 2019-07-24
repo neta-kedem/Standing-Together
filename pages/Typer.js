@@ -14,9 +14,6 @@ import ScanForm from "./scanContacts/ScanForm";
 import SuccessfulUpload from "./typer/SuccessfulUpload";
 fontawesome.library.add(faCloudUploadAlt);
 
-
-
-
 export default class Typer extends React.Component {
 	//constants
 	scanPingIntervalDuration = 10000;
@@ -47,7 +44,7 @@ export default class Typer extends React.Component {
 					required: false
 				},
 				{
-					name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true,
+					name: "email", type: "text", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true, forceEnglish: true,
 					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 					required: false
 				},
@@ -77,6 +74,7 @@ export default class Typer extends React.Component {
 		if(this.state.unsaved)
 			return "You Have Unsaved Data - Are You Sure You Want To Quit?";
 	}.bind(this);
+
 	componentDidMount() {
 		this.fetchCities();
 		this.setState({activists:[this.generateRow()]}, ()=>{this.getContactsScan();});
@@ -91,9 +89,16 @@ export default class Typer extends React.Component {
 				let dataLists = this.state.profileDataLists.slice();
 				for(let i=0; i<dataLists.length; i++){
 					if(dataLists[i].field === "residency")
-						dataLists[i].data = json.map((city)=>{
-							return city.name;
+					{
+						const hebrewCities = json.map((city)=>{
+							return city.nameHe;
 						});
+						const arabicCities = json.map((city)=>{
+							return city.nameAr;
+						});
+						const allCities = arabicCities.concat(hebrewCities);
+						dataLists[i].data = [...new Set(allCities)];
+					}
 				}
 				this.setState({profileDataLists: dataLists})
 			});
@@ -314,11 +319,17 @@ export default class Typer extends React.Component {
 		const selectedScanRow = activists.length?activists[selectedRowIndex].scanRow:0;
 		const typerFormTopBar = <React.Fragment>
 			<div className={"event-details"}>
-				<div>ארוע ההחתמה</div>
+				<div className={"event-details-label"}>
+					<div>اسم الحدث</div>
+					<div>ארוע ההחתמה</div>
+				</div>
 				<div>{eventData.name}</div>
 			</div>
 			<div className={"event-details"}>
-				<div>תאריך</div>
+				<div className={"event-details-label"}>
+					<div>التاريخ</div>
+					<div>תאריך</div>
+				</div>
 				<div>{eventData.date}</div>
 			</div>
 			<div onClick={this.handlePost} className={"post-button"}>
@@ -326,20 +337,30 @@ export default class Typer extends React.Component {
 					<FontAwesomeIcon icon="cloud-upload-alt"/>
 				</div>
 				<div className={"post-button-label"}>
-					<div>שלח</div>
 					<div>ارسل</div>
+					<div>שלח</div>
 				</div>
 			</div>
 		</React.Fragment>;
-		const scanUploaderFormTopBar = <div className={"event-details"}>
-			העלאת תמונה
+		const scanUploaderFormTopBar = <div className={"event-details event-details-label"}>
+			<div>تحميل صورة</div>
+			<div>העלאת תמונה</div>
 		</div>;
-		const loadingTopBar = <div className={"event-details"}>
-			טעינה...
+		const doneTopBar = <div className={"event-details event-details-label"}>
+			<div>تم استيعاب البيانات</div>
+			<div>הנתונים נקלטו</div>
+		</div>;
+		const loadingTopBar = <div className={"event-details event-details-label"}>
+			<div>جار التحميل...</div>
+			<div>טעינה...</div>
 		</div>;
 		const topBar = <div dir="rtl">
 			<TopNavBar justification={"space-between"}>
-				{this.state.displayLoadingMessage?loadingTopBar:this.state.displayTyperForm?typerFormTopBar:scanUploaderFormTopBar}
+				{
+					this.state.displayLoadingMessage?loadingTopBar:
+					this.state.displayTyperForm?typerFormTopBar:
+					this.state.postSuccessful?doneTopBar :scanUploaderFormTopBar
+				}
 			</TopNavBar>
 		</div>;
 		const scanDisplay = <ContactScanDisplay
@@ -349,16 +370,16 @@ export default class Typer extends React.Component {
 		const toggleFullyTypedPopup =
 				<Popup visibility={this.state.displayFullyTypedPopup} toggleVisibility={()=>{this.setState({displayFullyTypedPopup: !this.state.displayFullyTypedPopup})}}>
 					<div className="fully-typed-popup-label">
-						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
 						<div>هل انتهيت من ملئ كل الاسطر بالصفحة؟</div>
+						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
 					</div>
 					<div className="confirm-fully-typed-wrap">
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(true)}}>סיימתי</button>
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(false)}}>נותרו רשומות להקלדה</button>
 					</div>
 				</Popup>;
-		const loadingMessage = <div>
-			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
+		const loadingMessage = <div className={"loading-message"}>
+			<h2>نبحث عن صفحات اتصال للطباعة...</h2>
 			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
 		</div>;
 		const typerForm = <div>
@@ -403,4 +424,3 @@ export default class Typer extends React.Component {
 		)
 	}
 }
-

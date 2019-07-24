@@ -1,7 +1,7 @@
 import React from 'react';
 import Meta from '../lib/meta';
-import style from './scanContacts/ScanContacts.css';
-import ScanForm from './scanContacts/ScanForm';
+import style from './importContacts/ImportContacts.css';
+import ImportForm from './importContacts/ImportForm';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
 export default class ScanContacts extends React.Component {
@@ -10,8 +10,8 @@ constructor(props) {
 	this.state = {
 	};
 }
-handleUploadSuccess(id){
-	alert("המסמך נשמר בהצלחה, ויוצג לקלדנים");
+handleUploadSuccess(){
+	alert("אנשי הקשר נשמרו במערכת");
 }
 render() {
 	return (
@@ -20,12 +20,12 @@ render() {
 			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="title-wrap">
-					<span className="title-lang">مسح صفحات اتصال</span>
-					<span className="title-lang">סריקת דפי קשר</span>
+					<span className="title-lang">העלאת אנשי קשר</span>
+					<span className="title-lang">העלאת אנשי קשר</span>
 				</div>
 			</TopNavBar>
 			<div className="page-wrap">
-				<ScanForm onPublish={this.handleUploadSuccess}/>
+				<ImportForm onPublish={this.handleUploadSuccess}/>
 			</div>
 		</div>
 	)

@@ -2,6 +2,13 @@ import css from 'styled-jsx/css'
 export default css`
 	.nav-bar-wrapper{
 		position: relative;
+		width: 100%;
+		height: 55px;
+		z-index: 10000;
+	}
+	.nav-bar{
+	    position: fixed;
+		width: 100%;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -9,6 +16,7 @@ export default css`
 		background-color: #90278e;
 		font-size: 0.7em;
 		box-shadow: 0px 0px 5px #00000099;
+		z-index: 10000;
 	}
 	.nav-bar-logo{
 		left: 0px;

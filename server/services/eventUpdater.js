@@ -49,7 +49,7 @@ const updateEvent = function(req, res){
         /*for documentation on this approach to upserting, see: https://stackoverflow.com/a/7855281*/
         const upsertData = newEvent.toObject();
         delete upsertData._id;
-        Event.update({_id: newEvent._id}, {
+        Event.updateOne({_id: newEvent._id}, {
             "metadata.lastUpdate": today,
             "eventDetails": upsertData.eventDetails,
             "callInstructions": upsertData.callInstructions,

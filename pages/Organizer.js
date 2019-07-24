@@ -16,6 +16,7 @@ import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
 import PageNav from "../UIComponents/PageNav/PageNav";
 import Router from "next/router";
+import FileSaver from 'file-saver';
 
 export default class Organizer extends React.Component {
 constructor(props) {
@@ -30,12 +31,12 @@ constructor(props) {
 		currFilters: { logicalOperator:"or", groups: [] },
 		allSelected: false,
 		tableFields:[
-			{title: ["שם", "שם"],  visibility: true, key: "name", icon:"user", type:"text"},
-			{title: ["עיר", "עיר"],  visibility: true, key: "city", icon:"building", type:"text"},
-			{title: ["טלפון", "טלפון"],  visibility: true, key: "phone", icon:"phone", type:"text"},
-			{title: ["אימייל", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text"},
-			{title: ["נראתה לאחרונה", "נראתה לאחרונה"],  visibility: true, key: "lastSeen", icon:"calendar", type:"text"},
-			{title: ["אירוע אחרון", "אירוע אחרון"],  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
+			{title: ["اسم", "שם"],  visibility: true, key: "name", icon:"user", type:"text"},
+			{title: ["البلد", "עיר"],  visibility: true, key: "city", icon:"building", type:"text"},
+			{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"phone", type:"text"},
+			{title: ["البريد الإلكتروني", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text"},
+			{title: ["اخر ظهور", "נראתה לאחרונה"],  visibility: true, key: "lastSeen", icon:"calendar", type:"text"},
+			{title: ["اخر حدث", "אירוע אחרון"],  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
 		],
 		displayEventSelectionPopup: false
 	};
@@ -60,6 +61,23 @@ fetchActivistsByQuery(){
 		.then(json => {
 			if(json.activists)
 				this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
+		});
+
+}
+downloadActivistsByQuery(){
+	let query = "";
+	try{
+		query = JSON.parse("{"+this.state.query+"}");
+	}
+	catch(err){
+		console.log(err);
+		alert("check your syntax!");
+		return;
+	}
+	server.post('queryToXLSX', {'query': query})
+		.then(json => {
+			const blob = new Blob([json.csv], {type: "text/plain;charset=utf-8"});
+			FileSaver.saveAs(blob, "contacts_export.csv");
 		});
 }
 handleQueryChange(event){
@@ -203,10 +221,11 @@ render() {
 						items={[{"index": 1, "content": tableFieldsDropdown, "alignToEnd": true}]}
 						toggleEventPopup={this.handleEventPopupToggle.bind(this)}
 						activistCount={activistCount}
+						downloadActivistsByQuery={this.downloadActivistsByQuery.bind(this)}
 					> </QueryResultsActionMenu>
 					<div className="results-wrap">
 						<div className="query-results">
-							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields} onDoubleClick={this.goToActivistPage}> </SelectableTable>
+							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields} onDoubleClick={this.goToActivistPage.bind(this)}/>
 							<PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
 						</div>
 					</div>

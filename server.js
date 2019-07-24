@@ -15,7 +15,7 @@ mongoose.set('debug', true);
 const authentication = require('./server/services/authentication');
 const SQLSync = require("./server/services/SQLSync");
 
-mongoose.connect(MONGODB_URI).then(()=>{});
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true }).then(()=>{});
 mongoose.Promise = global.Promise;
 const server = express();
 //setup server to use accept calls whose body contains files up to 5 mgb
@@ -164,6 +164,18 @@ app.prepare().then(() => {
 			}
 			else{
 				return app.render(req, res, '/ScanContacts', req.query);
+			}
+		});
+	});
+	server.get('/ImportContacts', (req, res) => {
+		authentication.hasRole(req, res, "isOrganizer").then(user=>{
+			if(!user)
+			{
+				res.redirect('/Login');
+				res.end();
+			}
+			else{
+				return app.render(req, res, '/ImportContacts', req.query);
 			}
 		});
 	});

@@ -23,15 +23,15 @@ export default css
     .new-event-link{
         display: block;
         width: fit-content;
-        margin: 0 auto;
+        margin: 2em auto;
         text-decoration: none;
     }
     .new-event-link div{
         background-color: rgb(144, 39, 142);
         color: white;
         cursor: pointer;
-        width: 10em;
-        padding: 0.2em;
+        width: 15em;
+        padding: 0.2em 1em;
         text-align: center;
     }
     .new-event-link div:hover{

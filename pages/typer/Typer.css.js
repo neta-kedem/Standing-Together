@@ -112,16 +112,40 @@ export default css
         font-weight: 400;
         text-align: center;
         margin: 5%;
+        line-height: 1.25em;
+    }
+    .event-details-label div{
+        display: inline-block;
+        margin: 0 0.3em;
+        font-size: 0.9em;
+        opacity: 0.8
+    }
+    .loading-message{
+        margin-right: 2em;
     }
     .post-button{
+        float: left;
+        left: 0;
+        position: absolute;
         justify-self: start;
-        margin-left: 0.5em;
         -webkit-align-self: right; /* Safari 7.0+ */
         align-self: right;
         color: #fbfbfb;
         font-size: 1.5em;
         font-weight: 400;
         cursor: pointer;
+        height: 55px;
+        padding: calc(27px - 1.25em) 0.75em;
+        box-sizing: border-box;
+        transition: background-color 0.15s, color 0.2s;
+    }
+    .post-button:hover{
+        background-color: #00000033;
+        color: #eee;
+    }
+    .post-button:active{
+        background-color: #00000066;
+        color: #bbb;
     }
     .post-button-label{
         display: inline-block;

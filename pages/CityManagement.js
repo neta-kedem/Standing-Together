@@ -35,15 +35,21 @@ export default class CircleManagement extends React.Component {
         cities[index].changed = true;
         this.setState({cities: cities})
     }
-    setName(name, index) {
+    setHeName(name, index) {
         let cities = this.state.cities.slice();
-        cities[index].name = name;
+        cities[index].nameHe = name;
+        cities[index].changed = true;
+        this.setState({cities: cities})
+    }
+    setArName(name, index) {
+        let cities = this.state.cities.slice();
+        cities[index].nameAr = name;
         cities[index].changed = true;
         this.setState({cities: cities})
     }
     createCity() {
         let cities = this.state.cities.slice();
-        cities.push({changed: true, name:"", defaultCircle: null});
+        cities.push({changed: true, nameHe:"", nameAr:"", defaultCircle: null});
         this.setState({cities: cities})
     }
     saveCities() {
@@ -61,7 +67,8 @@ export default class CircleManagement extends React.Component {
             return <CityDetails
                 values={city}
                 key={"circle_"+city._id+"_"+i}
-                setName={this.setName.bind(this)}
+                setHeName={this.setHeName.bind(this)}
+                setArName={this.setArName.bind(this)}
                 setDefaultCircle={this.setDefaultCircle.bind(this)}
                 circles={circles}
                 rowIndex={i}
@@ -73,7 +80,7 @@ export default class CircleManagement extends React.Component {
                 <style jsx global>{style}</style>
                 <TopNavBar>
                     <div className="title-wrap">
-                        <span className="title-lang">ניהול ערים</span>
+                        <span className="title-lang">ادارة بلدات</span>
                         <span className="title-lang">ניהול ערים</span>
                     </div>
                 </TopNavBar>
@@ -81,11 +88,15 @@ export default class CircleManagement extends React.Component {
                     <thead>
                         <tr>
                             <th>
-                                <div>שם עיר</div>
-                                <div>שם עיר</div>
+                                <div>اسم البلد - بالعبرية</div>
+                                <div>שם עיר - עברית</div>
                             </th>
                             <th>
-                                <div>שיוך אוטומטי למעגל</div>
+                                <div>اسم البلد - بالعربية</div>
+                                <div>שם עיר - ערבית</div>
+                            </th>
+                            <th>
+                                <div>انتماء تلقائي للدائرة</div>
                                 <div>שיוך אוטומטי למעגל</div>
                             </th>
                         </tr>
@@ -94,8 +105,11 @@ export default class CircleManagement extends React.Component {
                         {rows}
                     </tbody>
                 </table>
-                <button type="button" className="add-city-button" onClick={this.createCity.bind(this)}>הוספת עיר</button>
-                <button type="button" className="save-cities-button" onClick={this.saveCities.bind(this)}>שמירה</button>
+                <button type="button" className="add-city-button" onClick={this.createCity.bind(this)}>اضافة بلد - הוספת עיר</button>
+                <button type="button" className="save-cities-button" onClick={this.saveCities.bind(this)}>
+                    حفظ
+                    שמירה
+                </button>
             </div>
         )
     }
