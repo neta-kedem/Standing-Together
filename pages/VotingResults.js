@@ -56,13 +56,10 @@ export default class VotingResults extends React.Component {
         }
       ];
       this.setState({ votingSet });
-      console.log('NETA this.state.votingSet', votingSet)
     });
   }
 
   render() {
-    console.log('NETA this.state.votingSet', this.state.votingSet[0])
-    console.log('NETA this.state.votingSet || [{data:[0]}]', this.state.votingSet[0] || [{data:[0]}])
     return (
       <div className="page">
         <Meta />

@@ -2,7 +2,7 @@ import React from 'react';
 import Meta from '../lib/meta';
 import config from '../services/config';
 
-import ItemService from '../services/ItemService';
+import QueryService from '../services/queryService';
 import server from '../services/server';
 
 import Popup from '../UIComponents/Popup/Popup'
@@ -27,7 +27,7 @@ constructor(props) {
 		activistCount: 0,
 		events: [],
 		activists: [],
-		currFilters: [],
+		currFilters: { logicalOperator:"or", groups: [] },
 		allSelected: false,
 		tableFields:[
 			{title: ["שם", "שם"],  visibility: true, key: "name", icon:"user", type:"text"},
@@ -47,11 +47,11 @@ componentDidMount() {
 	this.getCurrFilters();
 }
 fetchActivistsByQuery(){
-	let query = "";
-	try{
-		query = JSON.parse("{"+this.state.query+"}");
+	let query;
+	try {
+		query = this.state.query? JSON.parse("{"+this.state.query+"}") : JSON.stringify(this.getCurrQuery())
 	}
-	catch(err){
+	catch(err) {
 		console.log(err);
 		alert("check your syntax!");
 		return;
@@ -65,6 +65,11 @@ fetchActivistsByQuery(){
 handleQueryChange(event){
 	this.setState({query: event.target.value});
 }
+handleFiltersChange(currFilters){
+	this.setState(currFilters)
+	this.fetchActivistsByQuery()
+}
+
 getPotentialEvents(){
 	server.get('events/getInviteless')
 		.then(json => {
@@ -73,11 +78,18 @@ getPotentialEvents(){
 		});
 }
 getCurrFilters(){
-	ItemService.getCurrFilters()
+	QueryService.getCurrFilters()
 		.then(currFilters => {
 			this.setState({currFilters})
 		});
 }
+getCurrQuery() {
+	const currFilters = this.state.currFilters;
+	// todo neta- complete this
+	let query = {}
+	return query
+}
+
 handlePageNavigation(page){
 	this.setState({page: page}, ()=>{
 		this.fetchActivistsByQuery();
@@ -162,7 +174,7 @@ render() {
 						<input type={"text"} value={this.state.query} onChange={this.handleQueryChange.bind(this)}/>
 						<button type={"button"} onClick={this.fetchActivistsByQuery.bind(this)}>filter</button>
 					</div>
-					{/*<QueryCreator currFilters={this.state.currFilters}> </QueryCreator>*/}
+					<QueryCreator changeCurrFilters={this.handleFiltersChange.bind(this)} />
 				</div>
 				<div className="main-panel">
 					<QueryResultsActionMenu

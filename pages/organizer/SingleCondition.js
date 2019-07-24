@@ -1,47 +1,42 @@
 import React from 'react';
-import style from './SingleCondition.css';
+import styles from './SingleCondition.css';
 import fontawesome from '@fortawesome/fontawesome';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { faBuilding, faTimes } from '@fortawesome/fontawesome-free-solid';
-fontawesome.library.add(faBuilding, faTimes);
+import { faBuilding, faTimes, faUserCircle } from '@fortawesome/fontawesome-free-solid';
+fontawesome.library.add(faBuilding, faTimes, faUserCircle);
 
 class SingleCondition extends React.Component {
-  _removeFilter(){
-    this.props.onClose();
-
-  }
   render() {
 		const { provided, innerRef } = this.props;
     const newStyle = {};
-		for (let bla in provided.draggableProps.style) {
-      newStyle[bla] = provided.draggableProps.style[bla]
+		for (let style in provided.draggableProps.style) {
+      newStyle[style] = provided.draggableProps.style[style]
     }
 		return(
       <section
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          style={Object.assign(newStyle, style.wrapper)}
+          style={Object.assign(newStyle, styles.wrapper)}
 					ref={innerRef}>
-        <div style={style.titleRow}>
-          <div style={style.titleWrapper}>
-            {/*<span className={this.getFilterIcon()} style={style.filterIcon} aria-hidden="true"></span>*/}
-            <FontAwesomeIcon icon="building"></FontAwesomeIcon>
+        <div style={styles.titleRow}>
+          <div style={styles.titleWrapper}>
+            <FontAwesomeIcon style={{padding:10}} icon={this.getFilterIcon()}></FontAwesomeIcon>
             <div>
-              <div style={style.heading}>{this.props.condition.filterName}</div>
+              <div style={styles.heading}>{this.props.condition.filterName}</div>
             </div>
           </div>
-          <div style={style.closeIcons} onClick={this._removeFilter.bind(this)}>
+          <div style={styles.closeIcons} onClick={this.props.removeFilter}>
             <FontAwesomeIcon icon="times"></FontAwesomeIcon>
           </div>
         </div>
         <br/>
-        <div style={style.valueContainer}>
-          <div style={style.iconWrapper}>
-            <span style={style.valuePrefix}>{this.getFilterValuePrefix()}</span>
+        <div style={styles.valueContainer}>
+          <div style={styles.iconWrapper}>
+            <span style={styles.valuePrefix}>{this.getFilterValuePrefix()}</span>
             <span>{this.props.condition.filterMain}</span>
           </div>
           <div>
-            {/*<span style={style.valueNumber}>{this.props.condition.filterValue}</span>*/}
+            {/*<span style={styles.valueNumber}>{this.props.condition.filterValue}</span>*/}
           </div>
         </div>
       </section>
@@ -49,14 +44,18 @@ class SingleCondition extends React.Component {
   }
 
   getFilterValuePrefix(){
-    const filterName = this.props.condition.filterName;
-    // if(filterName === "Residency") return "In ";
+    // const filterName = this.props.condition.filterName;
+    // if(filterPrefix === "filterPrefix") return "In ";
 
-    return this.props.condition.prefix;
+    return this.props.condition.filterPrefix;
   }
   getFilterIcon(){
     const filterName = this.props.condition.filterName;
-    if(filterName === "Residency") return "fa fa-building";
+    if(filterName === "מגורים") return "building";
+    if(filterName === "שם מלא") return "user-circle";
+    if(filterName === "מעגל") return "circle";
+    if(filterName === "שם פרטי") return "user-circle";
+    if(filterName === "שם משפחה") return "user-circle";
 
     return "";
   }

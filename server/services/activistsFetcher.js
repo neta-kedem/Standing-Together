@@ -62,7 +62,7 @@ const queryActivists = function(req, res){
     Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
-        const query = req.body.query;
+        const query = JSON.parse(req.body.query);
         const page = req.body.page;
         if(page < 0)
             return res.json({"error":"illegal page"});
