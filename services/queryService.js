@@ -4,8 +4,8 @@ let currFilters = {
         {
             logicalOperator:"or",
             filters: [
-                {id:1, filterName: "מעגל", filterMain: "תל-אביב יפו", filterPrefix:"חבר/ה ב"},
-                {id:0, filterName: "שם מלא", filterMain: "נטע קדם", filterPrefix:""},
+                {id:1, filterName: "מעגל", filterMain: "תל אביב", filterPrefix:"חבר/ה ב"},
+                {id:0, filterName: "שם פרטי", filterMain: "נטע", filterPrefix:""},
             ]
         }
     ]
@@ -21,11 +21,11 @@ const emptyGroup = {
 }
 
 const avilableFilters = [
-    {label: "מגורים", options: ['גרים ב', 'לא גרים ב'], filterMain: '', mainCombo: 'cities', id: "lives"},
+    {label: "מגורים", options: ['גר/ה ב', 'לא גר/ה ב'], filterMain: '', mainCombo: 'cities', id: "lives"},
     {label: "מעגל", options: ['חבר/ה ב', 'לא חבר/ה ב'], filterMain: '', mainCombo: 'circles', id: "circle"},
     {label: "שם פרטי", filterMain: '', id: "firstName"},
     {label: "שם משפחה", filterMain: '', id: "secondName"},
-    {label: "שם מלא", filterMain: '', id: "fullName"},
+    // {label: "שם מלא", filterMain: '', id: "fullName"},
 ]
 
 async function getCurrFilters() {

@@ -49,7 +49,7 @@ componentDidMount() {
 fetchActivistsByQuery(){
 	let query;
 	try {
-		query = this.state.query? JSON.parse("{"+this.state.query+"}") : JSON.stringify(this.getCurrQuery())
+		query = this.state.query? JSON.parse("{"+this.state.query+"}") : this.getCurrQuery()
 	}
 	catch(err) {
 		console.log(err);
@@ -86,8 +86,30 @@ getCurrFilters(){
 getCurrQuery() {
 	const currFilters = this.state.currFilters;
 	// todo neta- complete this
-	let query = {}
+	if(!currFilters.groups.length) return "{}"
+	let query = `{"$${currFilters.logicalOperator}": [`
+	currFilters.groups.forEach(group => {
+		group.filters.forEach((filter, i) => {
+			const filterObj = this.filterMapper(filter)
+			let str = ''
+			if(i) str = ', {'
+			else str = '{'
+			str += filterObj.field + ':' + filterObj.body
+			query += `${str}}`
+		})
+	})
+	query += ']}'
 	return query
+}
+
+filterMapper(filter) {
+	const filterMapper = {
+		"מגורים": {field: '"profile.residency"', body: `{"$regex":".*${filter.filterMain}.*"}`, includes: (filter.filterPrefix === 'גר/ה ב')},
+		"מעגל": {field: '"profile.circle"', body: `{"$regex":".*${filter.filterMain}.*"}`, includes: (filter.filterPrefix === 'חבר/ה ב')},
+		"שם פרטי": {field: '"profile.firstName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
+		"שם משפחה": {field: '"profile.lasttName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
+	}
+	return filterMapper[filter.filterName]
 }
 
 handlePageNavigation(page){
