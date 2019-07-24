@@ -343,15 +343,15 @@ export default class Typer extends React.Component {
 			</div>
 		</React.Fragment>;
 		const scanUploaderFormTopBar = <div className={"event-details event-details-label"}>
-			<div>העלאת תמונה</div>
+			<div>تحميل صورة</div>
 			<div>העלאת תמונה</div>
 		</div>;
 		const doneTopBar = <div className={"event-details event-details-label"}>
-			<div>הנתונים נקלטו</div>
+			<div>تم استيعاب البيانات</div>
 			<div>הנתונים נקלטו</div>
 		</div>;
 		const loadingTopBar = <div className={"event-details event-details-label"}>
-			<div>טעינה...</div>
+			<div>جار التحميل...</div>
 			<div>טעינה...</div>
 		</div>;
 		const topBar = <div dir="rtl">
@@ -370,8 +370,8 @@ export default class Typer extends React.Component {
 		const toggleFullyTypedPopup =
 				<Popup visibility={this.state.displayFullyTypedPopup} toggleVisibility={()=>{this.setState({displayFullyTypedPopup: !this.state.displayFullyTypedPopup})}}>
 					<div className="fully-typed-popup-label">
-						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
 						<div>هل انتهيت من ملئ كل الاسطر بالصفحة؟</div>
+						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
 					</div>
 					<div className="confirm-fully-typed-wrap">
 						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(true)}}>סיימתי</button>
@@ -379,7 +379,7 @@ export default class Typer extends React.Component {
 					</div>
 				</Popup>;
 		const loadingMessage = <div className={"loading-message"}>
-			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
+			<h2>نبحث عن صفحات اتصال للطباعة...</h2>
 			<h2>אנחנו מחפשים דפי קשר להקלדה...</h2>
 		</div>;
 		const typerForm = <div>

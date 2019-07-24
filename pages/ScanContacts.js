@@ -20,7 +20,7 @@ render() {
 			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="title-wrap">
-					<span className="title-lang">סריקת דפי קשר</span>
+					<span className="title-lang">مسح صفحات اتصال</span>
 					<span className="title-lang">סריקת דפי קשר</span>
 				</div>
 			</TopNavBar>

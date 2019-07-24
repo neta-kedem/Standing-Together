@@ -51,7 +51,6 @@ export default class EventManagement extends React.Component {
                 <td>{event.name}</td>
                 <td>{event.location}</td>
                 <td>{event.creationDate.toLocaleDateString()}</td>
-                <td>{event.campaign?campaignLink:"X"}</td>
             </tr>;
         });
         return (
@@ -60,7 +59,7 @@ export default class EventManagement extends React.Component {
                 <style jsx global>{style}</style>
                 <TopNavBar>
                     <div className="title-wrap">
-                        <span className="title-lang">ניהול אירועים</span>
+                        <span className="title-lang">ادارة احداث</span>
                         <span className="title-lang">ניהול אירועים</span>
                     </div>
                 </TopNavBar>
@@ -80,12 +79,8 @@ export default class EventManagement extends React.Component {
                                 <div>מיקום</div>
                             </th>
                             <th>
+                                <div>تاريخ الانشاء</div>
                                 <div>תאריך יצירה</div>
-                                <div>תאריך יצירה</div>
-                            </th>
-                            <th>
-                                <div>קמפיין טלפנות התחיל</div>
-                                <div>קמפיין טלפנות התחיל</div>
                             </th>
                         </tr>
                     </thead>
@@ -96,7 +91,7 @@ export default class EventManagement extends React.Component {
                 <PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
                 <a href={"./EventCreation"} className={"new-event-link"}>
                 <div>
-                    יצירת אירוע חדש
+                    ادارة احداث - יצירת אירוע חדש
                 </div>
                 </a>
             </div>

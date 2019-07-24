@@ -113,7 +113,7 @@ export default class ScanForm extends React.Component {
     render() {
         const selectedImage = this.state.selectedImage;
         const imgUploadUI = <div className="contact-scan-uploader">
-            <ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText={selectedImage?"⇪ העלאה מחדש ⇪":"⇪ העלאת דף קשר ⇪"}/>
+            <ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText={selectedImage?"⇪ تحميل صفحة اتصال העלאה מחדש ⇪":"⇪ اعادة تحميل העלאת דף קשר ⇪"}/>
         </div>;
         const postButton = <button className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>;
         const scanPreview = <div>
@@ -128,11 +128,13 @@ export default class ScanForm extends React.Component {
                 <style jsx global>{style}</style>
                 <div className={"main-content"}>
                     <div className="scan-selection-wrap">
+                        <h3>اضافة مسح صفحة اتصال</h3>
                         <h3>העלו סריקה של דף הקשר</h3>
                         {imgUploadUI}
                         {this.state.selectedImageSrc ? scanPreview : ""}
                     </div>
                     <div className="event-selection-wrap">
+                        <h3>اختر الحدث الذي جمعت به جهات الاتصال</h3>
                         <h3>בחרו את האירוע שבמסגרתו הופק דף הקשר</h3>
                         <EventPicker handleSelection={this.handleEventSelection.bind(this)} selected={this.state.eventId}/>
                     </div>
