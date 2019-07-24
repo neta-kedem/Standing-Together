@@ -80,7 +80,7 @@ export default class CircleManagement extends React.Component {
                 <style jsx global>{style}</style>
                 <TopNavBar>
                     <div className="title-wrap">
-                        <span className="title-lang">ניהול ערים</span>
+                        <span className="title-lang">ادارة بلدات</span>
                         <span className="title-lang">ניהול ערים</span>
                     </div>
                 </TopNavBar>
@@ -88,15 +88,15 @@ export default class CircleManagement extends React.Component {
                     <thead>
                         <tr>
                             <th>
-                                <div>שם עיר - עברית</div>
+                                <div>اسم البلد - بالعبرية</div>
                                 <div>שם עיר - עברית</div>
                             </th>
                             <th>
-                                <div>שם עיר - ערבית</div>
+                                <div>اسم البلد - بالعربية</div>
                                 <div>שם עיר - ערבית</div>
                             </th>
                             <th>
-                                <div>שיוך אוטומטי למעגל</div>
+                                <div>انتماء تلقائي للدائرة</div>
                                 <div>שיוך אוטומטי למעגל</div>
                             </th>
                         </tr>
@@ -105,7 +105,7 @@ export default class CircleManagement extends React.Component {
                         {rows}
                     </tbody>
                 </table>
-                <button type="button" className="add-city-button" onClick={this.createCity.bind(this)}>הוספת עיר</button>
+                <button type="button" className="add-city-button" onClick={this.createCity.bind(this)}>اضافة بلد - הוספת עיר</button>
                 <button type="button" className="save-cities-button" onClick={this.saveCities.bind(this)}>
                     حفظ
                     שמירה
