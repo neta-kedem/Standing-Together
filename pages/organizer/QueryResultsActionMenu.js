@@ -31,7 +31,7 @@ class QueryResultsActionMenu extends React.Component {
 				</div>
 				*/}
 				<div className="action-button" onClick={this.state.downloadActivistsByQuery}>
-					<img className="action-button-icon" src={"../static/excel.svg"}/>
+					<img className="action-button-icon" src={"../static/Excel.svg"}/>
 					ייצוא לאקסל
 				</div>
 				{items}

@@ -50,7 +50,7 @@ componentDidMount() {
 fetchActivistsByQuery(){
 	let query;
 	try {
-		query = this.state.query? JSON.parse("{"+this.state.query+"}") : this.getCurrQuery()
+		query = this.state.query? JSON.parse("{"+this.state.query+"}") : this.getCurrQuery();
 	}
 	catch(err) {
 		console.log(err);
@@ -65,11 +65,11 @@ fetchActivistsByQuery(){
 
 }
 downloadActivistsByQuery(){
-	let query = "";
-	try{
-		query = JSON.parse("{"+this.state.query+"}");
+	let query;
+	try {
+		query = this.state.query? JSON.parse("{"+this.state.query+"}") : this.getCurrQuery();
 	}
-	catch(err){
+	catch(err) {
 		console.log(err);
 		alert("check your syntax!");
 		return;

@@ -155,7 +155,7 @@ class QueryCreator extends React.Component {
 
   render() {
     return (
-      <section style={{ overflow: "none", height: "100%", userSelect: "none" }}>
+      <section style={{ overflow: "none", height: "calc(95% - 55px)", userSelect: "none" }}>
         <style global jsx>
           {`
             .filterIcon {
