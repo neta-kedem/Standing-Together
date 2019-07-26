@@ -100,6 +100,7 @@ export default css`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
   margin: 0 20px;
 }
 .candidate {
@@ -248,16 +249,18 @@ export default css`
 .close-popup-button{
     display: block;
     cursor: pointer;
-    background-color: rgb(144, 39, 142);
-    color: white;
+    background-color: white;
+    color: rgb(144, 39, 142);
     font-size: 2em;
     line-height: 0.5em;
     font-weight: 700;
     text-align: center;
-    padding: 9px 15px;
     border: none;
     border-radius: 5px;
     outline: none;
+}
+.close-popup-button:active{
+    color: rgb(114, 9, 112);
 }
 .popup-candidate-picture{
     margin: 0 auto;

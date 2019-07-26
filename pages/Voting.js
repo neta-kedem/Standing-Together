@@ -3,8 +3,13 @@ import style from "./voting/Voting.css";
 import Meta from "../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {faWindowClose} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faWindowClose);
 
-const MAX_VOTES = 15;
+
+const MAX_VOTES = 4;
 
 export default class Voting extends React.Component {
   constructor(props) {
@@ -85,6 +90,13 @@ export default class Voting extends React.Component {
         .then(res => {
           if (res) {
             alert("תודה רבה על ההצבעה!\n" + "شكرًا جزيلًا على التصويت!");
+            this.setState({
+                selected: [],
+                finishedSelecting: false,
+                code: "",
+                openPopup: false,
+                attemptedPost: false
+            });
           } else {
             alert(
               "הקוד שלך כבר לא תקף.\n" +
@@ -93,13 +105,6 @@ export default class Voting extends React.Component {
                 "لم يتمّ استيعاب التصويت"
             );
           }
-          this.setState({
-            selected: [],
-            finishedSelecting: false,
-            code: "",
-            openPopup: false,
-            attemptedPost: false
-          });
         });
     });
   }
@@ -127,10 +132,10 @@ export default class Voting extends React.Component {
         </div>
         <div className="candidate_name">
           <span className="candidate_name_lang">
-            {candidate.firstName + " " + candidate.lastName}
+            {candidate.firstNameAr + " " + candidate.lastNameAr}
           </span>
           <span className="candidate_name_lang">
-            {candidate.firstNameAr + " " + candidate.lastNameAr}
+            {candidate.firstName + " " + candidate.lastName}
           </span>
         </div>
         <div className={"candidate-selection-wrap"}>
@@ -302,7 +307,7 @@ export default class Voting extends React.Component {
               onClick={this.handleEventPopupToggle.bind(this)}
               className={"close-popup-button"}
             >
-              ⬅
+                <FontAwesomeIcon icon={faWindowClose}> </FontAwesomeIcon>
             </button>
             <h3 className="hebrew">
               האם את/ת בטוח בהצבעה? אי אפשר יהיה לבטל אח״כ
@@ -333,7 +338,7 @@ export default class Voting extends React.Component {
               onClick={this.handleCandidatePopupToggle}
               className={"close-popup-button"}
             >
-              ⬅
+                <FontAwesomeIcon icon={faWindowClose}> </FontAwesomeIcon>
             </button>
             <div
               className="popup-candidate-picture"
