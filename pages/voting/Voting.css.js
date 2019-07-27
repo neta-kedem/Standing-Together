@@ -56,9 +56,11 @@ export default css`
 }
 .code-input-label{
     display: inline-block;
+    vertical-align: middle;
     color: #90278e;
     margin-top: 10px;
     margin-bottom: 10px;
+    margin-left: 0.5em;
     padding-left: 10px;
     font-size: 24px;
     line-height: 30px;
@@ -67,6 +69,7 @@ export default css`
 }
 .code_input{
     display: inline-block;
+    vertical-align: middle;
     color: #90278e;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -148,7 +151,7 @@ export default css`
   flex-direction: row;
   text-align: center;
   color: black;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 36px;
   font-weight: 400;
 }
@@ -285,5 +288,69 @@ export default css`
 }
 .vote_button:hover, .code_button:active{
     background-color: #90278e25;
+}
+.finish-popup-content{
+    text-align: center;
+}
+
+@media only screen and (max-device-width: 480px) {
+    .page{
+        width: 100%;
+    }
+    .introduction-wrap{
+        width: 90%;
+        margin: 0 auto;
+    }
+    .code_button{
+        width: 80%;
+    }
+    .candidates {
+      flex-direction: column;
+      margin: 0;
+    }
+    .candidate {
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 100%;
+      padding-bottom: 0;
+    }
+    .candidate-member {
+      flex: 0 0 100%;
+    }
+    .candidate-picture-wrap{
+    }
+    .candidate_picture {
+    }
+    .candidate-details-wrap{    
+        align-self: baseline;
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 10em);
+        margin-right: 10px;
+    }
+    .candidate_name {
+      flex-direction: column;
+      text-align: right;
+    }
+    .candidate_name_lang:first-child{
+        margin-left: 0.5em;
+    }
+    .candidate-selection-wrap{
+        width: fit-content;
+        flex-direction: row;
+        margin: 0 auto;
+    }
+    .candidate-selection-label{
+        padding-left: 0;
+        margin-top: -5px;
+    }
+    .candidate-selection-button{
+        margin-right: 1em;
+    }
+    .popup-candidate-description {
+        max-height: calc(((100vh - 220px) - 20vw) - 4em);
+        padding: 0 0.5em;
+        direction: rtl;
+    }
 }
 `;

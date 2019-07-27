@@ -31,6 +31,9 @@ export default class Voting extends React.Component {
     // this.selectCandidate = this.selectCandidate.bind(this);
     this.generateCandidate = this.generateCandidate.bind(this);
     this.validateCode = this.validateCode.bind(this);
+    //used to auto-scroll back to the voting code input
+    this.codeFormRef = React.createRef();
+
   }
 
   selectCandidate(id) {
@@ -48,14 +51,14 @@ export default class Voting extends React.Component {
   validateCode() {
     server
       .post("candidates/validateCode", {
-        code: this.state.code
+        code: this.state.code.trim()
       })
       .then(isValid => {
         if (isValid) {
           alert("כן! אפשר להצביע\n نعم! يمكنك التصويت");
         } else {
           alert(
-            "ההצבעה של הקוד הזה כבר נקלטה\n" +
+            "הקוד שגוי, או כבר משומש\n" +
               "تمّ تلقّي التصويت الخاص بهذا الكود"
           );
         }
@@ -63,7 +66,12 @@ export default class Voting extends React.Component {
   }
 
   handleSubmitVote() {
-    this.setState({ openPopup: true });
+      if(this.state.code === "") {
+          alert("שימו לב לא לשכוח להזין קוד הצבעה");
+          window.scrollTo(0, this.codeFormRef.current.offsetTop - 200);
+          return;
+      }
+      this.setState({ openPopup: true });
   }
 
   handleEventPopupToggle() {
@@ -85,7 +93,7 @@ export default class Voting extends React.Component {
       server
         .post("candidates/placeVote", {
           votes: this.state.selected,
-          code: this.state.code
+          code: this.state.code.trim()
         })
         .then(res => {
           if (res) {
@@ -99,11 +107,12 @@ export default class Voting extends React.Component {
             });
           } else {
             alert(
-              "הקוד שלך כבר לא תקף.\n" +
+              "הקוד שגוי, או כבר אינו תקף.\n" +
                 " ההצבעה לא נקלטה\n" +
                 "ألكود الذي بحوزتك ليس صالح الفعالية.\n" +
                 "لم يتمّ استيعاب التصويت"
             );
+              window.scrollTo(0, this.codeFormRef.current.offsetTop - 200);
           }
         });
     });
@@ -116,6 +125,7 @@ export default class Voting extends React.Component {
     const isDisabled = finishedSelecting && !isSelected;
     const disabledClass = isDisabled ? "disabled" : "";
     const photo = candidate.photo ? candidate.photo.replace(" ", "%20") : "";
+    const photoAlign = candidate.photoAlign;
     return (
       <div
         className={"candidate " + selectedClass + disabledClass}
@@ -124,36 +134,41 @@ export default class Voting extends React.Component {
         <div className="candidate-picture-wrap">
           <div
             className="candidate_picture"
-            style={{ backgroundImage: `url(${photo})` }}
+            style={{
+                backgroundImage: `url(${photo})`,
+                backgroundPosition: photoAlign
+            }}
             onClick={() => {
               this.handleCandidatePopupToggle(index);
             }}
           />
         </div>
-        <div className="candidate_name">
+        <div className="candidate-details-wrap">
+          <div className="candidate_name">
           <span className="candidate_name_lang">
             {candidate.firstNameAr + " " + candidate.lastNameAr}
           </span>
-          <span className="candidate_name_lang">
+                <span className="candidate_name_lang">
             {candidate.firstName + " " + candidate.lastName}
           </span>
-        </div>
-        <div className={"candidate-selection-wrap"}>
-          <label
-            htmlFor={"select-candidate-" + candidate._id}
-            className="candidate-selection-label"
-          >
-            בחירה
-          </label>
-          <input
-            type="button"
-            className={
-              "candidate-selection-button " + selectedClass + disabledClass
-            }
-            id={"select-candidate-" + candidate._id}
-            value={isSelected ? "✔" : ""}
-            onClick={this.selectCandidate.bind(this, candidate._id)}
-          ></input>
+            </div>
+            <div className={"candidate-selection-wrap"}>
+                <label
+                    htmlFor={"select-candidate-" + candidate._id}
+                    className="candidate-selection-label"
+                >
+                    בחירה
+                </label>
+                <input
+                    type="button"
+                    className={
+                        "candidate-selection-button " + selectedClass + disabledClass
+                    }
+                    id={"select-candidate-" + candidate._id}
+                    value={isSelected ? "✔" : ""}
+                    onClick={this.selectCandidate.bind(this, candidate._id)}
+                ></input>
+            </div>
         </div>
       </div>
     );
@@ -182,6 +197,7 @@ export default class Voting extends React.Component {
     const focusedCandidatePhoto = focusedCandidate.photo
       ? focusedCandidate.photo.replace(" ", "%20")
       : "";
+    const focusedCandidatePhotoAlign = focusedCandidate.photoAlign;
     return (
       <div className="page">
         <Meta />
@@ -193,6 +209,7 @@ export default class Voting extends React.Component {
           width={250}
           className={"voting-logo"}
         />
+        <div className={"introduction-wrap"}>
         <h1 className="voting-title">
           {"בחירות לצוות התיאום הארצי של תנועת עומדים ביחד"}
         </h1>
@@ -238,18 +255,22 @@ export default class Voting extends React.Component {
           بحال واجهتم/ن مشاكل أو صعوبات اطلبوا المساعدة من أحد الناشطين/ات
           بزاوية التصويت.
         </h3>
-        <div className="code_validation">
+        </div>
+        <div className="code_validation" ref={this.codeFormRef}>
           <form className="form">
             <div className="code-input-wrap">
               <label htmlFor="code-input" className="code-input-label">
-                קוד הצבעה:
-                <br />
-                كلمة السر للتصويت:
+                  <div>
+                      كلمة السر للتصويت:
+                  </div>
+                  <div>
+                      קוד הצבעה:
+                  </div>
               </label>
               <input
                 type="text"
                 name="code"
-                placeholder={"123456"}
+                placeholder={"להזין קוד פה"}
                 className="code_input"
                 id="code-input"
                 maxLength="6"
@@ -298,7 +319,7 @@ export default class Voting extends React.Component {
               backgroundColor: "rgba(60,60,60,0.8)"
             },
             content: {
-              height: "max-content"
+              height: "90vh"
             }
           }}
         >
@@ -309,8 +330,8 @@ export default class Voting extends React.Component {
             >
                 <FontAwesomeIcon icon={faWindowClose}> </FontAwesomeIcon>
             </button>
-            <h3 className="hebrew">
-              האם את/ת בטוח בהצבעה? אי אפשר יהיה לבטל אח״כ
+            <h3 className="hebrew finish-popup-content">
+              האם את/ה בטוח/ה בהצבעה? אי אפשר יהיה לבטל אח״כ
               <br />
               هل أنت متأكد/ة من تصويتك؟ لا يمكن إلغاؤه لاحقًا
             </h3>
@@ -329,7 +350,7 @@ export default class Voting extends React.Component {
               backgroundColor: "rgba(60,60,60,0.8)"
             },
             content: {
-              height: "max-content"
+              height: "calc(90vh - 40px)"
             }
           }}
         >
@@ -342,7 +363,10 @@ export default class Voting extends React.Component {
             </button>
             <div
               className="popup-candidate-picture"
-              style={{ backgroundImage: `url(${focusedCandidatePhoto})` }}
+              style={{
+                  backgroundImage: `url(${focusedCandidatePhoto})`,
+                  backgroundPosition: focusedCandidatePhotoAlign
+              }}
             />
             <div className="popup-candidate-description">
               {focusedCandidate.text1
