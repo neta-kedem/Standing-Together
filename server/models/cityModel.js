@@ -28,11 +28,11 @@ const citySchema = new mongoose.Schema({
         }
     },
     location: {
-        longitude:{
+        lng:{
             type: Number,
             required: false,
         },
-        latitude:{
+        lat:{
             type: Number,
             required: false,
         }

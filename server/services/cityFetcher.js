@@ -9,6 +9,7 @@ const getCities = function (){
                 "_id":city._id,
                 "nameHe":city.name.he,
                 "nameAr":city.name.ar,
+                "location":city.location,
                 "defaultCircle":city.defaultCircle
             });
         }

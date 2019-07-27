@@ -4,6 +4,7 @@ import Meta from '../lib/meta'
 import CityDetails from './cityManagement/CityDetails'
 import style from './cityManagement/CityManagement.css'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
+import CitySelector from '../UIComponents/CitySelector/CitySelector';
 
 export default class CircleManagement extends React.Component {
     constructor(props) {
@@ -110,6 +111,15 @@ export default class CircleManagement extends React.Component {
                     حفظ
                     שמירה
                 </button>
+                <CitySelector
+                    cities={this.state.cities}
+                    width={1000}
+                    height={1000}
+                    top={33.344888}
+                    bottom={29.463942}
+                    left={34.2170233}
+                    right={35.949}
+                />
             </div>
         )
     }
