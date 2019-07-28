@@ -251,11 +251,7 @@ export default class CitySelector extends React.Component {
                 const cityPosition = this.coordinatesToPosition(this.state.canvas, city.location.lng, city.location.lat);
                 if((cityPosition.y < start.y && cityPosition.y < end.y) || (cityPosition.y > start.y && cityPosition.y > end.y))
                     continue;
-                const maxX = Math.max(start.x, end.x);
-                const maxY = Math.max(start.y, end.y);
-                const minX = Math.min(start.x, end.x);
-                const minY = Math.min(start.y, end.y);
-                const intersectionX = minX + ((cityPosition.y - minY) / (maxY - minY) * (maxX - minX));
+                const intersectionX = start.x + ((cityPosition.y - start.y) / (end.y - start.y) * (end.x - start.x));
                 if(intersectionX >= cityPosition.x){
                     intersectionToTheRight++;
                 }
