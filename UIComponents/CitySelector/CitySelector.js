@@ -15,9 +15,13 @@ export default class CitySelector extends React.Component {
             right: this.props.right,
             mouseX: 0,
             mouseY: 0,
-            isSelecting: false,
-            selectionStart: null,
-            selectionEnd: null,
+            mousePressed: false,
+            mousePressTime: 0,
+            additiveSelection: false,
+            rectSelectionMode: true,
+            rectSelectionStart: null,
+            polygonSelectionMode: false,
+            polygonSelectionPoints: [],
             highlightedCity: null,
             canvas: null,
             ctx: null
@@ -35,6 +39,10 @@ export default class CitySelector extends React.Component {
         canvas.addEventListener("mousemove", this.getPosition, false);
         canvas.addEventListener("mousedown", this.onPress, false);
         canvas.addEventListener("mouseup", this.onRelease, false);
+        canvas.addEventListener("click", this.onClick, false);
+        canvas.addEventListener("dblclick", this.onDblClick, false);
+        window.addEventListener('keydown',this.onKeyPress,false);
+        window.addEventListener('keyup',this.onKeyRelease,false);
         //initialize wrapper canvas to have the same size as the image it's wrapping
         canvas.width = this.state.width;
         canvas.height = Math.floor(this.state.width/(right-left)*(top-bottom));
@@ -53,39 +61,37 @@ export default class CitySelector extends React.Component {
             this.setState({cities: nextProps.cities}, this.loadMapToCanvas);
         }
     }
-    draw = function() {
-        const cities = this.state.cities.slice();
-        const top = this.state.top;
-        const bottom = this.state.bottom;
-        const left = this.state.left;
-        const right = this.state.right;
+
+    drawMap(ctx, width, height){
         const scanImage = this.imgRef.current;
-        const canvas = this.state.canvas;
-        const ctx = this.state.ctx;
         //initialize canvas to have a white background to prevent transparent areas messing with the detection
         ctx.fillStyle="#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, width, height);
         //draw the image onto a wrapping canvas - this allows us to access the pixel data directly later on
-        ia.drawImage(ctx, scanImage, 0, 0, canvas.width, canvas.height);
+        ia.drawImage(ctx, scanImage, 0, 0, width, height);
+    }
+
+    drawCities(ctx){
+        const cities = this.state.cities.slice();
         ctx.fillStyle="#90278E";
         ctx.strokeStyle="#50003E";
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             if(!city.location || !city.location.lat || !city.location.lng)
                 continue;
-            const cityX = (city.location.lng - left)/(right-left)*canvas.width;
-            const cityY = canvas.height - (city.location.lat - bottom)/(top-bottom)*canvas.height;
+            const cityPosition = this.coordinatesToPosition(ctx.canvas, city.location.lng, city.location.lat);
             ctx.beginPath();
-            ctx.arc(cityX, cityY, city.selected ? 10 : 5, 0, 2 * Math.PI);
+            ctx.arc(cityPosition.x, cityPosition.y, (city.selected || city.toBeSelected) ? 10 : 5, 0, 2 * Math.PI);
             ctx.fill();
             ctx.stroke();
         }
-        ctx.beginPath();
+    }
+
+    drawRectSelectionArea(ctx){
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
-        const selectionStart = this.state.selectionStart;
-        const isSelecting = this.state.isSelecting;
-        if(selectionStart && !isSelecting){
+        const selectionStart = this.state.rectSelectionStart;
+        if(selectionStart){
             ctx.fillStyle="#90278E90";
             ctx.fillRect(
                 Math.min(mouseX, selectionStart.x),
@@ -94,80 +100,249 @@ export default class CitySelector extends React.Component {
                 Math.abs(mouseY - selectionStart.y)
             )
         }
-        if(!(selectionStart && !isSelecting)){
-            //highlighted city
-            const highlighted = this.state.highlightedCity;
-            if(highlighted !== null){
-                ctx.fillStyle="#60278E30";
-                ctx.strokeStyle="#005544";
-                const cityX = (cities[highlighted].location.lng - left)/(right-left)*canvas.width;
-                const cityY = canvas.height - (cities[highlighted].location.lat - bottom)/(top-bottom)*canvas.height;
-                ctx.beginPath();
-                ctx.arc(cityX, cityY, 20, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.stroke();
-            }
+    }
+
+    drawPolygonSelectionArea(ctx){
+        const vertices = this.state.polygonSelectionPoints.slice();
+        if(!vertices.length)
+            return;
+        const mouseX = this.state.mouseX;
+        const mouseY = this.state.mouseY;
+        ctx.strokeStyle="#005544";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(vertices[0].x, vertices[0].y);
+        for(let i = 0; i < vertices.length; i++){
+            const vertex = vertices[i];
+            ctx.lineTo(vertex.x, vertex.y);
         }
-        //storing the canvases in the state. Once done, perform minor contrast/saturation adjustments.
-        this.setState({width: canvas.width, height: canvas.height});
+        ctx.lineTo(mouseX, mouseY);
+        ctx.stroke();
+        ctx.setLineDash([10, 10]);
+        ctx.strokeStyle="#fff";
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    drawCityHighlight(ctx){
+        const cities = this.state.cities.slice();
+        const highlighted = this.state.highlightedCity;
+        if(highlighted !== null){
+            ctx.fillStyle="#60278E30";
+            ctx.strokeStyle="#005544";
+            const cityPosition = this.coordinatesToPosition(ctx.canvas, cities[highlighted].location.lng, cities[highlighted].location.lat);
+            ctx.beginPath();
+            ctx.arc(cityPosition.x, cityPosition.y, 20, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+
+    draw = function() {
+        const canvas = this.state.canvas;
+        const ctx = this.state.ctx;
+        this.drawMap(ctx, canvas.width, canvas.height);
+        this.drawCities(ctx);
+        if(this.state.rectSelectionMode)
+            this.drawRectSelectionArea(ctx);
+        if(this.state.polygonSelectionMode)
+            this.drawPolygonSelectionArea(ctx);
+        this.drawCityHighlight(ctx);
         requestAnimFrame(this.draw);
     }.bind(this);
+
+    coordinatesToPosition(canvas, lng, lat){
+        const top = this.state.top;
+        const bottom = this.state.bottom;
+        const left = this.state.left;
+        const right = this.state.right;
+        const x = (lng - left)/(right-left)*canvas.width;
+        const y = canvas.height - (lat - bottom)/(top-bottom)*canvas.height;
+        return {x: x, y: y};
+    }
+
+    getClosestCity(x, y, cutoffDist){
+        const cities = this.state.cities.slice();
+        const canvas = this.state.canvas;
+        const mouseX = this.state.mouseX;
+        const mouseY = this.state.mouseY;
+        let closestToCursor = null;
+        let minDistFromCursor = cutoffDist * 2;
+        for(let i = 0; i < cities.length; i++){
+            const city = cities[i];
+            if(!city.location || !city.location.lat || !city.location.lng)
+                continue;
+            const cityPosition = this.coordinatesToPosition(canvas, city.location.lng, city.location.lat);
+            let distFromCursor = (Math.abs(cityPosition.y - mouseY) + Math.abs(cityPosition.x - mouseX));
+            if(minDistFromCursor > distFromCursor){
+                minDistFromCursor = distFromCursor;
+                closestToCursor = i;
+            }
+        }
+        return closestToCursor;
+    }
+
+    previewSelection(indexesToSelect){
+        const cities = this.state.cities.slice();
+        for(let i = 0; i < cities.length; i++){
+            const city = cities[i];
+            city.toBeSelected = false;
+        }
+        for(let i = 0; i < indexesToSelect.length; i++){
+            const city = cities[indexesToSelect[i]];
+            city.toBeSelected = true;
+        }
+        this.setState({cities: cities});
+    }
+
+    commitSelection(indexesToSelect){
+        const additiveSelection = this.state.additiveSelection;
+        const cities = this.state.cities.slice();
+        for(let i = 0; i < cities.length; i++){
+            const city = cities[i];
+            if(city.toBeSelected || (indexesToSelect && indexesToSelect.indexOf(i) !== -1)){
+                city.selected = true;
+            }
+            else if(!additiveSelection){
+                city.selected = false;
+            }
+            city.toBeSelected = false;
+        }
+    }
+
+    updateRectSelection(){
+        if(!this.state.rectSelectionMode || this.state.rectSelectionStart === null){
+            return;
+        }
+        const mouseX = this.state.mouseX;
+        const mouseY = this.state.mouseY;
+        const selectionStartX = this.state.rectSelectionStart.x;
+        const selectionStartY = this.state.rectSelectionStart.y;
+        const maxX = Math.max(selectionStartX, mouseX);
+        const maxY = Math.max(selectionStartY, mouseY);
+        const minX = Math.min(selectionStartX, mouseX);
+        const minY = Math.min(selectionStartY, mouseY);
+        const cities = this.state.cities.slice();
+        let selectedCities = [];
+        for(let i = 0; i < cities.length; i++){
+            const city = cities[i];
+            if(!city.location || !city.location.lat || !city.location.lng)
+                continue;
+            const cityPosition = this.coordinatesToPosition(this.state.canvas, city.location.lng, city.location.lat);
+            if(cityPosition.x >= minX && cityPosition.x <= maxX && cityPosition.y >= minY && cityPosition.y <= maxY){
+                selectedCities.push(i);
+            }
+        }
+        this.previewSelection(selectedCities);
+    }
+
+    updatePolygonSelection(){
+        const points = this.state.polygonSelectionPoints.slice();
+        const selectedPoints = [];
+        if(points.length < 3)
+            return;
+        const cities = this.state.cities.slice();
+        for(let i = 0; i < cities.length; i++){
+            const city = cities[i];
+            let intersectionToTheRight = 0;
+            for(let j = 0; j < points.length; j++){
+                const start = points[j];
+                const end = points[(j + 1) % points.length];
+                const cityPosition = this.coordinatesToPosition(this.state.canvas, city.location.lng, city.location.lat);
+                if((cityPosition.y < start.y && cityPosition.y < end.y) || (cityPosition.y > start.y && cityPosition.y > end.y))
+                    continue;
+                const maxX = Math.max(start.x, end.x);
+                const maxY = Math.max(start.y, end.y);
+                const minX = Math.min(start.x, end.x);
+                const minY = Math.min(start.y, end.y);
+                const intersectionX = minX + ((cityPosition.y - minY) / (maxY - minY) * (maxX - minX));
+                if(intersectionX >= cityPosition.x){
+                    intersectionToTheRight++;
+                }
+            }
+            if(intersectionToTheRight % 2 === 1){
+                selectedPoints.push(i);
+            }
+        }
+        this.commitSelection(selectedPoints);
+    }
+
+    highlightCity(){
+        const highlighted = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
+        this.setState({highlightedCity: highlighted});
+    }
+
     //track mouse
     getPosition = function(evt) {
         const canvas = this.state.canvas;
         const rect = canvas.getBoundingClientRect();
         const mouseX = Math.round((evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
         const mouseY = Math.round((evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
-        const top = this.state.top;
-        const bottom = this.state.bottom;
-        const left = this.state.left;
-        const right = this.state.right;
-        const isSelecting = this.state.isSelecting;
-        if(this.state.selectionStart){
-            const maxX = Math.max(this.state.selectionStart.x, isSelecting?this.state.selectionEnd.x:this.state.mouseX);
-            const maxY = Math.max(this.state.selectionStart.y, isSelecting?this.state.selectionEnd.y:this.state.mouseY);
-            const minX = Math.min(this.state.selectionStart.x, isSelecting?this.state.selectionEnd.x:this.state.mouseX);
-            const minY = Math.min(this.state.selectionStart.y, isSelecting?this.state.selectionEnd.y:this.state.mouseY);
-            const cities = this.state.cities.slice();
-            let closestToCursor = 0;
-            let minDistFromCursor = 30;
-            for(let i = 0; i < cities.length; i++){
-                const city = cities[i];
-                if(!city.location || !city.location.lat || !city.location.lng)
-                    continue;
-                const cityX = (city.location.lng - left)/(right-left)*canvas.width;
-                const cityY = canvas.height - (city.location.lat - bottom)/(top-bottom)*canvas.height;
-                if(cityX >= minX && cityX <= maxX && cityY >= minY && cityY <= maxY){
-                    city.selected = true;
-                }
-                else{
-                    city.selected = false;
-                }
-                let distFromCursor = (Math.abs(cityY - mouseY) + Math.abs(cityX - mouseX));
-                if(minDistFromCursor > distFromCursor){
-                    minDistFromCursor = distFromCursor;
-                    closestToCursor = i;
-                }
-            }
-            let highlightedCity = null;
-            if(closestToCursor){
-                highlightedCity = closestToCursor;
-            }
-            this.setState({cities: cities, highlightedCity: highlightedCity});
+        if(this.state.rectSelectionMode){
+            this.updateRectSelection();
         }
+        this.highlightCity();
         this.setState({mouseX: mouseX, mouseY: mouseY});
     }.bind(this);
+
     onPress = function(evt) {
-        if(this.state.isSelecting)
-            this.setState({selectionStart: {x: this.state.mouseX, y: this.state.mouseY}, selectionEnd:{}, isSelecting: false});
+        if(this.state.rectSelectionMode)
+            this.setState({rectSelectionStart: {x: this.state.mouseX, y: this.state.mouseY}, selectionEnd:{}});
+        this.setState({mousePressTime: new Date()});
     }.bind(this);
+
     onRelease = function(evt) {
-            this.setState({selectionEnd: {x: this.state.mouseX, y: this.state.mouseY}, isSelecting: true});
+        if(this.state.rectSelectionStart){
+            this.commitSelection();
+            this.setState({rectSelectionStart: null});
+        }
+        if(this.state.polygonSelectionMode){
+            const points = this.state.polygonSelectionPoints;
+            points.push({x: this.state.mouseX, y: this.state.mouseY});
+            this.setState({polygonSelectionPoints: points})
+        }
     }.bind(this);
+
+    onClick = function(evt) {
+        //this practically fires whenever a mouse release is detected
+        //so a timediff is used to filter out long presses
+        if(new Date() - this.state.mousePressTime > 300)
+            return;
+        //and a position diff to detect quick selections
+        if(this.state.rectSelectionMode && this.state.rectSelectionStart)
+            if(this.state.rectSelectionStart.x - this.state.mouseX > 5 || this.state.rectSelectionStart.x - this.state.mouseX > 5 )
+            return;
+        //if a click was detected, we find the closest city, and select it
+        const cityToSelect = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
+        if(cityToSelect !== null)
+            this.commitSelection([cityToSelect]);
+        else
+            this.commitSelection([]);
+    }.bind(this);
+
+    onDblClick = function(evt) {
+        if(this.state.polygonSelectionMode){
+            this.updatePolygonSelection();
+            this.setState({polygonSelectionPoints: []});
+        }
+    }.bind(this);
+
+    onKeyPress = function(evt) {
+        if(evt.keyCode === 16){
+            this.setState({additiveSelection: true})
+        }
+    }.bind(this);
+
+    onKeyRelease = function(evt) {
+        if(evt.keyCode === 16)
+            this.setState({additiveSelection: false})
+    }.bind(this);
+
     render() {
         const cities = this.state.cities.slice();
         const highlightedCity = this.state.highlightedCity ? cities[this.state.highlightedCity] : null;
         const highlightedCityLabel = highlightedCity ? highlightedCity.nameAr + " - " + highlightedCity.nameHe : "";
+        const highlightedCityPosition = highlightedCity ? this.coordinatesToPosition(this.state.canvas, highlightedCity.location.lng, highlightedCity.location.lat) : {};
         return (
             <div>
                 <style jsx global>{style}</style>
@@ -175,6 +350,16 @@ export default class CitySelector extends React.Component {
                     <canvas ref={this.canvasRef} className="map-view"/>
                     <div className={"highlighted-city-label"}>
                         {highlightedCityLabel}
+                    </div>
+                    <div className={"selection-mechanism"}>
+                        <button type={"button"}
+                                className={"selection-mode rect-selection " + (this.state.rectSelectionMode ? "active-mode" : "")}
+                                onClick={()=>{this.setState({polygonSelectionMode: false, rectSelectionMode: true})}}>
+                        </button>
+                        <button type={"button"}
+                                className={"selection-mode poly-selection " + (this.state.polygonSelectionMode ? "active-mode" : "")}
+                                onClick={()=>{this.setState({polygonSelectionMode: true, rectSelectionMode: false})}}>
+                        </button>
                     </div>
                 </div>
                 {/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.
