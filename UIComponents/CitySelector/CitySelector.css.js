@@ -43,6 +43,7 @@ export default css
     border: none;
     width: 3em;
     height: 2.25em;
+    transition: filter 0.15s;
 }
 .selection-mode:hover{
     filter:brightness(80%);

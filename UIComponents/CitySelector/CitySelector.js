@@ -109,7 +109,7 @@ export default class CitySelector extends React.Component {
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
         ctx.strokeStyle="#005544";
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(vertices[0].x, vertices[0].y);
         for(let i = 0; i < vertices.length; i++){
