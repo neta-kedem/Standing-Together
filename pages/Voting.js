@@ -5,8 +5,8 @@ import server from "../services/server";
 import Modal from "react-modal";
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faWindowClose} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faWindowClose);
+import {faTimes} from '@fortawesome/fontawesome-free-solid'
+fontawesome.library.add(faTimes);
 
 
 const MAX_VOTES = 4;
@@ -112,7 +112,11 @@ export default class Voting extends React.Component {
                 "ألكود الذي بحوزتك ليس صالح الفعالية.\n" +
                 "لم يتمّ استيعاب التصويت"
             );
-              window.scrollTo(0, this.codeFormRef.current.offsetTop - 200);
+            this.setState({
+                openPopup: false,
+                attemptedPost: false
+            });
+            window.scrollTo(0, this.codeFormRef.current.offsetTop - 200);
           }
         });
     });
@@ -157,7 +161,8 @@ export default class Voting extends React.Component {
                     htmlFor={"select-candidate-" + candidate._id}
                     className="candidate-selection-label"
                 >
-                    בחירה
+                    <div>تصويت</div>
+                    <div>בחירה</div>
                 </label>
                 <input
                     type="button"
@@ -247,11 +252,11 @@ export default class Voting extends React.Component {
               <input
                 type="text"
                 name="code"
-                placeholder={"להזין קוד פה"}
+                placeholder={"إدخال الرمز هنا • להזין קוד פה"}
                 className="code_input"
                 id="code-input"
                 maxLength="6"
-                size="8"
+                size="25"
                 value={this.state.code}
                 onChange={e => {
                   this.setState({ code: e.target.value });
@@ -296,7 +301,7 @@ export default class Voting extends React.Component {
               backgroundColor: "rgba(60,60,60,0.8)"
             },
             content: {
-              height: "90vh"
+              height: "fit-content"
             }
           }}
         >
@@ -305,7 +310,7 @@ export default class Voting extends React.Component {
               onClick={this.handleEventPopupToggle.bind(this)}
               className={"close-popup-button"}
             >
-                <FontAwesomeIcon icon={faWindowClose}> </FontAwesomeIcon>
+                <FontAwesomeIcon icon={faTimes}> </FontAwesomeIcon>
             </button>
             <h3 className="hebrew finish-popup-content">
               האם את/ה בטוח/ה בהצבעה? אי אפשר יהיה לבטל אח״כ
@@ -327,7 +332,7 @@ export default class Voting extends React.Component {
               backgroundColor: "rgba(60,60,60,0.8)"
             },
             content: {
-              height: "calc(90vh - 40px)"
+              height: "calc(100vh - 120px)"
             }
           }}
         >
@@ -336,7 +341,7 @@ export default class Voting extends React.Component {
               onClick={this.handleCandidatePopupToggle}
               className={"close-popup-button"}
             >
-                <FontAwesomeIcon icon={faWindowClose}> </FontAwesomeIcon>
+                <FontAwesomeIcon icon={faTimes}> </FontAwesomeIcon>
             </button>
             <div
               className="popup-candidate-picture"

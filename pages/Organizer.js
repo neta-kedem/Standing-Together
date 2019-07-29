@@ -43,9 +43,9 @@ constructor(props) {
 }
 
 componentDidMount() {
-	this.fetchActivistsByQuery();
-	this.getPotentialEvents();
 	this.getCurrFilters();
+	//this.fetchActivistsByQuery();
+	this.getPotentialEvents();
 }
 fetchActivistsByQuery(){
 	let query;
@@ -76,7 +76,7 @@ downloadActivistsByQuery(){
 	}
 	server.post('queryToXLSX', {'query': query})
 		.then(json => {
-			const blob = new Blob([json.csv], {type: "text/plain;charset=utf-8"});
+			const blob = new Blob(["\uFEFF" + json.csv], {type: "text/csv;charset=utf-8,%EF%BB%BF"});
 			FileSaver.saveAs(blob, "contacts_export.csv");
 		});
 }
@@ -98,15 +98,18 @@ getPotentialEvents(){
 getCurrFilters(){
 	QueryService.getCurrFilters()
 		.then(currFilters => {
-			this.setState({currFilters})
+			this.setState({currFilters}, ()=>{
+				this.fetchActivistsByQuery();
+			});
 		});
 }
 getCurrQuery() {
 	const currFilters = this.state.currFilters;
 	// todo neta- complete this
 	if(!currFilters.groups.length) return "{}"
-	let query = `{"$${currFilters.logicalOperator}": [`
+	let query = `{"$${currFilters.logicalOperator}": [{`
 	currFilters.groups.forEach(group => {
+		query += `"$${group.logicalOperator}": [`;
 		group.filters.forEach((filter, i) => {
 			const filterObj = this.filterMapper(filter)
 			let str = ''
@@ -115,8 +118,9 @@ getCurrQuery() {
 			str += filterObj.field + ':' + filterObj.body
 			query += `${str}}`
 		})
+		query += "]"
 	})
-	query += ']}'
+	query += '}]}'
 	return query
 }
 
