@@ -142,6 +142,7 @@ export default css`
     background-position: center;
     background-origin: border-box;
     transition: transform 0.25s ease-out;
+    -webkit-tap-highlight-color:transparent;
 }
 .candidate_picture:hover{
     transform: scale(1.1);
@@ -166,6 +167,7 @@ export default css`
     color: #90278e;
 }
 .candidate-selection-wrap{
+    -webkit-tap-highlight-color:transparent;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -273,6 +275,8 @@ export default css`
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 100%;
+    border: 1px solid rgba(144, 39, 142, 0.4);
+    box-shadow: 5px 5px 15px rgba(144, 39, 142, 0.4) inset;
 }
 .popup-candidate-description{
     max-height: calc(100vh - 120px - 20vw - 4em);
