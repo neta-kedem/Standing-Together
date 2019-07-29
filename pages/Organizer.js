@@ -44,7 +44,7 @@ constructor(props) {
 
 componentDidMount() {
 	this.getCurrFilters();
-	this.fetchActivistsByQuery();
+	//this.fetchActivistsByQuery();
 	this.getPotentialEvents();
 }
 fetchActivistsByQuery(){
@@ -98,7 +98,9 @@ getPotentialEvents(){
 getCurrFilters(){
 	QueryService.getCurrFilters()
 		.then(currFilters => {
-			this.setState({currFilters})
+			this.setState({currFilters}, ()=>{
+				this.fetchActivistsByQuery();
+			});
 		});
 }
 getCurrQuery() {
