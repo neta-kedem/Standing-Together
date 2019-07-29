@@ -327,10 +327,13 @@ export default css`
         flex-direction: column;
         width: calc(100% - 10em);
         margin-right: 10px;
+        height: 10em;
+        justify-content: space-evenly;
     }
     .candidate_name {
       flex-direction: column;
       text-align: right;
+      line-height: 1.3em;
     }
     .candidate_name_lang:first-child{
         margin-left: 0.5em;
@@ -338,19 +341,24 @@ export default css`
     .candidate-selection-wrap{
         width: fit-content;
         flex-direction: row;
-        margin: 0 auto;
+        margin-right: 0;
+        width: 100%;
+        justify-content: space-between;
     }
     .candidate-selection-label{
         padding-left: 0;
-        margin-top: -5px;
+        margin-top: -5px;    
+        font-size: 24px;
+        line-height: 1em;
     }
     .candidate-selection-button{
-        margin-right: 1em;
+        margin-left: 0.5em;
     }
     .popup-candidate-description {
         max-height: calc(((100vh - 220px) - 20vw) - 4em);
         padding: 0 0.5em;
         direction: rtl;
+        font-size: 1.15em;
     }
 }
 `;
