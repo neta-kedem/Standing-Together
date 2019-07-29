@@ -76,7 +76,7 @@ downloadActivistsByQuery(){
 	}
 	server.post('queryToXLSX', {'query': query})
 		.then(json => {
-			const blob = new Blob([json.csv], {type: "text/plain;charset=utf-8"});
+			const blob = new Blob(["\uFEFF" + json.csv], {type: "text/csv;charset=utf-8,%EF%BB%BF"});
 			FileSaver.saveAs(blob, "contacts_export.csv");
 		});
 }
