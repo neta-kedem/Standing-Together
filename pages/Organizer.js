@@ -43,9 +43,9 @@ constructor(props) {
 }
 
 componentDidMount() {
+	this.getCurrFilters();
 	this.fetchActivistsByQuery();
 	this.getPotentialEvents();
-	this.getCurrFilters();
 }
 fetchActivistsByQuery(){
 	let query;
@@ -105,8 +105,9 @@ getCurrQuery() {
 	const currFilters = this.state.currFilters;
 	// todo neta- complete this
 	if(!currFilters.groups.length) return "{}"
-	let query = `{"$${currFilters.logicalOperator}": [`
+	let query = `{"$${currFilters.logicalOperator}": [{`
 	currFilters.groups.forEach(group => {
+		query += `"$${group.logicalOperator}": [`;
 		group.filters.forEach((filter, i) => {
 			const filterObj = this.filterMapper(filter)
 			let str = ''
@@ -115,8 +116,9 @@ getCurrQuery() {
 			str += filterObj.field + ':' + filterObj.body
 			query += `${str}}`
 		})
+		query += "]"
 	})
-	query += ']}'
+	query += '}]}'
 	return query
 }
 
