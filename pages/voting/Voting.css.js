@@ -13,11 +13,22 @@ export default css`
     border-left: 0;
   }
 }
+/*iphone buttons fix*/
 button{
     -webkit-appearance: none !important;
     -moz-appearance: none;
     appearance: none;
 }
+textarea,
+input.text,
+input[type="text"],
+input[type="button"],
+input[type="submit"],
+.input-checkbox {
+  -webkit-appearance: none !important;
+  border-radius: 0;
+}
+
 .page{
 	font-family: Assistant, Cairo, Rubik, sans-serif;
 	width: 85%;
