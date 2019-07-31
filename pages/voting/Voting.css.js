@@ -13,6 +13,11 @@ export default css`
     border-left: 0;
   }
 }
+button{
+    -webkit-appearance: none !important;
+    -moz-appearance: none;
+    appearance: none;
+}
 .page{
 	font-family: Assistant, Cairo, Rubik, sans-serif;
 	width: 85%;
