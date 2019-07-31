@@ -129,7 +129,7 @@ filterMapper(filter) {
 		"מגורים": {field: '"profile.residency"', body: `{"$regex":".*${filter.filterMain}.*"}`, includes: (filter.filterPrefix === 'גר/ה ב')},
 		"מעגל": {field: '"profile.circle"', body: `{"$regex":".*${filter.filterMain}.*"}`, includes: (filter.filterPrefix === 'חבר/ה ב')},
 		"שם פרטי": {field: '"profile.firstName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
-		"שם משפחה": {field: '"profile.lasttName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
+		"שם משפחה": {field: '"profile.lastName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
 	}
 	return filterMapper[filter.filterName]
 }
