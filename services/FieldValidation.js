@@ -23,6 +23,12 @@ export default class FieldValidation {
                 const type = this.fields[j].type;
                 const required = this.fields[j].required;
                 const fieldVal = activists[i][this.fields[j].name] || null;
+                //return false if the value is required, but missing
+                const missingRequiredValue = (required && (!fieldVal || fieldVal === "" || (fieldVal === 0 && type === "select")));
+                if(missingRequiredValue){
+                    activists[i][this.fields[j].name+"Valid"] = false;
+                    return false
+                }
                 //if this is true, it means that the value is missing (null, 0, "", etc.), and that's ok (i.e. the value isn't required).
                 const validMissingValue = (!required && (!fieldVal || fieldVal === "" || (fieldVal === 0 && type === "select")));
                 //if the field is outright invalid - return false
