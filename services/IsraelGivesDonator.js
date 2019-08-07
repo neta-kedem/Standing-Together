@@ -91,11 +91,9 @@ function donate(profileData, paymentData){
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-    })
-        .then(res => res.json())
-        .then(json => {
+    }).then(res => {
             donationInProcess = false;
-            return json;
+            return true;
         });
     return promise;
 }
