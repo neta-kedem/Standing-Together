@@ -20,6 +20,7 @@ export default class Popup extends React.Component {
 						position: fixed;
 						height: 100%;
 						width: 100%;
+						top: 0;
 					}
 					
 					.popup-background{
@@ -59,6 +60,12 @@ export default class Popup extends React.Component {
 					.popup a:active {
 						color: #fff;
 					}
+
+					@media only screen and (max-width: 480px){
+    				    .popup{
+    				        width: 85%;
+    				    }
+    				}
 				`}
 				</style>
 				<div className="popup-background" onClick={this.handleBackgroundClick.bind(this)}></div>
