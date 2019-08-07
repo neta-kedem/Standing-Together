@@ -26,7 +26,7 @@ export default class RegistrationForm extends React.Component {
                 for(let i=0; i<dataLists.length; i++){
                     if(dataLists[i].field === "residency")
                         dataLists[i].data = json.map((city)=>{
-                            return city.name;
+                            return city.nameHe;
                         });
                 }
                 this.setState({profileDataLists: dataLists})

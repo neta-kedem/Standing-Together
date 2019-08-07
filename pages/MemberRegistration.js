@@ -6,32 +6,34 @@ import server from "../services/server";
 import FieldValidation from "../services/FieldValidation";
 import IsraelGivesDonator from "../services/IsraelGivesDonator";
 import Checkbox from '../UIComponents/Checkbox/Checkbox';
+import Popup from '../UIComponents/Popup/Popup';
 import Meta from '../lib/meta';
+import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 
 export default class MemberRegistration extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             activistData: {
-                apartmentNum: "12א",
-                birthday: new Date().toUTCString(),
-                email: "new@new.new",
-                firstName: "testing",
-                houseNum: "897",
-                lastName: "new member",
-                mailbox: "תא דואר 6174",
-                phone: "0231231899",
-                residency: "תל אביב",
-                street: "רחוב 1",
-                tz: "2121922322"
+                apartmentNum: "",
+                birthday: "",
+                email: "",
+                firstName: "",
+                houseNum: "",
+                lastName: "",
+                mailbox: "",
+                phone: "",
+                residency: "",
+                street: "",
+                tz: ""
             },
             paymentInfo: {
-                CVV: "123",
+                CVV: "",
                 CardTypeId: "1",
                 CreditCardNo: "",
-                selectedAmount: 0,
-                month: "01",
-                year: "2020"
+                selectedAmount: null,
+                month: "",
+                year: ""
             },
             termsAccepted: false,
             postAttempted: false,
@@ -108,8 +110,12 @@ export default class MemberRegistration extends React.Component {
                     required: true
                 }
             ],
+            processingDonation: false,
+            displayFailedDonationPopup: false,
+            donationSuccessful: false
         };
     }
+
     componentDidMount() {
         this.registrationFormRef = React.createRef();
         this.paymentFormRef = React.createRef();
@@ -118,22 +124,27 @@ export default class MemberRegistration extends React.Component {
         this.PaymentFieldValidation = new FieldValidation();
         this.PaymentFieldValidation.setFields(this.state.paymentFields);
     }
+
     handleTypedProfileInput = function (name, value){
         let activist = this.state.activistData;
         activist[name] = value;
         activist[name + "Valid"] = this.ProfileFieldValidation.validate(value, name);
         this.setState({activistData: activist});
     }.bind(this);
+
     handleTypedPaymentInput = function (name, value){
         let info = this.state.paymentInfo;
         info[name] = value;
         info[name + "Valid"] = this.PaymentFieldValidation.validate(value, name);
         this.setState({paymentInfo: info});
     }.bind(this);
+
     handleTermsAcceptance = function(checked){
         this.setState({termsAccepted: checked});
     }.bind(this);
+
     handlePost = function(){
+        //validate profile details
         const activist = this.state.activistData;
         let activistWrap = [activist];
         if(!this.ProfileFieldValidation.validateAll(activistWrap)){
@@ -141,6 +152,7 @@ export default class MemberRegistration extends React.Component {
             window.scrollTo(0, this.registrationFormRef.current.offsetTop);
             return;
         }
+        //validate payment info
         const paymentInfo = this.state.paymentInfo;
         let paymentWrap = [paymentInfo];
         if(!this.PaymentFieldValidation.validateAll(paymentWrap)){
@@ -148,28 +160,35 @@ export default class MemberRegistration extends React.Component {
             window.scrollTo(0, this.paymentFormRef.current.offsetTop);
             return;
         }
-        IsraelGivesDonator.donate(activist, paymentInfo).then((result => {
+        this.setState({processingDonation: true}, ()=>{
+            this.registerMember(activist, paymentInfo);
+        });
+
+    }.bind(this);
+
+    registerMember = function(activist, paymentInfo){
+        //IsraelGivesDonator.donate(activist, paymentInfo).then((result => {
             const data ={
                 "activistData": activist
             };
             server.post('membership', data)
-                .then(() => {
-                    this.setState({
-                        activists: [this.generateRow()],
-                        cells: [],
-                        selectedRowIndex: 0,
-                        scanId: null,
-                        scanUrl: null,
-                        fullyTyped: false,
-                        displayFullyTypedPopup: false,
-                        postAttempted: false,
-                        unsaved: false
-                    });
-                    alert("the details have been stored in the system");
-                    this.getContactsScan();
+                .then((result) => {
+                    if(result.err){
+                        this.setState({processingDonation: false});
+                        this.handleDonationFailedPopupToggle();
+                    }
+                    else{
+                        debugger;
+                        window.parent.postMessage({donationSuccessful: true}, "*");
+                    }
                 });
-        }));
+        //}));
+    };
+
+    handleDonationFailedPopupToggle = function(){
+        this.setState({displayFailedDonationPopup: !this.state.displayFailedDonationPopup});
     }.bind(this);
+
     render() {
         return (
             <div dir={"rtl"}>
@@ -204,22 +223,54 @@ export default class MemberRegistration extends React.Component {
                     </div>
                     <span className={"section-instruction"}>3. אנא קראו והסכימו לתנאי ההצטרפות يرجى قراءة شروط الانضمام والمصادقة عليها:</span>
                     <br/>
-                    <div><b>
-                        אני, החתומ/ה מטה, מבקש/ת להצטרף להיות חבר/ה בתנועת "עומדים ביחד" ולפעול במסגרתה ً انا الموقع\ة ادناه, اطلب االنضمام الى حراك »نقف معا« وان اعمل من خالله:
-                    </b></div>
-                    <span>אני רוצה להצטרף לתנועת "עומדים ביחד" כי אני מקבל/ת את עקרונותיה הרעיוניים, הפוליטיים והארגוניים, של התנועה, שהיא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים. אני מבינ/ה שבתנועה שותפים חברים וחברות מכל קצוות הארץ - צעירים ומבוגרים, יהודים וערבים, נשים וגברים, מהמרכז ומהפריפריה - ואני מוכנ/ה לפעול במשותף מתוך אמונה שרק ביחד נוכל לשנות את המקום בו אנחנו חיים. אני מצהיר/ה שאפעל ביחד עם חברותיי וחבריי בתנועה כדי לחתור לשוויון מלא לכל מי שחיים כאן; לצדק חברתי אמיתי; לשלום, לעצמאות ולצדק לשני העמים. אפעל במסגרת התנועה כדי לשנות את השיטה החברתית והפוליטית הקיימת, שלא פועלת לטובת הרוב בחברה, אלא לטובת מיעוט קטן שנהנה מהמצב הקיים. אני מתחייב/ת להיות חלק מהמאבק להעמדת חלופה כוללת לימין, לשינוי מהותי בחברה הישראלית, ולהפיכת הארץ הזו למקום לכולנו.
-
-    أريد الانضمام لحراك "نقف معًا" لأني أقبل بالمبادئ الفكريّة, السّياسيّة, والتنظيمية للحراك, والذي هو حراك سياسي يعنى بالنّضال والأمل, كما ويحمل مبادئ وقيم اشتراكيّة. إني أعي أنّ الحراك يضم شركاء وشريكات من كل انحاء البلاد - شبابًا وشيبًا, يهودًا وعربًا, نساءً ورجالًا, من المركز ومن الأرياف - وأنا مستعد\ة للعمل المشترك من منطلق إيماني بأننا وفقط عندما نكون معًا يمكننا تغيير المكان الذي نعيش به. أصرّح بهذا انّي سأعمل سويةً مع رفاقي ورفيقاتي في الحراك من أجل السعي لتحقيق المساواة الكاملة لكلّ من يعيش هنا؛ من أجل العدالة الاجتماعيّة الحقيقيّة؛ من أجل السّلام, ألاستقلال والعدالة لكلا الشعبين. سأعمل من خلال الحراك من أجل تغيير السّياسات الاجتماعيّة والسّياسيّة السّائدة اليوم, والتي لا تخدم مصالح الأغلبية في المجتمع, بل تصب في مصلحة أقليّة صغيرة هي المستفيدة من الوضع القائم. أتعهد أن أكون جزءًا من النضال من أجل وضع بديل شامل لليمين, من أجل إحداث تغيير جذري في المجتمع الإسرائيلي, وتحويل هذه البلاد لمكانٍ لنا جميعًا.</span>
+                    <div>
+                        <b>
+                            אני, החתומ/ה מטה, מבקש/ת להצטרף להיות חבר/ה בתנועת "עומדים ביחד" ולפעול במסגרתה ً انا الموقع\ة ادناه, اطلب االنضمام الى حراك »نقف معا« وان اعمل من خالله:
+                        </b>
+                    </div>
+                    <div>
+                        אני רוצה להצטרף לתנועת "עומדים ביחד" כי אני מקבל/ת את עקרונותיה הרעיוניים, הפוליטיים והארגוניים, של התנועה, שהיא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים.
+                        אני מבינ/ה שבתנועה שותפים חברים וחברות מכל קצוות הארץ - צעירים ומבוגרים, יהודים וערבים, נשים וגברים, מהמרכז ומהפריפריה - ואני מוכנ/ה לפעול במשותף מתוך אמונה שרק ביחד נוכל לשנות את המקום בו אנחנו חיים.
+                        אני מצהיר/ה שאפעל ביחד עם חברותיי וחבריי בתנועה כדי לחתור לשוויון מלא לכל מי שחיים כאן; לצדק חברתי אמיתי; לשלום, לעצמאות ולצדק לשני העמים.
+                        אפעל במסגרת התנועה כדי לשנות את השיטה החברתית והפוליטית הקיימת, שלא פועלת לטובת הרוב בחברה, אלא לטובת מיעוט קטן שנהנה מהמצב הקיים.
+                        אני מתחייב/ת להיות חלק מהמאבק להעמדת חלופה כוללת לימין, לשינוי מהותי בחברה הישראלית, ולהפיכת הארץ הזו למקום לכולנו.
+                    </div>
+                    <div>
+                        أريد الانضمام لحراك "نقف معًا" لأني أقبل بالمبادئ الفكريّة, السّياسيّة, والتنظيمية للحراك, والذي هو حراك سياسي يعنى بالنّضال والأمل, كما ويحمل مبادئ وقيم اشتراكيّة.
+                        إني أعي أنّ الحراك يضم شركاء وشريكات من كل انحاء البلاد - شبابًا وشيبًا, يهودًا وعربًا, نساءً ورجالًا, من المركز ومن الأرياف - وأنا مستعد\ة للعمل المشترك من منطلق إيماني بأننا وفقط عندما نكون معًا يمكننا تغيير المكان الذي نعيش به.
+                        أصرّح بهذا انّي سأعمل سويةً مع رفاقي ورفيقاتي في الحراك من أجل السعي لتحقيق المساواة الكاملة لكلّ من يعيش هنا؛ من أجل العدالة الاجتماعيّة الحقيقيّة؛ من أجل السّلام, ألاستقلال والعدالة لكلا الشعبين.
+                        سأعمل من خلال الحراك من أجل تغيير السّياسات الاجتماعيّة والسّياسيّة السّائدة اليوم, والتي لا تخدم مصالح الأغلبية في المجتمع, بل تصب في مصلحة أقليّة صغيرة هي المستفيدة من الوضع القائم.
+                        أتعهد أن أكون جزءًا من النضال من أجل وضع بديل شامل لليمين, من أجل إحداث تغيير جذري في المجتمع الإسرائيلي, وتحويل هذه البلاد لمكانٍ لنا جميعًا.
+                    </div>
                     <div>
                         <Checkbox onChange={this.handleTermsAcceptance} checked={this.state.termsAccepted} label={"אני מאשר/ת שקראתי והסכמתי"}/>
                     </div>
-                    <button
-                        className={"register-button"}
-                        disabled={!this.state.termsAccepted}
-                        onClick={this.handlePost}>
-                        אני רוצה להצטרף!
-                    </button>
+                    <div className={"register-button-wrap"}>
+                        {!this.state.processingDonation?
+                            <button
+                                className={"register-button"}
+                                disabled={!this.state.termsAccepted}
+                                onClick={this.handlePost}>
+                                    אני רוצה להצטרף!
+                            </button>
+                            :''
+                        }
+                        <LoadSpinner visibility={this.state.processingDonation}/>
+                    </div>
                 </div>
+                <Popup visibility={this.state.displayFailedDonationPopup} toggleVisibility={this.handleDonationFailedPopupToggle.bind(this)}>
+                    <div className={"failed-donation-message"}>
+                        <h1>אוי לא!</h1>
+                        <p>לצערינו התרחשה שגיאה במהלך עיבוד התרומה, והיא לא נקלטה כראוי</p>
+                        <p>אנא וודאו שפרטי התשלום הוזנו באופן מדוייק, ונסו שוב</p>
+                        <p>אם הבעיה חוזרת על עצמה, בבקשה פנו אלינו בכתובת: info@standing-together.com או בטלפון 052-7306600</p>
+                        <button
+                            className={"close-failed-donation-button"}
+                            onClick={this.handleDonationFailedPopupToggle.bind(this)}>
+                            בסדר
+                        </button>
+                    </div>
+                </Popup>
             </div>
         );
     }
