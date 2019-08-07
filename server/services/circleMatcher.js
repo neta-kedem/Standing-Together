@@ -3,25 +3,50 @@ const cityFetcher = require("./cityFetcher");
 const arrayFunctions = require("./arrayFunctions");
 
 
-let circleDict = {};
-let cityDict = {};
+let circleDict = null;
+let cityDict = null;
+
 const initMatcher = function(){
+    circleDict = {};
+    cityDict = {};
     const fetchPromises = [cityFetcher.getCities(), circleFetcher.getCircles()];
     return Promise.all(fetchPromises).then((results)=>{
-            cityDict = arrayFunctions.indexByField(results[0], "name");
+            const cityDictHe = arrayFunctions.indexByField(results[0], "nameHe");
+            const cityDictAr = arrayFunctions.indexByField(results[0], "nameAr");
+            cityDict = Object.assign(cityDictHe, cityDictAr);
             circleDict = arrayFunctions.indexByField(results[1], "name");
         }
     );
 };
+
 const getCircleByCity = function(city){
-    if(!city || !cityDict[city]) {
-        return null;
+    if(!circleDict || !cityDict){
+        return new Promise((resolve)=>{
+            if(!city || !cityDict[city]) {
+                resolve(null);
+            }
+            const cityObject = cityDict[city];
+            if(cityObject.defaultCircle && circleDict[cityObject.defaultCircle]) {
+                resolve(circleDict[cityObject.defaultCircle]);
+            }
+            resolve(null);
+        });
     }
-    const cityObject = cityDict[city];
-    if(cityObject.defaultCircle && circleDict[cityObject.defaultCircle]) {
-        return circleDict[cityObject.defaultCircle];
+    else{
+        return fetchCircleByCity(city).then(circle => {
+            return circle;
+        })
     }
-    return null;
+};
+
+const fetchCircleByCity = function(city){
+    return cityFetcher.getCityByName(city).then((result) => {
+        if(!result || !result.defaultCircle || !result.defaultCircle.length){
+            circleFetcher.getCircleById(result.defaultCircle).then((circle)=>{
+                return circle;
+            })
+        }
+    });
 };
 module.exports = {
     initMatcher,
