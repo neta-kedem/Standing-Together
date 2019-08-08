@@ -62,6 +62,15 @@ export default class PaymentForm extends React.Component {
                        className={paymentData["CreditCardNoValid"] === false ? "invalid" : ""}/>
             </label>
             <div className={"credit-card-field-title"}>תוקף</div>
+            <select name="year" value={paymentData.year} onChange={this.handleInputChange}
+                    className={paymentData["yearValid"] === false ? "invalid" : ""}>
+                <option value=""> </option>
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
+                    const year = new Date().getUTCFullYear() + i;
+                    return <option value={year} key={"year_" + year}>{year}</option>;
+                })}
+            </select>
+            <span>/</span>
             <select name="month" value={paymentData.month} onChange={this.handleInputChange}
                     className={paymentData["monthValid"] === false ? "invalid" : ""}>
                 <option value=""> </option>
@@ -77,14 +86,6 @@ export default class PaymentForm extends React.Component {
                 <option value="10">10</option>
                 <option value="11">11</option>
                 <option value="12">12</option>
-            </select>
-            <select name="year" value={paymentData.year} onChange={this.handleInputChange}
-                    className={paymentData["yearValid"] === false ? "invalid" : ""}>
-                <option value=""> </option>
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
-                    const year = new Date().getUTCFullYear() + i;
-                    return <option value={year} key={"year_" + year}>{year}</option>;
-                })}
             </select>
             <label>
             <div className={"credit-card-field-title"}>שלוש ספרות אחרונות על גב הכרטיס</div>
