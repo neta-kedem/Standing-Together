@@ -14,6 +14,7 @@ export default class MemberRegistration extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            lang: "he",
             activistData: {
                 apartmentNum: "",
                 birthday: "",
@@ -167,7 +168,7 @@ export default class MemberRegistration extends React.Component {
     }.bind(this);
 
     registerMember = function(activist, paymentInfo){
-        //IsraelGivesDonator.donate(activist, paymentInfo).then((result => {
+        IsraelGivesDonator.donate(activist, paymentInfo).then((result => {
             const data ={
                 "activistData": activist
             };
@@ -182,7 +183,7 @@ export default class MemberRegistration extends React.Component {
                         window.parent.postMessage({donationSuccessful: true}, "*");
                     }
                 });
-        //}));
+        }));
     };
 
     handleDonationFailedPopupToggle = function(){
@@ -196,10 +197,6 @@ export default class MemberRegistration extends React.Component {
                 <style jsx global>{style}</style>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
-                    {/**<div className={"registration-form-title"}>
-                        <div>إنضمّوا لحراك نقف معًا</div>
-                        <div>הצטרפו לתנועת עומדים ביחד</div>
-                    </div>**/}
                     <span>הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.</span>
                     <br/>
                     <span>إنضمّوا ل<b>نقف معًا</b> وكونوا جزءًا من الحراك الميداني الأكبر في إسرائيل. حراك يقود النضال من أجل السلام، المساواة والعدالة الاجتماعية.</span>
@@ -208,6 +205,7 @@ export default class MemberRegistration extends React.Component {
                     <br/>
                     <div ref={this.registrationFormRef}>
                         <RegistrationForm
+                            lang={this.state.lang}
                             activistData={this.state.activistData}
                             profileFields={this.state.profileFields}
                             handleChange={this.handleTypedProfileInput.bind(this)}
@@ -230,7 +228,7 @@ export default class MemberRegistration extends React.Component {
                     </div>
                     <div>
                         אני רוצה להצטרף לתנועת "עומדים ביחד" כי אני מקבל/ת את עקרונותיה הרעיוניים, הפוליטיים והארגוניים, של התנועה, שהיא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים.
-                        אני מבינ/ה שבתנועה שותפים חברים וחברות מכל קצוות הארץ - צעירים ומבוגרים, יהודים וערבים, נשים וגברים, מהמרכז ומהפריפריה - ואני מוכנ/ה לפעול במשותף מתוך אמונה שרק ביחד נוכל לשנות את המקום בו אנחנו חיים.
+                        אני מבינ/ה שבתנועה שותפים חברים וחברות מכל קצוות הארץ - צעירים ומבוגרים, ערבים ויהודים, נשים וגברים, מהפריפריה ומהמרכז - ואני מוכנ/ה לפעול במשותף מתוך אמונה שרק ביחד נוכל לשנות את המקום בו אנחנו חיים.
                         אני מצהיר/ה שאפעל ביחד עם חברותיי וחבריי בתנועה כדי לחתור לשוויון מלא לכל מי שחיים כאן; לצדק חברתי אמיתי; לשלום, לעצמאות ולצדק לשני העמים.
                         אפעל במסגרת התנועה כדי לשנות את השיטה החברתית והפוליטית הקיימת, שלא פועלת לטובת הרוב בחברה, אלא לטובת מיעוט קטן שנהנה מהמצב הקיים.
                         אני מתחייב/ת להיות חלק מהמאבק להעמדת חלופה כוללת לימין, לשינוי מהותי בחברה הישראלית, ולהפיכת הארץ הזו למקום לכולנו.
@@ -243,7 +241,12 @@ export default class MemberRegistration extends React.Component {
                         أتعهد أن أكون جزءًا من النضال من أجل وضع بديل شامل لليمين, من أجل إحداث تغيير جذري في المجتمع الإسرائيلي, وتحويل هذه البلاد لمكانٍ لنا جميعًا.
                     </div>
                     <div>
-                        <Checkbox onChange={this.handleTermsAcceptance} checked={this.state.termsAccepted} label={"אני מאשר/ת שקראתי והסכמתי"}/>
+                        <Checkbox onChange={this.handleTermsAcceptance} checked={this.state.termsAccepted} label={
+                            <div>
+                                <div>אני מאשר/ת שקראתי והסכמתי</div>
+                                <div>אני מאשר/ת שקראתי והסכמתי</div>
+                            </div>
+                        }/>
                     </div>
                     <div className={"register-button-wrap"}>
                         {!this.state.processingDonation?
@@ -251,7 +254,8 @@ export default class MemberRegistration extends React.Component {
                                 className={"register-button"}
                                 disabled={!this.state.termsAccepted}
                                 onClick={this.handlePost}>
-                                    אני רוצה להצטרף!
+                                    <div>אני רוצה להצטרף!</div>
+                                    <div>אני רוצה להצטרף!</div>
                             </button>
                             :''
                         }

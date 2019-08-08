@@ -46,7 +46,7 @@ export default css`
     }
     .section-instruction{
         color: white;
-        background-color: #18C1C0;
+        background-color: rgb(45, 140, 145);
         font-weight: bold;
     }
     .registration-form, .payment-form {
