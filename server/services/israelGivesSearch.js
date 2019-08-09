@@ -6,7 +6,7 @@ async function getRecentDonations(){
     let startDate = new Date();
     let endDate = new Date();
     //startDate.setMinutes(startDate.getMinutes() -1);
-    startDate.setDate(startDate.getDate() - 1);
+    startDate.setHours(startDate.getHours() - 5);
     endDate.setDate(endDate.getDate() + 1);
     let query = 'https://www.israelgives.org/donationapi/DonationWebService.asmx/DonationsExportToJson';
     const options = {
