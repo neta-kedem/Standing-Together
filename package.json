@@ -16,6 +16,7 @@
     "body-parser": "latest",
     "chart.js": "^2.8.0",
     "cookie-parser": "^1.4.3",
+    "dotenv": "^8.0.0",
     "excel4node": "^1.7.2",
     "express": "^4.16.3",
     "fast-xml-parser": "^3.12.19",

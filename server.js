@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cron = require('./server/services/cron');
+require('dotenv').config();
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
