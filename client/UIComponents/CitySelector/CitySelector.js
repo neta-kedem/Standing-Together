@@ -360,7 +360,7 @@ export default class CitySelector extends React.Component {
                 </div>
                 {/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.
                  It is hidden from the user. The actual scan is displayed on a canvas **/}
-                <img src="/static/map.jpg" ref={this.imgRef} className="hidden"/>
+                <img src="/client/static/static/map.jpg" ref={this.imgRef} className="hidden"/>
             </div>
         )
     }

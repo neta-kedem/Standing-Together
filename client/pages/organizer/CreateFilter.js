@@ -1,5 +1,5 @@
 import React from "react";
-import Meta from "../../lib/meta";
+import Meta from "../../../lib/meta";
 import AddFiltersBtn from "./AddFiltersBtn";
 import server from "../../services/server";
 import QueryService from "../../services/queryService";

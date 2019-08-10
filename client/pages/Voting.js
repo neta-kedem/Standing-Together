@@ -1,6 +1,6 @@
 import React from "react";
 import style from "./voting/Voting.css";
-import Meta from "../lib/meta";
+import Meta from "../../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";
 import fontawesome from '@fortawesome/fontawesome'

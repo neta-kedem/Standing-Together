@@ -1,5 +1,5 @@
 import React from 'react';
-import Meta from '../lib/meta';
+import Meta from '../../lib/meta';
 import config from '../services/config';
 
 import QueryService from '../services/queryService';

@@ -1,6 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
-import Meta from '../lib/meta';
+import Meta from '../../lib/meta';
 import server from '../services/server';
 import cookie from 'js-cookie';
 import IdentificationField from './login/IdentificationField';

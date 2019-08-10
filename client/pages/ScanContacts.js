@@ -1,5 +1,5 @@
 import React from 'react';
-import Meta from '../lib/meta';
+import Meta from '../../lib/meta';
 import style from './scanContacts/ScanContacts.css';
 import ScanForm from './scanContacts/ScanForm';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';

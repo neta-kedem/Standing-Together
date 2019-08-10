@@ -7,7 +7,7 @@ import FieldValidation from "../services/FieldValidation";
 import IsraelGivesDonator from "../services/IsraelGivesDonator";
 import Checkbox from '../UIComponents/Checkbox/Checkbox';
 import Popup from '../UIComponents/Popup/Popup';
-import Meta from '../lib/meta';
+import Meta from '../../lib/meta';
 import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 
 export default class MemberRegistration extends React.Component {

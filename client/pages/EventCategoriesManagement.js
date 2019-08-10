@@ -1,6 +1,6 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
+import Meta from '../../lib/meta'
 import EventCategoriesDetails from './eventCategoriesManagement/EventCategoriesDetails'
 import style from './eventCategoriesManagement/EventCategoriesManagement.css'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';

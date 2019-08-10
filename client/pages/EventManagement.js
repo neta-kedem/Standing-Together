@@ -1,6 +1,6 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
+import Meta from '../../lib/meta'
 import style from './eventManagement/eventManagement.css'
 import Router from "next/router";
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';

@@ -1,6 +1,6 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
+import Meta from '../../lib/meta'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import htmlParser from 'html-to-react';
 const HtmlToReactParser = htmlParser.Parser;

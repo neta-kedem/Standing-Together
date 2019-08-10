@@ -1,5 +1,5 @@
 import React from 'react';
-import Meta from '../lib/meta';
+import Meta from '../../lib/meta';
 import server from '../services/server';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import TypedActivistsTable from './typer/TypedActivistsTable'

@@ -1,6 +1,6 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
+import Meta from '../../lib/meta'
 import CircleDetails from './circleManagement/CircleDetails'
 import style from './circleManagement/CircleManagement.css'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';

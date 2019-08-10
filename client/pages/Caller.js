@@ -2,7 +2,7 @@ import React from 'react';
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import Meta from '../lib/meta';
+import Meta from '../../lib/meta';
 
 import server from '../services/server'
 

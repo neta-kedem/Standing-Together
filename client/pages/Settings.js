@@ -1,6 +1,6 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
+import Meta from '../../lib/meta'
 import Setting from './settings/SettingDetails'
 import style from './settings/Settings.css'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';

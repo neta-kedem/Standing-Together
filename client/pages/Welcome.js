@@ -1,6 +1,6 @@
 import React from 'react';
 import style from "./welcome/welcome.css";
-import Meta from '../lib/meta';
+import Meta from '../../lib/meta';
 import cookie from "js-cookie";
 import Router from "next/router";
 
