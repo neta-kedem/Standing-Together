@@ -1,14 +1,15 @@
 import React from 'react';
-import style from './TopNavBar.scss';
+import './TopNavBar.scss';
 import server from '../../services/server';
 import cookie from 'js-cookie';
+import { withRouter } from 'react-router-dom'
 
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 library.add(faBars);
 
-export default class TopNavBar extends React.Component {
+export default withRouter(class TopNavBar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -42,7 +43,7 @@ export default class TopNavBar extends React.Component {
 	}.bind(this);
 
 	goToPage = function(page){
-		//
+		this.props.history.push('/' + page)
 	}.bind(this);
 
 	render() {
@@ -110,4 +111,4 @@ export default class TopNavBar extends React.Component {
 			</div>
 		)
 	}
-}
+})

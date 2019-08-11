@@ -20,22 +20,6 @@ function App() {
       <Router>
         <div>
           <meta/>
-          <nav>
-            <ul>
-              <li><Link to="/Login/">Login</Link></li>
-              <li><Link to="/Organizer/">Organizer</Link></li>
-              <li><Link to="/EventManagement/">EventManagement</Link></li>
-              <li><Link to="/EventCreation/">EventCreation</Link></li>
-              <li><Link to="/CityManagement/">CityManagement</Link></li>
-              <li><Link to="/CircleManagement/">CircleManagement</Link></li>
-              <li><Link to="/EventCategoriesManagement/">EventCategoriesManagement</Link></li>
-              <li><Link to="/Typer/">Typer</Link></li>
-              <li><Link to="/ScanContacts/">ScanContacts</Link></li>
-              <li><Link to="/ImportContacts/">ImportContacts</Link></li>
-              <li><Link to="/DailySummary/">DailySummary</Link></li>
-              <li><Link to="/Settings/">Settings</Link></li>
-            </ul>
-          </nav>
           <Route path="/" exact component={Login} />
           <Route path="/Organizer" component={Organizer} />
           <Route path="/EventManagement" component={EventManagement} />
