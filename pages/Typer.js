@@ -249,7 +249,12 @@ export default class Typer extends React.Component {
 
 	handlePost = function(){
 		const activists = this.state.activists.slice();
+		//make sure all fields pass validation
 		if(!this.ActivistFieldsValidation.validateAll(activists)){
+			this.setState({postAttempted: true});
+			return;
+		}
+		if(!this.detectMissingContactDetails()){
 			this.setState({postAttempted: true});
 			return;
 		}
@@ -272,16 +277,31 @@ export default class Typer extends React.Component {
 		})
 	}.bind(this);
 
+	/**
+	 * flags contacts missing both email and phone numbers
+	 * @returns {boolean} - true if no problem was detected, false if a row with no contact details was detected
+	 */
+	detectMissingContactDetails = function(){
+		const activists = this.state.activists.slice();
+		let foundMissingContactDetails = false;
+		for(let i = 0; i < activists.length; i++){
+			let a = activists[i];
+			if((!a.email || a.email.length === 0) && (!a.phone || a.phone.length === 0))
+			{
+				foundMissingContactDetails = true;
+				a.emailValid = false;
+			}
+		}
+		this.setState({activists: activists});
+		return !foundMissingContactDetails;
+	};
+
 	postData = function(){
 		//safety measure to prevent the same data getting posted multiple times when the post button is repeatedly pressed
 		if(this.state.postInProcess)
 			return;
 		this.setState({postInProcess: true});
 		const activists = this.state.activists.slice();
-		if(!this.ActivistFieldsValidation.validateAll(activists)){
-			this.setState({postAttempted: true});
-			return;
-		}
 		const data ={
 			"activists": activists,
 			"scanId": this.state.scanId,

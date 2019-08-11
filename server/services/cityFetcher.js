@@ -49,8 +49,25 @@ const getCityByArName = function (name){
     });
     return cityPromise;
 };
+const getCityByName = function (name){
+    const query = City.find({$or:[{"name.ar": name}, {"name.he": name}]});
+    const cityPromise = query.exec().then((cities) => {
+        if(cities && cities.length){
+            return {
+                "_id": cities[0]._id,
+                "name": cities[0].name,
+                "defaultCircle": cities[0].defaultCircle
+            };
+        }
+        else{
+            return null;
+        }
+    });
+    return cityPromise;
+};
 module.exports = {
     getCities,
+    getCityByName,
     getCityByArName,
     getCityByHeName
 };

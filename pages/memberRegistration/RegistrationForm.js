@@ -8,6 +8,7 @@ export default class RegistrationForm extends React.Component {
         super(props);
         this.state = {
             paymentId: null,
+            lang: props['lang'],
             profileFields: props['profileFields'],
             handleChange: props['handleChange'],
             setValidation: props['setValidation'],
@@ -26,7 +27,7 @@ export default class RegistrationForm extends React.Component {
                 for(let i=0; i<dataLists.length; i++){
                     if(dataLists[i].field === "residency")
                         dataLists[i].data = json.map((city)=>{
-                            return city.name;
+                            return city.nameHe;
                         });
                 }
                 this.setState({profileDataLists: dataLists})
@@ -43,6 +44,7 @@ export default class RegistrationForm extends React.Component {
             {profileFields.map((f)=>{
                 return <div className={"input-wrap " + (activistData[f.name+"Valid"] === false ? "invalid" : "")} key={"field_" + f.name} style={{"width":f.width+"%"}}>
                     <InputField
+                        lang = {this.state.lang}
                         field = {f}
                         fieldValue = {activistData[f.name]}
                         handleChange = {this.handleTypedInput.bind(this)}/>

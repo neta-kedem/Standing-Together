@@ -12,7 +12,6 @@ export default css`
     .form-container{
         width: 100%;
         padding: 5%;
-        padding-top: calc(4em + 5%);
         box-sizing: border-box;
         background-color: white;
         border-radius: 0.75em;
@@ -47,15 +46,20 @@ export default css`
     }
     .section-instruction{
         color: white;
-        background-color: #18C1C0;
+        background-color: rgb(45, 140, 145);
         font-weight: bold;
     }
     .registration-form, .payment-form {
         margin: 2.5% auto;
     }
+    .register-button-wrap div{
+        margin: 0 auto;
+        text-align: center;
+    }
     .register-button{
         display: block;
         margin: 5% auto;
+        margin-bottom: 0;
         border: none;
         outline: none;
         background-color: #932581;
@@ -81,5 +85,27 @@ export default css`
     button[disabled].register-button{
         background-color: #ccc;
         cursor: not-allowed;
+    }
+    .failed-donation-message{
+        padding: 5%;
+    }
+    .close-failed-donation-button{
+        display: block;
+        margin: 5% auto;
+        border: none;
+        outline: none;
+        background-color: #ddd;
+        color: #932581;
+        font-weight: bold;
+        font-family: 'Alef', sans-serif;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 0.3em;
+        padding: 0.5em 1em;
+        transition: box-shadow 0.3s, background-color 0.3s;
+    }
+    .close-failed-donation-button:hover{
+        box-shadow: 3px 3px 7px 1px rgba(0,50,70,0.4) inset;
+        background-color: #eee;
     }
 `
