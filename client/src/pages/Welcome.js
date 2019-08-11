@@ -1,6 +1,5 @@
 import React from 'react';
-import style from "./welcome/welcome.scss";
-import Meta from '../lib/meta';
+import "./welcome/welcome.scss";
 import cookie from "js-cookie";
 import Router from "next/router";
 
@@ -32,7 +31,6 @@ export default class MemberRegistration extends React.Component {
         const permissions = this.state.permissions;
         return (
             <div dir={"rtl"}>
-                <Meta/>
                 <div className={"welcome-title"}>
                     <div>ברוכים הבאים</div>
                     <div>ברוכים הבאים</div>

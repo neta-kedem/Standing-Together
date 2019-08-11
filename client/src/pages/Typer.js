@@ -1,12 +1,11 @@
 import React from 'react';
-import Meta from '../lib/meta';
 import server from '../services/server';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import TypedActivistsTable from './typer/TypedActivistsTable'
 import ContactScanDisplay from './typer/ContactScanDisplay'
 import FieldValidation from '../services/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
-import style from './typer/Typer.scss'
+import './typer/Typer.scss'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
@@ -428,7 +427,6 @@ export default class Typer extends React.Component {
 		const successfulUpload = <SuccessfulUpload refetchScans={this.refetchScans}/>;
 		return (
 			<div dir="rtl">
-				<Meta/>
 				{topBar}
 				<section className="section">
 					<div className="main-panel">

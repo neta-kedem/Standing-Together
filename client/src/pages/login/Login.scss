@@ -1,26 +1,27 @@
-	:root {
-		--field-placeholder-color: #777F89;
-		--background-color: #90278e;
-		--main-color: #fff;
-	}
-	.logo{
+@import "../../lib/variables.scss";
+Login {
+	.logo {
 		display: block;
 		width: 35%;
 		margin: 6% auto 0;
 	}
-	.login-page-wrap{
+
+	.login-page-wrap {
 		direction: rtl;
 	}
-	.identification-input-title{
+
+	.identification-input-title {
 		text-align: center;
 		font-size: 1.25em;
 		margin-top: 2em;
 	}
-	.code-input-title{
+
+	.code-input-title {
 		text-align: center;
 		font-size: 1.25em;
 	}
-	.login-code{
+
+	.login-code {
 		display: block;
 		margin: 0 auto;
 		height: 2em;
@@ -38,29 +39,35 @@
 		outline: none;
 		z-index: 2;
 	}
-	.back-to-identification{
-	    cursor: pointer;
-	    margin: 1% auto;
-	    text-align: center;
+
+	.back-to-identification {
+		cursor: pointer;
+		margin: 1% auto;
+		text-align: center;
 	}
-	body{
-		color: var(--main-color);
-		background-color: var(--background-color);
+
+	body {
+		color: white;
+		background-color: $purple-main;
 		direction: rtl;
 		text-align: right;
 	}
+
 	::placeholder {
-		color: var(--field-placeholder-color);
+		color: white;
 		direction: ltr;
 		text-align: center;
 	}
+
 	:-ms-input-placeholder {
-		color: var(--field-placeholder-color);
+		color: white;
 		direction: ltr;
 		text-align: center;
 	}
+
 	::-ms-input-placeholder {
-		color: var(--field-placeholder-color);
+		color: white;
 		direction: ltr;
 		text-align: center;
 	}
+}

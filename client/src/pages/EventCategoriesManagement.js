@@ -1,8 +1,7 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
 import EventCategoriesDetails from './eventCategoriesManagement/EventCategoriesDetails'
-import style from './eventCategoriesManagement/EventCategoriesManagement.scss'
+import './eventCategoriesManagement/EventCategoriesManagement.scss'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
 export default class EventCategoriesManagement extends React.Component {
@@ -58,7 +57,6 @@ export default class EventCategoriesManagement extends React.Component {
         });
         return (
             <div>
-                <Meta/>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ניהול קטגוריות אירועים</span>

@@ -1,12 +1,11 @@
 import React from 'react';
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import Meta from '../lib/meta';
 
 import server from '../services/server'
 
-import style from './caller/Caller.scss'
+import './caller/Caller.scss'
 import Nav from './caller/Nav'
 import PrevCalls from './caller/PrevCalls'
 import CallPostponer from './caller/CallPostponer'
@@ -304,7 +303,6 @@ export default class Caller extends React.Component {
 		</div>;
 		return (
 			<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}} dir="rtl">
-				<Meta/>
 				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone} event={this.state.eventData.eventDetails.name}/>
 				<PrevCalls callCount={selectedActivist.callCount} lastCallAt={selectedActivist.lastCallAt} availableAt={selectedActivist.availableAt}/>
 				<div className="content-wrap">

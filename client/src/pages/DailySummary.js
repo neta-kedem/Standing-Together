@@ -1,6 +1,5 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import htmlParser from 'html-to-react';
 const HtmlToReactParser = htmlParser.Parser;
@@ -26,7 +25,6 @@ export default class DailySummary extends React.Component {
         const htmlToReactParser = new HtmlToReactParser();
         return (
             <div>
-                <Meta/>
                 <style>{/**
                     .summary-wrap{
                         text-align: right;

@@ -1,5 +1,4 @@
 import React from 'react';
-import Meta from '../lib/meta';
 import config from '../services/config';
 
 import QueryService from '../services/queryService';
@@ -13,7 +12,7 @@ import HamburgerMenu from '../UIComponents/HamburgerMenu/HamburgerMenu'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
-import style from './organizer/Organizer.scss'
+import './organizer/Organizer.scss'
 import PageNav from "../UIComponents/PageNav/PageNav";
 import FileSaver from 'file-saver';
 
@@ -201,7 +200,6 @@ render() {
 		</div>;
 	return (
 		<div className="page-wrap" dir="rtl">
-			<Meta/>
 			<TopNavBar>
 				<div className="saved-views-wrap">
 					{/**<div className="saved-views">שאילתה 1</div>

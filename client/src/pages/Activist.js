@@ -1,8 +1,6 @@
 import React from 'react'
-import Router from 'next/router'
 import server from '../services/server'
-import Meta from '../lib/meta'
-import style from './activist/activist.scss'
+import './activist/activist.scss'
 import FormSegment from './activist/formSegment'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
@@ -144,7 +142,7 @@ export default class EventCreation extends React.Component {
         server.post('activists', {'activists': [this.state.activist]})
             .then(() => {
                 alert("saved");
-                Router.push({pathname: '/Organizer'}).then(()=>{});
+                //Router.push({pathname: '/Organizer'}).then(()=>{});
             });
     }.bind(this);
 
@@ -155,7 +153,6 @@ export default class EventCreation extends React.Component {
         const memberFields = this.state.memberFields.slice();
         return (
             <div style={{'height':'100vh'}}>
-                <Meta/>
                 <TopNavBar>
                     <div onClick={this.handlePost.bind(this)} className="save-event-button">
                         <div className="save-event-button-label">

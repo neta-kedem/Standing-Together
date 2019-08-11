@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./voting/Voting.scss";
+import "./voting/Voting.scss";
 import Meta from "../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";

@@ -1,8 +1,7 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../lib/meta'
 import CityDetails from './cityManagement/CityDetails'
-import style from './cityManagement/CityManagement.scss'
+import './cityManagement/CityManagement.scss'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import CitySelector from '../UIComponents/CitySelector/CitySelector';
 
@@ -77,7 +76,6 @@ export default class CircleManagement extends React.Component {
         });
         return (
             <div>
-                <Meta/>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ادارة بلدات</span>

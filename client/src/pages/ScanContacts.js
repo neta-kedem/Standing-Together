@@ -1,6 +1,5 @@
 import React from 'react';
-import Meta from '../lib/meta';
-import style from './scanContacts/ScanContacts.scss';
+import './scanContacts/ScanContacts.scss';
 import ScanForm from './scanContacts/ScanForm';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
@@ -16,7 +15,6 @@ handleUploadSuccess(id){
 render() {
 	return (
 		<div>
-			<Meta/>
 			<TopNavBar>
 				<div className="title-wrap">
 					<span className="title-lang">مسح صفحات اتصال</span>

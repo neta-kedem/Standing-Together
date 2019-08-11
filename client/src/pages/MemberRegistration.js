@@ -1,13 +1,12 @@
 import React from 'react';
 import RegistrationForm from './memberRegistration/RegistrationForm'
 import PaymentForm from './memberRegistration/PaymentForm'
-import style from './memberRegistration/MemberRegistration.scss'
+import './memberRegistration/MemberRegistration.scss'
 import server from "../services/server";
 import FieldValidation from "../services/FieldValidation";
 import IsraelGivesDonator from "../services/IsraelGivesDonator";
 import Checkbox from '../UIComponents/Checkbox/Checkbox';
 import Popup from '../UIComponents/Popup/Popup';
-import Meta from '../lib/meta';
 import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 
 export default class MemberRegistration extends React.Component {
@@ -193,7 +192,6 @@ export default class MemberRegistration extends React.Component {
     render() {
         return (
             <div dir={"rtl"}>
-                <Meta/>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
                     <span>הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.</span>

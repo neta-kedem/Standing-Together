@@ -1,19 +1,21 @@
 function drawImage(context, img, x, y, width, height){
 	//handle unloaded images
-	if(!img){
+	if(!img.complete){
 		console.error("can't draw an unloaded image");
 		return;
 	}
 	//in case no width and height were provided
-	if(arguments.length==4)
+	if(arguments.length === 4)
 	{
 		context.drawImage(img, x, y);
 		return;
 	}
 	//in case width and height were provided
-	else if(arguments.length==6)
+	else if(arguments.length === 6)
 	{
-		context.drawImage(img, x, y, width, height);
+		img.onload = () => {
+			context.drawImage(img, x, y, width, height);
+		};
 		return;
 	}
 	//otherwise

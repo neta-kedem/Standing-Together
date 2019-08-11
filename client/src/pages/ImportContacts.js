@@ -1,6 +1,5 @@
 import React from 'react';
-import Meta from '../lib/meta';
-import style from './importContacts/ImportContacts.scss';
+import './importContacts/ImportContacts.scss';
 import ImportForm from './importContacts/ImportForm';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
@@ -16,7 +15,6 @@ handleUploadSuccess(){
 render() {
 	return (
 		<div>
-			<Meta/>
 			<TopNavBar>
 				<div className="title-wrap">
 					<span className="title-lang">העלאת אנשי קשר</span>

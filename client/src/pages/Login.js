@@ -1,9 +1,8 @@
 import React from 'react';
-import Meta from '../lib/meta';
 import server from '../services/server';
 import cookie from 'js-cookie';
 import IdentificationField from './login/IdentificationField';
-import stylesheet from './login/Login.scss';
+import './login/Login.scss';
 
 export default class Login extends React.Component {
 state = {
@@ -118,8 +117,6 @@ render() {
 		</div>;
 	return (
 		<div className='login-page-wrap' dir="rtl">
-			<Meta/>
-
 			<img src="../static/Logo.svg" alt="standing-together" className='logo'/>
 			{this.state.codeSent?loginCode:identification}
 		</div>
