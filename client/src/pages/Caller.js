@@ -1,8 +1,8 @@
 import React from 'react';
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import Meta from '../../lib/meta';
+import Meta from '../lib/meta';
 
 import server from '../services/server'
 
@@ -14,8 +14,8 @@ import Popup from '../UIComponents/Popup/Popup'
 import Confirmation from '../UIComponents/Effects/Confirmation/Confirmation'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import Toggle from '../UIComponents/SelectableTable/FieldTypes/ToggleSwitch.js'
-import {faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
+import {faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash} from '@fortawesome/free-solid-svg-icons'
+library.add(faChevronCircleLeft, faClock, faChevronCircleDown, faUser, faPhone, faEnvelopeOpen, faUserTimes, faCopy, faMicrophoneSlash);
 
 export default class Caller extends React.Component {
 	//constants

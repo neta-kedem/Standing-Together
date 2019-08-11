@@ -1,5 +1,5 @@
 import React from 'react';
-import Meta from '../../lib/meta';
+import Meta from '../lib/meta';
 import style from './importContacts/ImportContacts.css';
 import ImportForm from './importContacts/ImportForm';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';

@@ -1,6 +1,5 @@
 import React from 'react';
 import server from '../../services/server'
-import Router from "next/router";
 import style from "./SuccessfulUpload.css"
 
 export default class SuccessfulUpload extends React.Component {
@@ -13,7 +12,7 @@ export default class SuccessfulUpload extends React.Component {
     logout() {
         server.get('logout', {})
             .then(json => {
-                Router.push({pathname: '/Login'}).then(()=>{});
+                //Router.push({pathname: '/Login'}).then(()=>{});
             });
     }
     render() {

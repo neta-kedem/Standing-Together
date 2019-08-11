@@ -1,6 +1,6 @@
 import React from 'react';
 import style from './QueryResultsActionMenu.css'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class QueryResultsActionMenu extends React.Component {
 	constructor(props) {

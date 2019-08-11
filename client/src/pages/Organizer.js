@@ -1,5 +1,5 @@
 import React from 'react';
-import Meta from '../../lib/meta';
+import Meta from '../lib/meta';
 import config from '../services/config';
 
 import QueryService from '../services/queryService';
@@ -15,7 +15,6 @@ import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import style from './organizer/Organizer.css'
 import PageNav from "../UIComponents/PageNav/PageNav";
-import Router from "next/router";
 import FileSaver from 'file-saver';
 
 export default class Organizer extends React.Component {
@@ -158,7 +157,7 @@ handleEventSelection(selected){
 		});
 }
 goToActivistPage(activist){
-	Router.push({pathname: '/Activist', query: {id: activist._id}}).then(()=>{});
+	//Router.push({pathname: '/Activist', query: {id: activist._id}}).then(()=>{});
 }
 render() {
 	const currPage = this.state.page;

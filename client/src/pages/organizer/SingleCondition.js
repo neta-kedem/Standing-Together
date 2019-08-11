@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './SingleCondition.css';
-import fontawesome from '@fortawesome/fontawesome';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { faBuilding, faTimes, faUserCircle } from '@fortawesome/fontawesome-free-solid';
-fontawesome.library.add(faBuilding, faTimes, faUserCircle);
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBuilding, faTimes, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+library.add(faBuilding, faTimes, faUserCircle);
 
 class SingleCondition extends React.Component {
   render() {

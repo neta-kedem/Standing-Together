@@ -1,5 +1,5 @@
 import React from 'react';
-import Meta from '../../lib/meta';
+import Meta from '../lib/meta';
 import server from '../services/server';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import TypedActivistsTable from './typer/TypedActivistsTable'
@@ -7,12 +7,12 @@ import ContactScanDisplay from './typer/ContactScanDisplay'
 import FieldValidation from '../services/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
 import style from './typer/Typer.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCloudUploadAlt } from '@fortawesome/fontawesome-free-solid'
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import ScanForm from "./scanContacts/ScanForm";
 import SuccessfulUpload from "./typer/SuccessfulUpload";
-fontawesome.library.add(faCloudUploadAlt);
+library.add(faCloudUploadAlt);
 
 export default class Typer extends React.Component {
 	//constants

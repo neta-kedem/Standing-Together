@@ -1,9 +1,9 @@
 import React from 'react';
 import style from './ContactScanDisplay.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faChevronUp, faChevronDown} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faChevronUp, faChevronDown);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons'
+library.add(faChevronUp, faChevronDown);
 
 export default class ContactScanDisplay extends React.Component {
 	constructor(props) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import style from './PaymentForm.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faArrowRight, faCheckCircle} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faArrowRight);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faArrowRight, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
+library.add(faArrowRight);
 
 export default class PaymentForm extends React.Component {
     constructor(props) {

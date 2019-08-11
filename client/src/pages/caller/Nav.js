@@ -1,9 +1,9 @@
 import React from 'react';
 import style from './Nav.css'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faChevronCircleLeft } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faChevronCircleLeft);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons'
+library.add(faChevronCircleLeft);
 
 export default class Nav extends React.Component {
 	constructor(props) {

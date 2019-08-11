@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import fetch from 'node-fetch';
 import config from './config';
 
@@ -36,7 +35,7 @@ function post(path, data){
 	.then(json => {
 		if(json.error === "missing token")
 		{
-			Router.push({pathname: '/Login'});
+			//Router.push({pathname: '/Login'});
 			return null;
 		}
 		return json;

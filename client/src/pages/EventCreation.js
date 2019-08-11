@@ -1,13 +1,12 @@
 import React from 'react'
-import Router from 'next/router'
 import server from '../services/server'
-import Meta from '../../lib/meta'
+import Meta from '../lib/meta'
 import style from './eventCreation/EventCreation.css'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faSave} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faSave);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faSave} from '@fortawesome/free-solid-svg-icons'
+library.add(faSave);
 
 export default class EventCreation extends React.Component {
 constructor(props) {
@@ -98,7 +97,7 @@ handlePost() {
 	server.post('events', {'event':eventObject})
 	.then(() => {
 		alert("האירוע נשמר!");
-		Router.push({pathname: '/Organizer'}).then(()=>{});
+		//Router.push({pathname: '/Organizer'}).then(()=>{});
 	});
 }
 

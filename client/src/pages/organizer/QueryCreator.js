@@ -3,28 +3,6 @@ import QueryService from "../../services/queryService";
 import SingleCondition from "./SingleCondition";
 import style from "./QueryCreator.css";
 import AddFiltersBtn from "./AddFiltersBtn";
-import fontawesome from "@fortawesome/fontawesome";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import {
-  faCalendarAlt,
-  faTimes,
-  faBuilding,
-  faUserCircle,
-  faUser,
-  faPhone,
-  faEnvelope,
-  faCheckCircle
-} from "@fortawesome/fontawesome-free-solid";
-fontawesome.library.add(
-  faCalendarAlt,
-  faTimes,
-  faBuilding,
-  faUserCircle,
-  faUser,
-  faPhone,
-  faEnvelope,
-  faCheckCircle
-);
 import {
   DragDropContext,
   Droppable,
@@ -34,6 +12,28 @@ import {
 import CreateFilter from "./CreateFilter";
 import server from "../../services/server";
 import GroupCondition from "./GroupCondition";
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faCalendarAlt,
+    faTimes,
+    faBuilding,
+    faUserCircle,
+    faUser,
+    faPhone,
+    faEnvelope,
+    faCheckCircle
+} from "@fortawesome/free-solid-svg-icons";
+library.add(
+    faCalendarAlt,
+    faTimes,
+    faBuilding,
+    faUserCircle,
+    faUser,
+    faPhone,
+    faEnvelope,
+    faCheckCircle
+);
 
 // icons
 const orIcon = "./static/or.png";

@@ -1,8 +1,8 @@
 import React from 'react';
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faTrashAlt, faPenSquare} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faTrashAlt, faPenSquare);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faTrashAlt, faPenSquare} from '@fortawesome/free-solid-svg-icons'
+library.add(faTrashAlt, faPenSquare);
 
 export default class EventCategoriesDetails extends React.Component {
 	constructor(props) {

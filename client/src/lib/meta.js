@@ -1,8 +1,6 @@
-import Head from 'next/head'
 import React from "react";
 export default () => (
 	<div>
-		<Head title={"standing-together"}>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<meta charSet="utf-8"/>
 			<link
@@ -26,7 +24,7 @@ export default () => (
 				type='text/css'
 			/>
 			<link
-				href="../client/static/favicon.ico"
+				href="../static/favicon.ico"
 				rel="icon"
 				type="image/x-icon"
 			/>
@@ -35,7 +33,6 @@ export default () => (
 				rel="stylesheet"
 				type='text/css'
 			/>
-		</Head>
 		<style jsx global>{`
 		body {
 			margin: 0;

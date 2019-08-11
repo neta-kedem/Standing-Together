@@ -1,6 +1,6 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../../lib/meta'
+import Meta from '../lib/meta'
 import CityDetails from './cityManagement/CityDetails'
 import style from './cityManagement/CityManagement.css'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';

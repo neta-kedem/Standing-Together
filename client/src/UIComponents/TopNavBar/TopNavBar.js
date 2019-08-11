@@ -1,13 +1,12 @@
 import React from 'react';
-import Router from 'next/router';
 import style from './TopNavBar.css';
 import server from '../../services/server';
 import cookie from 'js-cookie';
 
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faBars);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+library.add(faBars);
 
 export default class TopNavBar extends React.Component {
 	constructor(props) {
@@ -35,7 +34,7 @@ export default class TopNavBar extends React.Component {
 	logout(){
 		server.get('logout', {})
 			.then(json => {
-				Router.push({pathname: '/Login'}).then(()=>{});
+				//
 			});
 	}
 	toggleMenu = function(){
@@ -43,7 +42,7 @@ export default class TopNavBar extends React.Component {
 	}.bind(this);
 
 	goToPage = function(page){
-		Router.push({pathname: '/'+page}).then(()=>{});
+		//
 	}.bind(this);
 
 	render() {

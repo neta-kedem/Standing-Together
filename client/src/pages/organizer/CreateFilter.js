@@ -1,13 +1,13 @@
 import React from "react";
-import Meta from "../../../lib/meta";
+import Meta from "../../lib/meta";
 import AddFiltersBtn from "./AddFiltersBtn";
 import server from "../../services/server";
 import QueryService from "../../services/queryService";
 
-import fontawesome from "@fortawesome/fontawesome";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
-fontawesome.library.add(faCaretDown);
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
+library.add(faCaretDown);
 
 class CreateFilter extends React.Component {
   constructor(props) {

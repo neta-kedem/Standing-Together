@@ -1,6 +1,5 @@
 import React from 'react';
-import Router from 'next/router';
-import Meta from '../../lib/meta';
+import Meta from '../lib/meta';
 import server from '../services/server';
 import cookie from 'js-cookie';
 import IdentificationField from './login/IdentificationField';
@@ -66,15 +65,15 @@ verifyLoginCode()
 			cookie.set('token', json.token, {expires: 30});
 			cookie.set('permissions', JSON.stringify(json.permissions), {expires: 30});
 			if(json.permissions.isOrganizer){
-				Router.push({pathname: '/Organizer'}).then(()=>{});
+				//Router.push({pathname: '/Organizer'}).then(()=>{});
 				return;
 			}
 			if(json.permissions.isTyper){
-				Router.push({pathname: '/Typer'}).then(()=>{});
+				//Router.push({pathname: '/Typer'}).then(()=>{});
 				return;
 			}
 			if(json.permissions.isCaller){
-				Router.push({pathname: '/Caller'}).then(()=>{});
+				//Router.push({pathname: '/Caller'}).then(()=>{});
 			}
 		}
 	});

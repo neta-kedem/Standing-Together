@@ -1,9 +1,9 @@
 import React from 'react';
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCheckCircle } from '@fortawesome/fontawesome-free-solid'
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import style from './CallPostponer.css'
-fontawesome.library.add(faCheckCircle);
+library.add(faCheckCircle);
 
 export default class CallPostponer extends React.Component {
     validation = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;

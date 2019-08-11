@@ -1,8 +1,8 @@
 import React from 'react';
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCheckCircle } from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faCheckCircle);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+library.add(faCheckCircle);
 
 export default class Confirmation extends React.Component {
     constructor(props) {

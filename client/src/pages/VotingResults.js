@@ -1,6 +1,6 @@
 import React from "react";
 // import style from "./voting/Voting.css";
-import Meta from "../../lib/meta";
+import Meta from "../lib/meta";
 import server from "../services/server";
 import ReactDOM from "react-dom";
 import BarChart from "../UIComponents/BarChart/BarChart";

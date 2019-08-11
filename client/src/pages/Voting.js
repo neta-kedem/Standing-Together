@@ -1,12 +1,12 @@
 import React from "react";
 import style from "./voting/Voting.css";
-import Meta from "../../lib/meta";
+import Meta from "../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faTimes} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faTimes);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/free-solid-svg-icons'
+library.add(faTimes);
 
 
 const MAX_VOTES = 4;

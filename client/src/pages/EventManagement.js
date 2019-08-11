@@ -1,8 +1,7 @@
 import React from 'react'
 import server from '../services/server'
-import Meta from '../../lib/meta'
+import Meta from '../lib/meta'
 import style from './eventManagement/eventManagement.css'
-import Router from "next/router";
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import PageNav from "../UIComponents/PageNav/PageNav";
 
@@ -37,7 +36,7 @@ export default class EventManagement extends React.Component {
         });
     }
     goToEvent(id){
-        Router.push({pathname: '/EventCreation', query: {id: id}}).then(()=>{});
+        //Router.push({pathname: '/EventCreation', query: {id: id}}).then(()=>{});
     }
 
     render() {

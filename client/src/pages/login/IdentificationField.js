@@ -1,10 +1,10 @@
 import React from 'react';
 import stylesheet from './IdentificationField.css';
 
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faPaperPlane} from '@fortawesome/fontawesome-free-solid'
-fontawesome.library.add(faPaperPlane);
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPaperPlane} from '@fortawesome/free-solid-svg-icons'
+library.add(faPaperPlane);
 
 export default class IdentificationField extends React.Component {
 	constructor(props) {
