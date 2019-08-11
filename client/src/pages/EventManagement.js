@@ -1,7 +1,7 @@
 import React from 'react'
 import server from '../services/server'
 import Meta from '../lib/meta'
-import style from './eventManagement/eventManagement.css'
+import style from './eventManagement/eventManagement.scss'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import PageNav from "../UIComponents/PageNav/PageNav";
 
@@ -55,7 +55,6 @@ export default class EventManagement extends React.Component {
         return (
             <div  dir={"rtl"}>
                 <Meta/>
-                <style jsx global>{style}</style>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ادارة احداث</span>

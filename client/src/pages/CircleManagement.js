@@ -2,7 +2,7 @@ import React from 'react'
 import server from '../services/server'
 import Meta from '../lib/meta'
 import CircleDetails from './circleManagement/CircleDetails'
-import style from './circleManagement/CircleManagement.css'
+import style from './circleManagement/CircleManagement.scss'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
 export default class CircleManagement extends React.Component {
@@ -69,7 +69,6 @@ export default class CircleManagement extends React.Component {
         return (
             <div>
                 <Meta/>
-                <style jsx global>{style}</style>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ניהול מעגלים</span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import server from '../../services/server';
-import style from './ImportContacts.css';
+import style from './ImportContacts.scss';
 import EventPicker from '../../UIComponents/EventPicker/EventPicker';
 import ExcelUploader from '../../UIComponents/ExcelUploader/ExcelUploader'
 
@@ -108,7 +108,6 @@ export default class ImportForm extends React.Component {
         }</div>;
         return (
             <div dir={"rtl"}>
-                <style jsx global>{style}</style>
                 <div className={"main-content"}>
                     <div className="event-selection-wrap">
                         <h3>בחרו את האירוע שבמסגרתו נאספו אנשי הקשר</h3>

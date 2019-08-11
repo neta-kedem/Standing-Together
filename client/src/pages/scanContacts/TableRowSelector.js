@@ -1,5 +1,5 @@
 import React from 'react';
-import Stylesheet from './TableRowSelector.css'
+import Stylesheet from './TableRowSelector.scss'
 //graphics
 
 export default class TableRowSelector extends React.Component {
@@ -90,7 +90,7 @@ render() {
 	
 	return (
 		<div>
-			<style jsx global>{Stylesheet}</style>
+
 			<div className="display-wrap">
 				<img src={this.state.src?this.state.src:undefined} alt="scanned document" className="scan-canvas"/>
 				<div className="detected-table-cells-wrap">

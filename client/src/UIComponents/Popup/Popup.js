@@ -14,8 +14,8 @@ export default class Popup extends React.Component {
 	render() {
 		return this.props.visibility?(
 			<div className="popup-wrapper">
-				<style jsx global>
-				{`
+				<style>
+                    {/**
 					.popup-wrapper{
 						position: fixed;
 						height: 100%;
@@ -41,22 +41,15 @@ export default class Popup extends React.Component {
 						z-index: 1;
 						box-shadow: 0px 1px 5px 0px black;
 					}
-					/* unvisited link */
 					.popup a:link {
 						color: #fff;
 					}
-					
-					/* visited link */
 					.popup a:visited {
 						color: #fff;
 					}
-					
-					/* mouse over link */
 					.popup a:hover {
 						color: #fff;
 					}
-					
-					/* selected link */
 					.popup a:active {
 						color: #fff;
 					}
@@ -65,9 +58,8 @@ export default class Popup extends React.Component {
     				    .popup{
     				        width: 85%;
     				    }
-    				}
-				`}
-				</style>
+    				}**/}
+                </style>
 				<div className="popup-background" onClick={this.handleBackgroundClick.bind(this)}></div>
 				<div className="popup">
 					{this.props.children}

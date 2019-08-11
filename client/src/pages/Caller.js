@@ -6,7 +6,7 @@ import Meta from '../lib/meta';
 
 import server from '../services/server'
 
-import style from './caller/Caller.css'
+import style from './caller/Caller.scss'
 import Nav from './caller/Nav'
 import PrevCalls from './caller/PrevCalls'
 import CallPostponer from './caller/CallPostponer'
@@ -304,7 +304,6 @@ export default class Caller extends React.Component {
 		</div>;
 		return (
 			<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}} dir="rtl">
-				<style jsx global>{style}</style>
 				<Meta/>
 				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone} event={this.state.eventData.eventDetails.name}/>
 				<PrevCalls callCount={selectedActivist.callCount} lastCallAt={selectedActivist.lastCallAt} availableAt={selectedActivist.availableAt}/>

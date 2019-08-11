@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './AddFiltersBtn.css';
+import style from './AddFiltersBtn.scss';
 
 class AddFiltersBtn extends React.Component {
 
@@ -22,8 +22,8 @@ class AddFiltersBtn extends React.Component {
   render() {
     return(
       <section>
-        <style jsx>
-          {`
+        <style>
+          {/**
           .addBtn {
             display: inline-block;
             font-size: 21px;
@@ -42,15 +42,14 @@ class AddFiltersBtn extends React.Component {
           }
           .addGroupButton:active {
             color: #B77393;
-          }
-          `}
+          }**/}
         </style>
         <div
             className={"addBtn "+ this.state.class}
             onClick={this.props.onClick}
         >
           {this.props.text}
-          </div>
+        </div>
       </section>
     )
   }

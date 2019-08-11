@@ -33,7 +33,7 @@ export default () => (
 				rel="stylesheet"
 				type='text/css'
 			/>
-		<style jsx global>{`
+		<style>{/**
 		body {
 			margin: 0;
 			font-family: Cabin, Cairo, Rubik, sans-serif;
@@ -42,13 +42,12 @@ export default () => (
 			font-family: Cabin, Cairo, Rubik, sans-serif !important;
 		}
 		::-webkit-selection {
-			background: rgb(255, 56, 131); /* WebKit/Blink Browsers */
+			background: rgb(255, 56, 131);
 			color: white;
 		}
 		::selection {
-			background: rgb(255, 56, 131); /* WebKit/Blink Browsers */
+			background: rgb(255, 56, 131);
 			color: white;
-		}
-		`}</style>
+		}**/}</style>
 	</div>
 )

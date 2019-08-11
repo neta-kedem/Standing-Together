@@ -1,7 +1,7 @@
 import React from 'react'
 import server from '../services/server'
 import Meta from '../lib/meta'
-import style from './eventCreation/EventCreation.css'
+import style from './eventCreation/EventCreation.scss'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -109,7 +109,6 @@ render() {
 	return (
 		<div style={{'height':'100vh'}}>
 			<Meta/>
-			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="title-wrap">
 					<span className="title-lang">انشاء حدث</span>

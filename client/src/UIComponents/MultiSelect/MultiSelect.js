@@ -27,16 +27,15 @@ export default class MultiSelect extends React.Component {
 				</div>);
 		return (
 			<div>
-				<style jsx global>{`
+				<style>{/**
 					.multi-select-option{
 						text-align: right;
 						display: block;
 					}
 					.multi-select-option input{
 						cursor: pointer;
-					}
-				`}
-				</style>
+					}**/}
+                </style>
 				{options}
 			</div>
 		)

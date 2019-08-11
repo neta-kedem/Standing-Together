@@ -30,7 +30,7 @@ export default class PageNav extends React.Component {
         const pageIndex = this.state.currPage;
         const pageCount = this.state.pageCount;
         return <div className="page-nav-wrap">
-                <style jsx global>{`
+                <style>{/**
                     .list-page-nav
                     {
                     	margin: 1em;
@@ -70,8 +70,7 @@ export default class PageNav extends React.Component {
                     .page-director:hover
                     {
                     	text-shadow:0px 0px 1px #90278e;
-                    }
-				`}
+                    }**/}
                 </style>
             <div className="list-page-nav" dir="ltr">
                 <div className="page-director clickable" onClick={()=>{this.goToPage(pageIndex - 1)}}>{"<"}</div>

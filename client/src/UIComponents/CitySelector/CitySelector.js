@@ -1,6 +1,6 @@
 import React from 'react';
 import ia from "../../services/canvas/imageAdjustor";
-import style from "./CitySelector.css";
+import style from "./CitySelector.scss";
 
 export default class CitySelector extends React.Component {
     constructor(props) {
@@ -341,7 +341,6 @@ export default class CitySelector extends React.Component {
         const highlightedCityPosition = highlightedCity ? this.coordinatesToPosition(this.state.canvas, highlightedCity.location.lng, highlightedCity.location.lat) : {};
         return (
             <div>
-                <style jsx global>{style}</style>
                 <div className={"map-selector-wrap"}>
                     <canvas ref={this.canvasRef} className="map-view"/>
                     <div className={"highlighted-city-label"}>

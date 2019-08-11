@@ -1,6 +1,6 @@
 import React from 'react';
 import InputRow from './InputRow'
-import style from './TypedActivistsTable.css'
+import style from './TypedActivistsTable.scss'
 
 export default class TypedActivistsTable extends React.Component {
 	constructor(props) {
@@ -53,7 +53,6 @@ export default class TypedActivistsTable extends React.Component {
 			:"";
 		return (
 			<div className="typed-table-wrap">
-				<style jsx global>{style}</style>
 				<table dir="rtl" className={"typed-rows-table "+(this.props.highlightInvalidFields?"highlight-invalid-fields":"")}>
 					<thead>
 						{titleRow}

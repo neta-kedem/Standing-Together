@@ -1,5 +1,5 @@
 import React from 'react';
-import stylesheet from './SelectableTable.css'
+import stylesheet from './SelectableTable.scss'
 
 import TextValue from './FieldTypes/TextValue'
 import ToggleSwitch from './FieldTypes/ToggleSwitch'
@@ -112,7 +112,7 @@ export default class SelectableTable extends React.Component {
 			</div>;
 		return (
 			<div className={'list-table-wrap'}>
-				<style jsx global>{stylesheet}</style>
+
 				<table className={'list-table'}>
 					<thead>
 						{tableHeader}

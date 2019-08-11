@@ -27,13 +27,12 @@ export default class DailySummary extends React.Component {
         return (
             <div>
                 <Meta/>
-                <style jsx global>{`
+                <style>{/**
                     .summary-wrap{
                         text-align: right;
                         padding: 3em;
                         font-size: 1.2em;
-                    }
-                `}</style>
+                    }**/}</style>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">סיכום יומי</span>

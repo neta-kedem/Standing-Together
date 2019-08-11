@@ -1,7 +1,7 @@
 import React from 'react';
 import InputField from './InputField'
 import server from "../../services/server";
-import style from './RegistrationForm.css'
+import style from './RegistrationForm.scss'
 
 export default class RegistrationForm extends React.Component {
     constructor(props) {
@@ -62,7 +62,6 @@ export default class RegistrationForm extends React.Component {
             :"";
         return (
             <div className={"registration-form"}>
-                <style jsx global>{style}</style>
                 {inputFields}
                 {dataLists}
             </div>

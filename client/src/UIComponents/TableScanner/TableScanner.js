@@ -1,5 +1,5 @@
 import React from 'react';
-import Stylesheet from './TableScanner.css'
+import Stylesheet from './TableScanner.scss'
 
 import aggregator from '../../services/arrayAggregator';
 
@@ -386,7 +386,7 @@ checkBorderScanComplete() {
 render() {
 	return (
 		<div>
-			<style jsx global>{Stylesheet}</style>
+
 			<div className="display-wrap">
 				<canvas ref="canvas" width={300} height={300} className="scan-canvas"/>
 			</div>

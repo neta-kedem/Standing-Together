@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './TopNavBar.css';
+import style from './TopNavBar.scss';
 import server from '../../services/server';
 import cookie from 'js-cookie';
 
@@ -49,7 +49,6 @@ export default class TopNavBar extends React.Component {
 		const permissions = this.state.permissions;
 		return (
 			<div className="nav-bar-wrapper" style={{"justifyContent":this.state.justification}} dir={"rtl"}>
-				<style jsx global>{style}</style>
 				<div className="nav-bar">
                 	<div className={"nav-bar-logo-menu-wrap " + (this.state.menuOpened ? "sidebar-open" : "")}>
 						<div className="nav-bar-icon" onClick={this.toggleMenu}>

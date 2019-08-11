@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './TitleRow.css'
+import styles from './TitleRow.scss'
 
 export default class TitleRow extends React.Component {
 	render() {

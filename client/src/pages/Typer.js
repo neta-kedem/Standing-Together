@@ -6,7 +6,7 @@ import TypedActivistsTable from './typer/TypedActivistsTable'
 import ContactScanDisplay from './typer/ContactScanDisplay'
 import FieldValidation from '../services/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
-import style from './typer/Typer.css'
+import style from './typer/Typer.scss'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
@@ -429,7 +429,6 @@ export default class Typer extends React.Component {
 		return (
 			<div dir="rtl">
 				<Meta/>
-				<style jsx global>{style}</style>
 				{topBar}
 				<section className="section">
 					<div className="main-panel">

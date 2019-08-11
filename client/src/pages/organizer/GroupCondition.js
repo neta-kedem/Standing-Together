@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./QueryCreator.css";
+import style from "./QueryCreator.scss";
 import {Draggable, resetServerContext} from 'react-beautiful-dnd'
 import SingleCondition from "./SingleCondition";
 import AddFiltersBtn from "./AddFiltersBtn";

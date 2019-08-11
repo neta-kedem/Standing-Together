@@ -1,6 +1,6 @@
 import React from 'react';
 import server from '../../services/server'
-import style from "./SuccessfulUpload.css"
+import style from "./SuccessfulUpload.scss"
 
 export default class SuccessfulUpload extends React.Component {
     constructor(props) {
@@ -18,7 +18,6 @@ export default class SuccessfulUpload extends React.Component {
     render() {
         return (
             <div>
-                <style jsx global>{style}</style>
                 <div className={"upload-successful-message"}>
                     <h2>ممتاز، تم استيعاب التفاصيل بالمنظومة</h2>
                     <h2>מצויין, הפרטים נקלטו במערכת</h2>

@@ -15,7 +15,7 @@ export default class ToggleSwitch extends React.Component {
 	render() {
 		return (
 			<div className="switch-wrap">
-				<style jsx global>{`
+				<style>{/**
 					.switch-wrap{
 						height:100%;
 					}
@@ -67,9 +67,8 @@ export default class ToggleSwitch extends React.Component {
 						-webkit-transform: translateX(1.5em);
 						-ms-transform: translateX(1.5em);
 						transform: translateX(1.5em);
-					}
-				`}
-				</style>
+					}**/}
+                </style>
 				<label className="switch">
 					<input type="checkbox" checked={this.props.value} onChange={(event)=>this.handleChange(event)}/>
 					<span className="slider"></span>

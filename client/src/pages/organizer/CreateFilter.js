@@ -191,13 +191,13 @@ class CreateFilter extends React.Component {
         </select>
         {this._getQueryFilter()}
         <Meta />
-        <style global jsx>
-          {`
+        <style>
+          {/**
             .hidden {
               display: none;
             }
-          `}
-        </style>
+          **/}
+                </style>
         <div
           style={{
             border: "2px solid #90278e",
@@ -206,7 +206,7 @@ class CreateFilter extends React.Component {
             backgroundColor: "white"
           }}
           onClick={() => {
-            this.props.saveFilter(this.state.newFilter)
+            this.props.saveFilter(this.state.newFilter);
             this.setState({ newFilter: {} })
           }}
         >

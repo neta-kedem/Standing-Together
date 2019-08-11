@@ -13,8 +13,8 @@ export default class Checkbox extends React.Component {
 	}.bind(this);
 	render() {
 		return <div className="checkbox-wrapper">
-				<style jsx global>
-				{`
+				<style>
+                    {/**
 					.control {
 					    display: inline-block;
 					    direction: rtl;
@@ -90,9 +90,8 @@ export default class Checkbox extends React.Component {
 					}
 					.control-checkbox input:disabled ~ .control_indicator:after {
 					    border-color: #7b7b7b;
-					}
-				`}
-				</style>
+					}**/}
+                </style>
 				<div className="control-group">
 					<label className="control control-checkbox">
 						<input type="checkbox" checked={this.props["checked"]} onChange={this.handleChange}/>

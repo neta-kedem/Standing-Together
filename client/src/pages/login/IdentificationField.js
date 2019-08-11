@@ -1,5 +1,5 @@
 import React from 'react';
-import stylesheet from './IdentificationField.css';
+import './IdentificationField.scss';
 
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,7 +36,6 @@ export default class IdentificationField extends React.Component {
 	render() {
 		return (
 			<div>
-				<style global jsx>{stylesheet}</style>
 				<div className='credentials-field-wrap'>	
 					<input onChange={(event)=>this.syncStateToInput(event)} onKeyPress={this.handleKeyPress} dir={this.state.dir} type={this.state.inputType} autoFocus minLength={this.state.minLength} maxLength={this.state.maxLength} className='credentials-field' placeholder={this.state.placeholder}></input>
 					<div className={'login-button-wrap '+(this.state.validationFunction(this.state.value)?'valid-input ':'invalid-input ')}>

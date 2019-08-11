@@ -43,7 +43,7 @@ export default class ImageCropper extends React.Component {
 		:"";
 		return (
 			<div>
-				<style jsx global>{`
+				<style>{/**
 					.crop-button{
 						color: white;
 						background-color: #90278e;
@@ -61,8 +61,7 @@ export default class ImageCropper extends React.Component {
 					}
 					.crop-button:active{
 						background-color: #561755;
-					}
-				`}</style>
+					}**/}</style>
 				{cropperWrap}
 			</div>
 		)

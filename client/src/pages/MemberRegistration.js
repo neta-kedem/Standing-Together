@@ -1,7 +1,7 @@
 import React from 'react';
 import RegistrationForm from './memberRegistration/RegistrationForm'
 import PaymentForm from './memberRegistration/PaymentForm'
-import style from './memberRegistration/MemberRegistration.css'
+import style from './memberRegistration/MemberRegistration.scss'
 import server from "../services/server";
 import FieldValidation from "../services/FieldValidation";
 import IsraelGivesDonator from "../services/IsraelGivesDonator";
@@ -194,7 +194,6 @@ export default class MemberRegistration extends React.Component {
         return (
             <div dir={"rtl"}>
                 <Meta/>
-                <style jsx global>{style}</style>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
                     <span>הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.</span>

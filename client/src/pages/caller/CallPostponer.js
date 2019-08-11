@@ -2,7 +2,7 @@ import React from 'react';
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
-import style from './CallPostponer.css'
+import style from './CallPostponer.scss'
 library.add(faCheckCircle);
 
 export default class CallPostponer extends React.Component {
@@ -48,7 +48,6 @@ export default class CallPostponer extends React.Component {
             </div>;
         return (
             <div>
-                <style global jsx>{style}</style>
                 <input className="postpone-input" type="text" value={val} onKeyPress={this.handleKeyPress.bind(this)} onChange={(event)=>{this.handleInputChange(event)}}/>
                 {postButton}
             </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './QueryResultsActionMenu.css'
+import style from './QueryResultsActionMenu.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class QueryResultsActionMenu extends React.Component {
@@ -18,7 +18,6 @@ class QueryResultsActionMenu extends React.Component {
 		const items = this.state.items.map(item => <div key={item.index} className={"action-button "+(item.alignToEnd?"align-to-end":"")}>{item.content}</div>);
 		return(
 			<div className="query-results-wrapper">
-				<style jsx global>{style}</style>
 				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>
 				{/*
 				<div className="action-button" onClick={this.handlePhoneListClick.bind(this)}>

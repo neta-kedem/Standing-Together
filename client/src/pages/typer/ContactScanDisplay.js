@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './ContactScanDisplay.css'
+import style from './ContactScanDisplay.scss'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons'
@@ -36,7 +36,7 @@ export default class ContactScanDisplay extends React.Component {
 		const hp = this.state.scanHeight?100/this.state.scanHeight:0.1;
 		return (
 			<div>
-				<style jsx global>{style}</style>
+
 				<div className="scan-wrap">
 					<div ref={this.scanDisplayWrap} className={"scan-display-wrap full-scan-display-wrap"}>
 							{this.state.scanUrl?scan:""}

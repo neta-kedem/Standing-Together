@@ -1,7 +1,7 @@
 import React from "react";
 import QueryService from "../../services/queryService";
 import SingleCondition from "./SingleCondition";
-import style from "./QueryCreator.css";
+import style from "./QueryCreator.scss";
 import AddFiltersBtn from "./AddFiltersBtn";
 import {
   DragDropContext,
@@ -156,9 +156,8 @@ class QueryCreator extends React.Component {
   render() {
     return (
       <section style={{ overflow: "none", height: "calc(95% - 55px)", userSelect: "none" }}>
-        <style global jsx>
-          {`
-            .filterIcon {
+        <style>
+            {/**.filterIcon {
               width: 30px;
               height: 22px;
               cursor: pointer;
@@ -176,9 +175,8 @@ class QueryCreator extends React.Component {
             .filterIcon:active {
               animation: logicalOperatorClick 1s;
               transition-timing-function: ease-in-out;
-            }
-          `}
-        </style>
+            }**/}
+                </style>
 
         <DragDropContext onDragEnd={this.onDragStart.bind(this)}>
           <Droppable droppableId="droppable">

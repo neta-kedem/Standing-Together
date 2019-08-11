@@ -11,8 +11,8 @@ export default class LoadSpinner extends React.Component {
         return this.props.visibility ? (
             <div className="spinner-wrap">
                 {/*credit to luke hass, https://projects.lukehaas.me/css-loaders/*/}
-                <style jsx global>
-                    {`
+                <style>
+                    {/**
                     .load-spinner {
                       font-size: 10px;
                       text-indent: -9999em;
@@ -74,8 +74,7 @@ export default class LoadSpinner extends React.Component {
                         -webkit-transform: rotate(360deg);
                         transform: rotate(360deg);
                       }
-                    }
-				    `}
+                    }**/}
                 </style>
                 <div className="load-spinner">
                     {this.props.children}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Meta from '../../lib/meta';
-import style from './CodeInput.css';
+import style from './CodeInput.scss';
 
 export default class CodeInput extends React.Component {
 	constructor(props) {

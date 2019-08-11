@@ -16,7 +16,7 @@ export default class SelectorItem extends React.Component {
 	render() {
 		return (
 			<div>
-				<style jsx global>{`
+				<style>{/**
 					.selector-item{
 						padding: 0.5%;
 						color: white;
@@ -29,9 +29,8 @@ export default class SelectorItem extends React.Component {
 					}
 					.selector-item:active{
 						background-color: #ccc;
-					}
-				`}
-				</style>
+					}**/}
+                </style>
 				<div className="selector-item" onClick={this.handleSelect.bind(this)}>
 					{this.state.item[this.state.titleIndex]}
 				</div>

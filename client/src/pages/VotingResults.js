@@ -1,5 +1,5 @@
 import React from "react";
-// import style from "./voting/Voting.css";
+// import style from "./voting/Voting.scss";
 import Meta from "../lib/meta";
 import server from "../services/server";
 import ReactDOM from "react-dom";
@@ -63,9 +63,6 @@ export default class VotingResults extends React.Component {
     return (
       <div className="page">
         <Meta />
-        {/*<style jsx global>*/}
-        {/*  {style}*/}
-        {/*</style>*/}
         <BarChart
           lables={this.state.candidateNames}
           data={this.state.votingSet}

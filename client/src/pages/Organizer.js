@@ -13,7 +13,7 @@ import HamburgerMenu from '../UIComponents/HamburgerMenu/HamburgerMenu'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
-import style from './organizer/Organizer.css'
+import style from './organizer/Organizer.scss'
 import PageNav from "../UIComponents/PageNav/PageNav";
 import FileSaver from 'file-saver';
 
@@ -202,7 +202,6 @@ render() {
 	return (
 		<div className="page-wrap" dir="rtl">
 			<Meta/>
-			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="saved-views-wrap">
 					{/**<div className="saved-views">שאילתה 1</div>

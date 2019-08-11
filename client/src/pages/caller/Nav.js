@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './Nav.css'
+import style from './Nav.scss'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons'

@@ -1,10 +1,10 @@
 import React from 'react';
-import styles from './SingleCondition.css';
+//import styles from './SingleCondition.scss';
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faTimes, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 library.add(faBuilding, faTimes, faUserCircle);
-
+const styles={};
 class SingleCondition extends React.Component {
   render() {
 		const { provided, innerRef } = this.props;

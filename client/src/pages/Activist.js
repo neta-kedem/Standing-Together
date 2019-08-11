@@ -2,7 +2,7 @@ import React from 'react'
 import Router from 'next/router'
 import server from '../services/server'
 import Meta from '../lib/meta'
-import style from './activist/activist.css'
+import style from './activist/activist.scss'
 import FormSegment from './activist/formSegment'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
@@ -156,7 +156,6 @@ export default class EventCreation extends React.Component {
         return (
             <div style={{'height':'100vh'}}>
                 <Meta/>
-                <style jsx global>{style}</style>
                 <TopNavBar>
                     <div onClick={this.handlePost.bind(this)} className="save-event-button">
                         <div className="save-event-button-label">

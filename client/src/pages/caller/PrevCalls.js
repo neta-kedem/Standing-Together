@@ -21,8 +21,8 @@ export default class PrevCalls extends React.Component {
         </div>;
         return (
             <div>
-                <style jsx global>
-                    {`
+                <style>
+                    {/**
 					.prev-calls-banner-wrap{
 					    position: relative;
 					}
@@ -35,8 +35,7 @@ export default class PrevCalls extends React.Component {
                         color: white;
                         background: rgb(255, 56, 131);
                         z-index: 500;
-					}
-				    `}
+					}**/}
                 </style>
                 <div className="prev-calls-banner-wrap">
                     {callCount?banner:""}

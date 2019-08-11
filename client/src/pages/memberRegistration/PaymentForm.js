@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './PaymentForm.css'
+import style from './PaymentForm.scss'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faArrowRight, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
@@ -95,7 +95,6 @@ export default class PaymentForm extends React.Component {
         </div>;
         return (
             <div className={"payment-form"}>
-                <style jsx global>{style}</style>
                 {displayForm?contributionForm:contributionButtons}
             </div>
         );

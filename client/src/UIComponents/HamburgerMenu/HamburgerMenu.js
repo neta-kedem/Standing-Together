@@ -16,8 +16,8 @@ export default class HamburgerMenu extends React.Component {
 	render() {
 		return (
 			<div className="menu-wrapper">
-				<style jsx global>
-				{`
+				<style>
+                    {/**
 					.menu-wrapper {
 						position: relative;
 					}
@@ -70,9 +70,8 @@ export default class HamburgerMenu extends React.Component {
 					}
 					.menu-content.open{
 						display: block;
-					}
-				`}
-				</style>
+					}**/}
+                </style>
 				<div dir="ltr" className={"hamburger " + (this.state.isOpen ? 'change' : '')} onClick={this.handleMenuToggle.bind(this)}>
 					<div className="bar1"></div>
 					<div className="bar2"></div>

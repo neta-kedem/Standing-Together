@@ -30,8 +30,8 @@ export default class Confirmation extends React.Component {
     }
     render() {
         return <div>
-                <style jsx global>
-                {`
+                <style>
+                    {/**
                     @-webkit-keyframes slide-fwd-top {
                       0% {
                         -webkit-transform: translateY(0) scale(0);
@@ -73,7 +73,7 @@ export default class Confirmation extends React.Component {
 						box-shadow: 0px 10px 30px 0px #00000088;
 						-webkit-animation: slide-fwd-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards;
 						animation: slide-fwd-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards;
-				`}
+				`**/}
                 </style>
                 {this.state.visible?<div className="confirmation-icon">
                     <FontAwesomeIcon icon="check-circle"/>

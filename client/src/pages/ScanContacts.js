@@ -1,6 +1,6 @@
 import React from 'react';
 import Meta from '../lib/meta';
-import style from './scanContacts/ScanContacts.css';
+import style from './scanContacts/ScanContacts.scss';
 import ScanForm from './scanContacts/ScanForm';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
@@ -17,7 +17,6 @@ render() {
 	return (
 		<div>
 			<Meta/>
-			<style jsx global>{style}</style>
 			<TopNavBar>
 				<div className="title-wrap">
 					<span className="title-lang">مسح صفحات اتصال</span>

@@ -2,7 +2,7 @@ import React from 'react'
 import server from '../services/server'
 import Meta from '../lib/meta'
 import Setting from './settings/SettingDetails'
-import style from './settings/Settings.css'
+import style from './settings/Settings.scss'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 
 export default class EventCategoriesManagement extends React.Component {
@@ -58,7 +58,6 @@ export default class EventCategoriesManagement extends React.Component {
         return (
             <div>
                 <Meta/>
-                <style jsx global>{style}</style>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ניהול הגדרות</span>

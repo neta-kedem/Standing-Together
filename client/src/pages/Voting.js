@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./voting/Voting.css";
+import style from "./voting/Voting.scss";
 import Meta from "../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";
@@ -192,9 +192,6 @@ export default class Voting extends React.Component {
     return (
       <div className="page">
         <Meta />
-        <style jsx global>
-          {style}
-        </style>
         <img
           src={"./static/logo_purple.svg"}
           width={250}
