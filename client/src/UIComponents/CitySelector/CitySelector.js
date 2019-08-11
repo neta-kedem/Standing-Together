@@ -148,7 +148,7 @@ export default class CitySelector extends React.Component {
         if(this.state.polygonSelectionMode)
             this.drawPolygonSelectionArea(ctx);
         this.drawCityHighlight(ctx);
-        requestAnimFrame(this.draw);
+        window.requestAnimFrame(this.draw);
     }.bind(this);
 
     coordinatesToPosition(canvas, lng, lat){
