@@ -1,18 +1,19 @@
-/*Scroll Bar*/
+.page-wrap-organizer{
+	/*Scroll Bar*/
 	::-webkit-scrollbar {
 		width: 6px;
 	}
 	/* Track */
 	::-webkit-scrollbar-track {
-		background: #999; 
+		background: #999;
 	}
 	/* Handle */
 	::-webkit-scrollbar-thumb {
-		background: #4D4D4D; 
+		background: #4D4D4D;
 	}
 	/* Handle on hover */
 	::-webkit-scrollbar-thumb:hover {
-		background: #555; 
+		background: #555;
 	}
 	.saved-views{
 		display: inline-block;
@@ -64,7 +65,7 @@
 		width: 99.9%;
 	}
 	.query-results .list-table-wrap{
-	    padding: 2.5%;
+		padding: 2.5%;
 	}
 	.event-selection-popup-title{
 		font-size: 1.75em;
@@ -83,7 +84,7 @@
 		text-decoration: none;
 	}
 	.new-event-button>div{
-	    border: 2px solid white;
+		border: 2px solid white;
 		padding: 0.5em;
 		border-radius: 0.5em;
 		display: block;
@@ -133,5 +134,6 @@
 		opacity:1;
 	}
 	.textualQuery {
-	  margin-bottom: 20px;
+		margin-bottom: 20px;
 	}
+}

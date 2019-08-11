@@ -1,6 +1,6 @@
 import React from 'react';
 import server from '../../services/server'
-import style from "./SuccessfulUpload.scss"
+import "./SuccessfulUpload.scss"
 
 export default class SuccessfulUpload extends React.Component {
     constructor(props) {

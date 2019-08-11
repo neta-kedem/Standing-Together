@@ -1,23 +1,25 @@
 import React from 'react';
-//import styles from './SingleCondition.scss';
-import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import './SingleCondition.scss';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faTimes, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 library.add(faBuilding, faTimes, faUserCircle);
 const styles={};
 class SingleCondition extends React.Component {
   render() {
-		const { provided, innerRef } = this.props;
+    const { provided, innerRef } = this.props;
     const newStyle = {};
-		for (let style in provided.draggableProps.style) {
-      newStyle[style] = provided.draggableProps.style[style]
+    for (let style in provided.draggableProps.style) {
+        newStyle[style] = provided.draggableProps.style[style];
     }
-		return(
+    return(
       <section
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={Object.assign(newStyle, styles.wrapper)}
-					ref={innerRef}>
+          ref={innerRef}
+          className={"single-condition-wrap"}
+      >
         <div style={styles.titleRow}>
           <div style={styles.titleWrapper}>
             <FontAwesomeIcon style={{padding:10}} icon={this.getFilterIcon()}></FontAwesomeIcon>

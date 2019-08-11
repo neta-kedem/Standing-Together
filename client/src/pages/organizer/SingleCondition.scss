@@ -1,51 +1,48 @@
-export default {
-	"wrapper": {
-		"alignSelf": "stretch",
-		// "height": "100%",
-		"borderRadius": "5px",
-		"fontFamily": "Cabin, sans-serif",
-		"color": "rgba(86, 95, 108, .9)",
-		"padding": "0 10px 10px",
-		"backgroundColor": "#f8ecef",
-		// "transform": "null",
-		// "transition": "null"
-	},
-	"valueContainer": {
-		"textAlign": "left",
-		"marginLeft": "8px",
-		"marginRight": "8px",
-		"flex": "1",
-		"fontSize": "18px",
-		"display": "flex",
-		"justifyContent": "space-between"
-	},
-	"filterIcon": {},
-	"heading": {
-		"paddingLeft": "5px",
-		"fontSize": "18px",
-		"lineHeight": "30px",
-		"fontWeight": "700"
-	},
-	"titleWrapper": {
-		"display": "flex",
-		"alignItems": "center",
-		"paddingLeft": "5px"
-	},
-	"iconWrapper": {
-		"lineHeight": "30px"
-	},
-	"valuePrefix": {},
-	"valueNumber": {
-		"marginTop": "10px",
-		"fontSize": "16px",
-		"textAlign": "right"
-	},
-	"titleRow":{
-    "display": "flex",
-    "justifyContent": "space-between",
-	},
-	"closeIcons":{
-		"alignSelf": "center",
-    "cursor": "pointer",
-  }
+.single-condition-wrap{
+	.wrapper {
+		align-self: stretch;
+		border-radius: 5px;
+		font-family: Cabin, "sans-serif";
+		color: rgba(86, 95, 108, .9);
+		padding: 0 10px 10px;
+		background-color: #f8ecef;
+	};
+	.valueContainer{
+		text-align: left;
+		margin-left: 8px;
+		margin-right: 8px;
+		flex: 1;
+		font-size: 18px;
+		display: flex;
+		justify-content: space-between;
+	};
+	.filterIcon{};
+	.heading{
+		padding-left: 5px;
+		font-size: 18px;
+		line-height: 30px;
+		font-weight: 700;
+	};
+	.titleWrapper{
+		display: flex;
+		align-items: center;
+		padding-left: 5px;
+	}
+	.iconWrapper{
+		line-height: 30px;
+	}
+	.valuePrefix{}
+	.valueNumber{
+		margin-top: 10px;
+		font-size: 16px;
+		text-align: right;
+	}
+	.titleRow{
+    	display: flex;
+    	justify-content: space-between;
+	}
+	.closeIcons{
+		align-self: center;
+    	cursor: pointer;
+  	}
 }

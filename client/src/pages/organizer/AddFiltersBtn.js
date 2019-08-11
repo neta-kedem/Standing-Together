@@ -4,7 +4,7 @@ import style from './AddFiltersBtn.scss';
 class AddFiltersBtn extends React.Component {
 
   constructor(props){
-    super(props)
+    super(props);
     this.state = {
 			isActive: false,
 		}

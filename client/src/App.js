@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import meta from './lib/meta';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Organizer from "./pages/Organizer";
 import EventManagement from "./pages/EventManagement";
@@ -21,6 +21,7 @@ function App() {
         <div>
           <meta/>
           <Route path="/" exact component={Login} />
+          <Route path="/Login" exact component={Login} />
           <Route path="/Organizer" component={Organizer} />
           <Route path="/EventManagement" component={EventManagement} />
           <Route path="/EventCreation" component={EventCreation} />

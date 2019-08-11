@@ -3,7 +3,7 @@ import "./voting/Voting.scss";
 import Meta from "../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTimes} from '@fortawesome/free-solid-svg-icons'
 library.add(faTimes);
@@ -190,7 +190,7 @@ export default class Voting extends React.Component {
       : "";
     const focusedCandidatePhotoAlign = focusedCandidate.photoAlign;
     return (
-      <div className="page">
+      <div className={"page page-wrap-voting"}>
         <Meta />
         <img
           src={"./static/logo_purple.svg"}

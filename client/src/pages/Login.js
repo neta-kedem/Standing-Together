@@ -116,7 +116,7 @@ render() {
 			<div className={"back-to-identification"} onClick={this.resendCode}>חזרה</div>
 		</div>;
 	return (
-		<div className='login-page-wrap' dir="rtl">
+		<div className='page-wrap-login' dir="rtl">
 			<img src="../static/Logo.svg" alt="standing-together" className='logo'/>
 			{this.state.codeSent?loginCode:identification}
 		</div>

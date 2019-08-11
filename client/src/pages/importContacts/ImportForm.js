@@ -1,6 +1,6 @@
 import React from 'react';
 import server from '../../services/server';
-import style from './ImportContacts.scss';
+import './ImportContacts.scss';
 import EventPicker from '../../UIComponents/EventPicker/EventPicker';
 import ExcelUploader from '../../UIComponents/ExcelUploader/ExcelUploader'
 

@@ -1,11 +1,9 @@
 import React from "react";
 import Meta from "../../lib/meta";
-import AddFiltersBtn from "./AddFiltersBtn";
 import server from "../../services/server";
 import QueryService from "../../services/queryService";
 
-import { library, dom } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 library.add(faCaretDown);
 
@@ -15,8 +13,6 @@ class CreateFilter extends React.Component {
     this.state = {
       index: props.index,
       returnFilter: props.newFilter,
-      // filter:props.filter,
-      // show: props.isShow,
       newFilter: {},
       availableFilters: [],
       cities: [],
@@ -80,7 +76,7 @@ class CreateFilter extends React.Component {
           }}
           type="text"
           onChange={ev => {
-            let newFilter = this.state.newFilter
+            let newFilter = this.state.newFilter;
             newFilter.filterMain = ev.target.value;
             this.setState({ newFilter })
             }
@@ -109,7 +105,7 @@ class CreateFilter extends React.Component {
           defaultValue={""}
           onClick={ev => ev.stopPropagation()}
           onChange={ev => {
-            let newFilter = this.state.newFilter
+            let newFilter = this.state.newFilter;
             newFilter.filterPrefix = ev.target.value;
             this.setState({ newFilter });
           }}
@@ -133,7 +129,7 @@ class CreateFilter extends React.Component {
             outline: "none"
           }}
           onChange={ev => {
-            let newFilter = this.state.newFilter
+            let newFilter = this.state.newFilter;
             newFilter.filterMain = ev.target.value;
             this.setState({ newFilter });
           }}

@@ -1,7 +1,7 @@
 import React from 'react';
 import InputField from './InputField'
 import server from "../../services/server";
-import style from './RegistrationForm.scss'
+import './RegistrationForm.scss'
 
 export default class RegistrationForm extends React.Component {
     constructor(props) {

@@ -191,7 +191,7 @@ export default class MemberRegistration extends React.Component {
 
     render() {
         return (
-            <div dir={"rtl"}>
+            <div dir={"rtl"} className={"page-wrap-member-registration"}>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
                     <span>הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.</span>

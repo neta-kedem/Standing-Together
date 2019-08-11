@@ -1,8 +1,8 @@
 import React from 'react';
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
-import style from './CallPostponer.scss'
+import './CallPostponer.scss'
 library.add(faCheckCircle);
 
 export default class CallPostponer extends React.Component {

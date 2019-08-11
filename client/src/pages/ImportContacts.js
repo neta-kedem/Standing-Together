@@ -14,7 +14,7 @@ handleUploadSuccess(){
 }
 render() {
 	return (
-		<div>
+		<div className={"page-wrap-import-contacts"}>
 			<TopNavBar>
 				<div className="title-wrap">
 					<span className="title-lang">העלאת אנשי קשר</span>

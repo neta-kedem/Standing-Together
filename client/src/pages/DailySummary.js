@@ -24,7 +24,7 @@ export default class DailySummary extends React.Component {
         const summary = this.state.summary ? this.state.summary : "לא התבצעה פעילות היום";
         const htmlToReactParser = new HtmlToReactParser();
         return (
-            <div>
+            <div className={"page-wrap-daily-summary"}>
                 <style>{/**
                     .summary-wrap{
                         text-align: right;

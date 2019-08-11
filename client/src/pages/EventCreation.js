@@ -2,7 +2,7 @@ import React from 'react'
 import server from '../services/server'
 import './eventCreation/EventCreation.scss'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faSave} from '@fortawesome/free-solid-svg-icons'
 library.add(faSave);
@@ -106,7 +106,7 @@ render() {
 		return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
 	});
 	return (
-		<div style={{'height':'100vh'}}>
+		<div style={{'height':'100vh'}} className={"page-wrap-event-creation"}>
 			<TopNavBar>
 				<div className="title-wrap">
 					<span className="title-lang">انشاء حدث</span>

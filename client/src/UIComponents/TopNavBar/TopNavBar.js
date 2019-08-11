@@ -35,7 +35,7 @@ export default withRouter(class TopNavBar extends React.Component {
 	logout(){
 		server.get('logout', {})
 			.then(json => {
-				//
+				this.props.history.push('/Login')
 			});
 	}
 	toggleMenu = function(){

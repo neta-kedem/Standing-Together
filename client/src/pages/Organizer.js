@@ -199,7 +199,7 @@ render() {
 			</div>
 		</div>;
 	return (
-		<div className="page-wrap" dir="rtl">
+		<div className="page-wrap page-wrap-organizer" dir="rtl">
 			<TopNavBar>
 				<div className="saved-views-wrap">
 					{/**<div className="saved-views">שאילתה 1</div>

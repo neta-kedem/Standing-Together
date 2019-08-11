@@ -1,6 +1,5 @@
 import React from 'react';
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import {faTrashAlt, faPenSquare} from '@fortawesome/free-solid-svg-icons'
 library.add(faTrashAlt, faPenSquare);
 

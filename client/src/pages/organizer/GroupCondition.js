@@ -38,7 +38,7 @@ class GroupCondition extends React.Component {
     this.props.toggleLogicalOperator(this.state.group.logicalOperator)
   }
   render() {
-    const {group, groupId, provided} = this.props
+    const {group, groupId, provided} = this.props;
     const groupStr = [];
 
     const possibleFilters = (
@@ -47,7 +47,7 @@ class GroupCondition extends React.Component {
               saveFilter={(newFilter) => this.props.saveFilter(groupId, newFilter)}
           />
         </div>
-    )
+    );
 
     groupStr.push(
       group.filters.map((filter, index) => {
@@ -101,9 +101,9 @@ class GroupCondition extends React.Component {
         text="Add Filter"
         type="single"
         onClick={this.props.exploreFilter}
-      ></AddFiltersBtn>
+      />
     );
-    groupStr.push(possibleFilters)
+    groupStr.push(possibleFilters);
     return (<div>{groupStr}</div>)
   }
 }

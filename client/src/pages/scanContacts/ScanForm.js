@@ -2,7 +2,7 @@ import React from 'react';
 
 import config from '../../services/config';
 import server from '../../services/server';
-import style from './ScanContacts.scss';
+import './ScanContacts.scss';
 import EventPicker from '../../UIComponents/EventPicker/EventPicker';
 import ImageUploader from '../../UIComponents/ImageUploader/ImageUploader';
 import ia from "../../services/canvas/imageAdjustor";
@@ -141,7 +141,7 @@ export default class ScanForm extends React.Component {
                 {(selectedImage && this.state.eventId) ? postButton : ""}
                 {/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.
                  It is hidden from the user. The actual scan is displayed on a canvas **/}
-                <img src="" ref={this.imgRef} className="hidden"/>
+                <img alt="hidden" src="" ref={this.imgRef} className="hidden"/>
             </div>
         )
     }

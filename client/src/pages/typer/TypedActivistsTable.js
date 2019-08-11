@@ -1,6 +1,6 @@
 import React from 'react';
 import InputRow from './InputRow'
-import style from './TypedActivistsTable.scss'
+import './TypedActivistsTable.scss'
 
 export default class TypedActivistsTable extends React.Component {
 	constructor(props) {

@@ -1,6 +1,6 @@
 function drawImage(context, img, x, y, width, height){
 	//handle unloaded images
-	if(!img.complete){
+	if(!img || !img.complete){
 		console.error("can't draw an unloaded image");
 		return;
 	}

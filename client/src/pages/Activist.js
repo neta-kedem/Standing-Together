@@ -3,7 +3,7 @@ import server from '../services/server'
 import './activist/activist.scss'
 import FormSegment from './activist/formSegment'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faSave} from '@fortawesome/free-solid-svg-icons'
 library.add(faSave);
@@ -152,7 +152,7 @@ export default class EventCreation extends React.Component {
         const roleFields = this.state.roleFields.slice();
         const memberFields = this.state.memberFields.slice();
         return (
-            <div style={{'height':'100vh'}}>
+            <div style={{'height':'100vh'}} className={"page-wrap-activist"}>
                 <TopNavBar>
                     <div onClick={this.handlePost.bind(this)} className="save-event-button">
                         <div className="save-event-button-label">

@@ -6,7 +6,7 @@ import ContactScanDisplay from './typer/ContactScanDisplay'
 import FieldValidation from '../services/FieldValidation'
 import Popup from '../UIComponents/Popup/Popup';
 import './typer/Typer.scss'
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import ScanForm from "./scanContacts/ScanForm";
@@ -44,7 +44,7 @@ export default class Typer extends React.Component {
 				},
 				{
 					name: "email", type: "text", ar: "البريد الإلكتروني", he: "אימייל", postOnTab: true, forceEnglish: true,
-					validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+					validation: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 					required: false
 				},
 				{
@@ -426,7 +426,7 @@ export default class Typer extends React.Component {
 		</div>;
 		const successfulUpload = <SuccessfulUpload refetchScans={this.refetchScans}/>;
 		return (
-			<div dir="rtl">
+			<div dir="rtl" className={"page-wrap-typer"}>
 				{topBar}
 				<section className="section">
 					<div className="main-panel">

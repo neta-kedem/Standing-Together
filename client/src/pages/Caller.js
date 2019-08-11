@@ -302,7 +302,7 @@ export default class Caller extends React.Component {
 			</div>
 		</div>;
 		return (
-			<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}} dir="rtl">
+			<div style={{'height':'100vh','fontWeight':'540','overflowX':"hidden"}} dir="rtl" className={"page-wrap-caller"}>
 				<Nav name={selectedActivist.firstName} lname={selectedActivist.lastName} phone={selectedActivist.phone} event={this.state.eventData.eventDetails.name}/>
 				<PrevCalls callCount={selectedActivist.callCount} lastCallAt={selectedActivist.lastCallAt} availableAt={selectedActivist.availableAt}/>
 				<div className="content-wrap">

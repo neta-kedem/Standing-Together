@@ -55,7 +55,7 @@ export default class EventCategoriesManagement extends React.Component {
             />;
         });
         return (
-            <div>
+            <div className={"page-wrap-settings"}>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ניהול הגדרות</span>

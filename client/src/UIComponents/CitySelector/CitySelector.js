@@ -281,13 +281,13 @@ export default class CitySelector extends React.Component {
         this.setState({mouseX: mouseX, mouseY: mouseY});
     }.bind(this);
 
-    onPress = function(evt) {
+    onPress = function() {
         if(this.state.rectSelectionMode)
             this.setState({rectSelectionStart: {x: this.state.mouseX, y: this.state.mouseY}, selectionEnd:{}});
         this.setState({mousePressTime: new Date()});
     }.bind(this);
 
-    onRelease = function(evt) {
+    onRelease = function() {
         if(this.state.rectSelectionStart){
             this.commitSelection();
             this.setState({rectSelectionStart: null});
@@ -299,7 +299,7 @@ export default class CitySelector extends React.Component {
         }
     }.bind(this);
 
-    onClick = function(evt) {
+    onClick = function() {
         //this practically fires whenever a mouse release is detected
         //so a timediff is used to filter out long presses
         if(new Date() - this.state.mousePressTime > 300)
@@ -338,7 +338,6 @@ export default class CitySelector extends React.Component {
         const cities = this.state.cities.slice();
         const highlightedCity = this.state.highlightedCity ? cities[this.state.highlightedCity] : null;
         const highlightedCityLabel = highlightedCity ? highlightedCity.nameAr + " - " + highlightedCity.nameHe : "";
-        const highlightedCityPosition = highlightedCity ? this.coordinatesToPosition(this.state.canvas, highlightedCity.location.lng, highlightedCity.location.lat) : {};
         return (
             <div>
                 <div className={"map-selector-wrap"}>
@@ -359,7 +358,7 @@ export default class CitySelector extends React.Component {
                 </div>
                 {/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.
                  It is hidden from the user. The actual scan is displayed on a canvas **/}
-                <img src="../../static/map.jpg" ref={this.imgRef} className="hidden"/>
+                <img alt={"ma"} src="../../static/map.jpg" ref={this.imgRef} className="hidden"/>
             </div>
         )
     }

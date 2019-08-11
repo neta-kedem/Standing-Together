@@ -56,7 +56,7 @@ export default class EventCategoriesManagement extends React.Component {
             />;
         });
         return (
-            <div>
+            <div className={"page-wrap-event-categories-management"}>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ניהול קטגוריות אירועים</span>

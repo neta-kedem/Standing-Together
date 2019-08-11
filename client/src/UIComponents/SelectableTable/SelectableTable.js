@@ -1,10 +1,10 @@
 import React from 'react';
-import stylesheet from './SelectableTable.scss'
+import './SelectableTable.scss'
 
 import TextValue from './FieldTypes/TextValue'
 import ToggleSwitch from './FieldTypes/ToggleSwitch'
 
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck, faPhoneSquare} from '@fortawesome/free-solid-svg-icons'
 library.add(faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck, faPhoneSquare);

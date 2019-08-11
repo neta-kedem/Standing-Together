@@ -1,5 +1,9 @@
 @import "../../lib/variables.scss";
-Login {
+.page-wrap-login {
+	color: white;
+	background-color: $purple-main;
+	direction: rtl;
+	text-align: right;
 	.logo {
 		display: block;
 		width: 35%;
@@ -44,13 +48,6 @@ Login {
 		cursor: pointer;
 		margin: 1% auto;
 		text-align: center;
-	}
-
-	body {
-		color: white;
-		background-color: $purple-main;
-		direction: rtl;
-		text-align: right;
 	}
 
 	::placeholder {

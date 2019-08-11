@@ -60,7 +60,7 @@ export default class VotingResults extends React.Component {
 
   render() {
     return (
-      <div className="page">
+      <div className={" page page-wrap-voting-results"}>
         <Meta />
         <BarChart
           lables={this.state.candidateNames}

@@ -1,6 +1,5 @@
 import React from 'react';
-import style from './QueryResultsActionMenu.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import './QueryResultsActionMenu.scss'
 
 class QueryResultsActionMenu extends React.Component {
 	constructor(props) {
@@ -30,7 +29,7 @@ class QueryResultsActionMenu extends React.Component {
 				</div>
 				*/}
 				<div className="action-button" onClick={this.state.downloadActivistsByQuery}>
-					<img className="action-button-icon" src={"../static/Excel.svg"}/>
+					<img alt="export to excel" className="action-button-icon" src={"../static/Excel.svg"}/>
 					ייצוא לאקסל
 				</div>
 				{items}

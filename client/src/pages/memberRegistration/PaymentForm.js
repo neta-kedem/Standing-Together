@@ -1,8 +1,7 @@
 import React from 'react';
-import style from './PaymentForm.scss'
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faArrowRight, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
+import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 library.add(faArrowRight);
 
 export default class PaymentForm extends React.Component {

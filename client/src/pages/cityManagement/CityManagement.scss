@@ -1,28 +1,34 @@
-.city-table{
+.page-wrap-city-management {
+    .city-table {
         direction: rtl;
         border-collapse: collapse;
         margin: 5% auto;
         width: 80%;
         table-layout: fixed;
     }
-    .city-table th{
+
+    .city-table th {
         padding: 5px 15px;
         border: 1px solid black;
     }
-    .city-table td{
-        padding: 0px;
+
+    .city-table td {
+        padding: 0;
         border: 1px solid black;
     }
-    .city-table td input, .city-table td select{
+
+    .city-table td input, .city-table td select {
         width: 100%;
         box-sizing: border-box;
         border: none;
         outline: none;
     }
-    .city-table tbody{
+
+    .city-table tbody {
         cursor: pointer;
     }
-    .add-city-button, .save-cities-button{
+
+    .add-city-button, .save-cities-button {
         display: block;
         margin: 0 auto;
         padding: 1% 3%;
@@ -32,12 +38,16 @@
         border: none;
         outline: none;
     }
-    .save-cities-button{
+
+    .save-cities-button {
         margin: 1.5em auto;
     }
-    .add-city-button:hover, .save-cities-button:hover{
+
+    .add-city-button:hover, .save-cities-button:hover {
         background-color: #80177e;
     }
-    .add-city-button:active, .save-cities-button:active{
+
+    .add-city-button:active, .save-cities-button:active {
         background-color: #70076e;
     }
+}

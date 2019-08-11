@@ -1,7 +1,7 @@
 import React from 'react';
 import './IdentificationField.scss';
 
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPaperPlane} from '@fortawesome/free-solid-svg-icons'
 library.add(faPaperPlane);

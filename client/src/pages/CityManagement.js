@@ -75,7 +75,7 @@ export default class CircleManagement extends React.Component {
             />;
         });
         return (
-            <div>
+            <div className={"page-wrap-city-management"}>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ادارة بلدات</span>

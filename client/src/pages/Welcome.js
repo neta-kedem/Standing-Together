@@ -30,7 +30,7 @@ export default class MemberRegistration extends React.Component {
     render() {
         const permissions = this.state.permissions;
         return (
-            <div dir={"rtl"}>
+            <div dir={"rtl"} className={"page-wrap-welcome"}>
                 <div className={"welcome-title"}>
                     <div>ברוכים הבאים</div>
                     <div>ברוכים הבאים</div>

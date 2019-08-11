@@ -1,5 +1,5 @@
 import React from 'react';
-import Stylesheet from './TableRowSelector.scss'
+import './TableRowSelector.scss'
 //graphics
 
 export default class TableRowSelector extends React.Component {

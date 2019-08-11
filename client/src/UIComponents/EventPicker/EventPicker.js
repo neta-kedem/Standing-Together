@@ -1,7 +1,7 @@
 import React from 'react'
 import server from '../../services/server'
 import PageNav from "../PageNav/PageNav"
-import style from "./EventPicker.scss"
+import "./EventPicker.scss"
 
 export default class EventManagement extends React.Component {
     constructor(props) {

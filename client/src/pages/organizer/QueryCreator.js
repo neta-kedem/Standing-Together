@@ -1,19 +1,14 @@
 import React from "react";
 import QueryService from "../../services/queryService";
-import SingleCondition from "./SingleCondition";
 import style from "./QueryCreator.scss";
 import AddFiltersBtn from "./AddFiltersBtn";
 import {
   DragDropContext,
   Droppable,
-  Draggable,
   resetServerContext
 } from "react-beautiful-dnd";
-import CreateFilter from "./CreateFilter";
-import server from "../../services/server";
 import GroupCondition from "./GroupCondition";
-import { library, dom } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faCalendarAlt,
     faTimes,
@@ -62,13 +57,6 @@ class QueryCreator extends React.Component {
     // react-beautiful-dnd needs that in order to support server side rendering
     resetServerContext();
   }
-
-  // componentWillReceiveProps(nextProps) {
-  // 	// You don't have to do this check first, but it can help prevent an unneeded render
-  // 	if (nextProps.currFilters !== this.state.currFilters) {
-  // 		this.setState({ currFilters: nextProps.currFilters });
-  // 	}
-  // }
 
   _toggleLogicalOperator(groupId, logicalOperator) {
     if ("or" === logicalOperator) {

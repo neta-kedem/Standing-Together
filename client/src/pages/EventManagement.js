@@ -43,7 +43,6 @@ export default class EventManagement extends React.Component {
         const currPage = this.state.page;
         const pageCount = this.state.pageCount;
         const rows = events.map((event)=>{
-            const campaignLink = <a href={"/Caller/?eventCode="+event.campaignUrl}>🔗</a>;
             return <tr key={"event_" + event._id} onClick={()=>{this.goToEvent(event._id)}}>
                 <td>{event.date.toLocaleDateString()}</td>
                 <td>{event.name}</td>
@@ -52,7 +51,7 @@ export default class EventManagement extends React.Component {
             </tr>;
         });
         return (
-            <div  dir={"rtl"}>
+            <div dir={"rtl"} className={"page-wrap-event-management"}>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">ادارة احداث</span>
