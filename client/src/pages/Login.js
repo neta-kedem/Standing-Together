@@ -4,6 +4,10 @@ import cookie from 'js-cookie';
 import IdentificationField from './login/IdentificationField';
 import './login/Login.scss';
 import logo from "../static/logo_purple.svg"
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faSignInAlt} from '@fortawesome/free-solid-svg-icons'
+library.add(faSignInAlt);
 
 export default class Login extends React.Component {
 state = {
@@ -26,29 +30,35 @@ validateEmail = function(email){
 	//checks for example@example.example, such that [example] doesn't contain a '@'
 	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
+
 identifyByPhone(phone){
 	server.post('identify/phone', {'phone':phone})
 	.then(() => {
 		this.setState({codeSent: true, identificationMethod: "SMS", phone: phone});
 	});
 }
+
 identifyByEmail(email){
 	server.post('identify/email', {'email':email})
 	.then(() => {
 		this.setState({codeSent: true, identificationMethod: "Email", email: email});
 	});
 }
+
 setLoginCode = function (event){
 	this.setState({code: event.target.value})
 }.bind(this);
+
 handleCodeKeyDown = function(event){
 	if(event.key === 'Enter'){
 		this.verifyLoginCode();
 	}
 }.bind(this);
+
 resendCode = function(){
 	this.setState({codeSent: false});
 }.bind(this);
+
 verifyLoginCode()
 {
 	const code = this.state.code;
@@ -81,6 +91,7 @@ verifyLoginCode()
 
 render() {
 	/**Stage 1 - Verification Method Selection**/
+	//TODO - the arabic here isn't up to date
 	const identification =
 		<div>
 			<div className='identification-input-title'>
@@ -88,15 +99,9 @@ render() {
 					مصادقة عبر
 				</div>
 				<div>
-					אימות באמצעות
+					הזינו כתובת אימייל
 				</div>
 			</div>
-			{/*<IdentificationField
-				dir="ltr" inputType="tel" minLength="9" maxLength="15"
-				placeholder="Phone Number"
-				validationFunction={this.validatePhone}
-				identificationFunction={this.identifyByPhone.bind(this)}
-			/>*/}
 			<IdentificationField
 				dir="ltr" inputType="email" minLength="5" maxLength="100"
 				placeholder="Email Address"
@@ -113,7 +118,9 @@ render() {
 			</div>
 			<br/>
 			<input className={"login-code"} value={this.state.code} onChange={(event) => {this.setLoginCode(event)}} onKeyDown={(event)=>{this.handleCodeKeyDown(event)}}/>
-
+			<button className={"submit-code-button"} onClick={this.verifyLoginCode.bind(this)}>
+				<FontAwesomeIcon icon="sign-in-alt"/>
+			</button>
 			<div className={"back-to-identification"} onClick={this.resendCode}>חזרה</div>
 		</div>;
 	return (
