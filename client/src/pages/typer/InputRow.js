@@ -29,6 +29,7 @@ export default class InputRow extends React.Component {
 		if(nextProps.isFocused && !state.isFocused) {
 			return {isFocused: nextProps.isFocused};
 		}
+		return null;
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {

@@ -38,9 +38,6 @@ constructor(props) {
 		],
 		displayEventSelectionPopup: false
 	};
-}
-
-componentDidMount() {
 	this.getCurrFilters();
 	this.getPotentialEvents();
 }

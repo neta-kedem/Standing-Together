@@ -17,6 +17,7 @@ export default class CircleDetails extends React.Component {
 		if(!state.mailchimpLists.length && nextProps.mailchimpLists && nextProps.mailchimpLists.length) {
 			return {mailchimpLists: nextProps.mailchimpLists};
 		}
+		return null;
 	}
 
 	setName=function(event){
