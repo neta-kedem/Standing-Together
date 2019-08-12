@@ -5,9 +5,8 @@ import SingleCondition from "./SingleCondition";
 import AddFiltersBtn from "./AddFiltersBtn";
 import QueryService from '../../services/queryService'
 import CreateFilter from './CreateFilter'
-// icons
-const orIcon = "./static/or.png";
-const andIcon = "./static/and.png";
+import orIcon from "../../static/or.png";
+import andIcon from "../../static/and.png";
 
 class GroupCondition extends React.Component {
   constructor(props) {

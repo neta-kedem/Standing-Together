@@ -1,6 +1,7 @@
 import React from 'react';
 import ia from "../../services/canvas/imageAdjustor";
 import "./CitySelector.scss";
+import map from "../../static/map.jpg";
 
 export default class CitySelector extends React.Component {
     constructor(props) {
@@ -62,7 +63,7 @@ export default class CitySelector extends React.Component {
         ctx.fillStyle="#FFFFFF";
         ctx.fillRect(0, 0, width, height);
         //draw the image onto a wrapping canvas - this allows us to access the pixel data directly later on
-        //ia.drawImage(ctx, scanImage, 0, 0, width, height);
+        ia.drawImage(ctx, scanImage, 0, 0, width, height);
     }
 
     drawCities(ctx){
@@ -352,7 +353,7 @@ export default class CitySelector extends React.Component {
                 </div>
                 {/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.
                  It is hidden from the user. The actual scan is displayed on a canvas **/}
-                <img alt={"ma"} src="../../static/map.jpg" ref={this.imgRef} className="hidden"/>
+                <img alt={"ma"} src={map} ref={this.imgRef} className="hidden"/>
             </div>
         )
     }

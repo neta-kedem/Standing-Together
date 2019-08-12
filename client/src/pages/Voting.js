@@ -3,6 +3,7 @@ import "./voting/Voting.scss";
 import Meta from "../lib/meta";
 import server from "../services/server";
 import Modal from "react-modal";
+import logo from "../static/logo_purple.svg"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTimes} from '@fortawesome/free-solid-svg-icons'
@@ -194,7 +195,7 @@ export default class Voting extends React.Component {
         <Meta />
         <img
             alt={"logo"}
-            src={"./static/logo_purple.svg"}
+            src={logo}
              width={250}
             className={"voting-logo"}
         />

@@ -3,6 +3,7 @@ import server from '../services/server';
 import cookie from 'js-cookie';
 import IdentificationField from './login/IdentificationField';
 import './login/Login.scss';
+import logo from "../static/logo_purple.svg"
 
 export default class Login extends React.Component {
 state = {
@@ -64,15 +65,15 @@ verifyLoginCode()
 			cookie.set('token', json.token, {expires: 30});
 			cookie.set('permissions', JSON.stringify(json.permissions), {expires: 30});
 			if(json.permissions.isOrganizer){
-				//Router.push({pathname: '/Organizer'}).then(()=>{});
+				this.props.history.push('/Organizer');
 				return;
 			}
 			if(json.permissions.isTyper){
-				//Router.push({pathname: '/Typer'}).then(()=>{});
+				this.props.history.push('/Typer');
 				return;
 			}
 			if(json.permissions.isCaller){
-				//Router.push({pathname: '/Caller'}).then(()=>{});
+				this.props.history.push('/Caller');
 			}
 		}
 	});
@@ -117,7 +118,7 @@ render() {
 		</div>;
 	return (
 		<div className='page-wrap-login' dir="rtl">
-			<img src="../static/Logo.svg" alt="standing-together" className='logo'/>
+			<img src={logo} alt="standing-together" className='logo'/>
 			{this.state.codeSent?loginCode:identification}
 		</div>
 	)

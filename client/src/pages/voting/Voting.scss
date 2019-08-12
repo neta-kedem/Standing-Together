@@ -1,4 +1,9 @@
 .page-wrap-voting {
+    font-family: Assistant, Cairo, Rubik, sans-serif;
+    width: 85%;
+    margin: 0 auto;
+    direction: rtl;
+
     @media (max-width: 768px) {
         .candidate {
             height: auto;
@@ -12,12 +17,7 @@
             border-left: 0;
         }
     }
-    /*iphone buttons fix*/
-    button {
-        -webkit-appearance: none !important;
-        -moz-appearance: none;
-    }
-
+    button,
     textarea,
     input.text,
     input[type="text"],
@@ -25,14 +25,7 @@
     input[type="submit"],
     .input-checkbox {
         -webkit-appearance: none !important;
-        border-radius: 0;
-    }
-
-    .page {
-        font-family: Assistant, Cairo, Rubik, sans-serif;
-        width: 85%;
-        margin: 0 auto;
-        direction: rtl;
+        -moz-appearance: none;
     }
 
     .page input, .page textarea, .page select, .page button {

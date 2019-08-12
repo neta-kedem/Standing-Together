@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
 import config from './config';
-import { withRouter } from 'react-router-dom'
 
 const apiPath='api/';
 function get(path){

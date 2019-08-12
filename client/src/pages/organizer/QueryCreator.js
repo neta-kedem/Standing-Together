@@ -8,6 +8,8 @@ import {
   resetServerContext
 } from "react-beautiful-dnd";
 import GroupCondition from "./GroupCondition";
+import orIcon from "../../static/or.png";
+import andIcon from "../../static/and.png";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faCalendarAlt,
@@ -29,10 +31,6 @@ library.add(
     faEnvelope,
     faCheckCircle
 );
-
-// icons
-const orIcon = "./static/or.png";
-const andIcon = "./static/and.png";
 
 class QueryCreator extends React.Component {
   constructor(props) {
@@ -160,11 +158,11 @@ class QueryCreator extends React.Component {
                         key={groupId}
                         className="filterIcon"
                         src={this.state.currFilters.logicalOperator === "or" ? orIcon : andIcon}
+                        alt="logical operator"
                         style={{
                           alignSelf: "center",
                           margin: "-12px 0 10px 0"
                         }}
-                        alt="logical operator"
                         onMouseDown={() =>
                           this._toggleLogicalOperator(-1, this.state.currFilters.logicalOperator)
                         }

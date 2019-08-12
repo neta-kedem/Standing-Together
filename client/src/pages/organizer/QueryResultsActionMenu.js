@@ -1,5 +1,6 @@
 import React from 'react';
 import './QueryResultsActionMenu.scss'
+import excel from  '../../static/Excel.svg'
 
 class QueryResultsActionMenu extends React.Component {
 	constructor(props) {
@@ -19,7 +20,7 @@ class QueryResultsActionMenu extends React.Component {
 			<div className="query-results-wrapper">
 				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>
 				<div className="action-button" onClick={this.state.downloadActivistsByQuery}>
-					<img alt="export to excel" className="action-button-icon" src={"../static/Excel.svg"}/>
+					<img alt="export to excel" className="action-button-icon" src={excel}/>
 					ייצוא לאקסל
 				</div>
 				{items}
