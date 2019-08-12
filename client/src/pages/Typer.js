@@ -20,6 +20,7 @@ export default class Typer extends React.Component {
 
 	constructor(props) {
 		super(props);
+		let scanId = QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).contactScan;
 		this.state = {
 			activists:[],
 			profileFields: [
@@ -57,7 +58,7 @@ export default class Typer extends React.Component {
 			],
 			eventData: {},
 			selectedRowIndex: 0,
-			scanId: QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).contactScan,
+			scanId: scanId ? scanId : "",
 			displayTyperForm: false,
 			displayScanUploadForm: false,
 			displayLoadingMessage: true,
