@@ -2,6 +2,7 @@ import React from 'react'
 import server from '../services/server'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import htmlParser from 'html-to-react';
+import "./dailySummary/DailySummary.scss"
 const HtmlToReactParser = htmlParser.Parser;
 
 export default class DailySummary extends React.Component {
@@ -25,12 +26,6 @@ export default class DailySummary extends React.Component {
         const htmlToReactParser = new HtmlToReactParser();
         return (
             <div className={"page-wrap-daily-summary"}>
-                <style>{/**
-                    .summary-wrap{
-                        text-align: right;
-                        padding: 3em;
-                        font-size: 1.2em;
-                    }**/}</style>
                 <TopNavBar>
                     <div className="title-wrap">
                         <span className="title-lang">סיכום יומי</span>
