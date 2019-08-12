@@ -1,6 +1,7 @@
 import React from 'react'
 import server from '../services/server'
 import './activist/activist.scss'
+import QueryString from 'query-string';
 import FormSegment from './activist/formSegment'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -13,7 +14,7 @@ export default class EventCreation extends React.Component {
         super(props);
         const today = new Date();
         this.state = {
-            _id: props.url.query.id,
+            _id: QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).id,
             activist: {},
             profileDataLists: {
                 residency:{field:"residency", data:[]},
@@ -136,13 +137,11 @@ export default class EventCreation extends React.Component {
             activist.membership[name] = value;
         this.setState({activist: activist, unsaved: true});
     }.bind(this);
-    validateActivist() {
-    }
     handlePost = function() {
         server.post('activists', {'activists': [this.state.activist]})
             .then(() => {
                 alert("saved");
-                //Router.push({pathname: '/Organizer'}).then(()=>{});
+                this.props.history.push('/Organizer');
             });
     }.bind(this);
 

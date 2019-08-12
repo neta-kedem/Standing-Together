@@ -1,6 +1,7 @@
 import React from 'react'
 import server from '../services/server'
 import './eventCreation/EventCreation.scss'
+import QueryString from 'query-string';
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -12,7 +13,7 @@ constructor(props) {
 	super(props);
 	const today = new Date();
 	this.state = {
-		_id: props.url.query.id,
+		_id: QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).id,
 		title: "",
 		date: today.getDate()+"/"+(today.getMonth()+1)+"/"+today.getFullYear(),
 		category: "",
@@ -50,7 +51,7 @@ fetchCategories() {
 fetchCities(){
 	server.get('cities/', {})
 		.then(json => {
-			this.setState({cities: json.map((city)=>{return city.name;})})
+			this.setState({cities: json.map((city)=>{return city.nameHe;})})
 		});
 }
 handleInputChange(event) {
@@ -96,7 +97,7 @@ handlePost() {
 	server.post('events', {'event':eventObject})
 	.then(() => {
 		alert("האירוע נשמר!");
-		//Router.push({pathname: '/Organizer'}).then(()=>{});
+		this.props.history.push('/Organizer');
 	});
 }
 

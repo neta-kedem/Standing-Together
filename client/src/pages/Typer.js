@@ -56,7 +56,7 @@ export default class Typer extends React.Component {
 			],
 			eventData: {},
 			selectedRowIndex: 0,
-			scanId: props.url.query.contactScan ? props.url.query.contactScan: "",
+			scanId: props.location.search.contactScan ? props.location.search.contactScan: "",
 			displayTyperForm: false,
 			displayScanUploadForm: false,
 			displayLoadingMessage: true,

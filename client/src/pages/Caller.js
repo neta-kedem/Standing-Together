@@ -1,4 +1,5 @@
 import React from 'react';
+import QueryString from 'query-string';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
@@ -21,8 +22,9 @@ export default class Caller extends React.Component {
 	callPingIntervalDuration = 10000;
 	constructor(props) {
 		super(props);
+		let eventCode = QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).eventCode;
 		this.state = {
-			eventCode: props.url?props.url.query.eventCode:"",
+			eventCode: eventCode?eventCode:"",
 			eventData: {
 				callInstructions:{},
 				eventDetails:{}
