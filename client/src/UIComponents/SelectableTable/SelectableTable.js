@@ -4,15 +4,26 @@ import './SelectableTable.scss'
 import TextValue from './FieldTypes/TextValue'
 import ToggleSwitch from './FieldTypes/ToggleSwitch'
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck, faPhoneSquare} from '@fortawesome/free-solid-svg-icons'
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {
+	faCalendar,
+	faCalendarCheck,
+	faCheckSquare,
+	faEnvelopeOpen,
+	faPaperPlane,
+	faPhone,
+	faPhoneSquare,
+	faUser
+} from '@fortawesome/free-solid-svg-icons'
+
 library.add(faPaperPlane, faCheckSquare, faUser, faPhone, faEnvelopeOpen, faCalendar, faCalendarCheck, faPhoneSquare);
 
 export default class SelectableTable extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			displayBorderTop: false, //when scrolling down the table, this border makes it look better. But if scrollTop == 0 it doesn't.
 			rows: props.rows,
 			rowKey: props.rowKey,
 			header: props.header,
@@ -21,6 +32,8 @@ export default class SelectableTable extends React.Component {
 			onDoubleClick: props.onDoubleClick,
 			allSelected: false
 		};
+		this.tableHead = React.createRef();
+		this.tableBody = React.createRef();
 	}
 
 	static getDerivedStateFromProps(nextProps){
@@ -71,15 +84,31 @@ export default class SelectableTable extends React.Component {
 		}
 	}
 
+	handleTableBodyScroll = function(e){
+		this.tableHead.current.scrollLeft = e.currentTarget.scrollLeft;
+		if(e.currentTarget.scrollTop > 4 && !this.state.displayBorderTop){
+			this.setState({displayBorderTop: true})
+		}
+		if(e.currentTarget.scrollTop <= 4 && this.state.displayBorderTop){
+			this.setState({displayBorderTop: false})
+		}
+	}.bind(this);
+
 	render() {
 		const tableHeader =
 			<tr className='list-table-header'>
 				<th className='list-row-selection-indicator list-table-header-field'> </th>
 				{this.state.header.map((field, i) =>
-				<th key={i} className={'list-table-header-field '+(!field.visibility?'hidden ':' ')} style={{'width':(field.width?field.width:'auto')}}>
+				<th key={i} className={'list-table-header-field '+(!field.visibility?'hidden ':' ')}
+					style={{
+						'width': (field.width ? field.width : 'auto'),
+						'minWidth': (field.width ? field.width : 'auto'),
+						'maxWidth': (field.width ? field.width : 'auto')
+					}}
+				>
 					{field.icon !== ""?
 						<div className="list-table-header-icon">
-							<FontAwesomeIcon icon={field.icon}> </FontAwesomeIcon>
+							<FontAwesomeIcon icon={field.icon}/>
 						</div>
 					:''}
 					<div className="list-table-header-titles">
@@ -92,10 +121,17 @@ export default class SelectableTable extends React.Component {
 		const rows =
 			this.state['rows'].map((row, i) =>
 				<tr key={this.state.rowKey?row[this.state.rowKey]:i} className='list-table-row' onClick={() => this.toggleRowSelection(i)} onDoubleClick={()=>this.onDoubleClick(i)}>
-					<td className={'list-table-field no-padding list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
+					<td className={'list-table-field list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
 					{
 						this.state.header.map((field, j) =>
-							<td key={j} className={'list-table-field '+(!field.visibility?'hidden ':' ')+(field.noPadding?'no-padding ':'')} style={{'width':(field.width?field.width:'auto')}} title={row[field["key"]]+""}>
+							<td key={j}
+								className={'list-table-field ' + (!field.visibility ? 'hidden ' : ' ') + (field.noPadding ? 'no-padding ' : '')}
+								style={{
+									'width': (field.width ? field.width : 'auto'),
+									'minWidth': (field.width ? field.width : 'auto'),
+									'maxWidth': (field.width ? field.width : 'auto')
+									}}
+								title={row[field["key"]]+""}>
 								{this.cellConstructor(field["type"], row[field["key"]], function(value){field["handleChange"](i, value)},)}
 							</td>
 						)
@@ -111,17 +147,21 @@ export default class SelectableTable extends React.Component {
 			</div>;
 		return (
 			<div className={'list-table-wrap'}>
-
 				<table className={'list-table'}>
-					<thead>
+					<thead ref={this.tableHead}>
 						{tableHeader}
 					</thead>
-					<tbody>
+					<tbody
+						ref={this.tableBody}
+						style={{
+							borderTop: this.state.displayBorderTop ? "1px solid #888" : "none"
+						}}
+						onScroll={this.handleTableBodyScroll}
+					>
 						{rows}
 					</tbody>
 				</table>
-				<br/>
-				{this.state.singleSelection?'':selectAll}
+				{/*this.state.singleSelection?'':selectAll*/}
 			</div>
 		);
 	}

@@ -36,16 +36,17 @@ class QueryCreator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAddFilterBtnActive: false,
-      isAddGroupBtnActive: false,
-      currFilters: { logicalOperator:"or", groups: [] },
-      showCreateFilterGroup: -1,
-      availableFilters: []
+        changeCurrFilters: this.props.changeCurrFilters,
+        isAddFilterBtnActive: false,
+        isAddGroupBtnActive: false,
+        currFilters: { logicalOperator:"or", groups: [] },
+        showCreateFilterGroup: -1,
+        availableFilters: []
     };
 
     QueryService.getCurrFilters().then(filters => {
       this.state.currFilters = filters;
-      this.props.changeCurrFilters(filters)
+      this.state.changeCurrFilters(filters)
     });
 
     QueryService.getAvailableFilters().then(filters => {
@@ -57,17 +58,17 @@ class QueryCreator extends React.Component {
   }
 
   _toggleLogicalOperator(groupId, logicalOperator) {
-    if ("or" === logicalOperator) {
+      if ("or" === logicalOperator) {
       QueryService.setLogicalOperator(groupId, "and")
           .then(currFilters => {
             this.setState({ currFilters });
-            this.props.changeCurrFilters(currFilters)
+            this.state.changeCurrFilters(currFilters)
           })
     } else {
       QueryService.setLogicalOperator(groupId, "or")
           .then(currFilters => {
             this.setState({ currFilters });
-            this.props.changeCurrFilters(currFilters)
+            this.state.changeCurrFilters(currFilters)
           })
     }
   }
@@ -81,7 +82,7 @@ class QueryCreator extends React.Component {
     QueryService.addFilter(groupId, newFilter)
         .then(currFilters => {
           this.setState({currFilters, showCreateFilterGroup: -1});
-          this.props.changeCurrFilters(currFilters)
+          this.state.changeCurrFilters(currFilters)
         })
   }
 
@@ -89,7 +90,7 @@ class QueryCreator extends React.Component {
     QueryService.removeSingleFilter(groupId, filterId)
         .then(currFilters => {
           this.setState({ currFilters });
-          this.props.changeCurrFilters(currFilters)
+          this.state.changeCurrFilters(currFilters)
         }
     );
   }
@@ -97,7 +98,7 @@ class QueryCreator extends React.Component {
     QueryService.addGroup()
         .then(currFilters => {
           this.setState({ currFilters });
-          this.props.changeCurrFilters(currFilters)
+          this.state.changeCurrFilters(currFilters)
         }
     );
   }

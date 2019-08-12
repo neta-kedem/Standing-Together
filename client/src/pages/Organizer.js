@@ -29,12 +29,12 @@ constructor(props) {
 		currFilters: { logicalOperator:"or", groups: [] },
 		allSelected: false,
 		tableFields:[
-			{title: ["اسم", "שם"],  visibility: true, key: "name", icon:"user", type:"text"},
-			{title: ["البلد", "עיר"],  visibility: true, key: "city", icon:"building", type:"text"},
-			{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"phone", type:"text"},
-			{title: ["البريد الإلكتروني", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text"},
-			{title: ["اخر ظهور", "נראתה לאחרונה"],  visibility: true, key: "lastSeen", icon:"calendar", type:"text"},
-			{title: ["اخر حدث", "אירוע אחרון"],  visibility: true, key: "lastEvent", icon:"calendar-check", type:"text"},
+			{title: ["اسم", "שם"],  visibility: true, key: "name", icon:"user", type:"text", width:"15em"},
+			{title: ["البلد", "עיר"],  visibility: true, key: "city", icon:"building", type:"text", width:"12em"},
+			{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"phone", type:"text", width:"12em"},
+			{title: ["البريد الإلكتروني", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text", width:"15em"},
+			{title: ["اخر ظهور", "נראתה לאחרונה"],  visibility: false, key: "lastSeen", icon:"calendar", type:"text", width:"12em"},
+			{title: ["اخر حدث", "אירוע אחרון"],  visibility: false, key: "lastEvent", icon:"calendar-check", type:"text", width:"8em"},
 		],
 		displayEventSelectionPopup: false
 	};
@@ -221,7 +221,7 @@ render() {
 						toggleEventPopup={this.handleEventPopupToggle.bind(this)}
 						activistCount={activistCount}
 						downloadActivistsByQuery={this.downloadActivistsByQuery.bind(this)}
-					> </QueryResultsActionMenu>
+					/>
 					<div className="results-wrap">
 						<div className="query-results">
 							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields} onDoubleClick={this.goToActivistPage.bind(this)}/>
