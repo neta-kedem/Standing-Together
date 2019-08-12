@@ -4,7 +4,6 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faTimes, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 library.add(faBuilding, faTimes, faUserCircle);
-const styles={};
 class SingleCondition extends React.Component {
   render() {
     const { provided, innerRef } = this.props;
@@ -16,25 +15,25 @@ class SingleCondition extends React.Component {
       <section
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          style={Object.assign(newStyle, styles.wrapper)}
+          style={newStyle}
           ref={innerRef}
-          className={"single-condition-wrap"}
+          className="single-condition-wrap"
       >
-        <div style={styles.titleRow}>
-          <div style={styles.titleWrapper}>
-            <FontAwesomeIcon style={{padding:10}} icon={this.getFilterIcon()}></FontAwesomeIcon>
+        <div className="titleRow">
+          <div className="titleWrapper">
+            <FontAwesomeIcon style={{padding:10}} icon={this.getFilterIcon()}/>
             <div>
-              <div style={styles.heading}>{this.props.condition.filterName}</div>
+              <div className="heading">{this.props.condition.filterName}</div>
             </div>
           </div>
-          <div style={styles.closeIcons} onClick={this.props.removeFilter}>
-            <FontAwesomeIcon icon="times"></FontAwesomeIcon>
+          <div className="closeIcons" onClick={this.props.removeFilter}>
+            <FontAwesomeIcon icon="times"/>
           </div>
         </div>
         <br/>
-        <div style={styles.valueContainer}>
-          <div style={styles.iconWrapper}>
-            <span style={styles.valuePrefix}>{this.getFilterValuePrefix()}</span>
+        <div className="valueContainer">
+          <div className="iconWrapper">
+            <span className="valuePrefix">{this.getFilterValuePrefix()}</span>
             <span>{this.props.condition.filterMain}</span>
           </div>
           <div>
@@ -55,7 +54,7 @@ class SingleCondition extends React.Component {
     const filterName = this.props.condition.filterName;
     if(filterName === "מגורים") return "building";
     if(filterName === "שם מלא") return "user-circle";
-    if(filterName === "מעגל") return "circle";
+    if(filterName === "מעגל") return "building";
     if(filterName === "שם פרטי") return "user-circle";
     if(filterName === "שם משפחה") return "user-circle";
 

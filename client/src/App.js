@@ -4,6 +4,7 @@ import meta from './lib/meta';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Organizer from "./pages/Organizer";
+import Activist from "./pages/Activist";
 import EventManagement from "./pages/EventManagement";
 import EventCreation from "./pages/EventCreation";
 import CityManagement from "./pages/CityManagement";
@@ -14,6 +15,9 @@ import ScanContacts from "./pages/ScanContacts";
 import ImportContacts from "./pages/ImportContacts";
 import DailySummary from "./pages/DailySummary";
 import Settings from "./pages/Settings";
+import MemberRegistration from "./pages/MemberRegistration";
+import Voting from "./pages/Voting";
+import VotingResults from "./pages/VotingResults";
 
 function App() {
   return (
@@ -23,6 +27,7 @@ function App() {
           <Route path="/" exact component={Login} />
           <Route path="/Login" exact component={Login} />
           <Route path="/Organizer" component={Organizer} />
+          <Route path="/Activist" component={Activist} />
           <Route path="/EventManagement" component={EventManagement} />
           <Route path="/EventCreation" component={EventCreation} />
           <Route path="/CityManagement" component={CityManagement} />
@@ -33,6 +38,9 @@ function App() {
           <Route path="/ImportContacts" component={ImportContacts} />
           <Route path="/DailySummary" component={DailySummary} />
           <Route path="/Settings" component={Settings} />
+          <Route path="/MemberRegistration" exact component={MemberRegistration} />
+          <Route path="/Voting" exact component={Voting} />
+          <Route path="/VotingResults" exact component={VotingResults} />
         </div>
       </Router>
   );

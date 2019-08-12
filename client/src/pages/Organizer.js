@@ -42,7 +42,6 @@ constructor(props) {
 
 componentDidMount() {
 	this.getCurrFilters();
-	//this.fetchActivistsByQuery();
 	this.getPotentialEvents();
 }
 fetchActivistsByQuery(){
@@ -82,7 +81,7 @@ handleQueryChange(event){
 	this.setState({query: event.target.value});
 }
 handleFiltersChange(currFilters){
-	this.setState(currFilters)
+	this.setState(currFilters);
 	this.fetchActivistsByQuery()
 }
 
@@ -128,7 +127,7 @@ filterMapper(filter) {
 		"מעגל": {field: '"profile.circle"', body: `{"$regex":".*${filter.filterMain}.*"}`, includes: (filter.filterPrefix === 'חבר/ה ב')},
 		"שם פרטי": {field: '"profile.firstName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
 		"שם משפחה": {field: '"profile.lastName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
-	}
+	};
 	return filterMapper[filter.filterName]
 }
 
@@ -156,7 +155,7 @@ handleEventSelection(selected){
 		});
 }
 goToActivistPage(activist){
-	//Router.push({pathname: '/Activist', query: {id: activist._id}}).then(()=>{});
+	this.props.history.push('/Activist?id='+activist._id);
 }
 render() {
 	const currPage = this.state.page;
@@ -179,7 +178,7 @@ render() {
 					handleSelection={this.handleEventSelection.bind(this)}
 				/>
 			</div>
-			<a className="new-event-button" href="./EventCreation">
+			<a className="new-event-button" href="./EventCreation.js">
 				<div>
 					<div>אירוע חדש</div>
 					<div>אירוע חדש</div>

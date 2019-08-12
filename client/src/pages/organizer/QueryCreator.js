@@ -1,6 +1,6 @@
 import React from "react";
 import QueryService from "../../services/queryService";
-import style from "./QueryCreator.scss";
+import "./QueryCreator.scss";
 import AddFiltersBtn from "./AddFiltersBtn";
 import {
   DragDropContext,
@@ -62,13 +62,13 @@ class QueryCreator extends React.Component {
     if ("or" === logicalOperator) {
       QueryService.setLogicalOperator(groupId, "and")
           .then(currFilters => {
-            this.setState({ currFilters })
+            this.setState({ currFilters });
             this.props.changeCurrFilters(currFilters)
           })
     } else {
       QueryService.setLogicalOperator(groupId, "or")
           .then(currFilters => {
-            this.setState({ currFilters })
+            this.setState({ currFilters });
             this.props.changeCurrFilters(currFilters)
           })
     }
@@ -82,7 +82,7 @@ class QueryCreator extends React.Component {
   _saveFilter(groupId, newFilter){
     QueryService.addFilter(groupId, newFilter)
         .then(currFilters => {
-          this.setState({currFilters, showCreateFilterGroup: -1})
+          this.setState({currFilters, showCreateFilterGroup: -1});
           this.props.changeCurrFilters(currFilters)
         })
   }
@@ -90,7 +90,7 @@ class QueryCreator extends React.Component {
   _removeFilter(groupId, filterId) {
     QueryService.removeSingleFilter(groupId, filterId)
         .then(currFilters => {
-          this.setState({ currFilters })
+          this.setState({ currFilters });
           this.props.changeCurrFilters(currFilters)
         }
     );
@@ -98,7 +98,7 @@ class QueryCreator extends React.Component {
   _addGroup() {
     QueryService.addGroup()
         .then(currFilters => {
-          this.setState({ currFilters })
+          this.setState({ currFilters });
           this.props.changeCurrFilters(currFilters)
         }
     );
@@ -119,7 +119,7 @@ class QueryCreator extends React.Component {
           })
         : null
     );
-    newId = Math.min(flatFilters.length - 1, newId)
+    newId = Math.min(flatFilters.length - 1, newId);
     let newGroupId = newId ? flatFilters[newId].groupId : 0;
     let filterMoved = flatFilters.splice(oldId, 1);
     filterMoved[0].groupId = newGroupId;
@@ -128,7 +128,7 @@ class QueryCreator extends React.Component {
     let newCurrFilters = {
       logicalOperator: this.state.currFilters.logicalOperator,
       groups: []
-    }
+    };
     flatFilters.forEach((filter, id) => {
       filter.id = id;
       let group = newCurrFilters.groups[filter.groupId];
@@ -137,35 +137,13 @@ class QueryCreator extends React.Component {
     });
     newCurrFilters.groups = newCurrFilters.groups.filter(group => group.filters.length);
 
-    QueryService.setFilters(newCurrFilters)
+    QueryService.setFilters(newCurrFilters);
     this.setState({ currFilters: newCurrFilters });
   }
 
   render() {
     return (
       <section style={{ overflow: "none", height: "calc(95% - 55px)", userSelect: "none" }}>
-        <style>
-            {/**.filterIcon {
-              width: 30px;
-              height: 22px;
-              cursor: pointer;
-              user-select: none;
-              user-drag: none;
-            }
-            @keyframes logicalOperatorClick {
-              25% {
-                transform: scale(1.5);
-              }
-              75% {
-                transform: scale(1);
-              }
-            }
-            .filterIcon:active {
-              animation: logicalOperatorClick 1s;
-              transition-timing-function: ease-in-out;
-            }**/}
-                </style>
-
         <DragDropContext onDragEnd={this.onDragStart.bind(this)}>
           <Droppable droppableId="droppable">
             {provided => (
@@ -194,7 +172,7 @@ class QueryCreator extends React.Component {
                     );
                   } else {
                     queryEl.push(
-                      <div key={groupId} style={{ paddingTop: 20 }}></div>
+                      <div key={groupId} style={{ paddingTop: 20 }}/>
                     );
                   }
                   queryEl.push(
@@ -216,7 +194,7 @@ class QueryCreator extends React.Component {
             )}
           </Droppable>
         </DragDropContext>
-        <AddFiltersBtn text="Add Group" type="group" onClick={this._addGroup.bind(this)}></AddFiltersBtn>
+        <AddFiltersBtn text="Add Group" type="group" onClick={this._addGroup.bind(this)}/>
       </section>
     );
   }

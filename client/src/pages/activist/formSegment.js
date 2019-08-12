@@ -10,10 +10,8 @@ export default class FormSegment extends React.Component {
             handleChange: props['handleChange']
         };
     }
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.dataLists) {
-            this.setState({dataLists: nextProps.dataLists});
-        }
+    static getDerivedStateFromProps(nextProps) {
+        return {dataLists: nextProps.dataLists};
     }
     syncStateToInput = function(event){
         const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;

@@ -35,7 +35,7 @@ export default class EventManagement extends React.Component {
         });
     }
     goToEvent(id){
-        //Router.push({pathname: '/EventCreation', query: {id: id}}).then(()=>{});
+        this.props.history.push('/EventCreation?id='+id);
     }
 
     render() {

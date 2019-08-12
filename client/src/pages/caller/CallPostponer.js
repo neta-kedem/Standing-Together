@@ -15,12 +15,14 @@ export default class CallPostponer extends React.Component {
             valid: false
         };
     }
-    componentWillReceiveProps(nextProps, nextState) {
+    static getDerivedStateFromProps(nextProps) {
         // You don't have to do this check first, but it can help prevent an unneeded render
-        this.setState({value: (nextProps.value||"")}, ()=>{
-            this.checkValidity();
-        });
+        return {value: (nextProps.value||"")};
     }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.checkValidity();
+    }
+
     checkValidity(){
         this.setState({valid: this.validation.test(this.state.value)})
     };

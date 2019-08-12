@@ -56,12 +56,6 @@ export default class CitySelector extends React.Component {
         })();
     }
 
-    componentWillReceiveProps(nextProps){
-        if(!this.state.cities || this.state.cities.length !== nextProps.cities.length || this.cities !== nextProps.cities){
-            this.setState({cities: nextProps.cities}, this.loadMapToCanvas);
-        }
-    }
-
     drawMap(ctx, width, height){
         const scanImage = this.imgRef.current;
         //initialize canvas to have a white background to prevent transparent areas messing with the detection
@@ -72,7 +66,7 @@ export default class CitySelector extends React.Component {
     }
 
     drawCities(ctx){
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         ctx.fillStyle="#90278E";
         ctx.strokeStyle="#50003E";
         for(let i = 0; i < cities.length; i++){
@@ -125,7 +119,7 @@ export default class CitySelector extends React.Component {
     }
 
     drawCityHighlight(ctx){
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         const highlighted = this.state.highlightedCity;
         if(highlighted !== null){
             ctx.fillStyle="#60278E30";
@@ -162,7 +156,7 @@ export default class CitySelector extends React.Component {
     }
 
     getClosestCity(x, y, cutoffDist){
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         const canvas = this.state.canvas;
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
@@ -183,7 +177,7 @@ export default class CitySelector extends React.Component {
     }
 
     previewSelection(indexesToSelect){
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             city.toBeSelected = false;
@@ -197,7 +191,7 @@ export default class CitySelector extends React.Component {
 
     commitSelection(indexesToSelect){
         const additiveSelection = this.state.additiveSelection;
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             if(city.toBeSelected || (indexesToSelect && indexesToSelect.indexOf(i) !== -1)){
@@ -222,7 +216,7 @@ export default class CitySelector extends React.Component {
         const maxY = Math.max(selectionStartY, mouseY);
         const minX = Math.min(selectionStartX, mouseX);
         const minY = Math.min(selectionStartY, mouseY);
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         let selectedCities = [];
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
@@ -241,7 +235,7 @@ export default class CitySelector extends React.Component {
         const selectedPoints = [];
         if(points.length < 3)
             return;
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             let intersectionToTheRight = 0;
@@ -335,7 +329,7 @@ export default class CitySelector extends React.Component {
     }.bind(this);
 
     render() {
-        const cities = this.state.cities.slice();
+        const cities = this.props.cities.slice();
         const highlightedCity = this.state.highlightedCity ? cities[this.state.highlightedCity] : null;
         const highlightedCityLabel = highlightedCity ? highlightedCity.nameAr + " - " + highlightedCity.nameHe : "";
         return (

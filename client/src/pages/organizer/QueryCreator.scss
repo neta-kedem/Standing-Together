@@ -15,3 +15,22 @@
 .filter-icon{
   padding-right: 5px
 }
+.filterIcon {
+  width: 30px;
+  height: 22px;
+  cursor: pointer;
+  user-select: none;
+  user-drag: none;
+}
+@keyframes logicalOperatorClick {
+  25% {
+    transform: scale(1.5);
+  }
+  75% {
+    transform: scale(1);
+  }
+}
+.filterIcon:active {
+  animation: logicalOperatorClick 1s;
+  transition-timing-function: ease-in-out;
+}

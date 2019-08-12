@@ -1,5 +1,6 @@
 import React from 'react';
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import "./Confirmation.scss";
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 library.add(faCheckCircle);
@@ -14,12 +15,14 @@ export default class Confirmation extends React.Component {
             visible: false
         };
     }
-    componentWillReceiveProps(nextProps, nextState) {
-        // You don't have to do this check first, but it can help prevent an unneeded render
-        if(!nextProps.visible)
-            return;
-        this.triggerAnimation();
+    static getDerivedStateFromProps(nextProps, nextState) {
+        return {visible: nextProps.visible};
     }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.state.visible)
+            this.triggerAnimation();
+    }
+
     triggerAnimation(){
         this.setState({visible: true}, ()=>{
             setTimeout(()=>{
@@ -30,51 +33,6 @@ export default class Confirmation extends React.Component {
     }
     render() {
         return <div>
-                <style>
-                    {/**
-                    @-webkit-keyframes slide-fwd-top {
-                      0% {
-                        -webkit-transform: translateY(0) scale(0);
-                                transform: translateY(0) scale(0);
-                      }
-                      50% {
-                        -webkit-transform: translateY(-20vw) scale(1);
-                                transform: translateY(-20vw) scale(1);
-                      }
-                      100% {
-                        -webkit-transform: translateY(-100vw) scale(0);
-                                transform: translateY(-100vw) scale(0);
-                      }
-                    }
-                    @keyframes slide-fwd-top {
-                      0% {
-                        -webkit-transform: translateY(0) scale(0);
-                                transform: translateY(0) scale(0);
-                      }
-                      50% {
-                        -webkit-transform: translateY(-20vw) scale(1);
-                                transform: translateY(-20vw) scale(1);
-                      }
-                      100% {
-                        -webkit-transform: translateY(-60vw) scale(0);
-                                transform: translateY(-60vw) scale(0);
-                      }
-                    }
-					.confirmation-icon{
-					    z-index: 1000;
-						position: fixed;
-						font-size: 20vw;
-						line-height: 20vw;
-						left: 40vw;
-						top: 30vw;
-						color: #90278e;
-						background-color: rgb(255, 206, 241);
-						border-radius: 20vw;
-						box-shadow: 0px 10px 30px 0px #00000088;
-						-webkit-animation: slide-fwd-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards;
-						animation: slide-fwd-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards;
-				`**/}
-                </style>
                 {this.state.visible?<div className="confirmation-icon">
                     <FontAwesomeIcon icon="check-circle"/>
                 </div>:""}

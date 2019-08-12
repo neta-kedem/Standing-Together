@@ -25,15 +25,17 @@ export default class InputRow extends React.Component {
 		this.firstInput = React.createRef();
 	}
 	
-	componentWillReceiveProps(nextProps) {
-		if(nextProps.isFocused&&!this.state.isFocused) {
-			this.firstInput.current.focus();
-		}
-		if(nextProps.isFocused !== this.state.isFocused){
-			this.setState({isFocused: nextProps.isFocused});
+	static getDerivedStateFromProps(nextProps, state) {
+		if(nextProps.isFocused && !state.isFocused) {
+			return {isFocused: nextProps.isFocused};
 		}
 	}
-	
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		if(this.state.isFocused)
+			this.firstInput.current.focus();
+	}
+
 	syncStateToInput = function(event, forceEnglish){
 	    const value = event.target.value;
 	    let translatedValue = "";

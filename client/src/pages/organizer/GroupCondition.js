@@ -24,11 +24,9 @@ class GroupCondition extends React.Component {
     resetServerContext();
   }
 
-  componentWillReceiveProps(nextProps) {
-    	if (nextProps.group !== this.state.group) {
-    		this.setState({ group: nextProps.group });
-    	}
-    }
+  static getDerivedStateFromProps(nextProps) {
+      return {group: nextProps.group};
+  }
 
   addFilter(groupId, filterId){
     this.props.addFilter(groupId, filterId)

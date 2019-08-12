@@ -13,9 +13,9 @@ export default class CircleDetails extends React.Component {
 			rowIndex: props['rowIndex'],
 		};
 	}
-	componentWillReceiveProps(nextProps) {
-		if(!this.state.mailchimpLists.length&&nextProps.mailchimpLists&&nextProps.mailchimpLists.length) {
-			this.setState({mailchimpLists: nextProps.mailchimpLists});
+	static getDerivedStateFromProps(nextProps, state) {
+		if(!state.mailchimpLists.length && nextProps.mailchimpLists && nextProps.mailchimpLists.length) {
+			return {mailchimpLists: nextProps.mailchimpLists};
 		}
 	}
 

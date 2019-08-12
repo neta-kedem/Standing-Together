@@ -50,10 +50,6 @@ class CreateFilter extends React.Component {
     return this.state.availableFilters.map(filter => filter.label);
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({ newFilter: {} });
-  }
-
   _getQueryFilter() {
     const filterLabel = this.state.newFilter.filterName;
     if (!filterLabel) return null;

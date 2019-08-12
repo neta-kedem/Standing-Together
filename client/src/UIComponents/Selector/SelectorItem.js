@@ -1,4 +1,5 @@
 import React from 'react';
+import "./SelectorItem.scss";
 
 export default class SelectorItem extends React.Component {
 	constructor(props) {
@@ -16,21 +17,6 @@ export default class SelectorItem extends React.Component {
 	render() {
 		return (
 			<div>
-				<style>{/**
-					.selector-item{
-						padding: 0.5%;
-						color: white;
-						transition: color 0.25s, background-color 0.25s;
-						cursor: pointer;
-					}
-					.selector-item:hover{
-						background-color: white;
-						color:rgb(144, 39, 142);
-					}
-					.selector-item:active{
-						background-color: #ccc;
-					}**/}
-                </style>
 				<div className="selector-item" onClick={this.handleSelect.bind(this)}>
 					{this.state.item[this.state.titleIndex]}
 				</div>

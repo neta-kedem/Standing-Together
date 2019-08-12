@@ -1,10 +1,6 @@
 import React from 'react';
-import Stylesheet from './TableScanner.scss'
+import './TableScanner.scss'
 
-import aggregator from '../../services/arrayAggregator';
-
-//graphics
-import sd from '../../services/canvas/shapeDrawer';
 import ia from '../../services/canvas/imageAdjustor';
 import ScannerDrawer from './ScannerDrawer'
 
@@ -42,14 +38,17 @@ componentDidMount() {
 	if(this.state.src)
 		this.initializeScanner();
 }
-	
-componentWillReceiveProps(nextProps) {
-  // You don't have to do this check first, but it can help prevent an unneeded render
-  if (nextProps.src && !this.state.src) {
-	this.setState({src: nextProps.src});
-	this.initializeScanner();
-  }
+
+componentDidUpdate(prevProps, prevState, snapshot) {
+	if(!prevState.src && this.state.src)
+		this.initializeScanner();
 }
+
+static getDerivedStateFromProps(nextProps) {
+	// You don't have to do this check first, but it can help prevent an unneeded render
+	return {src: nextProps.src};
+}
+
 initializeScanner() {
 	const canvas = this.refs.canvas;
 	const ctx = canvas.getContext('2d');
@@ -372,13 +371,11 @@ checkBorderScanComplete() {
 	const bordersScannerPosition = this.state.bordersScannerPosition;
 	//check if horizontal scan is complete
 	let moveAlongY = Math.sin(verticalEdgeRad);
-	let sin = Math.sin(horizontalEdgeRad);
 	let y = Math.floor(yOrigin+moveAlongY*bordersScannerPosition);
 	if(y>this.state.height||y<=0)
 		this.setState({allHorizontalBordersFound:true});
 	//check if vertical scan is complete
 	let moveAlongX = Math.cos(horizontalEdgeRad);
-	let cos = Math.cos(verticalEdgeRad);
 	let x = Math.floor(xOrigin+moveAlongX*bordersScannerPosition);
 	if(x>this.state.width||x<=0)
 		this.setState({allVerticalBordersFound:true});
@@ -392,7 +389,7 @@ render() {
 			</div>
 			<canvas ref="scanCanvas" className="hidden"/>
 			<canvas ref="originalScanCanvas" className="hidden"/>
-			<img ref="scanImage" className="hidden"/>
+			<img alt={"scanned-image"} ref="scanImage" className="hidden"/>
 		</div>
 	)
 }

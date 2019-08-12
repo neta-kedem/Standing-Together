@@ -1,7 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import {Cropper} from 'react-image-cropper'
-
+import "./ImageCropper.scss"
 
 export default class ImageCropper extends React.Component {
 	constructor(props) {
@@ -27,7 +26,7 @@ export default class ImageCropper extends React.Component {
 	handleImageLoad(){
 		this.setState({baseImg: this.state.cropper.img});
 	}
-	handleCrop(cropper){
+	handleCrop(){
 		this.state.onCrop(this.state.cropper.crop());
 	}
 	render() {
@@ -43,25 +42,6 @@ export default class ImageCropper extends React.Component {
 		:"";
 		return (
 			<div>
-				<style>{/**
-					.crop-button{
-						color: white;
-						background-color: #90278e;
-						border: none;
-						outline: none;
-						font-size: 1.5em;
-						display: block;
-						padding: 0.25em 0.5em;
-						margin: 0.5em auto;
-						transition: background-color 0.25s;
-						cursor: pointer;
-					}
-					.crop-button:hover{
-						background-color: #731f72;
-					}
-					.crop-button:active{
-						background-color: #561755;
-					}**/}</style>
 				{cropperWrap}
 			</div>
 		)

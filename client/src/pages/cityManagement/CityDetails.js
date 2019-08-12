@@ -14,9 +14,9 @@ export default class CityDetails extends React.Component {
 			rowIndex: props['rowIndex'],
 		};
 	}
-	componentWillReceiveProps(nextProps) {
-		if(!this.state.circles.length&&nextProps.circles&&nextProps.circles.length) {
-			this.setState({circles: nextProps.circles});
+	static getDerivedStateFromProps(nextProps, state) {
+		if(!state.circles.length && nextProps.circles && nextProps.circles.length) {
+			return{circles: nextProps.circles};
 		}
 	}
 

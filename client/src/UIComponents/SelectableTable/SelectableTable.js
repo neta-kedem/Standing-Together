@@ -23,12 +23,11 @@ export default class SelectableTable extends React.Component {
 		};
 	}
 
-	/*required because the data is fetched asynchronously. Might not be the optimal solution.*/
-	componentWillReceiveProps(nextProps){
-		this.setState(
-			{rows: nextProps.rows,
-			header: nextProps.header}
-		);
+	static getDerivedStateFromProps(nextProps){
+		return {
+			rows: nextProps.rows,
+			header: nextProps.header
+		};
 	}
 
 	toggleAllRowsSelection() {

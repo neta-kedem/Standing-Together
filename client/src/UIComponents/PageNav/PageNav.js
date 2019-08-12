@@ -1,4 +1,5 @@
 import React from 'react';
+import "./PageNav.scss";
 
 export default class PageNav extends React.Component {
     constructor(props) {
@@ -30,48 +31,6 @@ export default class PageNav extends React.Component {
         const pageIndex = this.state.currPage;
         const pageCount = this.state.pageCount;
         return <div className="page-nav-wrap">
-                <style>{/**
-                    .list-page-nav
-                    {
-                    	margin: 1em;
-                    	text-align: center;
-                    }
-                    .list-page-nav div
-                    {
-                    	display:inline-block;
-                    	vertical-align:  middle;
-                    }
-                    .page-nav-btn.prev
-                    {
-                    	margin-right: 0;
-                    }
-                    .page-nav-btn.next
-                    {
-                    	margin-left: 0;
-                    }
-                    .page-nav-btn.disabled
-                    {
-                    	color:#bbb;
-                    }
-                    .page-nav-btn:not(.disabled):hover
-                    {
-                    	text-shadow:0px 0px 1px black;
-                    }
-                    .page-director
-                    {
-                    	font-size:1.2em;
-                    	padding:0 0.25em;
-                    	cursor: pointer;
-                    }
-                    .page-director.curr-page
-                    {
-                    	text-shadow:0px 0px 1px black;
-                    }
-                    .page-director:hover
-                    {
-                    	text-shadow:0px 0px 1px #90278e;
-                    }**/}
-                </style>
             <div className="list-page-nav" dir="ltr">
                 <div className="page-director clickable" onClick={()=>{this.goToPage(pageIndex - 1)}}>{"<"}</div>
                 <div className="page-selection">
