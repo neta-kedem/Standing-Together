@@ -1,6 +1,7 @@
 import React from "react";
 import "./variables.scss";
 import "./global.scss";
+import favicon from "../static/favicon.ico"
 export default () => (
 	<div>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -26,7 +27,7 @@ export default () => (
 				type='text/css'
 			/>
 			<link
-				href="../static/favicon.ico"
+				href={favicon}
 				rel="icon"
 				type="image/x-icon"
 			/>
