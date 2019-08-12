@@ -108,7 +108,7 @@ export default class InputRow extends React.Component {
 			</td>;
 		//filler tag in case no row action is appropriate - without it, the layout gets all messed up
 		const noAction =
-			<td className="delete-row-wrap"> </td>;
+			<td className="delete-row-wrap"/>;
 		return (
 			<tbody className="row-wrap">
 				<tr className="row-margin">

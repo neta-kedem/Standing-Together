@@ -97,7 +97,7 @@ export default class SelectableTable extends React.Component {
 	render() {
 		const tableHeader =
 			<tr className='list-table-header'>
-				<th className='list-row-selection-indicator list-table-header-field'> </th>
+				<th className='list-row-selection-indicator list-table-header-field'/>
 				{this.state.header.map((field, i) =>
 				<th key={i} className={'list-table-header-field '+(!field.visibility?'hidden ':' ')}
 					style={{
@@ -121,7 +121,7 @@ export default class SelectableTable extends React.Component {
 		const rows =
 			this.state['rows'].map((row, i) =>
 				<tr key={this.state.rowKey?row[this.state.rowKey]:i} className='list-table-row' onClick={() => this.toggleRowSelection(i)} onDoubleClick={()=>this.onDoubleClick(i)}>
-					<td className={'list-table-field list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}> </td>
+					<td className={'list-table-field list-row-selection-indicator '+(row.selected?'selected-table-row ':'')}/>
 					{
 						this.state.header.map((field, j) =>
 							<td key={j}
@@ -139,7 +139,7 @@ export default class SelectableTable extends React.Component {
 				</tr>);
 		/*const selectAll =
 			<div className='select-all-checkbox' onClick={() => this.toggleAllRowsSelection()}>
-				<div className={'checkbox '+(this.state.allSelected?'checkbox-checked':'')}><FontAwesomeIcon icon="check-square"> </FontAwesomeIcon></div>
+				<div className={'checkbox '+(this.state.allSelected?'checkbox-checked':'')}><FontAwesomeIcon icon="check-square"/></div>
 				<div className="checkbox-label">
 					<div>اختر الكل</div>
 					<div>סימון הכל</div>

@@ -59,7 +59,7 @@ export default withRouter(class TopNavBar extends React.Component {
 								<div>תפריט</div>
 							</span>
 						</div>
-						<div className="sidebar-background" onClick={this.toggleMenu}> </div>
+						<div className="sidebar-background" onClick={this.toggleMenu}/>
 						<div className={"sidebar-wrap"}>
 							<div className={"sidebar"}>
 								<div className="sidebar-options">

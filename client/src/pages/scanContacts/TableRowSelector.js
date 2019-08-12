@@ -81,7 +81,7 @@ render() {
 									")"
 							}, ...{animationDelay: (i + j) * 0.05 + "s"}
 						}}
-			> </div>;
+			/>;
 		});
 		return <div className={className}
 					onClick={() => this.handleRowClick(i)}

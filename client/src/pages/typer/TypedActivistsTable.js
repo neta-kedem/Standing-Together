@@ -31,7 +31,7 @@ export default class TypedActivistsTable extends React.Component {
 			});
 		const titleRow =
 			<tr>
-				<th className="delete-row-wrap"> </th>
+				<th className="delete-row-wrap"/>
 				{this.state.fields.map((f) => {
 					return <React.Fragment key={"field_title_"+f.name}>
 						{f.margin?<th className="col-margin"/>:null}

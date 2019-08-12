@@ -26,7 +26,7 @@ export default class FormSegment extends React.Component {
                           onChange = {this.syncStateToInput}/>;
         case "select":
             return <select value = {values[f.name]} name={f.name} onChange = {this.syncStateToInput}>
-                <option value={0}> </option>
+                <option value={0}/>
                 {this.state.dataLists[f.name].data.map((o, i)=>{
                     return <option value={o} key={o + "_" + i}>{o}</option>
                 })}

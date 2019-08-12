@@ -17,7 +17,7 @@ export default class Checkbox extends React.Component {
 				<div className="control-group">
 					<label className="control control-checkbox">
 						<input type="checkbox" checked={this.props["checked"]} onChange={this.handleChange}/>
-						<div className="control_indicator"> </div>
+						<div className="control_indicator"/>
 						<div className={"checkbox-label"}> {this.state.label} </div>
 					</label>
 				</div>

@@ -64,7 +64,7 @@ export default class PaymentForm extends React.Component {
             <div className={"credit-card-field-title"}>תוקף</div>
             <select name="year" value={paymentData.year} onChange={this.handleInputChange}
                     className={paymentData["yearValid"] === false ? "invalid" : ""}>
-                <option value=""> </option>
+                <option value=""/>
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
                     const year = new Date().getUTCFullYear() + i;
                     return <option value={year} key={"year_" + year}>{year}</option>;
@@ -73,7 +73,7 @@ export default class PaymentForm extends React.Component {
             <span>/</span>
             <select name="month" value={paymentData.month} onChange={this.handleInputChange}
                     className={paymentData["monthValid"] === false ? "invalid" : ""}>
-                <option value=""> </option>
+                <option value=""/>
                 <option value="01">01</option>
                 <option value="02">02</option>
                 <option value="03">03</option>

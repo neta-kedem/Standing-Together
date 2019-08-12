@@ -131,7 +131,7 @@ render() {
 					<label className="label" id="event-cat">
 						<div>فئة<br/>קטגוריה</div>
 						<select dir="rtl" name="category" value={this.state.category} onChange={this.handleInputChange.bind(this)}>
-							<option value={""}> </option>
+							<option value={""}/>
 							{catOptions}
 						</select>
 					</label>
