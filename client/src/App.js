@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
 import meta from './lib/meta';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import NoMatch from "./pages/404";
 import Login from "./pages/Login";
 import Organizer from "./pages/Organizer";
 import Activist from "./pages/Activist";
@@ -24,23 +25,26 @@ function App() {
       <Router>
         <div>
           <meta/>
-          <Route path="/" exact component={Login} />
-          <Route path="/Login" exact component={Login} />
-          <Route path="/Organizer" component={Organizer} />
-          <Route path="/Activist" component={Activist} />
-          <Route path="/EventManagement" component={EventManagement} />
-          <Route path="/EventCreation" component={EventCreation} />
-          <Route path="/CityManagement" component={CityManagement} />
-          <Route path="/CircleManagement" component={CircleManagement} />
-          <Route path="/EventCategoriesManagement" component={EventCategoriesManagement} />
-          <Route path="/Typer" component={Typer} />
-          <Route path="/ScanContacts" component={ScanContacts} />
-          <Route path="/ImportContacts" component={ImportContacts} />
-          <Route path="/DailySummary" component={DailySummary} />
-          <Route path="/Settings" component={Settings} />
-          <Route path="/MemberRegistration" exact component={MemberRegistration} />
-          <Route path="/Voting" exact component={Voting} />
-          <Route path="/VotingResults" exact component={VotingResults} />
+          <Switch>
+            <Route path="/" exact component={Login} />
+            <Route path="/Login" exact component={Login} />
+            <Route path="/Organizer" component={Organizer} />
+            <Route path="/Activist" component={Activist} />
+            <Route path="/EventManagement" component={EventManagement} />
+            <Route path="/EventCreation" component={EventCreation} />
+            <Route path="/CityManagement" component={CityManagement} />
+            <Route path="/CircleManagement" component={CircleManagement} />
+            <Route path="/EventCategoriesManagement" component={EventCategoriesManagement} />
+            <Route path="/Typer" component={Typer} />
+            <Route path="/ScanContacts" component={ScanContacts} />
+            <Route path="/ImportContacts" component={ImportContacts} />
+            <Route path="/DailySummary" component={DailySummary} />
+            <Route path="/Settings" component={Settings} />
+            <Route path="/MemberRegistration" exact component={MemberRegistration} />
+            <Route path="/Voting" exact component={Voting} />
+            <Route path="/VotingResults" exact component={VotingResults} />
+            <Route component={NoMatch} />
+          </Switch>
         </div>
       </Router>
   );
