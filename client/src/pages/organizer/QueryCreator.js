@@ -42,7 +42,7 @@ class QueryCreator extends React.Component {
       isAddGroupBtnActive: false,
       currFilters: { logicalOperator:"or", groups: [] },
       showCreateFilterGroup: -1,
-      avilableFilters: []
+      availableFilters: []
     };
 
     QueryService.getCurrFilters().then(filters => {
@@ -51,7 +51,7 @@ class QueryCreator extends React.Component {
     });
 
     QueryService.getAvailableFilters().then(filters => {
-      this.state.avilableFilters = filters;
+      this.state.availableFilters = filters;
     });
 
     // react-beautiful-dnd needs that in order to support server side rendering
@@ -120,7 +120,7 @@ class QueryCreator extends React.Component {
         : null
     );
     newId = Math.min(flatFilters.length - 1, newId);
-    let newGroupId = newId ? flatFilters[newId].groupId : 0;
+    let newGroupId = (flatFilters[newId] && newId) ? flatFilters[newId].groupId : 0;
     let filterMoved = flatFilters.splice(oldId, 1);
     filterMoved[0].groupId = newGroupId;
     flatFilters.splice(newId, 0, filterMoved[0]);

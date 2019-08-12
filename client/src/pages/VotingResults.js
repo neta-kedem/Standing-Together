@@ -26,11 +26,10 @@ export default class VotingResults extends React.Component {
       let allVotes = [];
       votes.forEach(vote => (allVotes = allVotes.concat(vote.votes)));
       candidates.forEach(candidate => {
-        let votes = allVotes.reduce(
-          (acc, curr) => acc + (curr == candidate._id),
-          0
+        candidate.votes = allVotes.reduce(
+            (acc, curr) => acc + (curr === candidate._id),
+            0
         );
-        candidate.votes = votes;
       });
 
       candidates.sort((a, b) => b.votes - a.votes);

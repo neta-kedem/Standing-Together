@@ -12,7 +12,6 @@ library.add(faSave);
 export default class EventCreation extends React.Component {
     constructor(props) {
         super(props);
-        const today = new Date();
         this.state = {
             _id: QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).id,
             activist: {},
@@ -43,7 +42,7 @@ export default class EventCreation extends React.Component {
                 },
                 {
                     name: "email", type: "email", ar: "البريد الإلكتروني", he: "אימייל",
-                    validation: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    validation: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                 },
                 {
                     name: "circle", type: "select", ar: "", he: "מעגל",

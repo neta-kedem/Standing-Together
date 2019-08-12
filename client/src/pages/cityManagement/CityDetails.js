@@ -16,8 +16,9 @@ export default class CityDetails extends React.Component {
 	}
 	static getDerivedStateFromProps(nextProps, state) {
 		if(!state.circles.length && nextProps.circles && nextProps.circles.length) {
-			return{circles: nextProps.circles};
+			return {circles: nextProps.circles};
 		}
+		return null;
 	}
 
 	setHeName=function(event){

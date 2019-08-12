@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+
 const baseDonation = {
     DonorTitle: "test",
     DonorFirstName: '',
@@ -51,9 +52,6 @@ const baseDonation = {
     EcardPostalState: '-1',
     EcardPostalZipCode: ''
 };
-const errors = {
-    "default": "התרומה נכשלה - וודאו שהפרטים מדוייקים, וצרו איתנו קשר במקרה הצורך"
-};
 //this is here to block rapid consecutive donations. If you want to display a loading text while the donation is being processed, make another variable
 let donationInProcess = false;
 
@@ -83,7 +81,7 @@ function donate(profileData, paymentData){
     donationInProcess = true;
     const donation = getDonationObject(profileData, paymentData);
     const form = Object.keys(donation).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(donation[key])).join('&');//new FormData;
-    const promise = fetch("https://secured.israelgives.org/DonationAPI/v1.1/DonationAPI.asmx/MakdeDonation", {
+    return fetch("https://secured.israelgives.org/DonationAPI/v1.1/DonationAPI.asmx/MakdeDonation", {
         method: 'post',
         mode: 'no-cors',
         body: form,
@@ -91,11 +89,10 @@ function donate(profileData, paymentData){
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-    }).then(res => {
-            donationInProcess = false;
-            return true;
-        });
-    return promise;
+    }).then(() => {
+        donationInProcess = false;
+        return true;
+    });
 }
 export default {
     donate

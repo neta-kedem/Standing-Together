@@ -97,7 +97,7 @@ export default class Voting extends React.Component {
         })
         .then(res => {
           if (res) {
-            alert("תודה רבה על ההצבעה!\n" + "شكرًا جزيلًا على التصويت!");
+            alert("תודה רבה על ההצבעה!\nشكرًا جزيلًا على التصويت!");
             this.setState({
                 selected: [],
                 finishedSelecting: false,
@@ -172,7 +172,7 @@ export default class Voting extends React.Component {
                     id={"select-candidate-" + candidate._id}
                     value={isSelected ? "✔" : ""}
                     onClick={this.selectCandidate.bind(this, candidate._id)}
-                ></input>
+                />
             </div>
         </div>
       </div>
@@ -193,9 +193,10 @@ export default class Voting extends React.Component {
       <div className={"page page-wrap-voting"}>
         <Meta />
         <img
-          src={"./static/logo_purple.svg"}
-          width={250}
-          className={"voting-logo"}
+            alt={"logo"}
+            src={"./static/logo_purple.svg"}
+             width={250}
+            className={"voting-logo"}
         />
         <div className={"introduction-wrap"}>
             <h1 className="voting-title">
@@ -273,7 +274,7 @@ export default class Voting extends React.Component {
               value={"האם הקוד שלי תקף? هل الكود الذي أملكه صالح الفعالية؟"}
               className="code_button"
               onClick={this.validateCode}
-            ></input>
+            />
           </form>
         </div>
         <div className="candidates">
