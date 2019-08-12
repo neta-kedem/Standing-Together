@@ -14,7 +14,7 @@ handleUploadSuccess(id){
 }
 render() {
 	return (
-		<div className={"page-wrap-scan-contacts"}>
+		<div>
 			<TopNavBar>
 				<div className="title-wrap">
 					<span className="title-lang">مسح صفحات اتصال</span>

@@ -44,6 +44,7 @@ componentDidMount() {
 	this.getCurrFilters();
 	this.getPotentialEvents();
 }
+
 fetchActivistsByQuery(){
 	let query;
 	try {
@@ -56,7 +57,7 @@ fetchActivistsByQuery(){
 	}
 	server.post('selectActivists', {'query': query, 'page': this.state.page})
 		.then(json => {
-			if(json.activists)
+			if(json && json.activists)
 				this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
 		});
 
@@ -92,6 +93,7 @@ getPotentialEvents(){
 				this.setState({events:json});
 		});
 }
+
 getCurrFilters(){
 	QueryService.getCurrFilters()
 		.then(currFilters => {
@@ -100,6 +102,7 @@ getCurrFilters(){
 			});
 		});
 }
+
 getCurrQuery() {
 	const currFilters = this.state.currFilters;
 	// todo neta- complete this

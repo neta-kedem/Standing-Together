@@ -35,7 +35,7 @@ export default class ExcelUploader extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className="excel-uploader-wrap">
 				<div className="fileInputWrap">
 					<form method="post">
 						<div className="upload-btn-wrapper">

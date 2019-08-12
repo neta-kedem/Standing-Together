@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import config from './config';
+import { withRouter } from 'react-router-dom'
 
 const apiPath='api/';
 function get(path){
@@ -14,7 +15,7 @@ function get(path){
 	.then(json => {
 		if(json.error === "missing token")
 		{
-			//Router.push({pathname: '/Login'});
+			this.props.history.push('/Login');
 			return [];
 		}
 		return json;
@@ -35,7 +36,7 @@ function post(path, data){
 	.then(json => {
 		if(json.error === "missing token")
 		{
-			//Router.push({pathname: '/Login'});
+			this.props.history.push('/Login');
 			return null;
 		}
 		return json;
@@ -68,6 +69,5 @@ function uploadFile(path, file, name){
 }*/
 export default {
     get,
-    post,
-	//uploadFile
+    post
 }

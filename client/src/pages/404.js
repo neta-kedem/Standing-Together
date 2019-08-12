@@ -3,9 +3,6 @@ import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import "./404/404.scss"
 
 export default class EventCategoriesManagement extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         return (
             <div className={"page-wrap-event-categories-management"}>

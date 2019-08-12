@@ -124,7 +124,7 @@ export default class ScanForm extends React.Component {
             <canvas ref={this.canvasRef} className="img-preview"/>
         </div>;
         return (
-            <div>
+            <div className={"page-wrap-scan-contacts"}>
                 <div className={"main-content"}>
                     <div className="scan-selection-wrap">
                         <h3>اضافة مسح صفحة اتصال</h3>
