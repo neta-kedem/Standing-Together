@@ -1,7 +1,6 @@
 import React from 'react';
 import "./welcome/welcome.scss";
 import cookie from "js-cookie";
-import Router from "next/router";
 
 export default class MemberRegistration extends React.Component {
     constructor(props) {
@@ -24,9 +23,11 @@ export default class MemberRegistration extends React.Component {
             return {}
         }
     }
+
     goToPage = function(page){
-        Router.push({pathname: '/'+page}).then(()=>{});
+        this.props.history.push('/' + page)
     }.bind(this);
+
     render() {
         const permissions = this.state.permissions;
         return (

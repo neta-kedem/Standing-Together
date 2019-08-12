@@ -309,7 +309,7 @@ export default class Voting extends React.Component {
               onClick={this.handleEventPopupToggle.bind(this)}
               className={"close-popup-button"}
             >
-                <FontAwesomeIcon icon={faTimes}> </FontAwesomeIcon>
+                <FontAwesomeIcon icon={faTimes}/>
             </button>
             <h3 className="hebrew finish-popup-content">
               האם את/ה בטוח/ה בהצבעה? אי אפשר יהיה לבטל אח״כ
@@ -340,7 +340,7 @@ export default class Voting extends React.Component {
               onClick={this.handleCandidatePopupToggle}
               className={"close-popup-button"}
             >
-                <FontAwesomeIcon icon={faTimes}> </FontAwesomeIcon>
+                <FontAwesomeIcon icon={faTimes}/>
             </button>
             <div
               className="popup-candidate-picture"

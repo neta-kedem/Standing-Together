@@ -19,6 +19,7 @@ import Settings from "./pages/Settings";
 import MemberRegistration from "./pages/MemberRegistration";
 import Voting from "./pages/Voting";
 import VotingResults from "./pages/VotingResults";
+import Welcome from "./pages/Welcome";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/MemberRegistration" exact component={MemberRegistration} />
             <Route path="/Voting" exact component={Voting} />
             <Route path="/VotingResults" exact component={VotingResults} />
+            <Route path="/Welcome" exact component={Welcome} />
             <Route component={NoMatch} />
           </Switch>
         </div>

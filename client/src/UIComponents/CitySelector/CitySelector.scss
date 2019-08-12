@@ -2,11 +2,21 @@
     display: none;
 }
 .map-selector-wrap{
-    display: block;
+    display: inline-block;
+    vertical-align: top;
     position: relative;
     height: 90vh;
     width: 40vh;
-    margin: 1em auto;
+}
+.selected-cities-list{
+    display: inline-block;
+    vertical-align: top;
+    height: 90vh;
+    width: calc(90vw - 40vh);
+    max-width: 15em;
+    overflow: auto;
+    margin-right: 2em;
+    text-align: right;
 }
 .map-view{
     display: block;
@@ -56,4 +66,34 @@
 }
 .poly-selection{
     background-image: url("../../static/poly_select.png");
+}
+.selected-city{
+    background-color: #00000000;
+    transition: background-color 0.25s;
+}
+.selected-city:hover{
+    background-color: #ddd;
+}
+.selected-city{
+    width: fit-content;
+    padding: 0.2em;
+}
+.selected-city-name, .deselect-city{
+    display: inline-block;
+    vertical-align: middle;
+}
+.deselect-city{
+    cursor: pointer;
+}
+.selected-city-name{
+    margin-right: 1em;
+    width: 10em;
+}
+.select-city-wrap{
+    width: fit-content;
+    padding: 0.2em 0.1em 0.2em 0.2em;
+}
+.select-city{
+    margin-right: 1em;
+    width: 12.3em;
 }

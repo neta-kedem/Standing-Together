@@ -1,8 +1,9 @@
 import React from 'react';
 import server from '../../services/server'
+import { withRouter } from 'react-router-dom'
 import "./SuccessfulUpload.scss"
 
-export default class SuccessfulUpload extends React.Component {
+export default withRouter(class SuccessfulUpload extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,7 +13,7 @@ export default class SuccessfulUpload extends React.Component {
     logout() {
         server.get('logout', {})
             .then(json => {
-                //Router.push({pathname: '/Login'}).then(()=>{});
+                this.props.history.push('/Login')
             });
     }
     render() {
@@ -29,5 +30,5 @@ export default class SuccessfulUpload extends React.Component {
             </div>
         )
     }
-}
+})
 

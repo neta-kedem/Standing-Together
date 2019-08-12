@@ -2,6 +2,10 @@ import React from 'react';
 import ia from "../../services/canvas/imageAdjustor";
 import "./CitySelector.scss";
 import map from "../../static/map.jpg";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faTimes, faPlus} from '@fortawesome/free-solid-svg-icons'
+library.add(faTimes, faPlus);
 
 export default class CitySelector extends React.Component {
     constructor(props) {
@@ -51,10 +55,12 @@ export default class CitySelector extends React.Component {
         this.setState({ctx: ctx, canvas: canvas}, ()=>{
             this.draw();
         });
-        //animation loop configuration
-        window.requestAnimFrame = (function() {
-            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
-        })();
+        this.setState({drawInterval: setInterval(this.draw, 100)});
+    }
+
+    componentWillUnmount() {
+        if(this.state.drawInterval)
+            clearInterval(this.state.drawInterval);
     }
 
     drawMap(ctx, width, height){
@@ -143,7 +149,6 @@ export default class CitySelector extends React.Component {
         if(this.state.polygonSelectionMode)
             this.drawPolygonSelectionArea(ctx);
         this.drawCityHighlight(ctx);
-        window.requestAnimFrame(this.draw);
     }.bind(this);
 
     coordinatesToPosition(canvas, lng, lat){
@@ -329,12 +334,21 @@ export default class CitySelector extends React.Component {
             this.setState({additiveSelection: false})
     }.bind(this);
 
+    selectCityById = function(id){
+        const cities = this.props.cities.slice();
+        for(let i = 0; i < cities.length; i++){
+            if(cities[i]._id === id)
+                cities[i].selected = true;
+        }
+        this.setState({cities: cities})
+    }.bind(this);
+
     render() {
         const cities = this.props.cities.slice();
         const highlightedCity = this.state.highlightedCity ? cities[this.state.highlightedCity] : null;
         const highlightedCityLabel = highlightedCity ? highlightedCity.nameAr + " - " + highlightedCity.nameHe : "";
         return (
-            <div>
+            <div dir={"rtl"}>
                 <div className={"map-selector-wrap"}>
                     <canvas ref={this.canvasRef} className="map-view"/>
                     <div className={"highlighted-city-label"}>
@@ -349,6 +363,34 @@ export default class CitySelector extends React.Component {
                                 className={"selection-mode poly-selection " + (this.state.polygonSelectionMode ? "active-mode" : "")}
                                 onClick={()=>{this.setState({polygonSelectionMode: true, rectSelectionMode: false})}}>
                         </button>
+                    </div>
+                </div>
+                <div className={"selected-cities-list"}>
+                    {
+                        cities.filter(city => city.selected).map(city => {
+                            return <div className={"selected-city"} key={"city-" + city._id}>
+                                <div className={"deselect-city"}
+                                     onClick={()=>{
+                                         city.selected = false;
+                                         this.forceUpdate();
+                                     }}>
+                                    <FontAwesomeIcon icon={faTimes}/>
+                                </div>
+                                <div className={"selected-city-name"}>{city.nameAr + " - " + city.nameHe}</div>
+                            </div>
+                        })
+                    }
+                    <div className={"select-city-wrap"}>
+                        <FontAwesomeIcon icon={faPlus}/>
+                        <select className="select-city" value="" onChange={(e)=>{this.selectCityById(e.target.value)}}>
+                            <option value={""}/>
+                            {cities.filter(city => !city.selected && city.nameHe && city.nameHe.length).map(city => {
+                                return <option key={"city-he-" + city._id} value={city._id}>{city.nameHe}</option>
+                            })}
+                            {cities.filter(city => !city.selected && city.nameAr && city.nameAr.length).map(city => {
+                                return <option key={"city-ar-" + city._id} value={city._id}>{city.nameAr}</option>
+                            })}
+                        </select>
                     </div>
                 </div>
                 {/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.

@@ -1,8 +1,9 @@
 .page-wrap-welcome {
-	body {
-		background-color: #90278e;
-		color: white;
-	}
+	background-color: #90278e;
+	color: white;
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
 
 	.welcome-title {
 		font-size: 3em;
