@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import ScanForm from "./scanContacts/ScanForm";
 import SuccessfulUpload from "./typer/SuccessfulUpload";
+import QueryString from "query-string";
 library.add(faCloudUploadAlt);
 
 export default class Typer extends React.Component {
@@ -56,7 +57,7 @@ export default class Typer extends React.Component {
 			],
 			eventData: {},
 			selectedRowIndex: 0,
-			scanId: props.location.search.contactScan ? props.location.search.contactScan: "",
+			scanId: QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).contactScan,
 			displayTyperForm: false,
 			displayScanUploadForm: false,
 			displayLoadingMessage: true,
