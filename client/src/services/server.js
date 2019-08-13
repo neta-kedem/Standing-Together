@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import config from './config';
+import { withRouter} from "react-router";
 
 const apiPath='api/';
 function get(path){
@@ -14,7 +15,13 @@ function get(path){
 	.then(json => {
 		if(json.error === "missing token")
 		{
-			this.props.history.push('/Login');
+			if(window.confirm("you don't have permissions to view this page, switch user?"))
+			{
+				window.location.href = '/';
+			}
+			else{
+				window.location.href = '/Welcome';
+			}
 			return [];
 		}
 		return json;
@@ -35,38 +42,20 @@ function post(path, data){
 	.then(json => {
 		if(json.error === "missing token")
 		{
-			this.props.history.push('/Login');
+			if(window.confirm("you don't have permissions to view this page, switch user?"))
+			{
+				window.location.href = '/';
+			}
+			else{
+				window.location.href = '/Welcome';
+			}
 			return null;
 		}
 		return json;
 	});
 	return promise;
 }
-/*
-not sure why this doesn't work:
-server.uploadFile("contactScan", event.target.files[0], "scan");
-function uploadFile(path, file, name){
-	var formWrap = new FormData();
-	formWrap.append(name, file);
-	var promise = fetch(config.serverPath+apiPath+path, {
-		headers: {
-			'Accept': 'application/json, application/xml, text/play, text/html, *.*'
-		},
-		credentials: 'same-origin',
-		method: 'POST',
-		body: formWrap
-	})
-	.then(res => res.json())
-	.then(json => {
-		if(json.error=="missing token")
-		{
-			Router.push({pathname: '/Login'});
-		}
-		return json;
-	});
-	return promise;
-}*/
-export default {
+export default withRouter({
     get,
     post
-}
+})
