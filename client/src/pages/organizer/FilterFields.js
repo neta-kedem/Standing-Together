@@ -2,8 +2,8 @@ import server from '../../services/server';
 import React from "react";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faUserCircle } from '@fortawesome/free-solid-svg-icons';
-library.add(faBuilding, faUserCircle);
+import { faBuilding, faUserCircle, faEnvelope, faPhone} from '@fortawesome/free-solid-svg-icons';
+library.add(faBuilding, faUserCircle, faEnvelope, faPhone);
 const fieldsFilterOptions = {
     cities: [],
     circles: [],
@@ -47,6 +47,24 @@ const filterableFields = {
             options: {
             includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text"},
             nIncludes: {label: 'לא מכיל', acceptMultiple: false, sortPosition: 1, operator: "$regex", inputType: "text"},
+        }
+    },
+    email:{
+        sortPosition: 3,
+        label: "אימייל",
+        icon: <FontAwesomeIcon icon="envelope"/>,
+        fieldName: "profile.email",
+        options: {
+            includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text"}
+        }
+    },
+    phone:{
+        sortPosition: 3,
+        label: "טלפון",
+        icon: <FontAwesomeIcon icon="phone"/>,
+        fieldName: "profile.phone",
+        options: {
+            includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text"}
         }
     }
 };

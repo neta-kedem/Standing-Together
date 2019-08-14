@@ -105,7 +105,7 @@ class SingleCondition extends React.Component {
       </select>
     }
     else{
-      return <div>{field.options[condition.option]}</div>
+      return <div>{field.options[condition.option].label}</div>
     }
   };
 

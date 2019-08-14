@@ -1,50 +1,53 @@
-const emptyFilters = {
-    logicalOperator:"or",
-    groups: []
-};
+function emptyFilters (){
+    return {
+        logicalOperator:"or",
+        groups: []
+    }
+}
 
-const emptyGroup = {
-    logicalOperator:"or",
-    filters: []
-};
-
+function emptyGroup (){
+    return {
+        logicalOperator: "or",
+        filters: [emptyFilters()]
+    }
+}
 
 function addGroup(filters) {
-    filters.groups.push(emptyGroup);
-    return filters || emptyFilters
+    filters.groups.push(emptyGroup());
+    updateFilterIndices(filters);
+    return filters;
+}
+
+function removeGroup(filters, groupIndex) {
+    if(!filters.groups || !filters.groups.length)
+        return;
+    filters.groups.splice(groupIndex, 1);
+    updateFilterIndices(filters);
+    return filters;
 }
 
 function addCondition(filters, groupIndex) {
     filters.groups[groupIndex].filters.push({});
     updateFilterIndices(filters);
-    return filters || emptyFilters
+    return filters;
 }
 
 function updateCondition(condition, filters, groupIndex, conditionIndex) {
     filters.groups[groupIndex].filters[conditionIndex]=condition;
     updateFilterIndices(filters);
-    return filters || emptyFilters
+    return filters;
 }
 
 function removeCondition(filters, groupIndex, filterId) {
-    filters.groups[groupIndex].filters = filters.groups[groupIndex].filters.filter((filter, i) => i !== filterId);
+    filters.groups[groupIndex].filters = filters.groups[groupIndex].filters.filter((filter) => filter.id !== filterId);
     filters.groups = filters.groups.filter(group => group.filters.length);
     updateFilterIndices(filters);
-    return filters || emptyFilters
+    return filters;
 }
 
 function updateFilterIndices(filters){
     let index = 0;
     filters.groups.forEach(group => group.filters.forEach(filter => filter.id = index++));
-}
-
-function setLogicalOperator(filters, groupIndex, logicalOperator) {
-    if(groupIndex !== -1) {
-        filters.groups[groupIndex].logicalOperator = logicalOperator
-    } else {
-        filters.logicalOperator = logicalOperator
-    }
-    return filters || emptyFilters
 }
 
 function conditionToQuery(condition, filterableFields) {
@@ -59,12 +62,19 @@ function conditionToQuery(condition, filterableFields) {
 }
 
 function generateQuery(filters, filterableFields){
-    if(!filters.groups.length) return "{}";
-    let query = `{"$${filters.logicalOperator}": [`;
-    filters.groups.forEach((group, i) => {
+    const groups = JSON.parse(JSON.stringify(filters.groups));
+    groups.forEach(g => {
+        g.filters = g.filters.filter(c => c.fieldType && c.option && c.value !== null && c.value !== undefined);
+    });
+    const nonEmptyGroups = groups.filter(g => g.filters.length);
+    if(!nonEmptyGroups.length) return "{}";
+    const outerOp = filters.outerOr ? "or" : "and";
+    const innerOp = filters.outerOr ? "and" : "or";
+    let query = `{"$${outerOp}": [`;
+    nonEmptyGroups.forEach((group, i) => {
         if(i) query += ', {';
         else query += '{';
-        query += `"$${group.logicalOperator}": [`;
+        query += `"$${innerOp}": [`;
         group.filters.forEach((filter, j) => {
             const filterObj = conditionToQuery(filter, filterableFields);
             if(!filterObj)
@@ -84,9 +94,9 @@ function generateQuery(filters, filterableFields){
 export default {
     generateQuery,
     addGroup,
+    removeGroup,
     addCondition,
     updateCondition,
     removeCondition,
-    setLogicalOperator,
     updateFilterIndices
 }

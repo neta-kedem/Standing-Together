@@ -46,13 +46,13 @@
 		background-color: #fbfbfb;
 		text-align: center;
 		border-left: 1px solid #888;
+		overflow: auto;
 	}
 	.main-panel{
 		width: 80%;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
-		box-sizing: border-box;
 		background-color: #fbfbfb;
 	}
 	.results-wrap{
@@ -77,8 +77,7 @@
 		font-size: 1.25em;
 		width: 50%;
 		display: block;
-		margin: 0 auto;
-		margin-bottom: 1.5em;
+		margin: 0 auto 1.5em;
 	}
 	.new-event-button{
 		text-decoration: none;

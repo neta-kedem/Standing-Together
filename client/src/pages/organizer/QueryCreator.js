@@ -13,11 +13,11 @@ library.add(faCalendarAlt, faTimes, faBuilding, faUserCircle, faUser, faPhone, f
 class QueryCreator extends React.Component {
   constructor(props) {
       super(props);
-      let initFilters = this.props.initFilters || QueryService.addGroup({logicalOperator:"or", groups: []})
+      let initFilters = this.props.initFilters || QueryService.addGroup();
       QueryService.updateFilterIndices(initFilters);
     this.state = {
         changeCurrFilters: this.props.changeCurrFilters,
-        currFilters: initFilters,
+        currFilters: initFilters
     };
   }
 
@@ -29,16 +29,12 @@ class QueryCreator extends React.Component {
       this.state.changeCurrFilters(QueryService.generateQuery(this.state.currFilters, this.props.filterableFields))
   }
 
-  _toggleLogicalOperator(groupIndex, logicalOperator) {
-      if (logicalOperator === "or") {
-          const currFilters = QueryService.setLogicalOperator(this.state.currFilters, groupIndex, "and");
-          this.setState({ currFilters });
-          this.updateQuery()
-      } else {
-          const currFilters = QueryService.setLogicalOperator(this.state.currFilters, groupIndex, "or");
-          this.setState({ currFilters });
-          this.updateQuery()
-      }
+  _toggleLogicalOperator() {
+      const currFilter = this.state.currFilters;
+      currFilter.outerOr = !currFilter.outerOr;
+      this.setState({currFilter}, ()=>{
+          this.updateQuery();
+      });
   }
 
   _addCondition(groupIndex){
@@ -60,6 +56,11 @@ class QueryCreator extends React.Component {
   }
   _addGroup() {
       const currFilters = QueryService.addGroup(this.state.currFilters);
+      this.setState({ currFilters });
+      this.updateQuery()
+  }
+  _removeGroup(groupIndex) {
+      const currFilters = QueryService.removeGroup(this.state.currFilters, groupIndex);
       this.setState({ currFilters });
       this.updateQuery()
   }
@@ -119,10 +120,10 @@ class QueryCreator extends React.Component {
                       <img
                         key={groupIndex}
                         className="filter-icon"
-                        src={this.state.currFilters.logicalOperator === "or" ? orIcon : andIcon}
+                        src={this.state.currFilters.outerOr ? orIcon : andIcon}
                         alt="logical operator"
                         onMouseDown={() =>
-                          this._toggleLogicalOperator(-1, this.state.currFilters.logicalOperator)
+                          this._toggleLogicalOperator()
                         }
                       />
                     );
@@ -132,16 +133,18 @@ class QueryCreator extends React.Component {
                       key={'group-'+groupIndex}
                       group={group}
                       groupIndex={groupIndex}
+                      removeGroup={this._removeGroup.bind(this)}
                       addCondition={this._addCondition.bind(this)}
                       updateCondition={this._updateCondition.bind(this)}
                       removeCondition={this._removeCondition.bind(this)}
-                      toggleLogicalOperator={this._toggleLogicalOperator.bind(this, groupIndex)}
+                      toggleLogicalOperator={this._toggleLogicalOperator.bind(this)}
+                      outerOr={this.state.currFilters.outerOr}
                       filterableFields={this.props.filterableFields}
                       fieldsFilterOptions={this.props.fieldsFilterOptions}
                       provided={provided}
                     />
                   );
-                  return (<div key={'group-'+groupIndex} className="condition-group-wrap">{queryEl}</div>);
+                  return (<div key={'group-'+groupIndex} className={"condition-group-wrap"}>{queryEl}</div>);
                 })}
               </Queries>
             )}

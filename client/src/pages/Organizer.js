@@ -29,10 +29,9 @@ constructor(props) {
 		fieldsFilterOptions: FilterFields.fieldsFilterOptions,
 		filterableFields: FilterFields.filterableFields,
 		currFilters: {
-			logicalOperator:"or",
+			outerOr: true,
 			groups: [
 				{
-					logicalOperator:"and",
 					filters: [
 						{fieldType: "circle", value: "תל אביב - יפו", option:"associatedWith"},
 						{fieldType: "firstName", value: "נטע", option:"includes"},

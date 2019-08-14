@@ -5,6 +5,7 @@ import SingleCondition from "./SingleCondition";
 import AddFiltersBtn from "./AddFiltersBtn";
 import orIcon from "../../static/or.png";
 import andIcon from "../../static/and.png";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 class GroupCondition extends React.Component {
   constructor(props) {
@@ -31,19 +32,24 @@ class GroupCondition extends React.Component {
   }
 
   _toggleLogicalOperator() {
-    this.state.toggleLogicalOperator(this.state.group.logicalOperator)
+    this.state.toggleLogicalOperator()
   }
 
   render() {
     const {group, groupIndex, provided} = this.props;
     const groupStr = [];
     groupStr.push(
+      <div className="remove-group" onClick={()=>{this.props.removeGroup(this.props.groupIndex)}}>
+        <FontAwesomeIcon icon="times"/>
+      </div>
+    );
+    groupStr.push(
       group.filters.map((condition, conditionIndex) => {
           return(
-            <div className="query" key={conditionIndex}>
+            <div key={conditionIndex}>
               <img
                 className={"filter-icon " + (conditionIndex === 0 ? "hidden " : "")}
-                src={this.state.group.logicalOperator === "or" ? orIcon : andIcon}
+                src={!this.props.outerOr ? orIcon : andIcon}
                 alt="logical operator"
                 onMouseDown={() => this._toggleLogicalOperator()}
               />
@@ -76,7 +82,7 @@ class GroupCondition extends React.Component {
         onClick={()=>{this.addCondition()}}
       />
     );
-    return (<div>{groupStr}</div>)
+    return (<div className="condition-group">{groupStr}</div>)
   }
 }
 

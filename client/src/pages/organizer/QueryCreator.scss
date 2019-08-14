@@ -1,3 +1,4 @@
+@import "../../lib/variables.scss";
 .query-wizard-wrapper{
   min-width: 150px;
   height: 100%;
@@ -9,16 +10,33 @@
   flex-direction: column;
 }
 .condition-group-wrap{
+  display: flex;
+  flex-direction: column;
+}
+.condition-group{
   padding: 10px;
   border: 4px solid #90278e;
   border-radius: 15px;
+}
+.remove-group{
+  color: $purple-main;
+  margin-right: auto;
+  margin-bottom: 0.4em;
+  cursor: pointer;
+  display: block;
+  width: 1em;
+}
+.remove-group:hover{
+  color: $purple-dark;
+}
+.remove-group:active{
+  color: $purple-darker;
 }
 .filter-title{
   text-align: left;
   padding: 10px 0
 }
 .filter-icon{
-  padding-right: 5px;
   align-self: center;
   width: 30px;
   height: 22px;
