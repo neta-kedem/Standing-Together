@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './AddFiltersBtn.scss';
+import './AddFiltersBtn.scss';
 
 class AddFiltersBtn extends React.Component {
 
@@ -22,30 +22,8 @@ class AddFiltersBtn extends React.Component {
   render() {
     return(
       <section>
-        <style>
-          {/**
-          .addBtn {
-            display: inline-block;
-            font-size: 21px;
-            padding: 10px;
-            cursor: pointer;
-            user-select: none;
-          }
-          .addFilterButton {
-            color: #565F6B;
-          }
-          .addFilterButton:active {
-            color: #F7B3D3;
-          }
-          .addGroupButton {
-            color: #F7B3D3;
-          }
-          .addGroupButton:active {
-            color: #B77393;
-          }**/}
-        </style>
         <div
-            className={"addBtn "+ this.state.class}
+            className={"addBtn " + this.state.class}
             onClick={this.props.onClick}
         >
           {this.props.text}

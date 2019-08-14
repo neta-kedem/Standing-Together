@@ -1,7 +1,5 @@
 import React from 'react';
 import config from '../services/config';
-
-import QueryService from '../services/queryService';
 import server from '../services/server';
 
 import Popup from '../UIComponents/Popup/Popup'
@@ -10,11 +8,13 @@ import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import MultiSelect from '../UIComponents/MultiSelect/MultiSelect'
 import HamburgerMenu from '../UIComponents/HamburgerMenu/HamburgerMenu'
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
+import FilterFields from './organizer/FilterFields'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import './organizer/Organizer.scss'
 import PageNav from "../UIComponents/PageNav/PageNav";
 import FileSaver from 'file-saver';
+
 
 export default class Organizer extends React.Component {
 constructor(props) {
@@ -26,7 +26,20 @@ constructor(props) {
 		activistCount: 0,
 		events: [],
 		activists: [],
-		currFilters: { logicalOperator:"or", groups: [] },
+		fieldsFilterOptions: FilterFields.fieldsFilterOptions,
+		filterableFields: FilterFields.filterableFields,
+		currFilters: {
+			logicalOperator:"or",
+			groups: [
+				{
+					logicalOperator:"and",
+					filters: [
+						{fieldType: "circle", value: "תל אביב - יפו", option:"associatedWith"},
+						{fieldType: "firstName", value: "נטע", option:"includes"},
+					]
+				}
+			]
+		},
 		allSelected: false,
 		tableFields:[
 			{title: ["اسم", "שם"],  visibility: true, key: "name", icon:"user", type:"text", width:"15em"},
@@ -38,20 +51,40 @@ constructor(props) {
 		],
 		displayEventSelectionPopup: false
 	};
-	this.getCurrFilters();
+}
+
+componentDidMount() {
 	this.getPotentialEvents();
+	this.getCities();
+	this.getCircles();
+}
+
+getCities() {
+	server.get('cities', {})
+		.then(cities => {
+			const fieldsFilterOptions = this.state.fieldsFilterOptions;
+			fieldsFilterOptions.cities = cities;
+			this.setState({fieldsFilterOptions});
+		});
+}
+
+getCircles() {
+	server.get('circles', {})
+		.then(circles => {
+			const fieldsFilterOptions = this.state.fieldsFilterOptions;
+			fieldsFilterOptions.circles = circles.map(c=>{return {label: c.name, key: c.name}});
+			this.setState({fieldsFilterOptions});
+		});
+}
+
+handleQueryChange(query) {
+	this.setState({query: query}, () => {
+		this.fetchActivistsByQuery();
+	});
 }
 
 fetchActivistsByQuery(){
-	let query;
-	try {
-		query = this.state.query? JSON.parse("{"+this.state.query+"}") : this.getCurrQuery();
-	}
-	catch(err) {
-		console.log(err);
-		alert("check your syntax!");
-		return;
-	}
+	let query = this.state.query;
 	server.post('selectActivists', {'query': query, 'page': this.state.page})
 		.then(json => {
 			if(json && json.activists)
@@ -59,28 +92,14 @@ fetchActivistsByQuery(){
 		});
 
 }
+
 downloadActivistsByQuery(){
-	let query;
-	try {
-		query = this.state.query? JSON.parse("{"+this.state.query+"}") : this.getCurrQuery();
-	}
-	catch(err) {
-		console.log(err);
-		alert("check your syntax!");
-		return;
-	}
+	const query = this.state.query;
 	server.post('queryToXLSX', {'query': query})
 		.then(json => {
 			const blob = new Blob(["\uFEFF" + json.csv], {type: "text/csv;charset=utf-8,%EF%BB%BF"});
 			FileSaver.saveAs(blob, "contacts_export.csv");
 		});
-}
-handleQueryChange(event){
-	this.setState({query: event.target.value});
-}
-handleFiltersChange(currFilters){
-	this.setState(currFilters);
-	this.fetchActivistsByQuery()
 }
 
 getPotentialEvents(){
@@ -89,46 +108,6 @@ getPotentialEvents(){
 			if(json.events)
 				this.setState({events:json});
 		});
-}
-
-getCurrFilters(){
-	QueryService.getCurrFilters()
-		.then(currFilters => {
-			this.setState({currFilters}, ()=>{
-				this.fetchActivistsByQuery();
-			});
-		});
-}
-
-getCurrQuery() {
-	const currFilters = this.state.currFilters;
-	// todo neta- complete this
-	if(!currFilters.groups.length) return "{}"
-	let query = `{"$${currFilters.logicalOperator}": [{`
-	currFilters.groups.forEach(group => {
-		query += `"$${group.logicalOperator}": [`;
-		group.filters.forEach((filter, i) => {
-			const filterObj = this.filterMapper(filter)
-			let str = ''
-			if(i) str = ', {'
-			else str = '{'
-			str += filterObj.field + ':' + filterObj.body
-			query += `${str}}`
-		})
-		query += "]"
-	})
-	query += '}]}'
-	return query
-}
-
-filterMapper(filter) {
-	const filterMapper = {
-		"מגורים": {field: '"profile.residency"', body: `{"$regex":".*${filter.filterMain}.*"}`, includes: (filter.filterPrefix === 'גר/ה ב')},
-		"מעגל": {field: '"profile.circle"', body: `{"$regex":".*${filter.filterMain}.*"}`, includes: (filter.filterPrefix === 'חבר/ה ב')},
-		"שם פרטי": {field: '"profile.firstName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
-		"שם משפחה": {field: '"profile.lastName"', body: `{"$regex":".*${filter.filterMain}.*"}`},
-	};
-	return filterMapper[filter.filterName]
 }
 
 handlePageNavigation(page){
@@ -201,19 +180,22 @@ render() {
 		<div className="page-wrap page-wrap-organizer" dir="rtl">
 			<TopNavBar>
 				<div className="saved-views-wrap">
-					{/**<div className="saved-views">שאילתה 1</div>
-					<div className="saved-views">שאילתה 2</div>**/}
 					<a className="saved-views" href={"./EventManagement"}>manage events</a>
 					<a className="saved-views" href={"./ScanContacts"}>scan contacts</a>
 				</div>
 			</TopNavBar>
 			<div className="content-wrap">
 				<div className="left-panel">
-					<div className="textualQuery">
-						<input type={"text"} value={this.state.query} onChange={this.handleQueryChange.bind(this)}/>
-						<button type={"button"} onClick={this.fetchActivistsByQuery.bind(this)}>filter</button>
+					<QueryCreator
+						changeCurrFilters={this.handleQueryChange.bind(this)}
+						initFilters={this.state.currFilters}
+						filterableFields={this.state.filterableFields}
+						fieldsFilterOptions={this.state.fieldsFilterOptions}
+					/>
+					<br/>
+					<div className="textual-query">
+						{this.state.query}
 					</div>
-					<QueryCreator changeCurrFilters={this.handleFiltersChange.bind(this)} />
 				</div>
 				<div className="main-panel">
 					<QueryResultsActionMenu

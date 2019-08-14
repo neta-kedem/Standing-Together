@@ -1,5 +1,6 @@
 import React from 'react';
 import ia from "../../services/canvas/imageAdjustor";
+import af from "../../services/arrayFunctions"
 import "./CitySelector.scss";
 import map from "../../static/map.jpg";
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -12,6 +13,7 @@ export default class CitySelector extends React.Component {
         super(props);
         this.state = {
             cities: this.props.cities,
+            onSelect: this.props.onSelect,
             width: this.props.width,
             height: this.props.height,
             top: this.props.top,
@@ -58,6 +60,25 @@ export default class CitySelector extends React.Component {
         this.setState({drawInterval: setInterval(this.draw, 100)});
     }
 
+    static getDerivedStateFromProps(nextProps, prevState){
+        const cities = prevState.cities;
+        if(!cities)
+            return null;
+        if(prevState.providedSelection !== nextProps.selected){
+            const selected = nextProps.selected || [];
+            const selectedDict = af.toDict(selected);
+            console.log(selectedDict);
+            for(let i = 0; i < cities.length; i++){
+                let city = cities[i];
+                city.selected = !!(selectedDict[city.nameHe]);
+            }
+        }
+        return {
+            cities: cities,
+            providedSelection: nextProps.selected
+        };
+    }
+
     componentWillUnmount() {
         if(this.state.drawInterval)
             clearInterval(this.state.drawInterval);
@@ -73,7 +94,7 @@ export default class CitySelector extends React.Component {
     }
 
     drawCities(ctx){
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         ctx.fillStyle="#90278E";
         ctx.strokeStyle="#50003E";
         for(let i = 0; i < cities.length; i++){
@@ -126,7 +147,7 @@ export default class CitySelector extends React.Component {
     }
 
     drawCityHighlight(ctx){
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         const highlighted = this.state.highlightedCity;
         if(highlighted !== null){
             ctx.fillStyle="#60278E30";
@@ -162,7 +183,7 @@ export default class CitySelector extends React.Component {
     }
 
     getClosestCity(x, y, cutoffDist){
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         const canvas = this.state.canvas;
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
@@ -183,7 +204,7 @@ export default class CitySelector extends React.Component {
     }
 
     previewSelection(indexesToSelect){
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             city.toBeSelected = false;
@@ -197,7 +218,7 @@ export default class CitySelector extends React.Component {
 
     commitSelection(indexesToSelect){
         const additiveSelection = this.state.additiveSelection;
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             if(city.toBeSelected || (indexesToSelect && indexesToSelect.indexOf(i) !== -1)){
@@ -208,6 +229,16 @@ export default class CitySelector extends React.Component {
             }
             city.toBeSelected = false;
         }
+        this.setState({cities: cities}, ()=>{
+            this.sendSelection();
+        })
+    }
+    
+    sendSelection(){
+        const cities = this.state.cities.slice();
+        const selectedCities = cities.filter(c => c.selected);
+        const selectedCitiesNames = selectedCities.map(c => c.nameHe);
+        this.state.onSelect(selectedCitiesNames);
     }
 
     updateRectSelection(){
@@ -222,7 +253,7 @@ export default class CitySelector extends React.Component {
         const maxY = Math.max(selectionStartY, mouseY);
         const minX = Math.min(selectionStartX, mouseX);
         const minY = Math.min(selectionStartY, mouseY);
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         let selectedCities = [];
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
@@ -241,7 +272,7 @@ export default class CitySelector extends React.Component {
         const selectedPoints = [];
         if(points.length < 3)
             return;
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             let intersectionToTheRight = 0;
@@ -335,20 +366,22 @@ export default class CitySelector extends React.Component {
     }.bind(this);
 
     selectCityById = function(id){
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         for(let i = 0; i < cities.length; i++){
             if(cities[i]._id === id)
                 cities[i].selected = true;
         }
-        this.setState({cities: cities})
+        this.setState({cities: cities}, ()=>{
+            this.sendSelection();
+        })
     }.bind(this);
 
     render() {
-        const cities = this.props.cities.slice();
+        const cities = this.state.cities.slice();
         const highlightedCity = this.state.highlightedCity ? cities[this.state.highlightedCity] : null;
         const highlightedCityLabel = highlightedCity ? highlightedCity.nameAr + " - " + highlightedCity.nameHe : "";
         return (
-            <div dir={"rtl"}>
+            <div dir={"rtl"} className={"city-selector"}>
                 <div className={"map-selector-wrap"}>
                     <canvas ref={this.canvasRef} className="map-view"/>
                     <div className={"highlighted-city-label"}>
@@ -366,20 +399,6 @@ export default class CitySelector extends React.Component {
                     </div>
                 </div>
                 <div className={"selected-cities-list"}>
-                    {
-                        cities.filter(city => city.selected).map(city => {
-                            return <div className={"selected-city"} key={"city-" + city._id}>
-                                <div className={"deselect-city"}
-                                     onClick={()=>{
-                                         city.selected = false;
-                                         this.forceUpdate();
-                                     }}>
-                                    <FontAwesomeIcon icon={faTimes}/>
-                                </div>
-                                <div className={"selected-city-name"}>{city.nameAr + " - " + city.nameHe}</div>
-                            </div>
-                        })
-                    }
                     <div className={"select-city-wrap"}>
                         <FontAwesomeIcon icon={faPlus}/>
                         <select className="select-city" value="" onChange={(e)=>{this.selectCityById(e.target.value)}}>
@@ -392,6 +411,21 @@ export default class CitySelector extends React.Component {
                             })}
                         </select>
                     </div>
+                    {
+                        cities.filter(city => city.selected).map(city => {
+                            return <div className={"selected-city"} key={"city-" + city._id}>
+                                <div className={"deselect-city"}
+                                     onClick={()=>{
+                                         city.selected = false;
+                                         this.sendSelection();
+                                         this.forceUpdate();
+                                     }}>
+                                    <FontAwesomeIcon icon={faTimes}/>
+                                </div>
+                                <div className={"selected-city-name"}>{city.nameAr + " - " + city.nameHe}</div>
+                            </div>
+                        })
+                    }
                 </div>
                 {/** I use this img tag simply because it is impossible to dynamically generate one in nodejs.
                  It is hidden from the user. The actual scan is displayed on a canvas **/}

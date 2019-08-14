@@ -8,19 +8,27 @@
   display: flex;
   flex-direction: column;
 }
+.condition-group-wrap{
+  padding: 10px;
+  border: 4px solid #90278e;
+  border-radius: 15px;
+}
 .filter-title{
   text-align: left;
   padding: 10px 0
 }
 .filter-icon{
-  padding-right: 5px
-}
-.filterIcon {
+  padding-right: 5px;
+  align-self: center;
   width: 30px;
   height: 22px;
   cursor: pointer;
   user-select: none;
   user-drag: none;
+}
+.filter-icon:active {
+  animation: logicalOperatorClick 1s;
+  transition-timing-function: ease-in-out;
 }
 @keyframes logicalOperatorClick {
   25% {
@@ -29,8 +37,4 @@
   75% {
     transform: scale(1);
   }
-}
-.filterIcon:active {
-  animation: logicalOperatorClick 1s;
-  transition-timing-function: ease-in-out;
 }

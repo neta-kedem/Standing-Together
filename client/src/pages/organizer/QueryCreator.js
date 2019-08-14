@@ -2,105 +2,66 @@ import React from "react";
 import QueryService from "../../services/queryService";
 import "./QueryCreator.scss";
 import AddFiltersBtn from "./AddFiltersBtn";
-import {
-  DragDropContext,
-  Droppable,
-  resetServerContext
-} from "react-beautiful-dnd";
+import {DragDropContext, Droppable} from "react-beautiful-dnd";
 import GroupCondition from "./GroupCondition";
 import orIcon from "../../static/or.png";
 import andIcon from "../../static/and.png";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-    faCalendarAlt,
-    faTimes,
-    faBuilding,
-    faUserCircle,
-    faUser,
-    faPhone,
-    faEnvelope,
-    faCheckCircle
-} from "@fortawesome/free-solid-svg-icons";
-library.add(
-    faCalendarAlt,
-    faTimes,
-    faBuilding,
-    faUserCircle,
-    faUser,
-    faPhone,
-    faEnvelope,
-    faCheckCircle
-);
+import {faCalendarAlt, faTimes, faBuilding, faUserCircle, faUser, faPhone, faEnvelope, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
+library.add(faCalendarAlt, faTimes, faBuilding, faUserCircle, faUser, faPhone, faEnvelope, faCheckCircle);
 
 class QueryCreator extends React.Component {
   constructor(props) {
-    super(props);
+      super(props);
+      let initFilters = this.props.initFilters || QueryService.addGroup({logicalOperator:"or", groups: []})
+      QueryService.updateFilterIndices(initFilters);
     this.state = {
         changeCurrFilters: this.props.changeCurrFilters,
-        isAddFilterBtnActive: false,
-        isAddGroupBtnActive: false,
-        currFilters: { logicalOperator:"or", groups: [] },
-        showCreateFilterGroup: -1,
-        availableFilters: []
+        currFilters: initFilters,
     };
-
-    QueryService.getCurrFilters().then(filters => {
-      this.state.currFilters = filters;
-      this.state.changeCurrFilters(filters)
-    });
-
-    QueryService.getAvailableFilters().then(filters => {
-      this.state.availableFilters = filters;
-    });
-
-    // react-beautiful-dnd needs that in order to support server side rendering
-    resetServerContext();
   }
 
-  _toggleLogicalOperator(groupId, logicalOperator) {
-      if ("or" === logicalOperator) {
-      QueryService.setLogicalOperator(groupId, "and")
-          .then(currFilters => {
-            this.setState({ currFilters });
-            this.state.changeCurrFilters(currFilters)
-          })
-    } else {
-      QueryService.setLogicalOperator(groupId, "or")
-          .then(currFilters => {
-            this.setState({ currFilters });
-            this.state.changeCurrFilters(currFilters)
-          })
-    }
+  componentDidMount() {
+      this.updateQuery();
   }
 
-  _exploreFilter(key) {
-    if (this.state.showCreateFilterGroup === key) this.setState({ showCreateFilterGroup: -1 });
-    else this.setState({ showCreateFilterGroup: key });
+  updateQuery(){
+      this.state.changeCurrFilters(QueryService.generateQuery(this.state.currFilters, this.props.filterableFields))
   }
 
-  _saveFilter(groupId, newFilter){
-    QueryService.addFilter(groupId, newFilter)
-        .then(currFilters => {
-          this.setState({currFilters, showCreateFilterGroup: -1});
-          this.state.changeCurrFilters(currFilters)
-        })
-  }
-
-  _removeFilter(groupId, filterId) {
-    QueryService.removeSingleFilter(groupId, filterId)
-        .then(currFilters => {
+  _toggleLogicalOperator(groupIndex, logicalOperator) {
+      if (logicalOperator === "or") {
+          const currFilters = QueryService.setLogicalOperator(this.state.currFilters, groupIndex, "and");
           this.setState({ currFilters });
-          this.state.changeCurrFilters(currFilters)
-        }
-    );
+          this.updateQuery()
+      } else {
+          const currFilters = QueryService.setLogicalOperator(this.state.currFilters, groupIndex, "or");
+          this.setState({ currFilters });
+          this.updateQuery()
+      }
+  }
+
+  _addCondition(groupIndex){
+    const currFilters = QueryService.addCondition(this.state.currFilters, groupIndex);
+    this.setState({currFilters});
+    this.updateQuery()
+  }
+
+  _updateCondition(condition, groupIndex, conditionIndex){
+      const currFilters = QueryService.updateCondition(condition, this.state.currFilters, groupIndex, conditionIndex);
+      this.setState({currFilters});
+      this.updateQuery()
+  }
+
+  _removeCondition(groupIndex, conditionIndex) {
+    const currFilters = QueryService.removeCondition(this.state.currFilters, groupIndex, conditionIndex);
+    this.setState({ currFilters });
+    this.updateQuery()
   }
   _addGroup() {
-    QueryService.addGroup()
-        .then(currFilters => {
-          this.setState({ currFilters });
-          this.state.changeCurrFilters(currFilters)
-        }
-    );
+      const currFilters = QueryService.addGroup(this.state.currFilters);
+      this.setState({ currFilters });
+      this.updateQuery()
   }
 
   onDragStart(result) {
@@ -128,21 +89,21 @@ class QueryCreator extends React.Component {
       logicalOperator: this.state.currFilters.logicalOperator,
       groups: []
     };
+
     flatFilters.forEach((filter, id) => {
       filter.id = id;
       let group = newCurrFilters.groups[filter.groupId];
       if (!group) newCurrFilters.groups[filter.groupId] = {filters: [], logicalOperator: this.state.currFilters.groups[filter.groupId].logicalOperator};
       newCurrFilters.groups[filter.groupId].filters.push(filter);
     });
-    newCurrFilters.groups = newCurrFilters.groups.filter(group => group.filters.length);
 
-    QueryService.setFilters(newCurrFilters);
+    newCurrFilters.groups = newCurrFilters.groups.filter(group => group.filters.length);
     this.setState({ currFilters: newCurrFilters });
   }
 
   render() {
     return (
-      <section style={{ overflow: "none", height: "calc(95% - 55px)", userSelect: "none" }}>
+      <div>
         <DragDropContext onDragEnd={this.onDragStart.bind(this)}>
           <Droppable droppableId="droppable">
             {provided => (
@@ -151,50 +112,43 @@ class QueryCreator extends React.Component {
                 innerRef={provided.innerRef}
                 {...provided.droppableProps}
               >
-                {this.state.currFilters.groups.map((group, groupId) => {
+                {this.state.currFilters.groups.map((group, groupIndex) => {
                   let queryEl = [];
-                  if (groupId) {
+                  if (groupIndex) {
                     queryEl.push(
                       <img
-                        key={groupId}
-                        className="filterIcon"
+                        key={groupIndex}
+                        className="filter-icon"
                         src={this.state.currFilters.logicalOperator === "or" ? orIcon : andIcon}
                         alt="logical operator"
-                        style={{
-                          alignSelf: "center",
-                          margin: "-12px 0 10px 0"
-                        }}
                         onMouseDown={() =>
                           this._toggleLogicalOperator(-1, this.state.currFilters.logicalOperator)
                         }
                       />
                     );
-                  } else {
-                    queryEl.push(
-                      <div key={groupId} style={{ paddingTop: 20 }}/>
-                    );
                   }
                   queryEl.push(
                     <GroupCondition
-                      key={'group-'+groupId}
+                      key={'group-'+groupIndex}
                       group={group}
-                      groupId={groupId}
-                      removeFilter={this._removeFilter.bind(this)}
+                      groupIndex={groupIndex}
+                      addCondition={this._addCondition.bind(this)}
+                      updateCondition={this._updateCondition.bind(this)}
+                      removeCondition={this._removeCondition.bind(this)}
+                      toggleLogicalOperator={this._toggleLogicalOperator.bind(this, groupIndex)}
+                      filterableFields={this.props.filterableFields}
+                      fieldsFilterOptions={this.props.fieldsFilterOptions}
                       provided={provided}
-                      exploreFilter={this._exploreFilter.bind(this, groupId)}
-                      hideNewFilters={this.state.showCreateFilterGroup !== groupId}
-                      saveFilter={this._saveFilter.bind(this)}
-                      toggleLogicalOperator={this._toggleLogicalOperator.bind(this, groupId)}
                     />
                   );
-                  return (<div key={'group-'+groupId} style={Object.assign({padding: "0 10px", "border": "4px solid #90278e", borderRadius: '15px'}, groupId ? {borderTop: "none"} : {})}>{queryEl}</div>);
+                  return (<div key={'group-'+groupIndex} className="condition-group-wrap">{queryEl}</div>);
                 })}
               </Queries>
             )}
           </Droppable>
         </DragDropContext>
         <AddFiltersBtn text="Add Group" type="group" onClick={this._addGroup.bind(this)}/>
-      </section>
+      </div>
     );
   }
 }

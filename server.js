@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cron = require('./server/services/cron');
+const authentication = require('./server/services/authentication');
 
 require('dotenv').config();
 const dev = process.env.NODE_ENV !== 'production';
@@ -9,10 +10,6 @@ const dev = process.env.NODE_ENV !== 'production';
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
 mongoose.set('debug', true);
-
-const authentication = require('./server/services/authentication');
-const SQLSync = require("./server/services/SQLSync");
-
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true }).then(()=>{});
 mongoose.Promise = global.Promise;
 const app = express();

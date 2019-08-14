@@ -2,10 +2,191 @@ import React from 'react';
 import './SingleCondition.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faTimes, faUserCircle } from '@fortawesome/free-solid-svg-icons';
-library.add(faBuilding, faTimes, faUserCircle);
+import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
+import Popup from "../../UIComponents/Popup/Popup";
+import CitySelector from "../../UIComponents/CitySelector/CitySelector";
+library.add(faFilter, faTimes);
 class SingleCondition extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      condition: this.props.condition,
+      conditionIndex: this.props.conditionIndex,
+      group: this.props.group,
+      updateCondition: this.props.updateCondition,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps){
+    return {
+      condition: nextProps.condition,
+      conditionIndex: nextProps.conditionIndex
+    };
+  }
+
+  setConditionFieldType = function(fieldType){
+    const condition = this.state.condition;
+    condition.fieldType = fieldType;
+    const field = this.props.filterableFields[fieldType];
+    const fieldOptions = Object.keys(field.options)
+        .map(o => {return {key: o, option: field.options[o]}})
+        .sort((a, b) => (a.option.sortPosition - b.option.sortPosition));
+    condition.option = fieldOptions[0].key;
+    this.setState({condition}, ()=>{
+      this.updateCondition();
+    })
+  }.bind(this);
+
+  setConditionOption = function(option){
+    const condition = this.state.condition;
+    condition.option = option;
+    this.setState({condition}, ()=>{
+      this.updateCondition();
+    })
+  }.bind(this);
+
+  setConditionValue = function(value){
+    const condition = this.state.condition;
+    condition.value = value;
+    this.setState({condition}, ()=>{
+      this.updateCondition();
+    })
+  }.bind(this);
+
+  updateCondition = function(){
+    this.state.updateCondition(this.state.condition, this.state.conditionIndex);
+  }.bind(this);
+
+  getFieldSelector = function(){
+    const filterableFields = this.props.filterableFields;
+    const condition = this.state.condition;
+    return <div>
+      <div className="heading">
+        <div className="condition-title-wrap">
+          <div className="condition-icon">
+            <FontAwesomeIcon icon="filter"/>
+          </div>
+          <div className="condition-title">
+            בחירת שדה
+          </div>
+        </div>
+        <div className="remove-condition" onClick={this.props.removeCondition}>
+          <FontAwesomeIcon icon="times"/>
+        </div>
+      </div>
+      <div className="condition-container">
+        <select value={condition.fieldType} onChange={(e)=>{this.setConditionFieldType(e.target.value)}} className="field-select">
+          <option value={0}/>
+          {
+            Object.keys(filterableFields)
+                .map(f => {return {key: f, field: filterableFields[f]}})
+                .sort((a, b) => (a.field.sortPosition - b.field.sortPosition))
+                .map((f) => <option key={"field_type_"+f.key} value={f.key}>{f.field.label}</option>)
+          }
+        </select>
+      </div>
+    </div>
+  }.bind(this);
+
+  getFieldOperators = function(){
+    const condition = this.state.condition;
+    const fieldType = condition.fieldType;
+    const filterableFields = this.props.filterableFields;
+    const field = filterableFields[fieldType];
+    const options = field.options;
+    if(Object.keys(options).length > 1){
+      return <select value={condition.option} onChange={(e)=>{this.setConditionOption(e.target.value)}} className="condition-option-selection">
+        {
+          Object.keys(options)
+              .map(o => {return {key: o, option: field.options[o]}})
+              .sort((a, b) => (a.option.sortPosition - b.option.sortPosition))
+              .map((f) => <option key={"field_option_"+f.key} value={f.key}>{f.option.label}</option>)
+        }
+      </select>
+    }
+    else{
+      return <div>{field.options[condition.option]}</div>
+    }
+  };
+
+  getFieldInput = function(){
+    const condition = this.state.condition;
+    if(!condition.option)
+      return;
+    const fieldType = condition.fieldType;
+    const filterableFields = this.props.filterableFields;
+    const fieldsFilterOptions = this.props.fieldsFilterOptions;
+    const field = filterableFields[fieldType];
+    const fieldOption = field.options[condition.option];
+    const valueOptions = fieldOption.options ? fieldsFilterOptions[fieldOption.options] : [];
+    switch(fieldOption.inputType){
+      case "text":
+        return <div>
+          <input type={"text"} value={condition.value} onChange={(e)=>{this.setConditionValue(e.target.value)}} className="condition-input"/>
+        </div>;
+      case "select":
+        return <div>
+          <select value={condition.value} onChange={(e)=>{this.setConditionValue(e.target.value)}} className="condition-input">
+            <option value={0}/>
+            {valueOptions.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+          </select>
+        </div>;
+      case "citySelector":
+        let selectionPreview = condition.value ? condition.value.slice(0, 20).join(", ") : "";
+        if(selectionPreview.length > 75)
+        {
+          selectionPreview = selectionPreview.substring(0, 75) + "..."
+        }
+        return <div onClick={e => {e.stopPropagation();}}>
+          <div onClick={()=>{this.setState({displayCitySelectorPopup: true})}} className="condition-input condition-selected-cities">
+            {condition.value? selectionPreview : "בחירת ערים"}
+          </div>
+          <Popup
+              visibility={this.state.displayCitySelectorPopup}
+              toggleVisibility={()=>{this.setState({displayCitySelectorPopup: !this.state.displayCitySelectorPopup})}}
+              height={"75vh"}
+          >
+            <CitySelector
+                cities={valueOptions}
+                selected={condition.value}
+                onSelect={this.setConditionValue}
+                width={1000}
+                height={1000}
+                top={33.344888}
+                bottom={29.463942}
+                left={34.2170233}
+                right={35.949}
+            />
+          </Popup>
+        </div>;
+    }
+  };
+
+  getFieldEditor = function(){
+    return <div>
+      <div className="heading">
+        <div className="condition-title-wrap">
+            <div className="condition-icon">
+              {this.props.filterableFields[this.state.condition.fieldType].icon}
+            </div>
+            <div className="condition-title">
+              {this.props.filterableFields[this.state.condition.fieldType].label}
+            </div>
+        </div>
+        <div className="remove-condition" onClick={this.props.removeCondition}>
+          <FontAwesomeIcon icon="times"/>
+        </div>
+      </div>
+      <div className="condition-container">
+          {this.getFieldOperators()}
+          {this.getFieldInput()}
+      </div>
+    </div>
+  }.bind(this);
+
   render() {
+    const condition = this.state.condition;
+    const fieldType = condition.fieldType;
     const { provided, innerRef } = this.props;
     const newStyle = {};
     for (let style in provided.draggableProps.style) {
@@ -13,52 +194,15 @@ class SingleCondition extends React.Component {
     }
     return(
       <section
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          style={newStyle}
-          ref={innerRef}
           className="single-condition-wrap"
       >
-        <div className="titleRow">
-          <div className="titleWrapper">
-            <FontAwesomeIcon style={{padding:10}} icon={this.getFilterIcon()}/>
-            <div>
-              <div className="heading">{this.props.condition.filterName}</div>
-            </div>
-          </div>
-          <div className="closeIcons" onClick={this.props.removeFilter}>
-            <FontAwesomeIcon icon="times"/>
-          </div>
-        </div>
-        <br/>
-        <div className="valueContainer">
-          <div className="iconWrapper">
-            <span className="valuePrefix">{this.getFilterValuePrefix()}</span>
-            <span>{this.props.condition.filterMain}</span>
-          </div>
-          <div>
-            {/*<span style={styles.valueNumber}>{this.props.condition.filterValue}</span>*/}
-          </div>
-        </div>
+        {(fieldType !== null && fieldType !== undefined) ? this.getFieldEditor() : this.getFieldSelector()}
       </section>
     )
   }
 
   getFilterValuePrefix(){
-    // const filterName = this.props.condition.filterName;
-    // if(filterPrefix === "filterPrefix") return "In ";
-
     return this.props.condition.filterPrefix;
-  }
-  getFilterIcon(){
-    const filterName = this.props.condition.filterName;
-    if(filterName === "מגורים") return "building";
-    if(filterName === "שם מלא") return "user-circle";
-    if(filterName === "מעגל") return "building";
-    if(filterName === "שם פרטי") return "user-circle";
-    if(filterName === "שם משפחה") return "user-circle";
-
-    return "";
   }
 }
 

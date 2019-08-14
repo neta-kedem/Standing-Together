@@ -1,23 +1,24 @@
+@import "../../lib/variables.scss";
 .addBtn{
   font-size: 21px;
+  cursor: pointer;
+  width: 5em;
+  height: 1em;
+  border-radius: 0.3em;
+  line-height: 1em;
+  padding: 0.5em 0.1em;
+  margin: 0.5em auto 0;
+  transition: background-color 0.2s;
 };
-.addFilterButton{
-  font-size: 21px;
-  color: #565F6B;
-  padding: 10px
-};
-.addFilterButtonActive{
-  font-size: 21px;
-  color: #F7B3D3;
-  padding: 10px
-};
+.addBtn:hover {
+  background-color: #f8ecef;
+}
+.addBtn:active{
+  background-color: #F3DBEA;
+}
 .addGroupButton{
   font-size: 21px;
-  color: #F7B3D3;
-  padding: 10px
-};
-.addGroupButtonActive{
-  font-size: 21px;
-  color: #F7B3D3;
+  color: $purple-darker;
+  border: 3px solid $purple-main;
   padding: 10px
 };
