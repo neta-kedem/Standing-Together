@@ -1,10 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cron = require('./server/services/cron');
 const authentication = require('./server/services/authentication');
+const SQLSync = require('./server/services/SQLSync');
+const dbFixer = require('./server/services/dbFixer');
 
-require('dotenv').config();
 const dev = process.env.NODE_ENV !== 'production';
 //db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
@@ -48,6 +50,32 @@ app.post("/webhooks/github", function (req, res) {
 	if(branch.indexOf('master') > -1){
 		deploy(res);
 	}
+});
+app.get('/admin/sync', (req, res) => {
+	authentication.hasRole(req, res, "isOrganizer").then(user=>{
+		if(!user)
+		{
+			res.end();
+		}
+		else{
+			SQLSync.syncAll().then(()=>{
+				return true
+			});
+		}
+	});
+});
+app.get('/admin/fixDB', (req, res) => {
+	authentication.hasRole(req, res, "isOrganizer").then(user=>{
+		if(!user)
+		{
+			res.end();
+		}
+		else{
+			dbFixer.idifyParticipatedEvents().then(()=>{
+				return true
+			});
+		}
+	});
 });
 // THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS
 app.get('*', (req, res) => {

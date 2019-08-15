@@ -11,3 +11,9 @@ input, textarea, select, button {
   background: $purple-main;
   color: white;
 }
+button{
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+}

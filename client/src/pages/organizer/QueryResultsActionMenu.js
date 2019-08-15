@@ -19,10 +19,10 @@ class QueryResultsActionMenu extends React.Component {
 		return(
 			<div className="query-results-wrapper">
 				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>
-				<div className="action-button" onClick={this.state.downloadActivistsByQuery}>
+				<button type="button" className="action-button" onClick={this.state.downloadActivistsByQuery}>
 					<img alt="export to excel" className="action-button-icon" src={excel}/>
 					ייצוא לאקסל
-				</div>
+				</button>
 				{items}
 			</div>
 		)

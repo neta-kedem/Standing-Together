@@ -5,22 +5,22 @@
 	display: flex;
 	background-color: #eee;
 	border-bottom: 1px solid #888;
-	padding: 0.6em 0.6em 0;
+	padding: 0.4em 0.6em;
 	flex: 0 0 auto;
+	align-items: center;
 }
 
 .results-count {
 	display: inline-block;
-	padding: 0 0 16px 20px;
 	color: rgba(86, 95, 108, 0.9);
 	font-size: 24px;
 	line-height: 24px;
 	font-weight: 700;
 	text-align: center;
+	margin-left: 1em;
 }
 
 .action-button {
-	margin: 0 10px 7.5px 10px;
 	padding: 0 10px 0 12px;
 	color: rgb(100, 109, 114);
 	font-size: 20px;
