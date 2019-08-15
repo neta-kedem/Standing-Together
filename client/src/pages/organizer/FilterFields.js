@@ -2,8 +2,8 @@ import server from '../../services/server';
 import React from "react";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised} from '@fortawesome/free-solid-svg-icons';
-library.add(faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised);
+import { faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised, faPeace} from '@fortawesome/free-solid-svg-icons';
+library.add(faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised, faPeace);
 const sortOptions = [
     {label:"שם פרטי", key:"profile.firstName"},
     {label:"שם משפחה", key:"profile.lastName"},
@@ -15,6 +15,7 @@ const sortOptions = [
 const fieldsFilterOptions = {
     cities: [],
     circles: [],
+    eventCategories:[],
     membershipStatus: [
         {label:"חבר/ה", key:true},
         {label:"לא חבר/ה", key:false},
@@ -90,13 +91,25 @@ const filterableFields = {
     },
     event:{
         sortPosition: 7,
-        label: "השתתתפות באירוע",
-        icon: <FontAwesomeIcon icon="fist-raised"/>,
+        label: "אירוע",
+        icon: <FontAwesomeIcon icon="peace"/>,
         fieldName: "linked.participatedEvents",
         options: {
             membershipStatus: {label: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "text",
                 valueMapper:v => {return {"eventDetails.name":{"$regex":v}}}
                 },
+        }
+    },
+    eventCategory:{
+        sortPosition: 8,
+        label: "קטגוריית אירועים",
+        icon: <FontAwesomeIcon icon="peace"/>,
+        fieldName: "linked.participatedEvents",
+        options: {
+            membershipStatus: {label: 'השתתתפו באירוע מקטגוריה', sortPosition: 0, acceptMultiple: false,
+                operator: "$elemMatch", inputType: "select", options: "eventCategories",
+                valueMapper:v => {return {"eventDetails.category":v}}
+            },
         }
     }
 };
@@ -108,6 +121,7 @@ const getCities = function() {
         });
 };
 getCities();
+
 const getCircles =function(){
     server.get('circles', {})
         .then(circles => {
@@ -115,6 +129,14 @@ const getCircles =function(){
         });
 };
 getCircles();
+
+const getEventCategories = function(){
+    server.get('eventCategories', {})
+        .then(eventCategories => {
+            fieldsFilterOptions.eventCategories = eventCategories.map(ec=>{return {label: ec.name.he, key: ec._id}});
+        });
+};
+getEventCategories();
 
 export default {
     sortOptions,
