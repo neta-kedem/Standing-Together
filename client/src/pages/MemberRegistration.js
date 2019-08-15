@@ -247,7 +247,7 @@ export default class MemberRegistration extends React.Component {
                     </div>
                     <div className={"register-button-wrap"}>
                         {!this.state.processingDonation?
-                            <button
+                            <button type={"button"}
                                 className={"register-button"}
                                 disabled={!this.state.termsAccepted}
                                 onClick={this.handlePost}>
@@ -265,7 +265,7 @@ export default class MemberRegistration extends React.Component {
                         <p>לצערינו התרחשה שגיאה במהלך עיבוד התרומה, והיא לא נקלטה כראוי</p>
                         <p>אנא וודאו שפרטי התשלום הוזנו באופן מדוייק, ונסו שוב</p>
                         <p>אם הבעיה חוזרת על עצמה, בבקשה פנו אלינו בכתובת: info@standing-together.com או בטלפון 052-7306600</p>
-                        <button
+                        <button type={"button"}
                             className={"close-failed-donation-button"}
                             onClick={this.handleDonationFailedPopupToggle.bind(this)}>
                             בסדר

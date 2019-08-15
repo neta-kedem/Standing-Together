@@ -25,8 +25,8 @@ export default withRouter(class SuccessfulUpload extends React.Component {
                 </div>
                 <br/>
                 <br/>
-                <button className={"upload-successful-button"} onClick={this.state.refetchScans}>بحث صفحات اضافية - חיפוש דפים נוספים להקלדה</button>
-                <button className={"upload-successful-button"} onClick={this.logout.bind(this)}>الخروج من النظام - התנתקות מהמערכת</button>
+                <button type={"button"} className={"upload-successful-button"} onClick={this.state.refetchScans}>بحث صفحات اضافية - חיפוש דפים נוספים להקלדה</button>
+                <button type={"button"} className={"upload-successful-button"} onClick={this.logout.bind(this)}>الخروج من النظام - התנתקות מהמערכת</button>
             </div>
         )
     }

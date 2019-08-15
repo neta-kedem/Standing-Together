@@ -305,9 +305,9 @@ export default class Voting extends React.Component {
           }}
         >
           <div>
-            <button
-              onClick={this.handleEventPopupToggle.bind(this)}
-              className={"close-popup-button"}
+            <button type={"button"}
+                onClick={this.handleEventPopupToggle.bind(this)}
+                className={"close-popup-button"}
             >
                 <FontAwesomeIcon icon={faTimes}/>
             </button>
@@ -316,7 +316,7 @@ export default class Voting extends React.Component {
               <br />
               هل أنت متأكد/ة من تصويتك؟ لا يمكن إلغاؤه لاحقًا
             </h3>
-            <button className="code_button" onClick={this.sendVote.bind(this)}>
+            <button type={"button"} className="code_button" onClick={this.sendVote.bind(this)}>
               {"כן כן, זו ההצבעה שאני רוצה\n" +
                 "نعم نعم، هذا التصويت الذي أريده"}
             </button>
@@ -336,7 +336,7 @@ export default class Voting extends React.Component {
           }}
         >
           <div>
-            <button
+            <button type={"button"}
               onClick={this.handleCandidatePopupToggle}
               className={"close-popup-button"}
             >

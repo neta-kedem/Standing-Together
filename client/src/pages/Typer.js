@@ -395,8 +395,8 @@ export default class Typer extends React.Component {
 						<div>האם סיימת להקליד את כל הרשומות בדף?</div>
 					</div>
 					<div className="confirm-fully-typed-wrap">
-						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(true)}}>סיימתי</button>
-						<button className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(false)}}>נותרו רשומות להקלדה</button>
+						<button type={"button"} className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(true)}}>סיימתי</button>
+						<button type={"button"} className="confirm-fully-typed" onClick={()=>{this.setFullyTyped(false)}}>נותרו רשומות להקלדה</button>
 					</div>
 				</Popup>;
 		const loadingMessage = <div className={"loading-message"}>

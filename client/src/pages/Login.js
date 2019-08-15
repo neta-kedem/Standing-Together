@@ -118,7 +118,7 @@ render() {
 			</div>
 			<br/>
 			<input className={"login-code"} value={this.state.code} onChange={(event) => {this.setLoginCode(event)}} onKeyDown={(event)=>{this.handleCodeKeyDown(event)}}/>
-			<button className={"submit-code-button"} onClick={this.verifyLoginCode.bind(this)}>
+			<button type={"button"} className={"submit-code-button"} onClick={this.verifyLoginCode.bind(this)}>
 				<FontAwesomeIcon icon="sign-in-alt"/>
 			</button>
 			<div className={"back-to-identification"} onClick={this.resendCode}>חזרה</div>

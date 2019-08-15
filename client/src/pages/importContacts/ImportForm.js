@@ -76,7 +76,7 @@ export default class ImportForm extends React.Component {
             <ExcelUploader onSelect={this.handleDataSelection.bind(this)} labelText={selectedFile ? "⇪ העלאה מחדש ⇪" : "⇪ העלאת אנשי קשר ⇪" }/>
         </div>;
         const postButton = <div className={"post-scan-wrap " + (contacts.length > 0 && eventId ? "active " : "")}>
-            <button className="post-scan-button" onClick={this.publishScan.bind(this)}>העלאת המסמך למערכת</button>
+            <button type={"button"} className="post-scan-button" onClick={this.publishScan.bind(this)}>העלאת המסמך למערכת</button>
         </div>;
         const contactsPreview = <div>{
             <table className={"contacts-table"}>

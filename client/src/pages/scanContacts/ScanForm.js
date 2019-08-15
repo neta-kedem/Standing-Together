@@ -115,11 +115,11 @@ export default class ScanForm extends React.Component {
         const imgUploadUI = <div className="contact-scan-uploader">
             <ImageUploader onSelect={this.handleImageSelection.bind(this)} labelText={selectedImage?"⇪ تحميل صفحة اتصال העלאה מחדש ⇪":"⇪ اعادة تحميل העלאת דף קשר ⇪"}/>
         </div>;
-        const postButton = <button className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>;
+        const postButton = <button type={"button"} className="post-scan-button" onClick={this.handlePost.bind(this)}>העלאת המסמך למערכת</button>;
         const scanPreview = <div>
             <div className={"rotation-controls"}>
-                <button onClick={()=>{this.rotateScan(true)}}>↻</button>
-                <button onClick={()=>{this.rotateScan(false)}}>↺</button>
+                <button type={"button"} onClick={()=>{this.rotateScan(true)}}>↻</button>
+                <button type={"button"} onClick={()=>{this.rotateScan(false)}}>↺</button>
             </div>
             <canvas ref={this.canvasRef} className="img-preview"/>
         </div>;

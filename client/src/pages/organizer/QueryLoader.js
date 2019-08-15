@@ -91,10 +91,10 @@ class QueryResultsActionMenu extends React.Component {
         return(
             <div className="query-loader-wrapper">
                 <div className="query-loader-controls-wrap">
-                    <button className="query-loader-control load-query" onClick={this.toggleLoadPopup}>
+                    <button type={"button"} className="query-loader-control load-query" onClick={this.toggleLoadPopup}>
                         <FontAwesomeIcon icon={"folder-open"}/>
                     </button>
-                    <button className="query-loader-control save-query" onClick={this.toggleSavePopup}>
+                    <button type={"button"} className="query-loader-control save-query" onClick={this.toggleSavePopup}>
                         <FontAwesomeIcon icon={"save"}/>
                     </button>
                 </div>

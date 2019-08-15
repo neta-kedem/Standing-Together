@@ -22,7 +22,7 @@ class AddFiltersBtn extends React.Component {
   render() {
     return(
       <section>
-        <button
+        <button type={"button"}
             className={"addBtn " + this.state.class}
             onClick={this.props.onClick}
         >
