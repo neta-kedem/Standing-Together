@@ -171,7 +171,7 @@ render() {
 						fieldsFilterOptions={this.state.fieldsFilterOptions}
 					/>
 					<br/>
-					<div className="textual-query hidden">
+					<div className="textual-query">
 						{this.state.query}
 					</div>
 				</div>

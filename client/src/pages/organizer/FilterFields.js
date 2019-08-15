@@ -35,8 +35,8 @@ const filterableFields = {
             icon: <FontAwesomeIcon icon="user-circle"/>,
             fieldName: "profile.firstName",
             options: {
-            includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text"},
-            nIncludes: {label: 'לא מכיל', acceptMultiple: false, sortPosition: 1, operator: "$regex", inputType: "text"},
+            includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text", valueMapper:v => ".*"+v+".*"},
+            nIncludes: {label: 'לא מכיל', acceptMultiple: false, sortPosition: 1, operator: "$regex", inputType: "text", valueMapper:v => "^((?!"+v+").)*$"},
         }
     },
     lastName:{
@@ -45,8 +45,8 @@ const filterableFields = {
             icon: <FontAwesomeIcon icon="user-circle"/>,
             fieldName: "profile.lastName",
             options: {
-            includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text"},
-            nIncludes: {label: 'לא מכיל', acceptMultiple: false, sortPosition: 1, operator: "$regex", inputType: "text"},
+            includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text", valueMapper:v => ".*"+v+".*"},
+            nIncludes: {label: 'לא מכיל', acceptMultiple: false, sortPosition: 1, operator: "$regex", inputType: "text", valueMapper:v => "^((?!"+v+").)*$"},
         }
     },
     email:{

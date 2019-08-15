@@ -55,9 +55,9 @@ function conditionToQuery(condition, filterableFields) {
         return null;
     const fieldType = condition.fieldType;
     const option = condition.option;
-    const value = condition.value;
     const fieldInfo = filterableFields[fieldType];
     const fieldOption = fieldInfo.options[option];
+    const value = fieldOption.valueMapper === undefined ? condition.value : fieldOption.valueMapper(condition.value);
     return {field: '"'+fieldInfo.fieldName+'"', body: `{"`+fieldOption.operator+`":`+JSON.stringify(value)+`}`}
 }
 
