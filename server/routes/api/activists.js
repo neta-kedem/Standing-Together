@@ -11,7 +11,7 @@ module.exports = (app) => {
 		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
-			return activistFetcher.queryActivists(req.body.query, req.body.page, (result)=>{return res.json(result)})
+			return activistFetcher.queryActivists(req.body.query, req.body.sortBy, req.body.page, (result)=>{return res.json(result)})
 		})
 	});
 	app.post('/api/queryToXLSX', (req, res) => {

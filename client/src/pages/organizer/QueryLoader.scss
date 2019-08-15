@@ -7,7 +7,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 2em;
-    padding: 0 0.25em 0.25em;
+    padding: 0 0.45em 0.45em;
   }
 
   .query-loader-control {
@@ -17,10 +17,11 @@
     background-color: transparent;
     color: $purple-main;
     border: none;
+    border-radius: 0.2em;
     outline: none;
     font-size: 1.25em;
     line-height: 1em;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
   }
 
   .query-loader-control:hover{
@@ -29,6 +30,11 @@
 
   .query-loader-control:active{
     color: $purple-darker;
+  }
+
+  .query-loader-control:focus{
+    background-color: #F3DBEA;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   }
 
   .saved-query{

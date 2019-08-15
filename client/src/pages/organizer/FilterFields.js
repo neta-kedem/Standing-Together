@@ -2,11 +2,23 @@ import server from '../../services/server';
 import React from "react";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faUserCircle, faEnvelope, faPhone} from '@fortawesome/free-solid-svg-icons';
-library.add(faBuilding, faUserCircle, faEnvelope, faPhone);
+import { faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised} from '@fortawesome/free-solid-svg-icons';
+library.add(faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised);
+const sortOptions = [
+    {label:"שם פרטי", key:"profile.firstName"},
+    {label:"שם משפחה", key:"profile.lastName"},
+    {label:"אימייל", key:"profile.email"},
+    {label:"תאריך הוספה למערכת", key:"metadata.creationDate"},
+    {label:"תאריך שינוי אחרון", key:"metadata.lastUpdate"},
+    {label:"תאריך הרשמה לתנועה", key:"membership.joiningDate"},
+];
 const fieldsFilterOptions = {
     cities: [],
     circles: [],
+    membershipStatus: [
+        {label:"חבר/ה", key:true},
+        {label:"לא חבר/ה", key:false},
+    ]
 };
 const filterableFields = {
     residency:{
@@ -50,7 +62,7 @@ const filterableFields = {
         }
     },
     email:{
-        sortPosition: 3,
+        sortPosition: 4,
         label: "אימייל",
         icon: <FontAwesomeIcon icon="envelope"/>,
         fieldName: "profile.email",
@@ -59,12 +71,21 @@ const filterableFields = {
         }
     },
     phone:{
-        sortPosition: 3,
+        sortPosition: 5,
         label: "טלפון",
         icon: <FontAwesomeIcon icon="phone"/>,
         fieldName: "profile.phone",
         options: {
             includes: {label: 'מכיל', acceptMultiple: false, sortPosition: 0, operator: "$regex", inputType: "text"}
+        }
+    },
+    membership:{
+        sortPosition: 6,
+        label: "חברות בתנועה",
+        icon: <FontAwesomeIcon icon="fist-raised"/>,
+        fieldName: "membership",
+        options: {
+            membershipStatus: {label: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$exists", inputType: "select", options: "membershipStatus"},
         }
     }
 };
@@ -85,6 +106,7 @@ const getCircles =function(){
 getCircles();
 
 export default {
+    sortOptions,
     filterableFields,
     fieldsFilterOptions
 }

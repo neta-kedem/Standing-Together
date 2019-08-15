@@ -58,7 +58,7 @@ const getActivistsByIds = function (ids){
     });
     return activistsPromise;
 };
-const queryActivists = function(query, page, callback){
+const queryActivists = function(query, sortBy, page, callback){
     try{
       query = JSON.parse(query);
     }
@@ -68,7 +68,7 @@ const queryActivists = function(query, page, callback){
     if(page < 0)
         return callback({"error":"illegal page"});
     const PAGE_SIZE = 50;
-    return Activist.paginate(query, { page: page + 1, limit: PAGE_SIZE }).then((result) => {
+    return Activist.paginate(query, { page: page + 1, limit: PAGE_SIZE, sort: sortBy ? sortBy : "profile.firstName" }).then((result) => {
         const activists = result.docs;
         let activistsList = [];
         for(let activist of activists)

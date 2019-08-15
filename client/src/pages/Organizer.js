@@ -26,6 +26,8 @@ constructor(props) {
 		activistCount: 0,
 		events: [],
 		activists: [],
+		sortBy: null,
+		sortOptions: FilterFields.sortOptions,
 		fieldsFilterOptions: FilterFields.fieldsFilterOptions,
 		filterableFields: FilterFields.filterableFields,
 		currFilters: {
@@ -56,15 +58,17 @@ componentDidMount() {
 	this.getPotentialEvents();
 }
 
-handleQueryChange(query) {
-	this.setState({query: query}, () => {
+handleQueryChange(query, sortBy) {
+	this.setState({query: query, sortBy:sortBy}, () => {
 		this.fetchActivistsByQuery();
 	});
 }
 
 fetchActivistsByQuery(){
-	let query = this.state.query;
-	server.post('selectActivists', {'query': query, 'page': this.state.page})
+	const query = this.state.query;
+	const sortBy = this.state.sortBy;
+	const page = this.state.page;
+	server.post('selectActivists', {'query': query, 'sortBy': sortBy, 'page': page})
 		.then(json => {
 			if(json && json.activists)
 				this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
@@ -167,6 +171,7 @@ render() {
 					<QueryCreator
 						changeCurrFilters={this.handleQueryChange.bind(this)}
 						initFilters={this.state.currFilters}
+						sortOptions={this.state.sortOptions}
 						filterableFields={this.state.filterableFields}
 						fieldsFilterOptions={this.state.fieldsFilterOptions}
 					/>

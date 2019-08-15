@@ -56,3 +56,17 @@
     transform: scale(1);
   }
 }
+.query-sorting-wrap{
+  margin-top: 1em;
+}
+.query-sorting{
+  margin-top: 0.5em;
+  outline: none;
+  font-size: 1.25em;
+  border: 2px solid $purple-main;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+.query-sorting:focus{
+  background-color: #F3DBEA;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}

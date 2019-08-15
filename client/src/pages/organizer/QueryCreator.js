@@ -14,7 +14,8 @@ class QueryCreator extends React.Component {
       QueryService.updateFilterIndices(initFilters);
     this.state = {
         changeCurrFilters: this.props.changeCurrFilters,
-        currFilters: initFilters
+        currFilters: initFilters,
+        sortOptions: this.props.sortOptions
     };
   }
 
@@ -23,13 +24,21 @@ class QueryCreator extends React.Component {
   }
 
   updateQuery(){
-      this.state.changeCurrFilters(QueryService.generateQuery(this.state.currFilters, this.props.filterableFields))
+      this.state.changeCurrFilters(QueryService.generateQuery(this.state.currFilters, this.props.filterableFields), this.state.currFilters.sortBy)
   }
 
   setFilters(filters){
       this.setState({currFilters: filters}, ()=>{
           this.updateQuery();
       })
+  }
+
+  setSortingField(field){
+      const currFilter = this.state.currFilters;
+      currFilter.sortBy = field;
+      this.setState({currFilter}, ()=>{
+          this.updateQuery();
+      });
   }
 
   _toggleLogicalOperator() {
@@ -155,6 +164,16 @@ class QueryCreator extends React.Component {
           </Droppable>
         </DragDropContext>
         <AddFiltersBtn text="Add Group" type="group" onClick={this._addGroup.bind(this)}/>
+        <div className={"query-sorting-wrap"}>
+            <label className={"query-sorting-label"} for="select-sort-by">סידור תוצאות לפי · סידור תוצאות לפי</label>
+            <select className={"query-sorting"} id="select-sort-by" value={this.state.currFilters.sortBy} onChange={(e)=>{this.setSortingField(e.target.value)}}>
+                {
+                    this.state.sortOptions.map(f => {
+                        return <option key={"sort-by-" + f.key} value={f.key}>{f.label}</option>
+                    })
+                }
+            </select>
+        </div>
       </div>
     );
   }
