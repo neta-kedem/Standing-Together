@@ -87,6 +87,17 @@ const filterableFields = {
         options: {
             membershipStatus: {label: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$exists", inputType: "select", options: "membershipStatus"},
         }
+    },
+    event:{
+        sortPosition: 7,
+        label: "השתתתפות באירוע",
+        icon: <FontAwesomeIcon icon="fist-raised"/>,
+        fieldName: "linked.participatedEvents",
+        options: {
+            membershipStatus: {label: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "text",
+                valueMapper:v => {return {"eventDetails.name":{"$regex":v}}}
+                },
+        }
     }
 };
 

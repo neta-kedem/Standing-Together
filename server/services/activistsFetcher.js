@@ -68,7 +68,29 @@ const queryActivists = function(query, sortBy, page, callback){
     if(page < 0)
         return callback({"error":"illegal page"});
     const PAGE_SIZE = 50;
-    return Activist.paginate(query, { page: page + 1, limit: PAGE_SIZE, sort: sortBy ? sortBy : "profile.firstName" }).then((result) => {
+    /*return Activist.paginate(query, {
+        page: page + 1, limit: PAGE_SIZE,
+        sort: sortBy ? sortBy : "profile.firstName",
+        populate: [
+            {path:"profile.participatedEvents",},
+        ]
+    })*/
+    const aggregation = Activist.aggregate([
+        {
+            $lookup: {
+                from: 'events',
+                localField: "profile.participatedEvents",
+                foreignField: "_id",
+                as: "linked.participatedEvents"
+            }
+        },
+        {$match: query},
+    ]);
+    return Activist.aggregatePaginate(aggregation, {
+            page: page + 1, limit: PAGE_SIZE,
+            sort: sortBy ? sortBy : "profile.firstName",
+        }
+    ).then((result) => {
         const activists = result.docs;
         let activistsList = [];
         for(let activist of activists)
@@ -80,10 +102,10 @@ const queryActivists = function(query, sortBy, page, callback){
                 "name":activist.profile.firstName+" "+activist.profile.lastName,
                 "city":activist.profile.residency,
                 "isCaller":activist.role.isCaller,
-                "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
+                "participatedEvents":activist.linked.participatedEvents,
             });
         }
-        return callback({activists: activistsList, pageCount: result.pages, activistCount: result.total});
+        return callback({activists: activistsList, pageCount: result.totalPages, activistCount: result.totalDocs});
     });
 };
 const downloadActivistsByQuery = function(query, callback){
