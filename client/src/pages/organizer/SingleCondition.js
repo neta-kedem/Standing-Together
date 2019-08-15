@@ -194,7 +194,7 @@ class SingleCondition extends React.Component {
     }
     return(
       <section
-          className="single-condition-wrap"
+          className="single-condition"
       >
         {(fieldType !== null && fieldType !== undefined) ? this.getFieldEditor() : this.getFieldSelector()}
       </section>

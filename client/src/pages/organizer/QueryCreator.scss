@@ -56,6 +56,10 @@
     transform: scale(1);
   }
 }
+.single-condition-wrap{
+  display: flex;
+  flex-direction: column;
+}
 .query-sorting-wrap{
   margin-top: 1em;
 }

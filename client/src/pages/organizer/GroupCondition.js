@@ -46,7 +46,7 @@ class GroupCondition extends React.Component {
     groupStr.push(
       group.filters.map((condition, conditionIndex) => {
           return(
-            <div key={conditionIndex}>
+            <div key={conditionIndex} className={"single-condition-wrap"}>
               <img
                 className={"filter-icon " + (conditionIndex === 0 ? "hidden " : "")}
                 src={!this.props.outerOr ? orIcon : andIcon}
