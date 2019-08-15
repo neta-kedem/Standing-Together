@@ -39,7 +39,7 @@ export default class ExcelUploader extends React.Component {
 				<div className="fileInputWrap">
 					<form method="post">
 						<div className="upload-btn-wrapper">
-							<button className="upload-btn">{this.state.labelText}</button>
+							<button type={"button"} className="upload-btn">{this.state.labelText}</button>
 							<input required type="file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={this.fileSelectionHandler.bind(this)}/>
 						</div>
 					</form>
