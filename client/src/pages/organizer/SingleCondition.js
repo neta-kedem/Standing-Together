@@ -1,10 +1,10 @@
 import React from 'react';
 import './SingleCondition.scss';
+import Popup from "../../UIComponents/Popup/Popup";
+import CitySelector from "../../UIComponents/CitySelector/CitySelector";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
-import Popup from "../../UIComponents/Popup/Popup";
-import CitySelector from "../../UIComponents/CitySelector/CitySelector";
 library.add(faFilter, faTimes);
 class SingleCondition extends React.Component {
   constructor(props) {

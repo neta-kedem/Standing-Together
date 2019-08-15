@@ -1,15 +1,12 @@
 import React from "react";
-import QueryService from "../../services/queryService";
-import "./QueryCreator.scss";
-import AddFiltersBtn from "./AddFiltersBtn";
 import {DragDropContext, Droppable} from "react-beautiful-dnd";
+import QueryService from "../../services/queryService";
+import AddFiltersBtn from "./AddFiltersBtn";
 import GroupCondition from "./GroupCondition";
+import QueryLoader from './QueryLoader'
 import orIcon from "../../static/or.png";
 import andIcon from "../../static/and.png";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {faCalendarAlt, faTimes, faBuilding, faUserCircle, faUser, faPhone, faEnvelope, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
-library.add(faCalendarAlt, faTimes, faBuilding, faUserCircle, faUser, faPhone, faEnvelope, faCheckCircle);
-
+import "./QueryCreator.scss";
 class QueryCreator extends React.Component {
   constructor(props) {
       super(props);
@@ -27,6 +24,12 @@ class QueryCreator extends React.Component {
 
   updateQuery(){
       this.state.changeCurrFilters(QueryService.generateQuery(this.state.currFilters, this.props.filterableFields))
+  }
+
+  setFilters(filters){
+      this.setState({currFilters: filters}, ()=>{
+          this.updateQuery();
+      })
   }
 
   _toggleLogicalOperator() {
@@ -105,6 +108,7 @@ class QueryCreator extends React.Component {
   render() {
     return (
       <div>
+          <QueryLoader currFilters={this.state.currFilters} setFilters={this.setFilters.bind(this)}/>
         <DragDropContext onDragEnd={this.onDragStart.bind(this)}>
           <Droppable droppableId="droppable">
             {provided => (

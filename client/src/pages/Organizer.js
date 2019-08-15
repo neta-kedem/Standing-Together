@@ -11,9 +11,9 @@ import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import FilterFields from './organizer/FilterFields'
 import QueryCreator from './organizer/QueryCreator'
 import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
-import './organizer/Organizer.scss'
 import PageNav from "../UIComponents/PageNav/PageNav";
 import FileSaver from 'file-saver';
+import './organizer/Organizer.scss'
 
 
 export default class Organizer extends React.Component {
@@ -54,26 +54,6 @@ constructor(props) {
 
 componentDidMount() {
 	this.getPotentialEvents();
-	this.getCities();
-	this.getCircles();
-}
-
-getCities() {
-	server.get('cities', {})
-		.then(cities => {
-			const fieldsFilterOptions = this.state.fieldsFilterOptions;
-			fieldsFilterOptions.cities = cities;
-			this.setState({fieldsFilterOptions});
-		});
-}
-
-getCircles() {
-	server.get('circles', {})
-		.then(circles => {
-			const fieldsFilterOptions = this.state.fieldsFilterOptions;
-			fieldsFilterOptions.circles = circles.map(c=>{return {label: c.name, key: c.name}});
-			this.setState({fieldsFilterOptions});
-		});
 }
 
 handleQueryChange(query) {
@@ -89,7 +69,6 @@ fetchActivistsByQuery(){
 			if(json && json.activists)
 				this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
 		});
-
 }
 
 downloadActivistsByQuery(){
@@ -178,9 +157,9 @@ render() {
 	return (
 		<div className="page-wrap page-wrap-organizer" dir="rtl">
 			<TopNavBar>
-				<div className="saved-views-wrap">
-					<a className="saved-views" href={"./EventManagement"}>manage events</a>
-					<a className="saved-views" href={"./ScanContacts"}>scan contacts</a>
+				<div className="title-wrap">
+					<span className="title-lang">ניהול אנשי קשר</span>
+					<span className="title-lang">ניהול אנשי קשר</span>
 				</div>
 			</TopNavBar>
 			<div className="content-wrap">
@@ -192,7 +171,7 @@ render() {
 						fieldsFilterOptions={this.state.fieldsFilterOptions}
 					/>
 					<br/>
-					<div className="textual-query">
+					<div className="textual-query hidden">
 						{this.state.query}
 					</div>
 				</div>
@@ -217,6 +196,4 @@ render() {
 		</div>
 	)
 }
-
 }
-
