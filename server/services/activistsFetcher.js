@@ -1,8 +1,9 @@
 const Activist = require('../models/activistModel');
 const mongoose = require('mongoose');
+const objectIdMapper = require("./dbHelper/objectIdMapper");
 const Authentication = require('./authentication');
 const EventFetcher = require("./eventFetcher");
-const contactScanFetcher = require("./contactScanFetcher");
+
 const getActivists = function (req, res){
     Authentication.isUser(req, res).then(isUser=>{
         if(!isUser)
@@ -65,16 +66,10 @@ const queryActivists = function(query, sortBy, page, callback){
     catch(err){
       console.log(err);
     }
+    objectIdMapper.idifyObject(query);
     if(page < 0)
         return callback({"error":"illegal page"});
     const PAGE_SIZE = 50;
-    /*return Activist.paginate(query, {
-        page: page + 1, limit: PAGE_SIZE,
-        sort: sortBy ? sortBy : "profile.firstName",
-        populate: [
-            {path:"profile.participatedEvents",},
-        ]
-    })*/
     const aggregation = Activist.aggregate([
         {
             $lookup: {
@@ -110,12 +105,23 @@ const queryActivists = function(query, sortBy, page, callback){
 };
 const downloadActivistsByQuery = function(query, callback){
     try{
-      query = JSON.parse(query);
+        query = JSON.parse(query);
     }
     catch(err){
-      console.log(err);
+        console.log(err);
     }
-    return Activist.find(query).then((activists) => {
+    objectIdMapper.idifyObject(query);
+    Activist.aggregate([
+        {
+            $lookup: {
+                from: 'events',
+                localField: "profile.participatedEvents",
+                foreignField: "_id",
+                as: "linked.participatedEvents"
+            }
+        },
+        {$match: query},
+    ]).exec().then((activists) => {
         let activistsList = [];
         for(let activist of activists)
         {
