@@ -1,9 +1,12 @@
 .event-table{
     direction: rtl;
-    border: 1px solid black;
-    border-collapse: collapse;
     margin: 0 auto;
     width: 100%;
+    text-align: center;
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    border-collapse: collapse;
 }
 .event-table tr{
     border: 1px solid black;

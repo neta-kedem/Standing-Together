@@ -95,9 +95,9 @@ const filterableFields = {
         icon: <FontAwesomeIcon icon="peace"/>,
         fieldName: "linked.participatedEvents",
         options: {
-            membershipStatus: {label: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "text",
-                valueMapper:v => {return {"eventDetails.name":{"$regex":v}}}
-                },
+            membershipStatus: {label: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
+                valueMapper:v => {return {"eventDetails.name":{"$regex": v.name}}},
+            },
         }
     },
     eventCategory:{

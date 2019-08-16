@@ -2,6 +2,7 @@ import React from 'react';
 import './SingleCondition.scss';
 import Popup from "../../UIComponents/Popup/Popup";
 import CitySelector from "../../UIComponents/CitySelector/CitySelector";
+import EventPicker from "../../UIComponents/EventPicker/EventPicker";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -45,11 +46,12 @@ class SingleCondition extends React.Component {
     })
   }.bind(this);
 
-  setConditionValue = function(value){
+  setConditionValue = function(value, updateResults){
     const condition = this.state.condition;
     condition.value = value;
     this.setState({condition}, ()=>{
-      this.updateCondition();
+      if(updateResults !== false)
+        this.updateCondition();
     })
   }.bind(this);
 
@@ -120,10 +122,6 @@ class SingleCondition extends React.Component {
     const fieldOption = field.options[condition.option];
     const valueOptions = fieldOption.options ? fieldsFilterOptions[fieldOption.options] : [];
     switch(fieldOption.inputType){
-      case "text":
-        return <div>
-          <input type={"text"} value={condition.value} onChange={(e)=>{this.setConditionValue(e.target.value)}} className="condition-input"/>
-        </div>;
       case "select":
         return <div>
           <select value={condition.value} onChange={(e)=>{this.setConditionValue(e.target.value)}} className="condition-input">
@@ -158,6 +156,30 @@ class SingleCondition extends React.Component {
                 right={35.949}
             />
           </Popup>
+        </div>;
+      case "eventSelector":
+        return <div onClick={e => {e.stopPropagation();}}>
+          <div onClick={()=>{this.setState({displayEventSelectorPopup: true})}} className="condition-input condition-selected-cities">
+            {condition.value ? condition.value.name : "בחירת אירוע"}
+          </div>
+          <Popup
+              visibility={this.state.displayEventSelectorPopup}
+              toggleVisibility={()=>{this.setState({displayEventSelectorPopup: !this.state.displayEventSelectorPopup})}}
+              height={"75vh"}
+          >
+            <EventPicker handleSelection={(id, event)=>{this.setConditionValue(event); this.setState({displayEventSelectorPopup: false});}} selected={condition.value ? condition.value._id : null}/>
+          </Popup>
+        </div>;
+      case "text":
+      default:
+        return <div>
+          <input type={"text"} value={condition.value}
+                 onChange={(e)=>{this.setConditionValue(e.target.value, false)}}
+                 onKeyDown={(e)=>{if(e.key === 'Enter'){this.updateCondition();}}}
+                 className="condition-input condition-text-filter"/>
+          <button type="button" className="condition-text-filter-button" onClick={this.updateCondition}>
+            <FontAwesomeIcon icon="filter"/>
+          </button>
         </div>;
     }
   };

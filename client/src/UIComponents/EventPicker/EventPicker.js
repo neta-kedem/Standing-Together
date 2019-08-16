@@ -34,8 +34,8 @@ export default class EventManagement extends React.Component {
             this.getListDetails();
         });
     }
-    selectEvent(id){
-        this.state.handleSelection(id);
+    selectEvent(event){
+        this.state.handleSelection(event._id, event);
     }
 
     render() {
@@ -43,7 +43,7 @@ export default class EventManagement extends React.Component {
         const currPage = this.state.page;
         const pageCount = this.state.pageCount;
         const rows = events.map((event)=>{
-            return <tr key={"event_" + event._id} onClick={()=>{this.selectEvent(event._id)}} className={event._id === this.props.selected ? "selected-event" : ""}>
+            return <tr key={"event_" + event._id} onClick={()=>{this.selectEvent(event)}} className={event._id === this.props.selected ? "selected-event" : ""}>
                 <td>{event.date.toLocaleDateString()}</td>
                 <td>{event.name}</td>
                 <td>{event.location}</td>

@@ -1,3 +1,4 @@
+@import "../../lib/variables";
 .single-condition{
 	align-self: stretch;
 	text-align: right;
@@ -67,6 +68,22 @@
 	}
 	.condition-selected-cities{
 		cursor: pointer;
+	}
+	.condition-text-filter{
+		width: calc(100% - 2.5em);
+		display: inline-block;
+	}
+	.condition-text-filter-button{
+		width: 1em;
+		display: inline-block;
+		cursor: pointer;
+		outline: none;
+	}
+	.condition-text-filter-button:hover{
+		color: $purple-dark;
+	}
+	.condition-text-filter-button:active{
+		color: $purple-darker;
 	}
 }
 .single-condition:hover{
