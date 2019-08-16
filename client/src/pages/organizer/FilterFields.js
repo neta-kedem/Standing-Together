@@ -96,7 +96,7 @@ const filterableFields = {
         fieldName: "linked.participatedEvents",
         options: {
             membershipStatus: {label: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
-                valueMapper:v => {return {"eventDetails.name":{"$regex": v.name}}},
+                valueMapper:v => {return {"_id":{"$eq": v._id}}},
             },
         }
     },
