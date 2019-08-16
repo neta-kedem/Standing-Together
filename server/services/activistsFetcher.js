@@ -125,15 +125,18 @@ const downloadActivistsByQuery = function(query, callback){
         let activistsList = [];
         for(let activist of activists)
         {
+            //add - to phone number, so that it won't be parsed as a number by excel
+            let phone = activist.profile.phone ? activist.profile.phone.replace("-", "") : "";
+            phone = phone.substring(0, 3) + "-" + phone.substring(4, phone.length);
             activistsList.push({
-                "phone":activist.profile.phone,
-                "email":activist.profile.email,
-                "firstName":activist.profile.firstName,
-                "lastName":activist.profile.lastName,
-                "city":activist.profile.residency,
-                "isCaller":activist.role.isCaller,
-                "creationDate":activist.metadata.creationDate,
-                "circle":activist.profile.circle,
+                "phone": phone,
+                "email": activist.profile.email,
+                "firstName": activist.profile.firstName,
+                "lastName": activist.profile.lastName,
+                "city": activist.profile.residency,
+                "isCaller": activist.role.isCaller,
+                "creationDate": activist.metadata.creationDate,
+                "circle": activist.profile.circle,
                 "isMember": activist.profile.isMember,
                 "isPaying": activist.profile.isPaying,
                 "isNewsletter": activist.profile.isNewsletter
