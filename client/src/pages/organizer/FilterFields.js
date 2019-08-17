@@ -120,7 +120,6 @@ const getCities = function() {
             fieldsFilterOptions.cities = cities;
         });
 };
-getCities();
 
 const getCircles =function(){
     server.get('circles', {})
@@ -128,7 +127,6 @@ const getCircles =function(){
             fieldsFilterOptions.circles = circles.map(c=>{return {label: c.name, key: c.name}});
         });
 };
-getCircles();
 
 const getEventCategories = function(){
     server.get('eventCategories', {})
@@ -136,10 +134,16 @@ const getEventCategories = function(){
             fieldsFilterOptions.eventCategories = eventCategories.map(ec=>{return {label: ec.name.he, key: ec._id}});
         });
 };
-getEventCategories();
+
+const mount = function(){
+    getEventCategories();
+    getCircles();
+    getCities();
+};
 
 export default {
     sortOptions,
     filterableFields,
-    fieldsFilterOptions
+    fieldsFilterOptions,
+    mount
 }

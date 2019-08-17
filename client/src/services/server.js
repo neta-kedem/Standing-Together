@@ -17,7 +17,7 @@ function get(path){
 		{
 			if(window.confirm("you don't have permissions to view this page, switch user?"))
 			{
-				window.location.href = '/';
+				window.location.href = '/Login';
 			}
 			else{
 				window.location.href = '/Welcome';
@@ -44,7 +44,7 @@ function post(path, data){
 		{
 			if(window.confirm("you don't have permissions to view this page, switch user?"))
 			{
-				window.location.href = '/';
+				window.location.href = '/Login';
 			}
 			else{
 				window.location.href = '/Welcome';

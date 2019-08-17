@@ -56,6 +56,7 @@ constructor(props) {
 
 componentDidMount() {
 	this.getPotentialEvents();
+	FilterFields.mount();
 }
 
 handleQueryChange(query, sortBy) {
