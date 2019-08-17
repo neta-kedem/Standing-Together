@@ -6,7 +6,8 @@
 	text-align: right;
 	height: 100vh;
 	width: 100vw;
-	position: absolute;
+	position: fixed;
+	overflow: auto;
 	top: 0;
 	.logo {
 		display: block;
