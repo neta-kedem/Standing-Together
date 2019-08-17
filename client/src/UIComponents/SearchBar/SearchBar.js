@@ -26,15 +26,17 @@ export default class Popup extends React.Component {
         }
     }.bind(this);
     render() {
-        return <div className="search-bar-wrap">
-                    <input
-                        className={"search-input"}
-                        onChange={(event)=>this.syncStateToInput(event)}
-                        onKeyPress={this.handleKeyPress}
-                        placeholder={this.state.placeholder}/>
-                    <div onClick={this.handlePost.bind(this)} className='search-button'>
-                        <FontAwesomeIcon className='search-button-icon' icon="search"/>
-                    </div>
+        return(
+            <div className="search-bar-wrap">
+                <input
+                    className={"search-input"}
+                    onChange={(event)=>this.syncStateToInput(event)}
+                    onKeyPress={this.handleKeyPress}
+                    placeholder={this.state.placeholder}/>
+                <div onClick={this.handlePost.bind(this)} className='search-button'>
+                    <FontAwesomeIcon className='search-button-icon' icon="search"/>
                 </div>
+            </div>
+        );
     }
 }
