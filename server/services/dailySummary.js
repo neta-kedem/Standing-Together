@@ -18,7 +18,7 @@ const sendDailySummary = function(){
         this.getDailySummary().then(emailBody => {
             if(emailBody){
                 mailer.sendEmail({
-                    from: 'noreply@gmail.com',
+                    from: 'info@standing-together.org',
                     to: emailTo.join(", "),
                     subject: '*** Daily Summary of Typing Activity ***',
                     text: emailBody,
