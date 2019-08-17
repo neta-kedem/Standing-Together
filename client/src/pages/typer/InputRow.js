@@ -33,8 +33,10 @@ export default class InputRow extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
+		/*
 		if(this.state.isFocused)
 			this.firstInput.current.focus();
+			*/
 	}
 
 	syncStateToInput = function(event, forceEnglish){
@@ -122,7 +124,8 @@ export default class InputRow extends React.Component {
 							<td className = {rowValues[f.name+"Valid"]?"":"invalid"}>
 								<input value = {rowValues[f.name]} type={f.type} name={f.name}
 									   onChange = {(event) => {this.syncStateToInput(event, f.forceEnglish)}} onFocus = {(event) => {this.handleFocus(event)}} ref = {i === 0 ? this.firstInput : ""}
-									   autoFocus = {i === 0} disabled = {rowValues.locked}
+									   autoFocus = {i === 0}
+									   disabled = {rowValues.locked}
 									   onKeyDown = {(event)=>{this.handleKeyPress(event, f)}}
 									   list = {f.name + "-data-list"}
 									   autoComplete = "new-password"

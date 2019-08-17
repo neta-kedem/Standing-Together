@@ -236,7 +236,7 @@ export default class Typer extends React.Component {
 		}
 		//if no rows are left, create a new one
 		if(!activists.length) {
-			activists = [this.generateRow()];
+			activists.push(this.generateRow());
 		}
 		//commit to state
 		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
