@@ -4,47 +4,89 @@ const ContactScan = require('../models/contactScanModel');
 const Authentication = require('../services/authentication');
 const mailchimpSync = require('../services/mailchimpSync');
 const circleFetcher = require("./circleFetcher");
+const contactScanFetcher = require("./contactScanFetcher");
 const cityFetcher = require("./cityFetcher");
 const activistsFetcher = require("./activistsFetcher");
 const arrayFunctions = require("./arrayFunctions");
 
-const markTypedContactScanRows = function(res, typerId, scanId, activists, markedDone){
-    ContactScan.findOne(
-        {"_id": scanId},
-        (err, scanData) => {
-            if (err) return res.json({success: false, error: err});
-            //iterate over new activist entries, and insert typer id and activist id details to appropriate rows
-            for(let i=0; i<activists.length; i++){
-                let activist = activists[i];
-                if(activist.metadata.scanRow) {
-                    scanData.rows[activist.metadata.scanRow].typerId = typerId;
-                    scanData.rows[activist.metadata.scanRow].activistId = activist._id;
-                }
-            }
-            //iterate over all scan rows - if all have an activist id associated with them, mark the scan as completed
-            let allRowsTyped = true;
-            for(let i=0; i<scanData.rows.length; i++){
-                if(!scanData.rows[i].activistId)
-                {
-                    allRowsTyped=false;
-                    break;
-                }
-            }
-            // if the scan went through row detection, mark it as finished IFF all rows have a corresponding typed in data.
-            // otherwise, mark it as finished IFF the typer has indicated it to be
-            scanData.complete=(scanData.rows.length&&allRowsTyped)||markedDone;
-            ContactScan.replaceOne(
-                {"_id": scanId},
-                scanData,
-                (err, result) => {
-                    if (err){
-                        return res.json(err);
-                    }
-                    return res.json({"result":"aha!", "scanData": scanData, "activists": activists});
-                }
-            );
-        });
+/**
+ * @param activists
+ * gets an array of activist objects, complete with an _id field for each one, and under the assumption that they appear in the db, updates their details
+ * @returns {Promise<any[]>} - the promise, once resolved, returns an array of all the update query results - one for each activist
+ */
+const updateActivists = function(activists){
+    let updateQueries = [];
+    for(let i = 0; i < activists.length; i++)
+    {
+        let a = activists[i];
+        updateQueries.push(Activist.updateOne({_id: mongoose.Types.ObjectId(a._id)},
+            {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": new Date()}).exec());
+    }
+    return Promise.all(updateQueries);
 };
+
+/**
+ * @param typerId - the _id of the activist who typed in the data from some contact page scan
+ * @param scanId - the _id of the scanned contact page
+ * @param activists - the list of all activists whose data has been typed in according to that scanned contact page
+ * @param markedDone - whether or not the typer indicated that they have completed typing in all the data from the scan
+ * updates relevant details of the contactScan object which the typer used as a reference. This consists of:
+ * 1) updating the "lastUpdate" and "complete" fields, as necessary
+ * 2) update the associatedActivists array
+ * this array keeps the details of all activists whose details have been typed in from the relevant contact scan
+ * activists are
+ * @returns {Promise<any[]>} - the promise, once resolved, returns the result of the scan update query
+ */
+const markTypedContactScanRows = function(typerId, scanId, activists, markedDone){
+    const today = new Date();
+    const scanObjectId = mongoose.Types.ObjectId(scanId);
+    return ContactScan.findOne(
+        {"_id": scanObjectId}).exec().then((scanData) => {
+            // a dictionary of activists already associated with the scan, key'd by their _id
+            let associatedActivists = arrayFunctions.indexByField(scanData.activists, "activistId");
+            for(let i = 0; i < activists.length; i++){
+                //iterate over the up to date array of activists
+                const activist = activists[i];
+                //for each activist, determine whether it is already associated with this scan, by searching for them in the associated activists dictionary
+                if(!associatedActivists[activist._id]){
+                    //update data on newly typed activists
+                    //(again, here "new" means "new to the list of activists associated with this specific scan", not "new to the system")
+                    associatedActivists[activist._id]={
+                        "creationDate": today,
+                        "lastUpdate": today,
+                        "typerId": typerId,
+                        "activistId": activist._id,
+                        "new": activist.new,
+                        "pos": activist.pos,
+                        "comments": activist.comments
+                    };
+                }
+                //update data on existing activists (i.e. activists whose details were already typed as part of this scan, and were edited retroactively).
+                else{
+                    associatedActivists[activist._id].lastUpdate = today;
+                    associatedActivists[activist._id].comments = activist.comments;
+                    associatedActivists[activist._id].typerId = typerId;
+                }
+            }
+            //update the scan object with an up to date associatedActivists array, and appropriate "complete" and "lastUpdate" values
+            associatedActivists = Object.values(associatedActivists);
+            const updateQuery = ContactScan.updateOne(
+                {"_id": scanObjectId},
+                {"complete": markedDone, activists: associatedActivists, "metadata.lastUpdate": today}
+            ).exec().then((res)=> {
+                return res;
+            });
+            return updateQuery;
+        }
+    );
+};
+/**
+ * @param activists - an array of activists presumed to have been previously typed as part of this particular scan,
+ * and subsequently having some of their details altered.
+ * TODO: note - this presents a problem - it allows any typer to arbitrarily alter the details of pre-existing activists in the system,
+ * by typing in their details, hitting save, and then editing them and hitting save again.
+ * @returns {Promise<any[]>} - one resolved, the promise returns an array of all update query results (one for each activist)
+ */
 const updateTypedActivists = function(activists){
     const today = new Date();
     let updatePromises = [];
@@ -54,7 +96,7 @@ const updateTypedActivists = function(activists){
             "profile.firstName" : curr.firstName,
             "profile.lastName" : curr.lastName,
             "profile.phone" : curr.phone.replace(/[\-.():]/g, ''),
-            "profile.email" : curr.email,
+            "profile.email" : curr.email.toLowerCase(),
             "profile.residency" : curr.residency,
             "metadata.lastUpdate" : today,
         });
@@ -62,147 +104,240 @@ const updateTypedActivists = function(activists){
     }
     return Promise.all(updatePromises);
 };
-const insertActivists = function(req, res){
-    const newActivist = new Activist(req.body);
-    newActivist.save(function (err) {
-        if (err){
-            return res.json(err);
-        }
-        else
-            return res.json(req.body);
-    });
-};
-const toggleActivistStatus = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        const activistId = req.body.activistId;
-        const isCaller = req.body.status;
-        let query = Activist.update({'_id':activistId},{'role.isCaller': isCaller});
-        return query.exec().then(()=>{
-            return res.json({"result":"set status to "+isCaller+" for user "+activistId});
-        });
-    });
-};
-const addToMailchimpCircle = function(activists){
-    if(!activists || !activists.length){
-        return true;
-    }
+/**
+ * @param activists - a list of activists that have existed in the system prior to being typed in as part of the current contact scan
+ * for each such activist, update the lastUpdate field, and the list of events they have participated in
+ * @returns {Promise<any[]>}
+ */
+const updateDuplicateActivists = function(activists){
+    const today = new Date();
     let updatePromises = [];
-    const fetchPromises = [cityFetcher.getCities(), circleFetcher.getCircles()];
-    Promise.all(fetchPromises).then((results)=>{
-            const cities = arrayFunctions.indexByField(results[0], "name");
-            const circles = arrayFunctions.indexByField(results[1], "name");
+    for(let i=0; i<activists.length; i++){
+        const curr = activists[i];
+        //$addToSet is like $push, but doesn't allow duplicates
+        const query = Activist.updateOne({'_id':curr._id}, {
+            $addToSet: { "profile.participatedEvents": curr.eventId },
+            "metadata.lastUpdate" : today
+        });
+        updatePromises.push(query.exec());
+    }
+    return Promise.all(updatePromises);
+};
+/**
+ * @param activists - a list of activists
+ * matches each activist with a circle, according to their residency field.
+ * NOTE - be careful not to use this on existing activists, as it might override manual changes to their circle field
+ * @returns {*} - once resolved, the activists array will contain a circle field (profile.circle)
+ */
+const determineActivistsCircles = function(activists){
+    //default behaviour in case an empty/invalid activists list is provided
+    if(!activists || !activists.length){
+        return new Promise((resolve)=> {
+            resolve([]);
+        });
+    }
+    return cityFetcher.getCities().then((cities)=>{
+            const cityDict = arrayFunctions.indexByField(cities, "nameHe");
             for(let i = 0; i < activists.length; i++){
                 let curr = activists[i];
                 if (curr.profile.residency
-                    && cities[curr.profile.residency]
-                    && cities[curr.profile.residency].defaultCircle
-                    && circles[cities[curr.profile.residency].defaultCircle]
-                    && circles[cities[curr.profile.residency].defaultCircle].mailchimpList
+                    && cityDict[curr.profile.residency]
+                    && cityDict[curr.profile.residency].defaultCircle
                 ){
-                    updatePromises.push(mailchimpSync.createContacts([curr], circles[cities[curr.profile.residency].defaultCircle].mailchimpList));
+                    curr.profile.circle = cityDict[curr.profile.residency].defaultCircle;
                 }
             }
+            return activists
         }
-     );
+    );
+};
+/**
+ * @param activists
+ * adds each activist to the appropriate email list, as determined by their circle attribute
+ * @returns {Promise<any[]>} - once resolved, returns an array of all mailchimp subscription attempts results
+ */
+const addToRegionalMailchimpCircle = function(activists){
+    //default behaviour in case an empty/invalid activists list is provided
+    if(!activists || !activists.length){
+        return new Promise((resolve)=> {
+            resolve([]);
+        });
+    }
+    let updatePromises = [];
+    circleFetcher.getCircles().then((circles)=>{
+        const circlesDict = arrayFunctions.indexByField(circles, "name");
+        for(let i = 0; i < activists.length; i++){
+            let curr = activists[i];
+            if (curr.profile.circle && circlesDict[curr.profile.circle]){
+                updatePromises.push(mailchimpSync.createContacts([curr], circlesDict[curr.profile.circle].mailchimpList));
+            }
+        }
+        updatePromises.push(mailchimpSync.createContacts(activists));
+    });
     return Promise.all(updatePromises);
 };
-const checkForDuplicates = function (activists){
-    const phones = activists.map((a)=>{return a.profile.phone}).filter(phone => phone && phone.length > 3);
-    const emails = activists.map((a)=>{return a.profile.email}).filter(email => email && email.length > 3);
-    const duplicates = activistsFetcher.searchDuplicates(phones, emails).then(duplicates => {
-        const duplicatesByPhone = arrayFunctions.indexByField(duplicates, "phone");
-        const duplicatesByEmail = arrayFunctions.indexByField(duplicates, "email");
-        for(let i = 0; i < activists.length; i++){
-            if(duplicatesByPhone[activists[i].profile.phone]){
-                activists[i].metadata.duplicateId = duplicatesByPhone[activists[i].profile.phone]._id;
-            }
-            if(duplicatesByEmail[activists[i].profile.email]){
-                activists[i].metadata.duplicateId = duplicatesByEmail[activists[i].profile.email]._id;
-            }
-        }
-        return activists;
+/**
+ * @param activists
+ * @param scanId
+ * determines for each activist whether or not they've already existed in the system
+ * @returns {Promise<any[]>} - once resolved, the promise returns an object with two keys: nonDuplicates, and duplicates
+ * each containing an array of activists
+ */
+const checkForDuplicates = function (activists, scanId){
+    return new Promise((resolve)=> {
+        contactScanFetcher.getById(scanId).then((scanData) => {
+            //get sets of phones and emails from the activists
+            const phones = activists.map((a) => {
+                return a.profile.phone.replace(/[\-.():]/g, '')
+            }).filter(phone => phone && phone.length > 3);
+            const emails = activists.map((a) => {
+                return a.profile.email.toLowerCase()
+            }).filter(email => email && email.length > 3);
+            let oldActivists = [];
+            let newActivists = [];
+            //fetch all pre-existing activists whose email/phone is included in the emails/phones lists
+            const duplicates = activistsFetcher.searchDuplicates(phones, emails).then(duplicates => {
+                //index those existing activists once by phone, and once by email
+                const duplicatesByPhone = arrayFunctions.indexByField(duplicates, "phone");
+                const duplicatesByEmail = arrayFunctions.indexByField(duplicates, "email");
+                for (let i = 0; i < activists.length; i++) {
+                    //select an activist out of the newly typed activists
+                    let curr = activists[i];
+                    //if the activist's phone/email is a duplicate of an existing phone/email, this should point to the existing activist row
+                    let duplicateOf = duplicatesByPhone[curr.profile.phone] || duplicatesByEmail[curr.profile.email];
+                    if (duplicateOf) {
+                        curr._id = duplicateOf._id;
+                        curr.eventId = scanData.eventId;
+                        curr.isDuplicate = true;
+                        oldActivists.push(curr);
+                    } else {
+                        curr.isDuplicate = false;
+                        newActivists.push(curr);
+                    }
+                }
+                resolve({nonDuplicates: newActivists, duplicates: oldActivists});
+            });
+            return duplicates;
+        });
     });
-    return duplicates;
 };
-const uploadTypedActivists = function (req, res){
-    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        const typerId = Authentication.getMyId();
-        const typedActivists = req.body.activists;
-        const scanId = req.body.scanId?mongoose.Types.ObjectId(req.body.scanId):null;
-        const markedDone = req.body.markedDone;
-        let newActivists = [];
-        let updatedActivists = [];
-        const today = new Date();
-        for (let i=0; i<typedActivists.length; i++)
-        {
-            let curr = typedActivists[i];
-            if(!curr._id){
-                newActivists.push(
-                    {
-                        "_id": mongoose.Types.ObjectId(),
-                        "metadata" : {
-                            "creationDate" : today,
-                            "lastUpdate" : today,
-                            "joiningMethod" : "contactPage",
-                            "typerId" : typerId,
-                            "scanId": scanId,
-                            "scanRow": curr.scanRow
-                        },
-                        "profile" : {
-                            "firstName" : curr.firstName,
-                            "lastName" : curr.lastName,
-                            "phone" : curr.phone.replace(/[\-.():]/g, ''),
-                            "email" : curr.email,
-                            "residency" : curr.residency,
-                            "circle" : "תל-אביב",
-                            "isMember" : false,
-                            "isPaying" : false,
-                            "isNewsletter" : "not subscribed",
-                            "participatedEvents" : []
-                        },
-                        "role" : {
-                            "isTyper" : false,
-                            "isCaller" : false,
-                            "isOrganizer" : false,
-                            "isCircleLeader" : false
-                        },
-                        "login" : {
-                            "loginCode" : null,
-                            "token" : []
-                        }
-                    }
-                );
-            }
-            else{
-                if(!curr.locked)
-                    updatedActivists.push(curr);
+/**
+ * @param typedRows - an array containing all the data that has been typed in by the typer for some contacts scan
+ * @param scanId - the corresponding scan id
+ * @param markedDone - whether or not the typer has indicated that they've finished typing in all the rows in the scan
+ * given data from the Typers page, inserts/updates the data into the db
+ * @returns {Promise<any>} - once resolved, the promise returns true, or an {error: ...} object
+ */
+const uploadTypedActivists = function (typedRows, scanId, markedDone){
+    //gets the _id of the activist who has made the request
+    const typerId = Authentication.getMyId();
+    //rows that don't have an id attached
+    //this means they have only just been input by the typer (as opposed to edited retroactively)
+    let newRows = [];
+    //rows which have already been typed and submitted as part of this specific scan page,
+    //and have subsequently been updated by some typer
+    let updatedRows = [];
+    //current date. redundant comment.
+    const today = new Date();
+    for (let i = 0; i < typedRows.length; i++)
+    {
+        let curr = typedRows[i];
+        //if the row doesn't contain an _id field add them to a list of rows to insert
+        if(!curr._id){
+            newRows.push(
+                {
+                    "_id": mongoose.Types.ObjectId(),
+                    "metadata" : {
+                        "creationDate" : today,
+                        "lastUpdate" : today,
+                        "joiningMethod" : "contactPage",
+                        "typerId" : typerId,
+                        "scanId": scanId,
+                        "scanRow": curr.scanRow
+                    },
+                    "profile" : {
+                        "firstName" : curr.firstName,
+                        "lastName" : curr.lastName,
+                        "phone" : curr.phone.replace(/[\-.():]/g, ''),
+                        "email" : curr.email.toLowerCase(),
+                        "residency" : curr.residency,
+                        "comments" : curr.comments,
+                        "circle" : "",
+                        "isMember" : false,
+                        "isPaying" : false,
+                        "isNewsletter" : "not subscribed",
+                        "participatedEvents" : []
+                    },
+                    "role" : {
+                        "isTyper" : false,
+                        "isCaller" : false,
+                        "isOrganizer" : false,
+                        "isCircleLeader" : false
+                    },
+                    "login" : {
+                        "loginCode" : null,
+                        "token" : []
+                    },
+                    "pos": i
+                });
+        }
+        //otherwise, add them to a list of rows to update
+        else{
+            if(!curr.locked) {
+                updatedRows.push(curr);
             }
         }
-        updateTypedActivists(updatedActivists).then(()=>{
-            //mark activists whose phones or emails are already stored
-            checkForDuplicates(newActivists).then(()=>{
-                Activist.insertMany(newActivists).then(function (result) {
-                    if (result){
-                        let tasks = [];
-                        //create a mailchimp record in the main contact list
-                        //tasks.push(mailchimpSync.createContacts(newActivists));
-                        //create a mailchimp record in the circle-specific contact list
-                        tasks.push(addToMailchimpCircle(newActivists));
-                        //mark the activist as typed in the relevant contact scan
-                        if(scanId){
-                            tasks.push(markTypedContactScanRows(res, typerId, scanId, newActivists, markedDone));
-                        }
-                        Promise.all(tasks).then((results)=>{
-                            return res.json(results);
-                        })
-                    }
-                    else{
-                        return res.json({"error":"an unknown error has occurred, the activists were not saved"});
-                    }
+    }
+    //return a promise that resolves once all the db changes have been completed
+    return new Promise((resolve)=> {
+        //update activists whose rows were previously submitted as part of this scan, and subsequently edited
+        //we can assume that all these activists are already in the system
+        updateTypedActivists(updatedRows).then(() => {
+            //from here on out, we work only on newly typed rows
+            //mark activists whose phones or emails are already stored in the system
+            const test = checkForDuplicates(newRows, scanId).then((result) => {
+                //an array of completely new activists
+                let nonDuplicates = result.nonDuplicates;
+                //an array of activists whose details have just been typed in, but already existed in the system
+                const duplicates = result.duplicates;
+                //update the nonDuplicates array with circle data, determined for each activist based on their residency
+                determineActivistsCircles(nonDuplicates).then(result => {
+                    nonDuplicates = result;
+                    let tasks = [];
+                    //update metadata on preexisting activists (+ add the current event to their list of participatedEvents)
+                    tasks.push(updateDuplicateActivists(duplicates));
+                    //insert the new activists into
+                    tasks.push(Activist.insertMany(nonDuplicates));
+                    //create a mailchimp record in the main contact list
+                    tasks.push(mailchimpSync.createContacts(nonDuplicates));
+                    //create a mailchimp record in the circle-specific contact list
+                    tasks.push(addToRegionalMailchimpCircle(nonDuplicates));
+                    //update the contact scan to contain data on the typed activists
+                    //mark the activist as typed in the relevant contact scan
+                    let activistRows = duplicates.map((a) => {
+                        return {
+                            _id: a._id,
+                            new: false,
+                            pos: a.pos,
+                            comments: a.profile.comments
+                        };
+                    }).concat(nonDuplicates.map((a) => {
+                        return {
+                            _id: a._id,
+                            new: true,
+                            pos: a.pos,
+                            comments: a.profile.comments
+                        };
+                    })).concat(updatedRows.map((a) => {
+                        return {
+                            _id: a._id,
+                            comments: a.comments,
+                        };
+                    }));
+                    tasks.push(markTypedContactScanRows(typerId, scanId, activistRows, markedDone));
+                    return Promise.all(tasks).then((results) => {
+                        resolve(results);
+                    })
                 });
             });
         });
@@ -211,6 +346,5 @@ const uploadTypedActivists = function (req, res){
 
 module.exports = {
     uploadTypedActivists,
-    toggleActivistStatus,
-    insertActivists
+    updateActivists
 };

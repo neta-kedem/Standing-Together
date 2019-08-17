@@ -25,8 +25,8 @@ const insertEvent = function(req, res){
             "lastUpdate": today,
             "creatorId": Authentication.getMyId()
         };
-        const schedule = eventObject.eventDetails.date.split("/");
-        eventObject.eventDetails.date = new Date(schedule[2], schedule[1] - 1, schedule[0]);
+        const schedule = eventObject.eventDetails.date.split(/[.,\/ -]/).map(val=>{return parseInt(val)});
+        eventObject.eventDetails.date = new Date(schedule[2] < 2000 ? schedule[2] + 2000 : schedule[2], schedule[1] - 1, schedule[0]);
         const newEvent = new Event(eventObject);
         newEvent.save(function (err) {
             if (err){
@@ -49,7 +49,7 @@ const updateEvent = function(req, res){
         /*for documentation on this approach to upserting, see: https://stackoverflow.com/a/7855281*/
         const upsertData = newEvent.toObject();
         delete upsertData._id;
-        Event.update({_id: newEvent._id}, {
+        Event.updateOne({_id: newEvent._id}, {
             "metadata.lastUpdate": today,
             "eventDetails": upsertData.eventDetails,
             "callInstructions": upsertData.callInstructions,

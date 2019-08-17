@@ -15,19 +15,22 @@ const saveCircles = function(circles){
     return Promise.all(updatePromises);
 };
 const insertCircles = function(circles){
+    const today = new Date();
     const circlesObject = circles.map((c)=>{
-        return {name: c.name, mailchimpList: c.mailchimpList};
+        return {name: c.name, mailchimpList: c.mailchimpList, metadata:{"creationDate": today, "lastUpdate": today}};
     });
     const query = Circle.insertMany(circlesObject);
     return query;
 };
 const updateCircles = function(circles){
+    const today = new Date();
     let updatePromises = [];
     for(let i=0; i<circles.length; i++){
         const curr = circles[i];
         const query = Circle.updateOne({'_id': mongoose.Types.ObjectId(curr._id)}, {
             "name" : curr.name,
-            "mailchimpList" : curr.mailchimpList
+            "mailchimpList" : curr.mailchimpList,
+            "metadata.lastUpdate": today
         });
         updatePromises.push(query.exec());
     }

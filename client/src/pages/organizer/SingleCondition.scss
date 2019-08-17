@@ -1,0 +1,91 @@
+@import "../../lib/variables";
+.single-condition{
+	align-self: stretch;
+	text-align: right;
+	direction: rtl;
+	padding: 0 10px 10px;
+	border-radius: 5px;
+	background-color: #f8ecef;
+	color: rgb(86, 95, 108);
+	transition: background-color 0.2s;
+	.heading{
+		display: flex;
+		justify-content: space-between;
+	};
+	.condition-title-wrap{
+		display: flex;
+		align-items: center;
+		padding-left: 5px;
+		font-size: 18px;
+		line-height: 30px;
+		font-weight: 700;
+	}
+	.condition-icon{
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 0.5em;
+	}
+	.condition-title{
+		display: inline-block;
+		vertical-align: middle;
+	}
+	.remove-condition{
+		align-self: center;
+		cursor: pointer;
+	}
+	.condition-container{
+		flex: 1;
+		font-size: 16px;
+		display: flex;
+		justify-content: space-between;
+		flex-direction: column;
+	};
+	.condition-container input, .condition-container select, .condition-container button{
+		font-size: 16px;
+		color: rgb(86, 95, 108);
+	}
+	.condition-option-selection, .condition-input, .field-select{
+		min-height: 1em;
+		line-height: 1em;
+		margin-top: 0.35em;
+		border: none;
+		outline: none;
+		background-color: transparent;
+		border-bottom: 1.5px solid rgb(86, 95, 108);
+		transition: background-color 0.2s;
+	}
+	.condition-option-selection:hover, .condition-input:hover, .field-select:hover{
+		background-color: #ffffff35;
+	}
+	.condition-option-selection:focus, .condition-input:focus, .field-select:focus{
+		background-color: #ffffff70;
+	}
+	.condition-input, .field-select{
+		width: 100%;
+	}
+	.condition-option-selection{
+		width: 50%;
+	}
+	.condition-selected-cities{
+		cursor: pointer;
+	}
+	.condition-text-filter{
+		width: calc(100% - 2.5em);
+		display: inline-block;
+	}
+	.condition-text-filter-button{
+		width: 1em;
+		display: inline-block;
+		cursor: pointer;
+		outline: none;
+	}
+	.condition-text-filter-button:hover{
+		color: $purple-dark;
+	}
+	.condition-text-filter-button:active{
+		color: $purple-darker;
+	}
+}
+.single-condition:hover{
+	background-color: #F3DBEA;
+}

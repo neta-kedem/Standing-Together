@@ -1,0 +1,40 @@
+.page-wrap-welcome {
+	background-color: #90278e;
+	color: white;
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+
+	.welcome-title {
+		font-size: 3em;
+		text-align: center;
+		margin: 1em;
+	}
+
+	.pages-wrap {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
+		width: 80%;
+		margin: 0 auto;
+	}
+
+	.pages-wrap .page-link {
+		margin: 1em;
+		padding: 1% 2.5%;
+		font-size: 1.25em;
+		text-align: center;
+		width: 6em;
+		cursor: pointer;
+		transition: background-color 0.25s;
+	}
+
+	.pages-wrap .page-link:hover {
+		background-color: #00000030
+	}
+
+	.pages-wrap .page-link:active {
+		background-color: #00000060
+	}
+}

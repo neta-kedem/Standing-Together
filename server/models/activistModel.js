@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
+const aggregatePaginate = require('mongoose-aggregate-paginate-v2');
+Schema = mongoose.Schema;
 
 const activistSchema = new mongoose.Schema({
 	metadata: {
@@ -34,8 +36,7 @@ const activistSchema = new mongoose.Schema({
 		residency: String,
 		circle: {
 			type:String,
-			required: false,
-			enum: ['חיפה', 'תל-אביב' , 'ירושלים', 'הנגב']
+			required: false
 		},
 		isMember: Boolean,
 		isPaying: Boolean,
@@ -45,7 +46,40 @@ const activistSchema = new mongoose.Schema({
 			default: 'not subscribed',
 			enum: ['subscribed', 'unsubscribed' , 'not subscribed', 'cleaned', 'pending']
 		},
-		participatedEvents: [String],
+		participatedEvents: [
+			{type: Schema.Types.ObjectId, ref: 'event'}
+		],
+	},
+	membership:{
+		joiningDate: {
+			type: Date,
+			required: false,
+		},
+		street: {
+			type: String,
+			required: false,
+		},
+		houseNum: {
+			type: String,
+			required: false,
+		},
+		apartmentNum: {
+			type: String,
+			required: false,
+		},
+		mailbox: {
+			type: String,
+			required: false,
+		},
+		TZ: {
+			type: String,
+			required: false,
+		},
+		birthday: {
+			type: Date,
+			required: false,
+		},
+		required: false,
 	},
 	role: {
 		isTyper: Boolean,
@@ -55,9 +89,19 @@ const activistSchema = new mongoose.Schema({
 	},
 	login: {
 		loginCode: String,
-		token: [String]
+		tokens: [{
+			token: {type: String},
+			issuedAt: {type: Date},
+			lastUsage: {type: Date}
+		}],
+		failedLoginCount:{
+			type: Number,
+			default: 0
+		},
+		lastLoginAttempt: Date
 	}
 });
 activistSchema.plugin(mongoosePaginate);
+activistSchema.plugin(aggregatePaginate);
 const activistModel = mongoose.model('activist',activistSchema);
 module.exports = activistModel;

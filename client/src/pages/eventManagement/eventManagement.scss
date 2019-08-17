@@ -1,0 +1,49 @@
+.page-wrap-event-management {
+    .event-table {
+        direction: rtl;
+        border-collapse: collapse;
+        margin: 5% auto;
+        width: 80%;
+    }
+
+    .event-table td, .event-table th {
+        padding: 5px 15px;
+        border: 1px solid black;
+    }
+
+    .event-table tbody {
+        cursor: pointer;
+    }
+
+    .event-table tbody tr:hover {
+        background-color: #EEE;
+    }
+
+    .event-table tbody tr:active {
+        background-color: #DDD;
+    }
+
+    .new-event-link {
+        display: block;
+        width: fit-content;
+        margin: 2em auto;
+        text-decoration: none;
+    }
+
+    .new-event-link div {
+        background-color: rgb(144, 39, 142);
+        color: white;
+        cursor: pointer;
+        width: 15em;
+        padding: 0.2em 1em;
+        text-align: center;
+    }
+
+    .new-event-link div:hover {
+        background-color: rgb(124, 19, 122);
+    }
+
+    .new-event-link div:active {
+        background-color: rgb(104, 0, 102);
+    }
+}
