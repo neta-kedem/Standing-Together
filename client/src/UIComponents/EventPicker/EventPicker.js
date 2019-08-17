@@ -1,23 +1,26 @@
 import React from 'react'
 import server from '../../services/server'
 import PageNav from "../PageNav/PageNav"
+import SearchBar from "../SearchBar/SearchBar"
 import "./EventPicker.scss"
 
-export default class EventManagement extends React.Component {
+export default class EventPicker extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             handleSelection: this.props.handleSelection,
             page: 0,
             pageCount: 0,
-            events: []
+            events: [],
+            search: this.props.initSearch ? this.props.initSearch : ""
         }
     }
     componentDidMount() {
         this.getListDetails();
     }
     getListDetails() {
-        server.post('events/list', {'page':this.state.page})
+        const search = this.state.search || "";
+        server.post('events/list', {'page': this.state.page, 'search': search})
             .then(result => {
                 const events = result.events;
                 this.setState({events: events.map((event)=>{
@@ -31,6 +34,11 @@ export default class EventManagement extends React.Component {
     }
     handlePageNavigation(page){
         this.setState({page: page}, ()=>{
+            this.getListDetails();
+        });
+    }
+    handleSearch(search){
+        this.setState({page: 0, search: search}, ()=>{
             this.getListDetails();
         });
     }
@@ -51,6 +59,7 @@ export default class EventManagement extends React.Component {
         });
         return (
             <div>
+                <SearchBar placeholder={"חיפוש אירועים"} initVal={this.state.search} onSearch={this.handleSearch.bind(this)}/>
                 <table className={"event-table"}>
                     <thead>
                         <tr>
@@ -76,6 +85,5 @@ export default class EventManagement extends React.Component {
             </div>
         )
     }
-
 }
 
