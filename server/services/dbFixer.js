@@ -38,7 +38,7 @@ const getParticipatedEventsFromScans = function(){
                 let a = s.activists[j];
                 if (!activistDict[a.activistId])
                     activistDict[a.activistId] = [];
-                activistDict[a.activistId].push(s._id);
+                activistDict[a.activistId].push(s.eventId);
             }
         }
         const activists = Object.keys(activistDict);
