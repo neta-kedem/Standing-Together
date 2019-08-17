@@ -68,7 +68,8 @@ export default class Typer extends React.Component {
 			postAttempted: false, //toggled once the "post" button is pressed. If true, invalid fields will be highlighted
 			postInProcess: false,
 			postSuccessful: false,
-			unsaved: false
+			unsaved: false,
+			callPingInterval: null
 		};
 	};
 	refreshHandler = function() {
@@ -84,6 +85,10 @@ export default class Typer extends React.Component {
 		//confirm exit without saving
 		window.onbeforeunload = this.refreshHandler;
 	}
+	componentWillUnmount() {
+		this.cancelPingInterval();
+	}
+
 	fetchCities(){
 		server.get('cities/', {})
 			.then(json => {
@@ -128,10 +133,7 @@ export default class Typer extends React.Component {
 					"eventData": eventData.eventDetails,
 					"displayScanUploadForm": false,
 					"displayTyperForm": true,
-				});
-				const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
-				// store interval promise in the state so it can be cancelled later:
-				this.setState({callPingInterval: callPingInterval});
+				}, this.initiatePingInterval);
 			}
 			if(json.activists && json.activists.length)
 			{
@@ -143,6 +145,15 @@ export default class Typer extends React.Component {
 				});
 			}
 		});
+	}
+	initiatePingInterval(){
+		const callPingInterval = setInterval(this.pingScan.bind(this), this.scanPingIntervalDuration);
+		// store interval promise in the state so it can be cancelled later:
+		this.setState({callPingInterval: callPingInterval});
+	}
+	cancelPingInterval(){
+		if(this.state.callPingInterval)
+			clearInterval(this.state.callPingInterval);
 	}
 	pingScan(){
 		if(!this.state.scanId)
@@ -325,8 +336,10 @@ export default class Typer extends React.Component {
 				displayScanUploadForm: false,
 				displayLoadingMessage: false,
 			});
+			this.cancelPingInterval();
 		});
 	}.bind(this);
+
 	refetchScans = function(){
 		this.getContactsScan();
 		this.setState({postSuccessful: false});
