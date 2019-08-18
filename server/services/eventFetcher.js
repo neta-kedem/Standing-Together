@@ -74,7 +74,7 @@ const listEvents = function(req, res){
         if(!isUser)
             return res.json({"error" : "missing token"});
         const page = req.body.page;
-        const search = req.body.search;
+        const search = req.body.search || "";
         if(page < 0)
             return res.json({"error":"illegal page"});
         const PAGE_SIZE = 15;
