@@ -105,10 +105,12 @@ getCurrFilters(){
 }
 getCurrQuery() {
 	const currFilters = this.state.currFilters;
-	// todo neta- complete this
 	if(!currFilters.groups.length) return "{}"
-	let query = `{"$${currFilters.logicalOperator}": [{`
-	currFilters.groups.forEach(group => {
+	let query = `{"$${currFilters.logicalOperator}": [`
+	currFilters.groups.forEach((group, j) => {
+		if(!group.filters.length) return '';
+		if(j) query += ', {'
+		else query += '{'
 		query += `"$${group.logicalOperator}": [`;
 		group.filters.forEach((filter, i) => {
 			const filterObj = this.filterMapper(filter)
@@ -118,9 +120,9 @@ getCurrQuery() {
 			str += filterObj.field + ':' + filterObj.body
 			query += `${str}}`
 		})
-		query += "]"
+		query += "]}"
 	})
-	query += '}]}'
+	query += ']}'
 	return query
 }
 

@@ -115,6 +115,14 @@ class QueryCreator extends React.Component {
         }
     );
   }
+  _removeGroup(groupId) {
+    QueryService.removeGroup(groupId)
+        .then(currFilters => {
+          this.setState({ currFilters })
+          this.props.changeCurrFilters(currFilters)
+        }
+    );
+  }
 
   onDragStart(result) {
     // todo neta- should be in the service
@@ -222,6 +230,7 @@ class QueryCreator extends React.Component {
                       hideNewFilters={this.state.showCreateFilterGroup !== groupId}
                       saveFilter={this._saveFilter.bind(this)}
                       toggleLogicalOperator={this._toggleLogicalOperator.bind(this, groupId)}
+                      removeGroup={this._removeGroup.bind(this, groupId)}
                     />
                   );
                   return (<div key={'group-'+groupId} style={Object.assign({padding: "0 10px", "border": "4px solid #90278e", borderRadius: '15px'}, groupId ? {borderTop: "none"} : {})}>{queryEl}</div>);
