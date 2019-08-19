@@ -35,33 +35,51 @@ export default class PaymentForm extends React.Component {
             {contributionAmounts.map((sum)=>{
                 return <button  type="button" className={"contribution-button"} key={"sum_" + sum} onClick={()=>{this.handleContributionAmountSelection(sum)}}>
                         <span className={"contribution-value"}>{sum}</span>
-                        <span className={"contribution-units"}>₪ לחודש</span>
+                        <span className={"contribution-units"}>
+                            <div className={"shekels"}>₪</div>
+                            <div>
+                                <div>شهريًا</div>
+                                <div>לחודש</div>
+                            </div>
+                        </span>
                     </button>;
             })}
         </div>;
         const contributionForm = <div className="contributionForm">
+            <div>تسديد رسوم عضوية بمبلغ {paymentData.selectedAmount}₪ شهريًا</div>
             <div>תשלום חברות חודשי של {paymentData.selectedAmount}₪ לחודש</div>
-            <div onClick={this.closeContributionForm} className={"close-payment-form"}>
-                <FontAwesomeIcon icon="arrow-right" className="close-payment-form-icon"/>
-                <div className="close-payment-form-label">בחירת סכום אחר</div>
+            <div className={"close-payment-form"}>
+                <button type={"button"} onClick={this.closeContributionForm} className="close-payment-form-icon" id={"close-payment-form-icon"}>
+                    <FontAwesomeIcon icon="arrow-right"/>
+                </button>
+                <label className="close-payment-form-label" for="close-payment-form-icon">اختيار مبلغ آخر • בחירת סכום אחר</label>
             </div>
             <label>
-            <div className={"credit-card-field-title"}>אמצעי תשלום</div>
+            <div className={"credit-card-field-title"}>
+                <div>اختاروا وسيلة الدفع</div>
+                <div>אמצעי תשלום</div>
+            </div>
             <select name="CardTypeId" value={paymentData.CardTypeId} onChange={this.handleInputChange}
                     className={paymentData["CardTypeIdValid"] === false ? "invalid" : ""}>
-                <option value="0">בחרו אמצעי תשלום</option>
-                <option value="6">אמריקן אקספרס</option>
-                <option value="1">ויזה</option>
-                <option value="2">מאסטרקארד</option>
-                <option value="3">ישראכרט</option>
+                <option value="0">اختاروا وسيلة الدفع בחרו אמצעי תשלום</option>
+                <option value="1">فيزا ויזה</option>
+                <option value="2">ماستركارد מאסטרקארד</option>
+                <option value="4">أمريكان إكسبرس אמריקן אקספרס</option>
+                <option value="3">Discover</option>
             </select>
             </label>
             <label>
-                <div className={"credit-card-field-title"}>מספר אשראי</div>
+                <div className={"credit-card-field-title"}>
+                    <div>رقم البطاقة الائتمانية</div>
+                    <div>מספר אשראי</div>
+                </div>
                 <input type="text" name="CreditCardNo" size="18" value={paymentData.CreditCardNo} onChange={this.handleInputChange}
                        className={paymentData["CreditCardNoValid"] === false ? "invalid" : ""}/>
             </label>
-            <div className={"credit-card-field-title"}>תוקף</div>
+            <div className={"credit-card-field-title"}>
+                <div>الصلاحية</div>
+                <div>תוקף</div>
+            </div>
             <select name="year" value={paymentData.year} onChange={this.handleInputChange}
                     className={paymentData["yearValid"] === false ? "invalid" : ""}>
                 <option value=""/>
@@ -88,7 +106,10 @@ export default class PaymentForm extends React.Component {
                 <option value="12">12</option>
             </select>
             <label>
-            <div className={"credit-card-field-title"}>שלוש ספרות אחרונות על גב הכרטיס</div>
+                <div className={"credit-card-field-title"}>
+                    <div>آخر ثلاث منازل بظهر البطاقة</div>
+                    <div>שלוש ספרות אחרונות על גב הכרטיס</div>
+                </div>
             <input type="text" inputMode="numeric" name="CVV" maxLength="3" size="3" value={paymentData.CVV} onChange={this.handleInputChange}
                    className={paymentData["CVVValid"] === false ? "invalid" : ""}/>
             </label>

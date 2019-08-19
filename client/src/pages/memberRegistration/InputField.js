@@ -4,7 +4,6 @@ export default class InputField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			lang: props['lang'],
 			field: props['field'],
 			handlePost: props['handlePost'],
 			handleChange: props['handleChange']
@@ -19,8 +18,12 @@ export default class InputField extends React.Component {
 		const fieldValue = this.props.fieldValue || "";
 		const f = this.state.field;
 		return (
-			<div>
-				<input value={fieldValue} type={f.type} name={f.name} placeholder={f[this.state.lang]}
+			<div className={"field-wrap"}>
+				<label for={"field-"+f.name} className={"input-field-label"}>
+					<div>{f.ar}</div>
+					<div>{f.he}</div>
+				</label>
+				<input value={fieldValue} type={f.type} name={f.name} id={"field-"+f.name}
 					   onChange = {this.syncStateToInput}
 					   list = {f.name + "-data-list"}
 					   autoComplete = "new-password"
