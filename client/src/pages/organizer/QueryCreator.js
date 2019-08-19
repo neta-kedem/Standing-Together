@@ -165,7 +165,7 @@ class QueryCreator extends React.Component {
         </DragDropContext>
         <AddFiltersBtn text="Add Group" type="group" onClick={this._addGroup.bind(this)}/>
         <div className={"query-sorting-wrap"}>
-            <label className={"query-sorting-label"} for="select-sort-by">סידור תוצאות לפי · סידור תוצאות לפי</label>
+            <label className={"query-sorting-label"} htmlFor="select-sort-by">סידור תוצאות לפי · סידור תוצאות לפי</label>
             <select className={"query-sorting"} id="select-sort-by" value={this.state.currFilters.sortBy} onChange={(e)=>{this.setSortingField(e.target.value)}}>
                 {
                     this.state.sortOptions.map(f => {

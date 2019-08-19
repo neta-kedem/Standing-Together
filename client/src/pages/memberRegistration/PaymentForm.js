@@ -52,7 +52,7 @@ export default class PaymentForm extends React.Component {
                 <button type={"button"} onClick={this.closeContributionForm} className="close-payment-form-icon" id={"close-payment-form-icon"}>
                     <FontAwesomeIcon icon="arrow-right"/>
                 </button>
-                <label className="close-payment-form-label" for="close-payment-form-icon">اختيار مبلغ آخر • בחירת סכום אחר</label>
+                <label className="close-payment-form-label" htmlFor="close-payment-form-icon">اختيار مبلغ آخر • בחירת סכום אחר</label>
             </div>
             <label>
             <div className={"credit-card-field-title"}>
