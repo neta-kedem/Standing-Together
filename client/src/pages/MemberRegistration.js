@@ -28,12 +28,12 @@ export default class MemberRegistration extends React.Component {
                 tz: ""
             },
             paymentInfo: {
-                CVV: "",
+                CVV: "123",
                 CardTypeId: "1",
-                CreditCardNo: "",
+                CreditCardNo: "9111111111111111",
                 selectedAmount: null,
-                month: "",
-                year: ""
+                month: "2020",
+                year: "01"
             },
             termsAccepted: false,
             postAttempted: false,
@@ -79,7 +79,7 @@ export default class MemberRegistration extends React.Component {
                     name: "tz", type: "text", ar: "رقم الهوية", he: "מספר ת.ז.", width: 47.5,
                 },
                 {
-                    name: "birthday", type: "text", ar: "تاريخ الميلاد", he: "תאריך לידה", width: 47.5,
+                    name: "birthday", type: "date", ar: "تاريخ الميلاد", he: "תאריך לידה", width: 47.5,
                     required: true
                 },
             ],
@@ -167,7 +167,8 @@ export default class MemberRegistration extends React.Component {
     }.bind(this);
 
     registerMember = function(activist, paymentInfo){
-        IsraelGivesDonator.donate(activist, paymentInfo).then(() => {
+        //IsraelGivesDonator.donate(activist, paymentInfo)
+            new Promise((resolve)=>{resolve(true)}).then(() => {
             const data ={
                 "activistData": activist
             };
@@ -182,7 +183,7 @@ export default class MemberRegistration extends React.Component {
                         window.parent.postMessage({donationSuccessful: true}, "*");
                     }
                 });
-        }));
+        });
     };
 
     handleDonationFailedPopupToggle = function(){

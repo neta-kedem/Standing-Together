@@ -17,7 +17,7 @@
         display: flex;
         flex-direction: column;
     }
-    input.input-field{
+    input.input-field, .react-date-picker__wrapper{
         width: 100%;
         padding: 0.7em 0.5em;
         box-sizing: border-box !important;
@@ -33,7 +33,7 @@
         border-style: solid;
         border-color: rgba(232, 232, 232, 1);
         outline: none;
-        margin: 0.25em 0 0.75em 1em;
+        margin: 0.25em 0 0.75em 0;
         max-width: 100%;
         -webkit-box-flex: 1;
         -webkit-flex: 1;
@@ -43,9 +43,18 @@
     input.input-field:focus{
         box-shadow: 0 3.5px 12px 1px rgba(0,0,0,0.4);
     }
-	.highlight-invalid-fields .invalid .input-field{
-        background-color: rgb(255, 150, 160);
+	.highlight-invalid-fields .invalid{
+        .input-field, .react-date-picker__wrapper{
+            background-color: rgb(255, 150, 160);
+        }
     }
     .input-field-label{
         line-height: 1em;
     }
+    /*react-date-picker*/
+.react-date-picker{
+    direction: ltr;
+}
+.react-date-picker__wrapper{
+    width: 100%;
+}

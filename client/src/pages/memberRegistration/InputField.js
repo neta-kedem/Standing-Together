@@ -1,4 +1,5 @@
 import React from 'react';
+import DatePicker from 'react-date-picker';
 
 export default class InputField extends React.Component {
 	constructor(props) {
@@ -10,8 +11,8 @@ export default class InputField extends React.Component {
 		};
 	}
 	
-	syncStateToInput=function(event){
-		this.state.handleChange(event.target.name, event.target.value);
+	syncStateToInput=function(fieldVal){
+		this.state.handleChange(this.state.field.name, fieldVal);
 	}.bind(this);
 	
 	render() {
@@ -19,16 +20,27 @@ export default class InputField extends React.Component {
 		const f = this.state.field;
 		return (
 			<div className={"field-wrap"}>
-				<label for={"field-"+f.name} className={"input-field-label"}>
+				<label htmlFor={"field-"+f.name} className={"input-field-label"}>
 					<div>{f.ar}</div>
 					<div>{f.he}</div>
 				</label>
-				<input value={fieldValue} type={f.type} name={f.name} id={"field-"+f.name}
-					   onChange = {this.syncStateToInput}
-					   list = {f.name + "-data-list"}
-					   autoComplete = "new-password"
-					   className={"input-field"}
-				/>
+				{f.type === "date"
+				?	<DatePicker
+						dir = "ltr"
+						id={"field-"+f.name}
+						value={fieldValue}
+						onChange = {(date) => {this.syncStateToInput(date)}}
+						disableCalendar = {true}
+						format="yy-M-d"
+					/>
+				:	<input
+						value={fieldValue} type={f.type} name={f.name} id={"field-"+f.name}
+						onChange = {(e) => {this.syncStateToInput(e.target.value)}}
+						list = {f.name + "-data-list"}
+						autoComplete = "new-password"
+						className={"input-field"}
+					/>
+				}
 			</div>
 		);
 	}
