@@ -28,12 +28,12 @@ export default class MemberRegistration extends React.Component {
                 tz: ""
             },
             paymentInfo: {
-                CVV: "",
+                CVV: "123",
                 CardTypeId: "1",
-                CreditCardNo: "",
+                CreditCardNo: "9111111111111111",
                 selectedAmount: null,
-                month: "",
-                year: ""
+                month: "2020",
+                year: "01"
             },
             termsAccepted: false,
             postAttempted: false,
@@ -64,22 +64,22 @@ export default class MemberRegistration extends React.Component {
                     required: true
                 },
                 {
-                    name: "street", type: "text", ar: "البلد", he: "רחוב", width: 37.5,
+                    name: "street", type: "text", ar: "الشارع", he: "רחוב", width: 37.5,
                 },
                 {
-                    name: "houseNum", type: "text", ar: "البلد", he: "מספר בית", width: 17.5,
+                    name: "houseNum", type: "text", ar: "رقم البيت", he: "מספר בית", width: 17.5,
                 },
                 {
-                    name: "apartmentNum", type: "text", ar: "البلد", he: "מספר דירה", width: 17.5,
+                    name: "apartmentNum", type: "text", ar: "رقم الشقة", he: "מספר דירה", width: 20.5,
                 },
                 {
-                    name: "mailbox", type: "text", ar: "البلد", he: "תא דואר (אם אין שם רחוב)", width: 37.5,
+                    name: "mailbox", type: "text", ar: "صندوق البريد (بحال لا يوجد اسم شارع)", he: "תא דואר (אם אין שם רחוב)", width: 75,
                 },
                 {
-                    name: "tz", type: "text", ar: "البلد", he: "מספר ת.ז.", width: 37.5,
+                    name: "tz", type: "text", ar: "رقم الهوية", he: "מספר ת.ז.", width: 47.5,
                 },
                 {
-                    name: "birthday", type: "text", ar: "البلد", he: "תאריך לידה", width: 40,
+                    name: "birthday", type: "date", ar: "تاريخ الميلاد", he: "תאריך לידה", width: 47.5,
                     required: true
                 },
             ],
@@ -167,7 +167,8 @@ export default class MemberRegistration extends React.Component {
     }.bind(this);
 
     registerMember = function(activist, paymentInfo){
-        IsraelGivesDonator.donate(activist, paymentInfo).then((result => {
+        //IsraelGivesDonator.donate(activist, paymentInfo)
+            new Promise((resolve)=>{resolve(true)}).then(() => {
             const data ={
                 "activistData": activist
             };
@@ -182,7 +183,7 @@ export default class MemberRegistration extends React.Component {
                         window.parent.postMessage({donationSuccessful: true}, "*");
                     }
                 });
-        }));
+        });
     };
 
     handleDonationFailedPopupToggle = function(){
@@ -194,11 +195,18 @@ export default class MemberRegistration extends React.Component {
             <div dir={"rtl"} className={"page-wrap-member-registration"}>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
-                    <span>הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.</span>
+                    <div className={"section-text"}>
+                        הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.
+                    </div>
+                    <div className={"section-text"}>
+                        إنضمّوا ل<b>نقف معًا</b> وكونوا جزءًا من الحراك الميداني الأكبر في إسرائيل. حراك يقود النضال من أجل السلام، المساواة والعدالة الاجتماعية.
+                    </div>
                     <br/>
-                    <span>إنضمّوا ل<b>نقف معًا</b> وكونوا جزءًا من الحراك الميداني الأكبر في إسرائيل. حراك يقود النضال من أجل السلام، المساواة والعدالة الاجتماعية.</span>
-                    <br/>
-                    <span className={"section-instruction"}>1. אנא מלאו את הפרטים האישיים שלכם يرجى تعبئة تفاصيلكم/ن الشخصية:</span>
+                    <span className={"section-text section-instruction"}>
+                        <span>١. يرجى تعبئة تفاصيلكم/ن الشخصية:</span>
+                        <br/>
+                        <span>1. אנא מלאו את הפרטים האישיים שלכם:</span>
+                    </span>
                     <br/>
                     <div ref={this.registrationFormRef}>
                         <RegistrationForm
@@ -208,22 +216,35 @@ export default class MemberRegistration extends React.Component {
                             handleChange={this.handleTypedProfileInput.bind(this)}
                         />
                     </div>
-                    <span className={"section-instruction"}> 2. אנא לחצו על סכום דמי החבר אותו תרצו לשלם והכניסו בטופס שיפתח את פרטי האשראי שלכן/ם يرجى الضعط على مبلغ رسوم عضويتكم، وإدخال تفاصيل بطاقة اعتمادكم في الاستمارة التي ستظهر:</span>
-                    <br/>
+                    <span className={"section-text section-instruction"}>
+                        <span>٢. يرجى الضعط على مبلغ رسوم عضويتكم، وإدخال تفاصيل بطاقة اعتمادكم في الاستمارة التي ستظهر:</span>
+                        <br/>
+                        <span>2. אנא לחצו על סכום דמי החבר אותו תרצו לשלם והכניסו בטופס שיפתח את פרטי האשראי שלכן/ם:</span>
+                    </span>
                     <div ref={this.paymentFormRef}>
                         <PaymentForm
                             handleChange={this.handleTypedPaymentInput}
                             paymentData={this.state.paymentInfo}
                         />
                     </div>
-                    <span className={"section-instruction"}>3. אנא קראו והסכימו לתנאי ההצטרפות يرجى قراءة شروط الانضمام والمصادقة عليها:</span>
+                    <span className={"section-text section-instruction"}>
+                        <span className={"section-text"}>٣. يرجى قراءة شروط الانضمام والمصادقة عليها:</span>
+                        <br/>
+                        <span className={"section-text"}>3. אנא קראו והסכימו לתנאי ההצטרפות:</span>
+                    </span>
                     <br/>
-                    <div>
-                        <b>
-                            אני, החתומ/ה מטה, מבקש/ת להצטרף להיות חבר/ה בתנועת "עומדים ביחד" ולפעול במסגרתה ً انا الموقع\ة ادناه, اطلب االنضمام الى حراك »نقف معا« وان اعمل من خالله:
-                        </b>
+                    <div className={"section-text"}>
+                        <div><b> ً انا الموقع\ة ادناه, اطلب االنضمام الى حراك »نقف معا« وان اعمل من خالله:</b></div>
+                        <div><b>אני, החתומ/ה מטה, מבקש/ת להצטרף להיות חבר/ה בתנועת "עומדים ביחד" ולפעול במסגרתה:</b></div>
                     </div>
-                    <div>
+                    <div className={"section-text"}>
+                        أريد الانضمام لحراك "نقف معًا" لأني أقبل بالمبادئ الفكريّة, السّياسيّة, والتنظيمية للحراك, والذي هو حراك سياسي يعنى بالنّضال والأمل, كما ويحمل مبادئ وقيم اشتراكيّة.
+                        إني أعي أنّ الحراك يضم شركاء وشريكات من كل انحاء البلاد - شبابًا وشيبًا, يهودًا وعربًا, نساءً ورجالًا, من المركز ومن الأرياف - وأنا مستعد\ة للعمل المشترك من منطلق إيماني بأننا وفقط عندما نكون معًا يمكننا تغيير المكان الذي نعيش به.
+                        أصرّح بهذا انّي سأعمل سويةً مع رفاقي ورفيقاتي في الحراك من أجل السعي لتحقيق المساواة الكاملة لكلّ من يعيش هنا؛ من أجل العدالة الاجتماعيّة الحقيقيّة؛ من أجل السّلام, ألاستقلال والعدالة لكلا الشعبين.
+                        سأعمل من خلال الحراك من أجل تغيير السّياسات الاجتماعيّة والسّياسيّة السّائدة اليوم, والتي لا تخدم مصالح الأغلبية في المجتمع, بل تصب في مصلحة أقليّة صغيرة هي المستفيدة من الوضع القائم.
+                        أتعهد أن أكون جزءًا من النضال من أجل وضع بديل شامل لليمين, من أجل إحداث تغيير جذري في المجتمع الإسرائيلي, وتحويل هذه البلاد لمكانٍ لنا جميعًا.
+                    </div>
+                    <div className={"section-text"}>
                         אני רוצה להצטרף לתנועת "עומדים ביחד" כי אני מקבל/ת את עקרונותיה הרעיוניים, הפוליטיים והארגוניים, של התנועה, שהיא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים.
                         אני מבינ/ה שבתנועה שותפים חברים וחברות מכל קצוות הארץ - צעירים ומבוגרים, ערבים ויהודים, נשים וגברים, מהפריפריה ומהמרכז - ואני מוכנ/ה לפעול במשותף מתוך אמונה שרק ביחד נוכל לשנות את המקום בו אנחנו חיים.
                         אני מצהיר/ה שאפעל ביחד עם חברותיי וחבריי בתנועה כדי לחתור לשוויון מלא לכל מי שחיים כאן; לצדק חברתי אמיתי; לשלום, לעצמאות ולצדק לשני העמים.
@@ -231,16 +252,9 @@ export default class MemberRegistration extends React.Component {
                         אני מתחייב/ת להיות חלק מהמאבק להעמדת חלופה כוללת לימין, לשינוי מהותי בחברה הישראלית, ולהפיכת הארץ הזו למקום לכולנו.
                     </div>
                     <div>
-                        أريد الانضمام لحراك "نقف معًا" لأني أقبل بالمبادئ الفكريّة, السّياسيّة, والتنظيمية للحراك, والذي هو حراك سياسي يعنى بالنّضال والأمل, كما ويحمل مبادئ وقيم اشتراكيّة.
-                        إني أعي أنّ الحراك يضم شركاء وشريكات من كل انحاء البلاد - شبابًا وشيبًا, يهودًا وعربًا, نساءً ورجالًا, من المركز ومن الأرياف - وأنا مستعد\ة للعمل المشترك من منطلق إيماني بأننا وفقط عندما نكون معًا يمكننا تغيير المكان الذي نعيش به.
-                        أصرّح بهذا انّي سأعمل سويةً مع رفاقي ورفيقاتي في الحراك من أجل السعي لتحقيق المساواة الكاملة لكلّ من يعيش هنا؛ من أجل العدالة الاجتماعيّة الحقيقيّة؛ من أجل السّلام, ألاستقلال والعدالة لكلا الشعبين.
-                        سأعمل من خلال الحراك من أجل تغيير السّياسات الاجتماعيّة والسّياسيّة السّائدة اليوم, والتي لا تخدم مصالح الأغلبية في المجتمع, بل تصب في مصلحة أقليّة صغيرة هي المستفيدة من الوضع القائم.
-                        أتعهد أن أكون جزءًا من النضال من أجل وضع بديل شامل لليمين, من أجل إحداث تغيير جذري في المجتمع الإسرائيلي, وتحويل هذه البلاد لمكانٍ لنا جميعًا.
-                    </div>
-                    <div>
                         <Checkbox onChange={this.handleTermsAcceptance} checked={this.state.termsAccepted} label={
                             <div>
-                                <div>אני מאשר/ת שקראתי והסכמתי</div>
+                                <div>أؤكد أني قرأت ووافقت</div>
                                 <div>אני מאשר/ת שקראתי והסכמתי</div>
                             </div>
                         }/>
@@ -251,7 +265,7 @@ export default class MemberRegistration extends React.Component {
                                 className={"register-button"}
                                 disabled={!this.state.termsAccepted}
                                 onClick={this.handlePost}>
-                                    <div>אני רוצה להצטרף!</div>
+                                    <div>أريد أن أنضم!</div>
                                     <div>אני רוצה להצטרף!</div>
                             </button>
                             :''
@@ -261,9 +275,12 @@ export default class MemberRegistration extends React.Component {
                 </div>
                 <Popup visibility={this.state.displayFailedDonationPopup} toggleVisibility={this.handleDonationFailedPopupToggle.bind(this)}>
                     <div className={"failed-donation-message"}>
-                        <h1>אוי לא!</h1>
+                        <h1>أوه لا! אוי לא!</h1>
+                        <p>مع الأسف حصل خلل أثناء تلقّي التبرع، ولم يتم استيعابه.</p>
                         <p>לצערינו התרחשה שגיאה במהלך עיבוד התרומה, והיא לא נקלטה כראוי</p>
+                        <p>تأكدوا من إدخالكم التفاصيل الصحيحة، وحاولوا مجددًا.</p>
                         <p>אנא וודאו שפרטי התשלום הוזנו באופן מדוייק, ונסו שוב</p>
+                        <p>بحال تكررت المشكلة، يرجى التوجه إلينا على عنوان: info@standing-together.com أو على تلفون رقم ٧٣٠٦٦٠٠-٠٥٢</p>
                         <p>אם הבעיה חוזרת על עצמה, בבקשה פנו אלינו בכתובת: info@standing-together.com או בטלפון 052-7306600</p>
                         <button type={"button"}
                             className={"close-failed-donation-button"}

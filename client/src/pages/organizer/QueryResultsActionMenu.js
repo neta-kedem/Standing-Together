@@ -15,7 +15,7 @@ class QueryResultsActionMenu extends React.Component {
 		this.state.toggleEventPopup();
 	}
 	render() {
-		const items = this.state.items.map(item => <div key={item.index} className={"action-button "+(item.alignToEnd?"align-to-end":"")}>{item.content}</div>);
+		const items = this.state.items.map((item, i) => <div key={"queryAction_" + i} className={"action-button " + (item.alignToEnd?"align-to-end":"")}>{item.content}</div>);
 		return(
 			<div className="query-results-wrapper">
 				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>

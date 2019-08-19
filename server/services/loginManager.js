@@ -89,11 +89,28 @@ const loginViaMail = function (req, res){
 
 const sendCodeViaMail = function(code, email)
 {
+    const htmlBody = `
+    <div dir="rtl" style="text-align: right;">
+        <h3 style="color: #60076e">קוד הכניסה שלך למערכת של "עומדים ביחד": ${code}</h3>
+        <p>הקוד הזה נשלח כחלק מניסיון התחברות למערכת באמצעות כתובת המייל הזאת.</p>
+        <p>אם לא ניסית להיכנס למערכת, <a href="https://www.google.com">נא ללחוץ כאן</a>.</p>
+        <p>אחרי שמונה דקות של חוסר פעילות במערכת, תוקף הקוד יפוג, ותצטרכו להתחבר אליה מחדש.</p>
+        <p>אם נכנסת למערכת ממחשב ציבורי, חשוב להתנתק בסוף העבודה הן מהמערכת עצמה, והן מחשבון המייל, שגישה אליו מאפשרת כניסה למערכת.</p>
+    </div>
+    `;
+    const textBody = (
+        "קוד הכניסה שלך למערכת של \"עומדים ביחד\": " + code + "\n" +
+        "הקוד הזה נשלח כחלק מניסיון התחברות למערכת באמצעות כתובת המייל הזאת." + "\n" +
+        "אם לא ניסית להיכנס למערכת, נא ללחוץ כאן:" + "\n" +
+        "אחרי שמונה דקות של חוסר פעילות במערכת, תוקף הקוד יפוג, ותצטרכו להתחבר אליה מחדש." + "\n" +
+        "אם נכנסת למערכת ממחשב ציבורי, חשוב להתנתק בסוף העבודה הן מהמערכת עצמה, והן מחשבון המייל, שגישה אליו מאפשרת כניסה למערכת." + "\n"
+    );
     Mailer.sendEmail({
-        from: 'noreply@gmail.com',
+        from: 'info@standing-together.org',
         to: email,
         subject: 'Your login code for Standing Together',
-        text: 'Use the following code: ' + code
+        text: textBody,
+        html: htmlBody
     });
 };
 const assignToken = function(userId) {

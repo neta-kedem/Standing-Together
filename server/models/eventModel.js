@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
+Schema = mongoose.Schema;
 
 const eventSchema = new mongoose.Schema({
 	metadata: {
@@ -15,8 +16,9 @@ const eventSchema = new mongoose.Schema({
 		},
 		//_id of the activist (user) who created the event
 		creatorId: {
-			type: String,
-			required: true,
+			type: Schema.Types.ObjectId,
+			ref: 'activist',
+			required: true
 		}
 	},
 	eventDetails: {
@@ -31,8 +33,9 @@ const eventSchema = new mongoose.Schema({
 			required: true,
 		},
 		category: {
-			type: String,
-			required: true,
+			type: Schema.Types.ObjectId,
+			ref: 'eventCategory',
+			required: true
 		},
 		//the location where the event will take place
 		location: {

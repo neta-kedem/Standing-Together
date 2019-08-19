@@ -13,9 +13,8 @@ const insertContactScan = function(scanUrl, eventId){
            "creatorId": Authentication.getMyId()
        },
        "scanUrl": scanUrl,
-       "eventId": eventId
+       "eventId": mongoose.Types.ObjectId(eventId)
    };
-   const newScan = new ContactScan(scanObject);
    return ContactScan.create(scanObject).then(()=>{
        return {"id": scanObject._id};
    });

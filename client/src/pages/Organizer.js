@@ -56,6 +56,7 @@ constructor(props) {
 
 componentDidMount() {
 	this.getPotentialEvents();
+	FilterFields.mount();
 }
 
 handleQueryChange(query, sortBy) {
@@ -182,7 +183,7 @@ render() {
 				</div>
 				<div className="main-panel">
 					<QueryResultsActionMenu
-						items={[{"index": 1, "content": tableFieldsDropdown, "alignToEnd": true}]}
+						items={[{"content": tableFieldsDropdown, "alignToEnd": true}]}
 						toggleEventPopup={this.handleEventPopupToggle.bind(this)}
 						activistCount={activistCount}
 						downloadActivistsByQuery={this.downloadActivistsByQuery.bind(this)}

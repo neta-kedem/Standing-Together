@@ -85,11 +85,11 @@
 	bottom: 0;
 	z-index: 1000;
 	height: 100%;
-	transition: width 1s ease;
-	-moz-transition: width 1s ease;
-	-ms-transition: width 1s ease;
-	-webkit-transition: width 1s ease;
-	-o-transition: width 1s ease;
+	transition: width 0.35s ease-out;
+	-moz-transition: width 0.35s ease-out;
+	-ms-transition: width 0.35s ease-out;
+	-webkit-transition: width 0.35s ease-out;
+	-o-transition: width 0.35s ease-out;
 	width: 0;
 	overflow: hidden;
 	box-shadow: 0 0 5px #444444aa;
@@ -98,6 +98,11 @@
 .sidebar-open .sidebar-wrap {
 	width: 30em;
 	max-width: 100%;
+	transition: width 0.75s ease-out;
+	-moz-transition: width 0.75s ease-out;
+	-ms-transition: width 0.75s ease-out;
+	-webkit-transition: width 0.75s ease-out;
+	-o-transition: width 0.75s ease-out;
 }
 
 .sidebar-background {
@@ -109,11 +114,11 @@
 	position: fixed;
 	z-index: 999;
 	opacity: 0;
-	transition: opacity 1s ease;
-	-moz-transition: opacity 1s ease;
-	-ms-transition: opacity 1s ease;
-	-webkit-transition: opacity 1s ease;
-	-o-transition: opacity 1s ease;
+	transition: opacity 1s ease-out;
+	-moz-transition: opacity 1s ease-out;
+	-ms-transition: opacity 1s ease-out;
+	-webkit-transition: opacity 1s ease-out;
+	-o-transition: opacity 1s ease-out;
 }
 
 .sidebar-open .sidebar-background {
@@ -189,11 +194,12 @@
 }
 
 .sidebar-item .sidebar-item-ar, .sidebar-item .sidebar-item-he {
-	width: 50%;
+	width: 12em;
 	box-sizing: border-box;
 	display: inline-block;
 	vertical-align: middle;
 }
+
 @for $i from 2 through 20{
 	.sidebar-options .sidebar-item:nth-child(#{$i}) {
 		transition-delay: (0.05s * $i);

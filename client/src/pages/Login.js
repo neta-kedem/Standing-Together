@@ -2,6 +2,7 @@ import React from 'react';
 import server from '../services/server';
 import cookie from 'js-cookie';
 import IdentificationField from './login/IdentificationField';
+import LogoutReminder from './login/LogoutReminder';
 import './login/Login.scss';
 import logo from "../static/logo_purple.svg"
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -10,12 +11,24 @@ import {faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 library.add(faSignInAlt);
 
 export default class Login extends React.Component {
-state = {
-	phone: "",
-	email: "",
-	code: "",
-	codeSent: false
-};
+constructor(props) {
+	super(props);
+	this.state = {
+		phone: "",
+		email: "",
+		code: "",
+		codeSent: false,
+		displayLogoutReminder: !cookie.get('personalComputer')
+	};
+}
+
+closeLogoutReminder = function(isPersonalComputer){
+	this.setState({displayLogoutReminder: false}, ()=>{
+		if(isPersonalComputer) {
+			cookie.set('personalComputer', true);
+		}
+	})
+}.bind(this);
 
 validatePhone = function(phone){
 	const length = phone.length>9;
@@ -125,8 +138,15 @@ render() {
 		</div>;
 	return (
 		<div className='page-wrap-login' dir="rtl">
-			<img src={logo} alt="standing-together" className='logo'/>
-			{this.state.codeSent?loginCode:identification}
+			{
+				this.state.displayLogoutReminder
+					? <LogoutReminder onClose={this.closeLogoutReminder}/>
+					: <div>
+						<img src={logo} alt="standing-together" className='logo'/>
+						{this.state.codeSent ? loginCode : identification}
+				</div>
+			}
+
 		</div>
 	)
 }

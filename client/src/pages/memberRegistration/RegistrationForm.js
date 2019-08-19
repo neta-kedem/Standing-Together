@@ -47,7 +47,8 @@ export default class RegistrationForm extends React.Component {
                         lang = {this.state.lang}
                         field = {f}
                         fieldValue = {activistData[f.name]}
-                        handleChange = {this.handleTypedInput.bind(this)}/>
+                        handleChange = {this.handleTypedInput.bind(this)}
+                    />
                 </div>;
             })}
         </div>;
