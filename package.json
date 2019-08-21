@@ -5,10 +5,7 @@
     "client": "cd client && yarn start",
     "server": "nodemon --ignore 'client/' server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "build": "next build",
-    "local-build": "next build && node server",
-    "start": "node server -p $PORT",
-    "heroku-postbuild": "next build"
+    "start": "concurrently --kill-others-on-fail \"node server -p $PORT\" \"yarn client -p $PORT\" "
   },
   "dependencies": {
     "body-parser": "latest",
