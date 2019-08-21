@@ -72,7 +72,7 @@ const getContactScan = function(req, res){
             });
     })
 };
-const getById = function(scanId){
+const getContactScanById = async function(scanId){
     let scanObjectId;
     try{
         scanObjectId = mongoose.Types.ObjectId(scanId);
@@ -81,10 +81,10 @@ const getById = function(scanId){
         return {error: "incorrect id supplied"};
     }
     const query = ContactScan.findOne({"_id": scanObjectId});
-    const promise = query.exec().then((res)=>{
-        if (!res || !res._id)
+    const promise = query.exec().then((event)=>{
+        if (!event || !event._id)
             return {"error":"couldn't find a matching scan"};
-        return res;
+        return event;
     }).catch((err)=>{
         return {success: false, error: err};
     });
@@ -99,7 +99,7 @@ const getByActivistId = function(activistId){
 
 module.exports = {
     getContactScan,
-    getById,
+    getContactScanById,
     getByActivistId
 };
 

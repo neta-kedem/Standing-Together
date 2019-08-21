@@ -1,0 +1,76 @@
+.control {
+  display: inline-block;
+  direction: rtl;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 5px;
+  padding-top: 3px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.control input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+.checkbox-label{
+  display: inline-block;
+  vertical-align: middle;
+}
+.control_indicator {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5em;
+  height: 20px;
+  width: 20px;
+  background: #e6e6e6;
+  border: 0px solid #000000;
+  transition: box-shadow 0.3s;
+}
+.control-radio .control_indicator {
+  border-radius: 2px;
+}
+
+.control:hover input ~ .control_indicator{
+  background: #ccc;
+}
+.control input:active ~ .control_indicator {
+  background: #aaa;
+}
+.control input:focus ~ .control_indicator {
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+}
+.control input:checked ~ .control_indicator {
+  background: rgb(147, 37, 129);
+}
+.control:hover input:not([disabled]):checked ~ .control_indicator,
+.control input:checked:focus ~ .control_indicator {
+  background-color: #e6647d;
+}
+.control input:disabled ~ .control_indicator {
+  background: #e6e6e6;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.control_indicator:after {
+  box-sizing: unset;
+  content: '';
+  position: absolute;
+  display: none;
+}
+.control input:checked ~ .control_indicator:after {
+  display: block;
+}
+.control-checkbox .control_indicator:after {
+  right: 8px;
+  top: 4px;
+  width: 3px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.control-checkbox input:disabled ~ .control_indicator:after {
+  border-color: #7b7b7b;
+}

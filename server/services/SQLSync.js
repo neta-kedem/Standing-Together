@@ -24,7 +24,6 @@ const connectionConfig = {
     database: process.env.MYSQL_DB
 };
 
-
 const fetchUpdated = function(syncAll = false){
     let updated = [];
     const now = new Date();

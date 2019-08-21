@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Authentication = require('../services/authentication');
 const Activist = require('../models/activistModel');
 const Event = require('../models/eventModel');
@@ -25,6 +26,8 @@ const insertEvent = function(req, res){
             "lastUpdate": today,
             "creatorId": Authentication.getMyId()
         };
+        if(eventObject.category)
+            eventObject.category = mongoose.Types.ObjectId(eventObject.category);
         const schedule = eventObject.eventDetails.date.split(/[.,\/ -]/).map(val=>{return parseInt(val)});
         eventObject.eventDetails.date = new Date(schedule[2] < 2000 ? schedule[2] + 2000 : schedule[2], schedule[1] - 1, schedule[0]);
         const newEvent = new Event(eventObject);

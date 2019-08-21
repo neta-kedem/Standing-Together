@@ -1,0 +1,101 @@
+@import "../../lib/variables.scss";
+.page-wrap-login {
+	color: white;
+	background-color: $purple-main;
+	direction: rtl;
+	text-align: right;
+	height: 100vh;
+	width: 100vw;
+	position: fixed;
+	overflow: auto;
+	top: 0;
+	.logo {
+		display: block;
+		width: 35%;
+		margin: 6% auto 0;
+	}
+
+	.login-page-wrap {
+		direction: rtl;
+	}
+
+	.identification-input-title {
+		text-align: center;
+		font-size: 1.25em;
+		margin-top: 2em;
+	}
+
+	.code-input-title {
+		text-align: center;
+		font-size: 1.25em;
+	}
+
+	.login-code {
+		display: block;
+		margin: 0 auto;
+		height: 2em;
+		width: 12em;
+		box-sizing: border-box;
+		padding: 0.125em 0.5em;
+		font-size: 1.25em;
+		letter-spacing: 0.25em;
+		border-radius: 0.2em;
+		background-color: #FFF;
+		line-height: 2em;
+		text-align: left;
+		direction: ltr;
+		border: none;
+		outline: none;
+		z-index: 2;
+	}
+
+	.submit-code-button{
+		display: block;
+		font-size: 2em;
+		border: none;
+		outline: none;
+		background-color: white;
+		color: $purple-main;
+		padding: 0.1em 1em;
+		margin: 1em auto;
+		border-radius: 0.2em;
+		cursor: pointer;
+		transition: background-color 0.15s, box-shadow 0.15s;
+	}
+
+	.submit-code-button:hover{
+		background-color: #DDD;
+		color: $purple-dark;
+		box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25) inset;
+	}
+
+	.submit-code-button:active{
+		background-color: #BBB;
+		color: $purple-darker;
+		box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.45) inset;
+	}
+
+	.back-to-identification {
+		cursor: pointer;
+		margin: 1% auto;
+		text-align: center;
+	}
+
+	::placeholder {
+		color: white;
+		direction: ltr;
+		text-align: center;
+	}
+
+	:-ms-input-placeholder {
+		color: white;
+		direction: ltr;
+		text-align: center;
+	}
+
+	::-ms-input-placeholder {
+		color: white;
+		direction: ltr;
+		text-align: center;
+	}
+}

@@ -1,0 +1,64 @@
+.wrapper {
+	position: relative;
+	display: flex;
+	height: 55px;
+	justify-content: center;
+	background-color: #90278e
+}
+
+.saved-views {
+	display: inline-block;
+	padding-left: 20px;
+	color: #fbfbfb;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 55px;
+}
+
+.saved-views-wrap {
+	overflow-x: auto;
+	white-space: nowrap;
+	text-align: center;
+}
+
+.logo {
+	position: absolute;
+	left: 0;
+	width: 80px;
+	height: 100%;
+	margin: 0 15px;
+	background-image: url("../../static/Logo.svg");
+	background-position: 0 50%;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.heading_3 {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin-top: 0;
+	font-size: 10px;
+}
+
+.cloud {
+	display: inline-block;
+	color: #fbfbfb;
+	font-size: 18px;
+	font-weight: 400;
+	padding-right: 10px;
+	padding-top: 2px;
+	text-align: center;
+}
+
+.cloud-icon {
+	display: inline-block;
+	font-family: Rubik sans-serif;
+	color: #fbfbfb;
+	font-size: 27px;
+	font-weight: 400;
+	padding-right: 10px;
+	padding-bottom: 7px;
+	cursor: pointer;
+	text-align: center;
+}

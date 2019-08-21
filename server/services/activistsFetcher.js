@@ -1,8 +1,9 @@
 const Activist = require('../models/activistModel');
 const mongoose = require('mongoose');
+const objectIdMapper = require("./dbHelper/objectIdMapper");
 const Authentication = require('./authentication');
 const EventFetcher = require("./eventFetcher");
-const contactScanFetcher = require("./contactScanFetcher");
+
 const getActivists = function (req, res){
     Authentication.isUser(req, res).then(isUser=>{
         if(!isUser)
@@ -58,17 +59,33 @@ const getActivistsByIds = function (ids){
     });
     return activistsPromise;
 };
-const queryActivists = function(query, page, callback){
+const queryActivists = function(query, sortBy, page, callback){
     try{
       query = JSON.parse(query);
     }
     catch(err){
       console.log(err);
     }
+    objectIdMapper.idifyObject(query);
     if(page < 0)
         return callback({"error":"illegal page"});
     const PAGE_SIZE = 50;
-    return Activist.paginate(query, { page: page + 1, limit: PAGE_SIZE }).then((result) => {
+    const aggregation = Activist.aggregate([
+        {
+            $lookup: {
+                from: 'events',
+                localField: "profile.participatedEvents",
+                foreignField: "_id",
+                as: "linked.participatedEvents"
+            }
+        },
+        {$match: query},
+    ]);
+    return Activist.aggregatePaginate(aggregation, {
+            page: page + 1, limit: PAGE_SIZE,
+            sort: sortBy ? sortBy : "profile.firstName",
+        }
+    ).then((result) => {
         const activists = result.docs;
         let activistsList = [];
         for(let activist of activists)
@@ -80,32 +97,46 @@ const queryActivists = function(query, page, callback){
                 "name":activist.profile.firstName+" "+activist.profile.lastName,
                 "city":activist.profile.residency,
                 "isCaller":activist.role.isCaller,
-                "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
+                "participatedEvents":activist.linked.participatedEvents,
             });
         }
-        return callback({activists: activistsList, pageCount: result.pages, activistCount: result.total});
+        return callback({activists: activistsList, pageCount: result.totalPages, activistCount: result.totalDocs});
     });
 };
 const downloadActivistsByQuery = function(query, callback){
     try{
-      query = JSON.parse(query);
+        query = JSON.parse(query);
     }
     catch(err){
-      console.log(err);
+        console.log(err);
     }
-    return Activist.find(query).then((activists) => {
+    objectIdMapper.idifyObject(query);
+    Activist.aggregate([
+        {
+            $lookup: {
+                from: 'events',
+                localField: "profile.participatedEvents",
+                foreignField: "_id",
+                as: "linked.participatedEvents"
+            }
+        },
+        {$match: query},
+    ]).exec().then((activists) => {
         let activistsList = [];
         for(let activist of activists)
         {
+            //add - to phone number, so that it won't be parsed as a number by excel
+            let phone = activist.profile.phone ? activist.profile.phone.replace("-", "") : "";
+            phone = phone.substring(0, 3) + "-" + phone.substring(4, phone.length);
             activistsList.push({
-                "phone":activist.profile.phone,
-                "email":activist.profile.email,
-                "firstName":activist.profile.firstName,
-                "lastName":activist.profile.lastName,
-                "city":activist.profile.residency,
-                "isCaller":activist.role.isCaller,
-                "creationDate":activist.metadata.creationDate,
-                "circle":activist.profile.circle,
+                "phone": phone,
+                "email": activist.profile.email,
+                "firstName": activist.profile.firstName,
+                "lastName": activist.profile.lastName,
+                "city": activist.profile.residency,
+                "isCaller": activist.role.isCaller,
+                "creationDate": activist.metadata.creationDate,
+                "circle": activist.profile.circle,
                 "isMember": activist.profile.isMember,
                 "isPaying": activist.profile.isPaying,
                 "isNewsletter": activist.profile.isNewsletter

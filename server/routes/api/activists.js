@@ -11,7 +11,7 @@ module.exports = (app) => {
 		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
-			return activistFetcher.queryActivists(req.body.query, req.body.page, (result)=>{return res.json(result)})
+			return activistFetcher.queryActivists(req.body.query, req.body.sortBy, req.body.page, (result)=>{return res.json(result)})
 		})
 	});
 	app.post('/api/queryToXLSX', (req, res) => {
@@ -21,7 +21,7 @@ module.exports = (app) => {
 			res.setHeader('Content-Type', 'text/csv');
 			res.setHeader('Content-Disposition', 'attachment; filename=\"' + 'download-' + Date.now() + '.csv\"');
 			activistFetcher.downloadActivistsByQuery(req.body.query, (result) => {
-				return res.json({"csv":excelExport.getCSV(result.activists, ["firstName", "lastName", "city", "phone", "email"])});
+				return res.json({"csv":excelExport.getCSV(result.activists, ["firstName", "lastName", "city", "phone", "email",  "isCaller", "creationDate", "circle", "isMember", "isPaying", "isNewsletter"])});
 			});
 		})
 	});

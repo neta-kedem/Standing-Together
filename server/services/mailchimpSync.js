@@ -39,6 +39,8 @@ const updateNewsletterStatus = function(contacts){
     return Promise.all(updatePromises);
 };
 const createContacts = function(contacts, list=null){
+    if(process.env.NODE_ENV === 'development')
+        return new Promise((resolve)=>{resolve(true)});
     let updatePromises = [];
     for(let i=0; i<contacts.length; i++){
         const contact = contacts[i];

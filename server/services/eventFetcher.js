@@ -74,10 +74,11 @@ const listEvents = function(req, res){
         if(!isUser)
             return res.json({"error" : "missing token"});
         const page = req.body.page;
+        const search = req.body.search || "";
         if(page < 0)
             return res.json({"error":"illegal page"});
         const PAGE_SIZE = 15;
-        Event.paginate({}, {sort: {"metadata.creationDate": -1}, page: page + 1, limit: PAGE_SIZE }).then((result) => {
+        Event.paginate({"eventDetails.name": {$regex: ".*" + search + ".*"}}, {sort: {"metadata.creationDate": -1}, page: page + 1, limit: PAGE_SIZE }).then((result) => {
             const events = result.docs.map((event)=>{
                 return {
                     _id: event._id,
