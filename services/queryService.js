@@ -1,6 +1,14 @@
 let currFilters = {
     logicalOperator:"or",
-    groups: []
+    groups: [
+        {
+            logicalOperator:"or",
+            filters: [
+                {id:1, filterName: "מעגל", filterMain: "תל אביב", filterPrefix:"חבר/ה ב"},
+                {id:0, filterName: "שם פרטי", filterMain: "נטע", filterPrefix:""},
+            ]
+        }
+    ]
 };
 
 const emptyFilters = {
@@ -32,19 +40,13 @@ async function addFilter(groupId, filter) {
 }
 
 async function addGroup() {
-    currFilters.groups.push(JSON.parse(JSON.stringify(emptyGroup)))
+    currFilters.groups.push(emptyGroup)
     return currFilters || emptyFilters
 }
 
 async function removeSingleFilter(groupId, filterId) {
     currFilters.groups[groupId].filters = currFilters.groups[groupId].filters.filter(filter => filter.id !== filterId)
     currFilters.groups = currFilters.groups.filter(group => group.filters.length)
-    let index = 0
-    currFilters.groups.forEach(group => group.filters.forEach(filter => filter.id = index++))
-    return currFilters || emptyFilters
-}
-async function removeGroup(groupId) {
-    currFilters.groups = currFilters.groups.filter((group, i) => i !== groupId)
     let index = 0
     currFilters.groups.forEach(group => group.filters.forEach(filter => filter.id = index++))
     return currFilters || emptyFilters
@@ -74,7 +76,6 @@ export default {
     getCurrFilters,
     addFilter,
     addGroup,
-    removeGroup,
     removeSingleFilter,
     getAvailableFilters,
     setLogicalOperator,

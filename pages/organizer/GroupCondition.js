@@ -5,13 +5,6 @@ import SingleCondition from "./SingleCondition";
 import AddFiltersBtn from "./AddFiltersBtn";
 import QueryService from '../../services/queryService'
 import CreateFilter from './CreateFilter'
-
-import fontawesome from '@fortawesome/fontawesome';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faDivide, faTimes} from '@fortawesome/fontawesome-free-solid'
-import styles from './SingleCondition.css'
-fontawesome.library.add(faTimes);
-
 // icons
 const orIcon = "./static/or.png";
 const andIcon = "./static/and.png";
@@ -55,8 +48,6 @@ class GroupCondition extends React.Component {
           />
         </div>
     )
-
-    groupStr.push(<div style={{display: "flex", justifyContent: "flex-end", cursor:"pointer"}} onClick={this.props.removeGroup} key={'removeGroup' + groupId}><FontAwesomeIcon icon="times"></FontAwesomeIcon></div>)
 
     groupStr.push(
       group.filters.map((filter, index) => {

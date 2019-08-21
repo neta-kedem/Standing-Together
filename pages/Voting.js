@@ -189,21 +189,6 @@ export default class Voting extends React.Component {
       ? focusedCandidate.photo.replace(" ", "%20")
       : "";
     const focusedCandidatePhotoAlign = focusedCandidate.photoAlign;
-
-    return (
-        <div style={{display:"flex", alignItems: "center", flexDirection:"column"}}>
-          {" "}
-          <img
-              style={{ paddingTop: 100 }}
-              src={"./static/logo_purple.svg"}
-              width={250}
-              className={"voting-logo"}
-          />
-          <h1 style={{ color: "#90278e", paddingTop: 50 }}>
-            Voting Is Closed
-          </h1>
-        </div>
-    );
     return (
       <div className="page">
         <Meta />
