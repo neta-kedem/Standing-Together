@@ -48,9 +48,13 @@ app.post("/webhooks/github", function (req, res) {
 	console.log('in webhook', branch, sender.login);
 
 	if(branch.indexOf('master') > -1){
-		deploy(res);
+		deploy(res, "master");
+	}
+	if(branch.indexOf('nextless') > -1){
+		deploy(res, "nextless");
 	}
 });
+
 app.get('/admin/sync', (req, res) => {
 	authentication.hasRole(req, res, "isOrganizer").then(user=>{
 		if(!user)
@@ -88,8 +92,8 @@ app.listen(port, err => {
 	console.log(`> Ready on port ${port}...`);
 });
 
-function deploy(res){
-	childProcess.exec('cd ~/scripts && ./pullST.sh', function(err, stdout, stderr){
+function deploy(res, branch){
+	childProcess.exec(`cd ~/scripts && ./pullST.sh ${branch}`, function(err, stdout, stderr){
 		if (err) {
 			console.error(err);
 			return res.send(500);
