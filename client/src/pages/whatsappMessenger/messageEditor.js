@@ -38,6 +38,7 @@ export default class MessageEditor extends React.Component {
             result.push(message.substring(pos, match.index));
             result.push(
                 <span
+                    key={"param_highlight_"+i}
                     className={"whatsapp-message-param " + (!isParam ? "invalid-param" : "")}
                     title={isParam ? null : "הפרמטר הזה לא מופיע בטבלה"}
                 >

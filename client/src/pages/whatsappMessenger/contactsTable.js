@@ -1,5 +1,6 @@
 import React from 'react'
 import "./contactsTable.scss";
+import Alert from "../../UIComponents/Alert/Alert"
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes, faEye } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +12,7 @@ export default class ContactsTable extends React.Component {
         this.state = {
             updateContacts: this.props.onContactsChange,
             updateParams: this.props.onParamsChange,
+            alertQueue: []
         }
     }
     componentDidMount() {
@@ -46,6 +48,17 @@ export default class ContactsTable extends React.Component {
         const contacts = this.props.contacts.slice();
         contacts.splice(index, 1);
         this.state.updateContacts(contacts);
+    };
+
+    previewMessage = function(contact){
+        let message = this.props.message;
+        const params = this.props.params.slice();
+        for(let i = 0; i < params.length; i++){
+            message = message.replace("$" + params[i], contact.params[i])
+        }
+        const alertQueue = this.state.alertQueue.slice();
+        alertQueue.push({content: message});
+        this.setState({alertQueue});
     };
 
     handlePaste = function(event){
@@ -151,7 +164,11 @@ export default class ContactsTable extends React.Component {
                             return (
                                 <tr key = {"contact_" + i}>
                                     <td>
-                                        <button type={"button"} className={"preview-message"}>
+                                        <button
+                                            type={"button"}
+                                            className={"preview-message"}
+                                            onClick={()=>{this.previewMessage(c)}}
+                                        >
                                             <FontAwesomeIcon icon={"eye"}/>
                                         </button>
                                     </td>
@@ -187,6 +204,7 @@ export default class ContactsTable extends React.Component {
                 <button type={"button"} onClick={this.addContact}>
                     <FontAwesomeIcon icon={"plus"}/>
                 </button>
+                <Alert queue={this.state.alertQueue} setQueue={(alertQueue)=>this.setState({alertQueue})} />
             </div>
         )
     }

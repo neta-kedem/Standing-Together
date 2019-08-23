@@ -51,6 +51,7 @@ export default class WhatsappMessenger extends React.Component {
                 <ContactsTable
                     contacts={this.state.contacts}
                     params={this.state.params}
+                    message={this.state.message}
                     onContactsChange={this.handleContactsChange}
                     onParamsChange={this.handleParamsChange}
                 />
