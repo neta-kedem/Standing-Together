@@ -127,7 +127,7 @@ const downloadActivistsByQuery = function(query, callback){
         {
             //add - to phone number, so that it won't be parsed as a number by excel
             let phone = activist.profile.phone ? activist.profile.phone.replace("-", "") : "";
-            phone = phone.substring(0, 3) + "-" + phone.substring(4, phone.length);
+            phone = phone.substring(0, 3) + "-" + phone.substring(3, phone.length + 4);
             activistsList.push({
                 "phone": phone,
                 "email": activist.profile.email,

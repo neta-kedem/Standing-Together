@@ -4,9 +4,6 @@ const Authentication = require('../../services/authentication');
 const excelExport = require('../../services/excelExport');
 
 module.exports = (app) => {
-	app.get('/api/activists', (req, res) => {
-		activistFetcher.getActivists(req, res);
-	});
 	app.post('/api/selectActivists', (req, res) => {
 		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
 			if(!isUser)

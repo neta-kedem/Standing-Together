@@ -1,0 +1,32 @@
+.whatsapp-message-wrap {
+  margin: 2.5%;
+  .whatsapp-message, textarea.whatsapp-message {
+    display: block;
+    outline: none;
+    font-size: 1em;
+    padding: 0.5em;
+    border: 2px solid rgb(0, 150, 136);
+    background-color: rgb(255, 250, 240);
+    width: 40vw;
+    height: 15vw;
+    resize: none;
+    direction: rtl;
+    text-align: right;
+  }
+  .whatsapp-message-param {
+    text-transform: uppercase;
+    background-color: #00AA8880;
+    transition: background-color 0.3s;
+    direction: ltr;
+  }
+  .whatsapp-message-param:hover{
+    background-color: #00AA88;
+  }
+  .whatsapp-message-param.invalid-param {
+    background-color: #e6647d80;
+  }
+  .whatsapp-message-param.invalid-param:hover{
+    background-color: #e6647d;
+    cursor: help;
+  }
+}

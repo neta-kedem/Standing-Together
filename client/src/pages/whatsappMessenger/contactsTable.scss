@@ -1,0 +1,53 @@
+.whatsapp-contacts-wrap{
+  margin: 2.5%;
+  .whatsapp-contacts-table{
+    border-collapse: collapse;
+  }
+  .whatsapp-contacts-table td{
+    border: 2px solid black;
+    width: 10em;
+  }
+  .contact-param-wrap{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+  }
+  .contact-param-input{
+    width: 9em;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+  td.add-param-cell, td.delete-contact-cell{
+    width: fit-content;
+    border: none;
+  }
+  .invalid-contact-phone{
+    background-color: #e6647d80;
+  }
+  .contact-info-input{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+  .preview-message{
+    width: 100%;
+    height: 100%;
+    color: rgb(0, 150, 136);
+    outline:none;
+  }
+  .preview-message:hover{
+    color: rgb(0, 100, 86);
+  }
+  .preview-message:active{
+    color: rgb(0, 50, 36);
+  }
+}

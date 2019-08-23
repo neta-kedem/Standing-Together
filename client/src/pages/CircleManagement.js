@@ -9,7 +9,7 @@ export default class CircleManagement extends React.Component {
         super(props);
         this.state = {
             circles: [],
-            mailchimpLists: []
+            mailchimpLists: [],
         }
     }
     componentDidMount() {

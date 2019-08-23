@@ -11,6 +11,7 @@ import EventCreation from "./pages/EventCreation";
 import CityManagement from "./pages/CityManagement";
 import CircleManagement from "./pages/CircleManagement";
 import EventCategoriesManagement from "./pages/EventCategoriesManagement";
+import WhatsappMessenger from "./pages/WhatsappMessenger";
 import Typer from "./pages/Typer";
 import ScanContacts from "./pages/ScanContacts";
 import ImportContacts from "./pages/ImportContacts";
@@ -45,6 +46,7 @@ function App() {
             <Route path="/Voting" exact component={Voting} />
             <Route path="/VotingResults" exact component={VotingResults} />
             <Route path="/Welcome" exact component={Welcome} />
+            <Route path="/WhatsappMessenger" exact component={WhatsappMessenger} />
             <Route component={NoMatch} />
           </Switch>
         </div>
