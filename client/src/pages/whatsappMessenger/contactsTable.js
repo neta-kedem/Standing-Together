@@ -18,7 +18,7 @@ export default class ContactsTable extends React.Component {
     componentDidMount() {
     }
 
-    phoneRegex = /\+972([0-9]){9}$/;
+    phoneRegex = /972([0-9]){9}$/;
 
     handleContactPhoneChange = function(contactIndex, value){
         const contacts = this.props.contacts.slice();
@@ -90,8 +90,9 @@ export default class ContactsTable extends React.Component {
             }
             //format phone
             phone = phone.replace("-", "");
+            phone = phone.replace("+", "");
             if(phone[0] === "0"){
-                phone = "+972" + phone.substring(1, phone.length);
+                phone = "972" + phone.substring(1, phone.length);
             }
             contact.number = phone;
             contact.params = [];
@@ -179,7 +180,7 @@ export default class ContactsTable extends React.Component {
                                             onChange={(e) => {this.handleContactPhoneChange(i, e.target.value)}}
                                             onPaste={(e) => {if(i === contacts.length - 1){this.handlePaste(e)}}}
                                             dir={"ltr"}
-                                            placeholder={"+972..."}
+                                            placeholder={"972..."}
                                         />
                                     </td>
                                     {params.map((p, j) => {

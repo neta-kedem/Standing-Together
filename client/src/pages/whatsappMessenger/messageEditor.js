@@ -6,9 +6,15 @@ export default class MessageEditor extends React.Component {
         super(props);
         this.state = {
             handleChange: this.props.onChange,
+            addVersion: this.props.addVersion,
+            selectVersion: this.props.selectVersion,
             editing: false
         }
     }
+
+    addVersion = () => {
+        this.state.addVersion();
+    };
 
     handleChange = (value) => {
         const qwerty = {
@@ -52,23 +58,41 @@ export default class MessageEditor extends React.Component {
     };
 
     render() {
-        const message = this.props.value;
+        const messages = this.props.messages;
+        const selected = messages[this.props.selectedVersion].content;
         return (
             <div className={"whatsapp-message-wrap"}>
+                <div className={"whatsapp-message-label"}>
                 תוכן ההודעה:
-                {
+                </div>
+                <div className={"message-input-wrap"}>
+                    {
                     this.state.editing ?
                         <textarea
-                            value={message}
+                            value={selected}
                             onChange={(e) => {this.handleChange(e.target.value)}}
                             onBlur={() => {this.setState({editing: false})}}
                             autoFocus={true}
                             className={"whatsapp-message"}
                         /> :
                         <div className={"whatsapp-message"} onClick={()=>{this.setState({editing: true})}}>
-                            {this.highlightParams(message)}
+                            {this.highlightParams(selected)}
                         </div>
-                }
+                    }
+                    <div className="message-version-switch">
+                        {
+                            messages.map((m, i) => {
+                                return <button
+                                    key={"version_" + i}
+                                    type={"button"}
+                                    className={"message-version"}
+                                    onClick={()=>{this.state.selectVersion(i)}}
+                                >{m.name}</button>
+                            })
+                        }
+                        <button type={"button"} className={"add-version"} onClick={this.state.addVersion}>+</button>
+                    </div>
+                </div>
             </div>
         )
     }
