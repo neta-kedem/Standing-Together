@@ -12,7 +12,7 @@ module.exports = (app) => {
         });
     });
     app.post('/api/circles', (req, res) => {
-        Authentication.isUser(req, res).then(isUser => {
+        Authentication.hasRole(req, "isOrganizer").then(isUser => {
             if (!isUser)
                 return res.json({"error": "missing token"});
             circleUpdater.saveCircles(req.body.circles).then(circles=>{
