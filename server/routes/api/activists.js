@@ -5,14 +5,14 @@ const excelExport = require('../../services/excelExport');
 
 module.exports = (app) => {
 	app.post('/api/selectActivists', (req, res) => {
-		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+		Authentication.hasRole(req, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			return activistFetcher.queryActivists(req.body.query, req.body.sortBy, req.body.page, (result)=>{return res.json(result)})
 		})
 	});
 	app.post('/api/queryToXLSX', (req, res) => {
-		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+		Authentication.hasRole(req, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			res.setHeader('Content-Type', 'text/csv');
@@ -23,7 +23,7 @@ module.exports = (app) => {
 		})
 	});
 	app.get('/api/activists/:id', (req, res) => {
-		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+		Authentication.hasRole(req, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			activistFetcher.getActivistsByIds([req.params.id]).then((activists)=>{
@@ -32,7 +32,7 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/activists', (req, res) => {
-		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+		Authentication.hasRole(req, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			activistUpdater.updateActivists(req.body.activists).then(() => {
@@ -41,7 +41,7 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/activists/uploadTyped', (req, res) => {
-		Authentication.hasRole(req, res, "isTyper").then(isUser=> {
+		Authentication.hasRole(req, "isTyper").then(isUser=> {
 			if (!isUser)
 				return res.json({"error": "missing token"});
 			activistUpdater.uploadTypedActivists(req.body.activists, req.body.scanId, req.body.markedDone).then((result)=>{
@@ -51,24 +51,3 @@ module.exports = (app) => {
 	});
 };
 
-//TODO neta- what did I try to do here?
-/*function queryToMongo(query){
-	console.log('query', query)
-	let toSend = `{$and:[`;
-	(query.conditions||[]).forEach(cond => {
-		switch(cond.filterPrefix){
-			case 'Is ': toSend += '{'
-		}
-		switch(cond.filterName){
-			case 'Residency': toSend += 'profile.residency:'
-		}
-		toSend += `"${cond.filterMain}"`;
-		switch(cond.filterPrefix){
-			case 'Is ': toSend += '}'
-		}
-		toSend += `]`;
-	})
-	toSend += `}`;
-	console.log('toSend', toSend);
-	return {};
-}*/

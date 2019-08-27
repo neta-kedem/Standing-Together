@@ -3,7 +3,7 @@ const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
     app.post('/api/whatsapp/send', (req, res) => {
-        Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+        Authentication.hasRole(req, "isOrganizer").then(isUser=>{
             if(!isUser)
                 return res.json({"error":"missing token"});
             whatsappMessenger.sendMessage(req.body.messages).then(qr =>{
@@ -12,7 +12,7 @@ module.exports = (app) => {
         })
     });
     app.get('/api/whatsapp/progress', (req, res) => {
-        Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+        Authentication.hasRole(req, "isOrganizer").then(isUser=>{
             if(!isUser)
                 return res.json({"error":"missing token"});
             whatsappMessenger.getProgress().then(progress =>{

@@ -2,7 +2,7 @@ const settingsManager = require('../../services/settingsManager');
 const Authentication = require('../../services/authentication');
 module.exports = (app) => {
     app.get('/api/settings', (req, res) => {
-        Authentication.hasRole(req, res, 'isOrganizer').then(isUser => {
+        Authentication.hasRole(req, 'isOrganizer').then(isUser => {
             if (!isUser)
                 return res.json({"error": "missing token"});
             settingsManager.getSettings().then(settings=>{
@@ -11,7 +11,7 @@ module.exports = (app) => {
         });
     });
     app.post('/api/settings', (req, res) => {
-        Authentication.hasRole(req, res, 'isOrganizer').then(isUser => {
+        Authentication.hasRole(req, 'isOrganizer').then(isUser => {
             if (!isUser)
                 return res.json({"error": "missing token"});
             settingsManager.setSettings(req.body.settings).then(()=>{

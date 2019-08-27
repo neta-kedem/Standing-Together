@@ -12,7 +12,7 @@ module.exports = (app) => {
         });
     });
     app.post('/api/eventCategories', (req, res) => {
-        Authentication.hasRole(req, res, 'isOrganizer').then(isUser => {
+        Authentication.hasRole(req, 'isOrganizer').then(isUser => {
             if (!isUser)
                 return res.json({"error": "missing token"});
             eventCategoriesUpdater.saveEventCategories(req.body.eventCategories).then(categories=>{

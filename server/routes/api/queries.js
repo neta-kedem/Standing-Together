@@ -4,7 +4,7 @@ const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
 	app.get('/api/queries', (req, res) => {
-		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+		Authentication.hasRole(req, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			savedQueryFetcher.getSavedQueries().then((queries)=>{
@@ -13,7 +13,7 @@ module.exports = (app) => {
 		})
 	});
 	app.get('/api/queries/:id', (req, res) => {
-		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+		Authentication.hasRole(req, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			savedQueryFetcher.getSavedQuery([req.params.id]).then((query)=>{
@@ -22,7 +22,7 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/queries', (req, res) => {
-		Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+		Authentication.hasRole(req, "isOrganizer").then(isUser=>{
 			if(!isUser)
 				return res.json({"error":"missing token"});
 			savedQueryUpdater.saveQuery(req.body.query).then(()=>{

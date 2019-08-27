@@ -35,7 +35,7 @@ const getAssociatedActivists = function(scanData){
 };
 
 const getContactScan = function(req, res){
-    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
+    Authentication.hasRole(req, "isTyper").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const requestedId = req.query.scanId;

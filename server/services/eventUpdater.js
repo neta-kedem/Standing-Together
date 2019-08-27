@@ -4,7 +4,7 @@ const Activist = require('../models/activistModel');
 const Event = require('../models/eventModel');
 
 const saveEvent = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         if(req.body.event._id){
@@ -16,7 +16,7 @@ const saveEvent = function(req, res){
     })
 };
 const insertEvent = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const eventObject = req.body.event;
@@ -41,7 +41,7 @@ const insertEvent = function(req, res){
     })
 };
 const updateEvent = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const eventObject = req.body.event;
@@ -66,7 +66,7 @@ const updateEvent = function(req, res){
     })
 };
 const inviteByQuery = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
+    Authentication.hasRole(req, "isOrganizer").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const query = req.body.query;

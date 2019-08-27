@@ -7,7 +7,7 @@ module.exports = (app) => {
 		ContactScanFetcher.getContactScan(req, res);
 	});
 	app.post('/api/contactScan', (req, res) => {
-		Authentication.hasRole(req, res, ["isOrganizer", "isTyper"]).then(isUser=>{
+		Authentication.hasRole(req, ["isOrganizer", "isTyper"]).then(isUser=>{
 			if (!isUser)
 				return res.json({"error": "missing token"});
 			ContactScanUpdater.insertContactScan(req.body.scanUrl, req.body.eventId).then((result) => {
@@ -16,7 +16,7 @@ module.exports = (app) => {
 		});
 	});
 	app.post('/api/contactScan/pingScan', (req, res) => {
-		Authentication.hasRole(req, res, "isTyper").then(isUser=>{
+		Authentication.hasRole(req, "isTyper").then(isUser=>{
 			if (!isUser)
 				return res.json({"error": "missing token"});
 			ContactScanUpdater.pingScan(req.body.scanId).then((result) => {
@@ -25,7 +25,7 @@ module.exports = (app) => {
 		});
 	});
 	app.post('/api/contactScan/importActivists', (req, res) => {
-		Authentication.hasRole(req, res, "isTyper").then(isUser=>{
+		Authentication.hasRole(req, "isTyper").then(isUser=>{
 			if (!isUser)
 				return res.json({"error": "missing token"});
 			ContactScanUpdater.importContacts(req.body.eventId, req.body.activists).then((result)=>{

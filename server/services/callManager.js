@@ -60,7 +60,7 @@ const markFetchedActivists = function(eventId, assignedActivistsIds, callerId){
     );
 };
 const fetchActivistsToCall = function(req, res){
-    Authentication.hasRole(req, res, "isCaller").then(isUser=>{
+    Authentication.hasRole(req, "isCaller").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const eventId = mongoose.Types.ObjectId(req.params.eventId);
@@ -135,7 +135,7 @@ const fetchActivistsToCall = function(req, res){
     })
 };
 const pingCalls =function(req, res){
-    Authentication.hasRole(req, res, "isCaller").then(isUser=>{
+    Authentication.hasRole(req, "isCaller").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const callerId = Authentication.getMyId();
@@ -147,7 +147,7 @@ const pingCalls =function(req, res){
     });
 };
 const resolveCall = function(req, res){
-    Authentication.hasRole(req, res, "isCaller").then(isUser=>{
+    Authentication.hasRole(req, "isCaller").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const eventId = mongoose.Types.ObjectId(req.body.eventId);
@@ -174,7 +174,7 @@ const resolveCall = function(req, res){
     });
 };
 const postponeCall = function(req, res){
-    Authentication.hasRole(req, res, "isCaller").then(isUser=>{
+    Authentication.hasRole(req, "isCaller").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const eventId = mongoose.Types.ObjectId(req.body.eventId);
@@ -204,7 +204,7 @@ const postponeCall = function(req, res){
     });
 };
 const markUnanswered = function(req, res){
-    Authentication.hasRole(req, res, "isCaller").then(isUser=>{
+    Authentication.hasRole(req, "isCaller").then(isUser=>{
         if(!isUser)
             return res.json({"error":"missing token"});
         const eventId = mongoose.Types.ObjectId(req.body.eventId);
