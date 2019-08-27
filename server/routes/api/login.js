@@ -4,7 +4,7 @@ const lockManager = require('../../services/login/lockManager');
 
 module.exports = (app) => {
 	app.post('/api/identify/email', (req, res) => {
-		loginManager.identifyViaEmail(req.email).then(result => res.json(result));
+		loginManager.identifyViaEmail(req.body.email).then(result => res.json(result));
 	});
 	app.post('/api/login/email', (req, res) => {
 		loginManager.loginViaMail(req.body.email, req.body.code).then(result => res.json(result));

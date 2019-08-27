@@ -9,9 +9,16 @@ const TOKEN_LENGTH = 32;
 const identifyViaEmail = function (email){
     email = email.toLowerCase();
     const code = Math.random().toString(36).substr(2, LOGIN_CODE_LENGTH);
-    Activist.findOneAndUpdate({'profile.email':email}, {$set : {'login.loginCode': code}}, (err) => {
-        if (err) return {success: false, error: err};
-        sendCodeViaMail(code, email);
+    const lockToken = generateLockToken();
+    return Activist.findOneAndUpdate(
+        {'profile.email':email},
+        {
+            $set : {
+                'login.loginCode': code,
+                'lockToken': lockToken
+            }
+        }).then(() => {
+        sendCodeViaMail(code, lockToken, email);
         return true;
     });
 };
@@ -24,53 +31,54 @@ const loginViaMail = async function (email, code){
         return {"error":"incorrect credentials"};
     if(!email)
         return {"error":"missing identification"};
-    Activist.findOne({'profile.email': email, 'login.loginCode': code}, (err, user) => {
-        if (err) return {success: false, error: err};
+    return Activist.findOne({'profile.email': email, 'login.loginCode': code}).exec().then((user) => {
         if(!user)
         {
-            return Activist.findOneAndUpdate(
+            return Activist.updateOne(
                 {'profile.email': email},
                 {
                     $inc: {'login.failedLoginCount': 1},
                     'login.lastLoginAttempt': now,
-                },
-                (err) => {
-                    if (err) return {success: false, error: err};
+                }
+            ).exec().then(
+                () => {
                     return {"error": "incorrect credentials"};
                 }
             );
         }
         if(user.login.locked){
-            return Activist.findOneAndUpdate(
-                {'profile.email': email},
+            return Activist.updateOne(
+                {'_id': user._id},
                 {
                     'login.lastLoginAttempt': now,
                 },
+            ).exec().then(
                 () => {
                     return {"error": "you've been locked out of the system, please contact an organizer"};
                 }
             );
         }
         if(user.login.failedLoginCount > MAX_FAILED_LOGINS){
-            return Activist.findOneAndUpdate(
-                {'profile.email': email},
+            return Activist.updateOne(
+                {'_id': user._id},
                 {
                     'login.lastLoginAttempt': now,
                 },
+            ).exec().then(
                 () => {
                     return {"error": "you've been locked out of the system due to too many failed login attempts, please contact an organizer"};
                 }
             );
         }
-        Activist.findOneAndUpdate(
-            {'profile.email': email},
+        return Activist.updateOne(
+            {'_id': user._id},
             {
                 'login.lastLoginAttempt': now,
                 'login.failedLoginCount': 0
             },
-            (err) => {
-                if (err) return {success: false, error: err};
-                assignToken(user._id).then((token) => {
+        ).exec().then(
+            () => {
+                return assignToken(user._id).then((token) => {
                     return {"token": token, "permissions": user.role};
                 });
             }
@@ -96,12 +104,10 @@ const generateLockToken = function() {
 const assignToken = function(userId) {
     const now = new Date();
     const token = generateLoginToken();
-    const lockToken = generateLockToken();
     const query = Activist.updateOne(
         {'_id': userId},
         {
-            $push: {'login.tokens': {"token": token, "issuedAt": now, "lastUsage": now}},
-            lockToken: lockToken
+            $push: {'login.tokens': {"token": token, "issuedAt": now, "lastUsage": now}}
         }
     );
     return query.exec().then(()=>{
@@ -109,13 +115,13 @@ const assignToken = function(userId) {
     });
 };
 
-const sendCodeViaMail = function(code, email)
+const sendCodeViaMail = function(code, lockToken, email)
 {
     const htmlBody = `
     <div dir="rtl" style="text-align: right;">
         <h3 style="color: #60076e">קוד הכניסה שלך למערכת של "עומדים ביחד": ${code}</h3>
         <p>הקוד הזה נשלח כחלק מניסיון התחברות למערכת באמצעות כתובת המייל הזאת.</p>
-        <p>אם לא ניסית להיכנס למערכת, <a href="https://www.google.com">נא ללחוץ כאן</a>.</p>
+        <p>אם לא ניסית להיכנס למערכת, <a href="https://management.standing-together.org/lockMe?token=${lockToken}">נא ללחוץ כאן</a>.</p>
         <p>אחרי שמונה דקות של חוסר פעילות במערכת, תוקף הקוד יפוג, ותצטרכו להתחבר אליה מחדש.</p>
         <p>אם נכנסת למערכת ממחשב ציבורי, חשוב להתנתק בסוף העבודה הן מהמערכת עצמה, והן מחשבון המייל, שגישה אליו מאפשרת כניסה למערכת.</p>
     </div>

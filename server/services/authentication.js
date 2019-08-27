@@ -72,8 +72,9 @@ const isUser = function(req){
 };
 
 const hasRole = function(req, role){
+	const token = req.cookies.token;
 	return (
-		getUserByToken(req)
+		getUserByToken(token)
 			.then(user => {
 				if (user.error)
 					return {error: user.error};

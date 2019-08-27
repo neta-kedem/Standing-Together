@@ -1,32 +1,8 @@
 const Activist = require('../models/activistModel');
 const mongoose = require('mongoose');
 const objectIdMapper = require("./dbHelper/objectIdMapper");
-const Authentication = require('./authentication');
 const EventFetcher = require("./eventFetcher");
 
-const getActivists = function (req, res){
-    Authentication.isUser(req, res).then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        Activist.find((err, activists) => {
-            if (err) return res.json({success: false, error: err});
-            let activistsList = [];
-            for(let activist of activists)
-            {
-                activistsList.push({
-                    "_id":activist._id,
-                    "phone":activist.profile.phone,
-                    "email":activist.profile.email,
-                    "name":activist.profile.firstName+" "+activist.profile.lastName,
-                    "city":activist.profile.residency,
-                    "isCaller":activist.role.isCaller,
-                    "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
-                });
-            }
-            return res.json(activistsList);
-        });
-    })
-};
 const getActivistsByIds = function (ids){
     const query = Activist.find({"_id":{$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}});
     const activistsPromise = query.exec().then((activists) => {
@@ -162,7 +138,6 @@ const searchDuplicates = function(phones, emails){
     return duplicatesPromise;
 };
 module.exports = {
-    getActivists,
     queryActivists,
     searchDuplicates,
     getActivistsByIds,
