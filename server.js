@@ -52,7 +52,7 @@ app.post("/webhooks/github", function (req, res) {
 	}
 });
 app.get('/admin/sync', (req, res) => {
-	authentication.hasRole(req, res, "isOrganizer").then(user=>{
+	Authentication.hasRole(req, "isOrganizer").then(user=>{
 		if(!user)
 		{
 			res.end();
@@ -65,7 +65,7 @@ app.get('/admin/sync', (req, res) => {
 	});
 });
 app.get('/admin/fixDB', (req, res) => {
-	authentication.hasRole(req, res, "isOrganizer").then(user=>{
+	Authentication.hasRole(req, "isOrganizer").then(user=>{
 		if(!user)
 		{
 			res.end();

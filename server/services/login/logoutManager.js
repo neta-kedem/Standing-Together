@@ -1,4 +1,4 @@
-const Activist = require('../models/activistModel');
+const Activist = require('../../models/activistModel');
 
 const logout = function(req, res) {
     const token = req.cookies.token;
