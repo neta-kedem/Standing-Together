@@ -2,6 +2,10 @@ import React from 'react';
 import './App.css';
 import meta from './lib/meta';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import PubSub from 'pubsub-js';
+import events from './lib/events';
+import Alert from './UIComponents/Alert/Alert'
+
 import NoMatch from "./pages/404";
 import Login from "./pages/Login";
 import Organizer from "./pages/Organizer";
@@ -22,36 +26,62 @@ import Voting from "./pages/Voting";
 import VotingResults from "./pages/VotingResults";
 import Welcome from "./pages/Welcome";
 
-function App() {
-  return (
-      <Router>
-        <div>
-          <meta/>
-          <Switch>
-            <Route path="/" exact component={Login} />
-            <Route path="/Login" exact component={Login} />
-            <Route path="/Organizer" component={Organizer} />
-            <Route path="/Activist" component={Activist} />
-            <Route path="/EventManagement" component={EventManagement} />
-            <Route path="/EventCreation" component={EventCreation} />
-            <Route path="/CityManagement" component={CityManagement} />
-            <Route path="/CircleManagement" component={CircleManagement} />
-            <Route path="/EventCategoriesManagement" component={EventCategoriesManagement} />
-            <Route path="/Typer" component={Typer} />
-            <Route path="/ScanContacts" component={ScanContacts} />
-            <Route path="/ImportContacts" component={ImportContacts} />
-            <Route path="/DailySummary" component={DailySummary} />
-            <Route path="/Settings" component={Settings} />
-            <Route path="/MemberRegistration" exact component={MemberRegistration} />
-            <Route path="/Voting" exact component={Voting} />
-            <Route path="/VotingResults" exact component={VotingResults} />
-            <Route path="/Welcome" exact component={Welcome} />
-            <Route path="/WhatsappMessenger" exact component={WhatsappMessenger} />
-            <Route component={NoMatch} />
-          </Switch>
-        </div>
-      </Router>
-  );
-}
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      alertQueue: []
+    };
+    PubSub.subscribe(events.alert, function (msg, data) {
+      this.alert(data)
+    }.bind(this));
+  }
 
-export default App;
+  componentWillUnmount() {
+    PubSub.clearAllSubscriptions();
+  }
+
+  alert(alert) {
+    let alertQueue = this.state.alertQueue.slice();
+    if(alert.flush){
+      alertQueue = [alert];
+    }
+    else{
+      alertQueue.push(alert);
+    }
+    this.setState({alertQueue});
+  }
+
+  render() {
+    return (
+        <Router>
+          <div>
+            <meta/>
+            <Switch>
+              <Route path="/" exact component={Login}/>
+              <Route path="/Login" exact component={Login}/>
+              <Route path="/Organizer" component={Organizer}/>
+              <Route path="/Activist" component={Activist}/>
+              <Route path="/EventManagement" component={EventManagement}/>
+              <Route path="/EventCreation" component={EventCreation}/>
+              <Route path="/CityManagement" component={CityManagement}/>
+              <Route path="/CircleManagement" component={CircleManagement}/>
+              <Route path="/EventCategoriesManagement" component={EventCategoriesManagement}/>
+              <Route path="/Typer" component={Typer}/>
+              <Route path="/ScanContacts" component={ScanContacts}/>
+              <Route path="/ImportContacts" component={ImportContacts}/>
+              <Route path="/DailySummary" component={DailySummary}/>
+              <Route path="/Settings" component={Settings}/>
+              <Route path="/MemberRegistration" exact component={MemberRegistration}/>
+              <Route path="/Voting" exact component={Voting}/>
+              <Route path="/VotingResults" exact component={VotingResults}/>
+              <Route path="/Welcome" exact component={Welcome}/>
+              <Route path="/WhatsappMessenger" exact component={WhatsappMessenger}/>
+              <Route component={NoMatch}/>
+            </Switch>
+            <Alert setQueue={(alertQueue)=>this.setState({alertQueue})} queue={this.state.alertQueue}/>
+          </div>
+        </Router>
+    );
+  }
+}

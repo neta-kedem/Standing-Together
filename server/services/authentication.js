@@ -7,20 +7,20 @@ const LAST_TOKEN_USAGE = 1000 * 60 * 7;
 
 let myId = "";
 const getUserByToken = function(token){
-	if(!token)
+	if(!token || !token.length)
 	{
 		return new Promise((resolve)=>{
-			resolve({"error":"missing token"});
+			resolve({error:"missing token"});
 		});
 	}
 	const query = Activist.findOne({'login.tokens.token': token});
 	return query.exec().then((user) => {
 		if (!user) {
-			return {"error": "missing token"};
+			return {error: "missing token"};
 		}
 
 		if (user.login.locked) {
-			return {"error": "locked out"};
+			return {error: "locked out"};
 		}
 		updateLastTokenUsage(user, token);
 		return retireExpiredTokens(user).then((validTokens) => {
@@ -32,7 +32,7 @@ const getUserByToken = function(token){
 				}
 			}
 			//otherwise, return a missing token error
-			return {"error": "missing token"};
+			return {error: "missing token"};
 		});
 	});
 };
@@ -77,7 +77,7 @@ const hasRole = function(req, role){
 		getUserByToken(token)
 			.then(user => {
 				if (user.error)
-					return false;
+					return {error: user.error};
 				let roles = [];
 				if (Array.isArray(role)) {
 					roles = role;
@@ -88,7 +88,7 @@ const hasRole = function(req, role){
 					if (!!user.role[roles[i]])
 						return true;
 				}
-				return false;
+				return {error: "missing permissions"};
 			})
 	);
 };

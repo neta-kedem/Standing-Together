@@ -17,16 +17,16 @@ module.exports = (app) => {
 		lockManager.lockByToken(req.params.lockToken).then(result => res.json(result));
 	});
 	app.post('/api/lock/user', (req, res) => {
-		Authentication.hasRole(req, "isOrganizer").then(isUser => {
-			if (!isUser)
-				return res.json({"error": "missing token"});
+		Authentication.hasRole(req, "isOrganizer").then(result => {
+			if (result.error)
+				return res.json({"error": result.error});
 			lockManager.lockUser(req.body.userId).then(result => res.json(result));
 		});
 	});
 	app.post('/api/unlock/user', (req, res) => {
-		Authentication.hasRole(req, "isOrganizer").then(isUser => {
-			if (!isUser)
-				return res.json({"error": "missing token"});
+		Authentication.hasRole(req, "isOrganizer").then(result => {
+			if (result.error)
+				return res.json({"error": result.error});
 			lockManager.unlockUser(req.body.userId).then(result => res.json(result));
 		});
 	});

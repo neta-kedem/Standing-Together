@@ -209,11 +209,6 @@ class SingleCondition extends React.Component {
   render() {
     const condition = this.state.condition;
     const fieldType = condition.fieldType;
-    const { provided, innerRef } = this.props;
-    const newStyle = {};
-    for (let style in provided.draggableProps.style) {
-        newStyle[style] = provided.draggableProps.style[style];
-    }
     return(
       <section
           className="single-condition"
@@ -221,10 +216,6 @@ class SingleCondition extends React.Component {
         {(fieldType !== null && fieldType !== undefined) ? this.getFieldEditor() : this.getFieldSelector()}
       </section>
     )
-  }
-
-  getFilterValuePrefix(){
-    return this.props.condition.filterPrefix;
   }
 }
 

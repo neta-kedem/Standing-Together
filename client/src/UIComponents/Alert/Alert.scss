@@ -1,3 +1,4 @@
+@import "../../lib/variables";
 .alert-wrapper{
   position: fixed;
   height: 100%;
@@ -21,7 +22,7 @@
   width: 50%;
   max-height: 80vh;
   color: white;
-  background-color: rgb(144, 39, 142);
+  background-color: $purple-main;
   padding: 2.5%;
   z-index: 1;
   box-shadow: 0 1px 5px 0 black;
@@ -37,6 +38,29 @@
 }
 .alert a:active {
   color: #fff;
+}
+
+.alert-options-wrap{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.alert-option{
+  padding: 0.5em 2em;
+  color: white;
+  font-size: 1.25em;
+  outline: none;
+  transition: background-color 0.2s;
+}
+
+.alert-option:hover {
+  background-color: $purple-dark;
+}
+
+.alert-option:active {
+  background-color: $purple-darker;
 }
 
 @media only screen and (max-width: 480px){

@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 library.add(faSave, faFolderOpen);
 
-class QueryResultsActionMenu extends React.Component {
+export default class QueryLoader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -100,15 +100,15 @@ class QueryResultsActionMenu extends React.Component {
                 </div>
                 <Popup visibility={this.state.displayLoadQueryPopup} toggleVisibility={this.toggleLoadPopup}>
                     {
-                        queries.map(q=>{
-                            return <div className={"saved-query"} onClick={()=>{this.loadSavedQuery(q._id)}}>{q.name}</div>
+                        queries.map((q, i) => {
+                            return <div key={i} className={"saved-query"} onClick={()=>{this.loadSavedQuery(q._id)}}>{q.name}</div>
                         })
                     }
                 </Popup>
                 <Popup visibility={this.state.displaySaveQueryPopup} toggleVisibility={this.toggleSavePopup}>
                     {
-                        queries.map(q=>{
-                            return <div className={"saved-query"} onClick={()=>{this.overrideQuery(q)}}>{q.name}</div>
+                        queries.map((q, i) => {
+                            return <div key={i} className={"saved-query"} onClick={()=>{this.overrideQuery(q)}}>{q.name}</div>
                         })
                     }
                     <div className={"save-query-wrap"}>
@@ -120,5 +120,3 @@ class QueryResultsActionMenu extends React.Component {
         )
     }
 }
-
-export default QueryResultsActionMenu;

@@ -10,7 +10,7 @@ class AddFiltersBtn extends React.Component {
 		}
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const type = this.props.type;
     if(type === 'single'){
       this.setState({class: 'addFilterButton'});

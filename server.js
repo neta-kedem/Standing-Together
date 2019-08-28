@@ -57,8 +57,8 @@ app.post("/webhooks/github", function (req, res) {
 	}
 });
 app.get('/admin/sync', (req, res) => {
-	Authentication.hasRole(req, "isOrganizer").then(user=>{
-		if(!user)
+	Authentication.hasRole(req, "isOrganizer").then(result => {
+		if(!result || result.error)
 		{
 			res.end();
 		}
@@ -70,8 +70,8 @@ app.get('/admin/sync', (req, res) => {
 	});
 });
 app.get('/admin/fixDB', (req, res) => {
-	Authentication.hasRole(req, "isOrganizer").then(user=>{
-		if(!user)
+	Authentication.hasRole(req, "isOrganizer").then(result => {
+		if(!result || result.error)
 		{
 			res.end();
 		}
@@ -83,7 +83,7 @@ app.get('/admin/fixDB', (req, res) => {
 	});
 });
 // THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS
-app.get('*', (req, res) => {
+app.get('*', (req) => {
 	return app.render('/Login', req.query);
 });
 const port = process.env.PORT || 5000;

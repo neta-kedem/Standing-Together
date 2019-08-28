@@ -9,9 +9,9 @@ module.exports = (app) => {
          });
     });
     app.post('/api/cities', (req, res) => {
-        Authentication.hasRole(req, "isOrganizer").then(isUser => {
-            if (!isUser)
-                return res.json({"error": "missing token"});
+        Authentication.hasRole(req, "isOrganizer").then(result => {
+            if (result.error)
+                return res.json({"error": result.error});
             cityUpdater.saveCities(req.body.cities).then(cities=>{
                 return res.json(cities);
             });

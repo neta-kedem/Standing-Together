@@ -20,6 +20,7 @@ export default class Alert extends React.Component {
 	render() {
 		const queue = this.props.queue;
 		const curr = queue.length ? queue[0] : {};
+		const resolutionOptions = curr.resolutionOptions ? curr.resolutionOptions : [];
 		return queue.length ? (
 			<div className="alert-wrapper">
 				<div className="alert-background" onClick={this.close}/>
@@ -27,7 +28,20 @@ export default class Alert extends React.Component {
 					width: curr.width ? curr.width : "50%",
 					height: curr.height ? curr.height : "fit-content"
 				}}>
-					{curr.content}
+					<div className={"alert-content-wrap"}>
+						{curr.content}
+					</div>
+					<div className={"alert-options-wrap"}>
+						{
+							resolutionOptions.map((o, i) => {
+								return (
+									<button type={"button"} onClick={o.onClick} key={i} className={"alert-option"}>
+										{o.label}
+									</button>
+								)
+							})
+						}
+					</div>
 				</div>
 			</div>
 		):<div/>
