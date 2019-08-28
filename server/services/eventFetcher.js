@@ -70,7 +70,7 @@ const getCampaignLess = function(req, res){
     })
 };
 const listEvents = function(req, res){
-    Authentication.hasRole(req, "isTyper").then(isUser=>{
+    Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(isUser=>{
         if(!isUser)
             return res.json({"error" : "missing token"});
         const page = req.body.page;

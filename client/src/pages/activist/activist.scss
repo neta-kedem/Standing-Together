@@ -41,7 +41,6 @@
 		margin-bottom: 0.5em;
 		margin-left: 2em;
 		white-space: nowrap;
-		align-self: right;
 		line-height: 1.2em;
 		color: #60666E;
 		font-weight: bold;
@@ -95,42 +94,40 @@
 		overflow-y: auto;
 	}
 
-	.save-event-button {
-		float: left;
-		left: 0;
-		position: absolute;
-		justify-self: start;
-		-webkit-align-self: flex-start; /* Safari 7.0+ */
-		align-self: flex-start;
-		height: 100%;
-		padding: calc(25px - 1em) 1.25em;
-		box-sizing: border-box;
+	.save-activist-button {
+		display: block;
+		margin: 1.5em auto 0;
+		padding: 1% 5%;
+		font-size: 1.25em;
 		color: white;
-		display: inline-block;
-		cursor: pointer;
-		transition: background-color 0.2s;
+		background-color: #90278e;
+		border: none;
+		outline: none;
 	}
 
-	.save-event-button:hover {
-		background-color: #00000033;
-		color: #eee;
+	.save-activist-button:hover {
+		background-color: #80177e;
 	}
 
-	.save-event-button:active {
-		background-color: #00000066;
-		color: #bbb;
+	.save-activist-button:active {
+		background-color: #70076e;
 	}
 
-	.save-event-button-label {
+	.save-activist-button-label {
 		display: inline-block;
 		vertical-align: middle;
 		line-height: 1em;
 	}
 
-	.save-event-button-icon {
+	.save-activist-button-icon {
 		display: inline-block;
 		vertical-align: middle;
 		font-size: 2em;
 		margin-right: 0.5em;
+	}
+
+	.loader-wrap{
+		margin: 1em auto;
+		width: fit-content;
 	}
 }

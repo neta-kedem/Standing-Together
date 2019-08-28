@@ -63,6 +63,7 @@ const loginViaMail = async function (email, code){
                 {'_id': user._id},
                 {
                     'login.lastLoginAttempt': now,
+                    'login.locked': true
                 },
             ).exec().then(
                 () => {
