@@ -4,25 +4,24 @@ const settingsManager = require("../settingsManager");
 const Mailer = require('../mailer');
 
 const lockUser = async function (userId){
-    Activist.findOneAndUpdate(
+    return Activist.findOneAndUpdate(
         {
             _id: mongoose.Types.ObjectId(userId)
         },
         {
             $set:
                 {
-                    'login.locked': false,
+                    'login.locked': true,
                     'login.tokens': []
                 }
         },
-    ).exec().then((err) => {
-        if (err) return {success: false, error: err};
+    ).exec().then(() => {
         return true;
     });
 };
 
 const unlockUser = async function (userId){
-    Activist.findOneAndUpdate(
+    return Activist.findOneAndUpdate(
         {
             _id: mongoose.Types.ObjectId(userId)
         },
@@ -34,8 +33,7 @@ const unlockUser = async function (userId){
                     'login.tokens': []
                 }
         },
-    ).exec().then((err) => {
-        if (err) return {success: false, error: err};
+    ).exec().then(() => {
         return true;
     });
 };

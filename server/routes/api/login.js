@@ -1,6 +1,7 @@
 const loginManager = require('../../services/login/loginManager');
 const logoutManager = require('../../services/login/logoutManager');
 const lockManager = require('../../services/login/lockManager');
+const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
 	app.post('/api/identify/email', (req, res) => {

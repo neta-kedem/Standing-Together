@@ -1,15 +1,15 @@
 import React from 'react'
 import server from '../services/server'
 import './activist/activist.scss'
+import {Link} from "react-router-dom";
 import QueryString from 'query-string';
 import FormSegment from './activist/formSegment'
+import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faSave} from '@fortawesome/free-solid-svg-icons'
-import {Link} from "react-router-dom";
-import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
-library.add(faSave);
+import {faSave, faLock, faLockOpen} from '@fortawesome/free-solid-svg-icons'
+library.add(faSave, faLock, faLockOpen);
 
 export default class Activist extends React.Component {
     constructor(props) {
@@ -147,6 +147,26 @@ export default class Activist extends React.Component {
         this.setState({activist: activist, unsaved: true});
     }.bind(this);
 
+    lockUser = function() {
+        server.post('lock/user', {'userId': this.state._id})
+            .then(() => {
+                const activist = this.state.activist;
+                activist.login.locked = true;
+                this.setState({activist});
+                alert("locked");
+            });
+    }.bind(this);
+
+    unlockUser = function() {
+        server.post('unlock/user', {'userId': this.state._id})
+            .then(() => {
+                const activist = this.state.activist;
+                activist.login.locked = false;
+                this.setState({activist});
+                alert("unlocked");
+            });
+    }.bind(this);
+
     handlePost = function() {
         if(this.state.savingInProcess)
             return;
@@ -232,6 +252,32 @@ export default class Activist extends React.Component {
                                             </Link>
                                         </div>
                                     )
+                                    : null
+                            }
+                            {
+                                activist.login && !activist.login.locked
+                                    ? <button type={"button"} onClick={this.lockUser.bind(this)} className="lock-activist-button">
+                                        <div className="lock-activist-button-label">
+                                            <div>ניתוק ונעילה</div>
+                                            <div>ניתוק ונעילה</div>
+                                        </div>
+                                        <div className="lock-activist-button-icon">
+                                            <FontAwesomeIcon icon="lock"/>
+                                        </div>
+                                    </button>
+                                    : null
+                            }
+                            {
+                                activist.login && activist.login.locked
+                                    ? <button type={"button"} onClick={this.unlockUser.bind(this)} className="lock-activist-button">
+                                        <div className="lock-activist-button-label">
+                                            <div>ביטול נעילה</div>
+                                            <div>ביטול נעילה</div>
+                                        </div>
+                                        <div className="lock-activist-button-icon">
+                                            <FontAwesomeIcon icon="lock-open"/>
+                                        </div>
+                                    </button>
                                     : null
                             }
                             <button type={"button"} onClick={this.handlePost.bind(this)} className="save-activist-button">

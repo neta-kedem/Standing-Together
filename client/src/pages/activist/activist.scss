@@ -126,6 +126,38 @@
 		margin-right: 0.5em;
 	}
 
+	.lock-activist-button {
+		display: block;
+		margin-top: 1.5em;
+		padding: 0.2em 1em;
+		font-size: 1em;
+		color: white;
+		background-color: #b00;
+		border: none;
+		outline: none;
+	}
+
+	.lock-activist-button:hover {
+		background-color: #800;
+	}
+
+	.lock-activist-button:active {
+		background-color: #500;
+	}
+
+	.lock-activist-button-label {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1em;
+	}
+
+	.lock-activist-button-icon {
+		display: inline-block;
+		vertical-align: middle;
+		font-size: 2em;
+		margin-right: 0.5em;
+	}
+
 	.loader-wrap{
 		margin: 1em auto;
 		width: fit-content;
