@@ -20,10 +20,11 @@ export default class Alert extends React.Component {
 	render() {
 		const queue = this.props.queue;
 		const curr = queue.length ? queue[0] : {};
+		const opaque = curr.opaque || false;
 		const resolutionOptions = curr.resolutionOptions ? curr.resolutionOptions : [];
 		return queue.length ? (
 			<div className="alert-wrapper">
-				<div className="alert-background" onClick={this.close}/>
+				<div className={"alert-background " + (opaque ? "opaque " : "")} onClick={this.close}/>
 				<div className="alert" style={{
 					width: curr.width ? curr.width : "50%",
 					height: curr.height ? curr.height : "fit-content"

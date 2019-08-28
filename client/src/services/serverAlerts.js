@@ -2,6 +2,7 @@ export default ({
     missingPermission: {
         content: "you don't have permissions to view this page, switch user?",
         flush: true,
+        opaque: true,
         onClose: () => window.location.href = '/Login',
         resolutionOptions: [
             {
@@ -17,6 +18,7 @@ export default ({
     missingToken: {
         content: "you aren't logged in",
         flush: true,
+        opaque: true,
         onClose: () => window.location.href = '/Login',
         resolutionOptions: [
             {
