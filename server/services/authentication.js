@@ -77,7 +77,7 @@ const hasRole = function(req, role){
 		getUserByToken(token)
 			.then(user => {
 				if (user.error)
-					return {error: user.error};
+					return false;
 				let roles = [];
 				if (Array.isArray(role)) {
 					roles = role;
