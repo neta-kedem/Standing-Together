@@ -49,8 +49,8 @@ export default class WhatsappMessenger extends React.Component {
                 {
                     (qrUrl && !profileImg) ? (
                         <div className={"whatsapp-qr-wrap"}>
-                            <img className={"whatsapp-qr"} src={qrUrl}/>
-                            <img className={"whatsapp-logo-overlay"} src={whatsappLogoOverlay}/>
+                            <img alt={"qr"} className={"whatsapp-qr"} src={qrUrl}/>
+                            <img alt={"qr-logo"} className={"whatsapp-logo-overlay"} src={whatsappLogoOverlay}/>
                         </div>
                     ) : null
                 }
@@ -58,7 +58,7 @@ export default class WhatsappMessenger extends React.Component {
                     (profileImg) ? (
                         <div className={"profile-image-wrap"}>
                             <div className={"profile-image-label"}>ההודעות נשלחות מ:</div>
-                            <img className={"profile-image"} src={this.cleanProfileImageUrl(profileImg)}/>
+                            <img alt={"profile"} className={"profile-image"} src={this.cleanProfileImageUrl(profileImg)}/>
                         </div>
                     ) : null
                 }
