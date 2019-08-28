@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
 import config from './config';
-import { withRouter} from "react-router";
+import { withRouter } from "react-router";
 import PubSub from "pubsub-js";
+import serverAlerts from "./serverAlerts";
 import events from "../lib/events";
 
 const apiPath='api/';
@@ -39,34 +40,12 @@ function post(path, data){
 function handleResult(json){
 	if(json.error === "missing token")
 	{
-		PubSub.publish(events.alert, {
-			content: "you aren't logged in",
-			flush: true,
-			resolutionOptions: [
-				{
-					label: "ok",
-					onClick: () => window.location.href = '/Login',
-				}
-			]
-		});
+		PubSub.publish(events.alert, serverAlerts.missingToken);
 		return [];
 	}
 	if(json.error === "missing permissions")
 	{
-		PubSub.publish(events.alert, {
-			content: "you don't have permissions to view this page, switch user?",
-			flush: true,
-			resolutionOptions: [
-				{
-					label: "yes",
-					onClick: () => window.location.href = '/Login',
-				},
-				{
-					label: "no",
-					onClick: () => window.location.href = '/Welcome',
-				},
-			]
-		});
+		PubSub.publish(events.alert, serverAlerts.missingPermission);
 		return [];
 	}
 	return json;

@@ -280,15 +280,21 @@ export default class Activist extends React.Component {
                                     </button>
                                     : null
                             }
-                            <button type={"button"} onClick={this.handlePost.bind(this)} className="save-activist-button">
-                                <div className="save-activist-button-label">
-                                    <div>حفظ</div>
-                                    <div>שמירה</div>
-                                </div>
-                                <div className="save-activist-button-icon">
-                                    <FontAwesomeIcon icon="save"/>
-                                </div>
-                            </button>
+                            {
+                                savingInProcess
+                                    ? <LoadSpinner visibility={true}/>
+                                    :(
+                                        <button type={"button"} onClick={this.handlePost.bind(this)} className="save-activist-button">
+                                            <div className="save-activist-button-label">
+                                                <div>حفظ</div>
+                                                <div>שמירה</div>
+                                            </div>
+                                            <div className="save-activist-button-icon">
+                                                <FontAwesomeIcon icon="save"/>
+                                            </div>
+                                        </button>
+                                    )
+                            }
                         </div>
                 }
             </div>
