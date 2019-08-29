@@ -12,6 +12,7 @@ import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 export default class MemberRegistration extends React.Component {
     constructor(props) {
         super(props);
+        console.log(process.env);
         this.state = {
             lang: "he",
             activistData: {
@@ -167,8 +168,7 @@ export default class MemberRegistration extends React.Component {
     }.bind(this);
 
     registerMember = function(activist, paymentInfo){
-        //IsraelGivesDonator.donate(activist, paymentInfo)
-            new Promise((resolve)=>{resolve(true)}).then(() => {
+        IsraelGivesDonator.donate(activist, paymentInfo).then(() => {
             const data ={
                 "activistData": activist
             };
@@ -179,7 +179,6 @@ export default class MemberRegistration extends React.Component {
                         this.handleDonationFailedPopupToggle();
                     }
                     else{
-                        debugger;
                         window.parent.postMessage({donationSuccessful: true}, "*");
                     }
                 });

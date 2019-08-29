@@ -33,7 +33,7 @@ const logRegistration = function(activistData, donationId) {
 
 const registerMember = async function (activistData){
     let donationId = null;
-    /*const recentDonations = await israelGivesSearch.getRecentDonations();
+    const recentDonations = await israelGivesSearch.getRecentDonations();
     //iterate over recent donations, look for one corresponding to the email of the new member
     for(let i = 0; i < recentDonations.length; i++){
         if(!recentDonations[i] || !recentDonations[i]["donor_email"] || !recentDonations[i]["donor_email"]["#cdata-section"])
@@ -43,11 +43,11 @@ const registerMember = async function (activistData){
             donationId = recentDonations[i].donation;
             console.log(util.inspect(donationId, {showHidden: false, depth: null}));
         }
-    }*/
+    }
     logRegistration(activistData, donationId);
-    /*if(!donationId) {
+    if(!donationId) {
         return {"err": "donation not found"};
-    }*/
+    }
     const today = new Date();
     const activistObject = {
         "_id": mongoose.Types.ObjectId(),
