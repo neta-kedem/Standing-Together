@@ -1,5 +1,3 @@
-import React from "react";
-
 export default ({
     missingPermission: {
         content: "you don't have permissions to view this page, switch user?",
