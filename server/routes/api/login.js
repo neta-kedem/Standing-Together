@@ -1,5 +1,6 @@
 const loginManager = require('../../services/login/loginManager');
 const logoutManager = require('../../services/login/logoutManager');
+const suspensionManager = require('../../services/login/suspensionManager');
 const lockManager = require('../../services/login/lockManager');
 const Authentication = require('../../services/authentication');
 
@@ -29,5 +30,11 @@ module.exports = (app) => {
 				return res.json({"error": result.error});
 			lockManager.unlockUser(req.body.userId).then(result => res.json(result));
 		});
+	});
+	app.get('/api/suspend/sendCode', (req, res) => {
+		suspensionManager.sendUnsuspendEmail(req.cookies.token).then(result => res.json(result));
+	});
+	app.post('/api/suspend/unsuspend', (req, res) => {
+		suspensionManager.unsuspend(req.cookies.token, req.body.code).then(result => res.json(result));
 	});
 };

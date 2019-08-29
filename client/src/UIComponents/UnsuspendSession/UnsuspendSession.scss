@@ -1,0 +1,28 @@
+@import "../../lib/variables";
+.unsuspend-session-button{
+  color: $purple-main;
+  background-color: white;
+  outline: none;
+  font-size: 1.2em;
+  padding: 0.2em 1em;
+  margin: 0.5em 0 0 0.5em;
+}
+
+.unsuspend-session-button:hover{
+  color: $purple-dark;
+  background-color: #ddd;
+}
+
+.unsuspend-session-button:active{
+  color: $purple-darker;
+  background-color: #bbb;
+}
+
+.unsuspend-session-input{
+  border: none;
+  outline: none;
+  font-size: 1.2em;
+  height: 1.2em;
+  padding: 0.2em;
+  margin-left: 1em;
+}

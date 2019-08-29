@@ -1,4 +1,5 @@
 const events = {
-    alert: "onAlert"
+    alert: "onAlert",
+    clearAlert: "onClearAlert"
 };
 export default events

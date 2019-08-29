@@ -1,12 +1,15 @@
 const Activist = require('../models/activistModel');
 
 //expire tokens that have been issued this long ago:
-const TOKEN_EXPIRATION = 1000 * 60 * 60;
+const TOKEN_EXPIRATION = 1000 * 60 * 60 * 24;
 //or have been used this long ago:
-const LAST_TOKEN_USAGE = 1000 * 60 * 7;
+const LAST_TOKEN_USAGE = 1000 * 60 * 60;
+//suspend sessions that have been inactive for:
+const SUSPEND_AFTER = 1000 * 60 * 7;
 
 let myId = "";
 const getUserByToken = function(token){
+	const now = new Date();
 	if(!token || !token.length)
 	{
 		return new Promise((resolve)=>{
@@ -18,15 +21,18 @@ const getUserByToken = function(token){
 		if (!user) {
 			return {error: "missing token"};
 		}
-
 		if (user.login.locked) {
 			return {error: "locked out"};
 		}
-		updateLastTokenUsage(user, token);
 		return retireExpiredTokens(user).then((validTokens) => {
 			for (let i = 0; i < validTokens.length; i++) {
 				//if the used token hasn't expired, return the user details
 				if (validTokens[i].token === token) {
+					if(validTokens[i].lastUsage < (now - SUSPEND_AFTER)){
+						//session has been suspended
+						return {error: "suspended session"};
+					}
+					updateLastTokenUsage(user, token);
 					myId = user["_id"];
 					return user;
 				}
@@ -37,8 +43,8 @@ const getUserByToken = function(token){
 	});
 };
 const retireExpiredTokens = function(user){
-	let validTokens = [];
-	let now = new Date();
+	const validTokens = [];
+	const now = new Date();
 	for(let i = 0; i < user.login.tokens.length; i++){
 		let token = user.login.tokens[i];
 		if(token.issuedAt >= (now - TOKEN_EXPIRATION) && token.lastUsage >= (now - LAST_TOKEN_USAGE))
@@ -58,7 +64,7 @@ const updateLastTokenUsage = function(user, token){
 			user.login.tokens[i].lastUsage = now;
 		}
 	}
-	let query = Activist.updateOne({'_id': user._id}, {"login.tokens": user.login.tokens});
+	const query = Activist.updateOne({'_id': user._id}, {"login.tokens": user.login.tokens});
 	return query.exec().then(()=>{
 		return true;
 	});

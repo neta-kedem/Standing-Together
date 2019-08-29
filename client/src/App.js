@@ -35,6 +35,9 @@ export default class App extends React.Component {
     PubSub.subscribe(events.alert, function (msg, data) {
       this.alert(data)
     }.bind(this));
+    PubSub.subscribe(events.clearAlert, function (msg, data) {
+      this.clearAlert(data)
+    }.bind(this));
   }
 
   componentWillUnmount() {
@@ -48,6 +51,17 @@ export default class App extends React.Component {
     }
     else{
       alertQueue.push(alert);
+    }
+    this.setState({alertQueue});
+  }
+
+  clearAlert(options) {
+    let alertQueue = this.state.alertQueue.slice();
+    if(options.clearAll){
+      alertQueue = [];
+    }
+    else{
+      alertQueue.splice(0, 1);
     }
     this.setState({alertQueue});
   }
