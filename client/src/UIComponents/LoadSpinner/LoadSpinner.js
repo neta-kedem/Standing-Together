@@ -10,7 +10,7 @@ export default class LoadSpinner extends React.Component {
     }
     render() {
         return this.props.visibility ? (
-            <div className="spinner-wrap">
+            <div className={"spinner-wrap " + (this.props.align === "center" ? "centered" : "")}>
                 <div className="load-spinner">
                     {this.props.children}
                 </div>

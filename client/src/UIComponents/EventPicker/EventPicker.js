@@ -3,6 +3,7 @@ import server from '../../services/server'
 import PageNav from "../PageNav/PageNav"
 import SearchBar from "../SearchBar/SearchBar"
 import "./EventPicker.scss"
+import LoadSpinner from "../LoadSpinner/LoadSpinner";
 
 export default class EventPicker extends React.Component {
     constructor(props) {
@@ -12,7 +13,8 @@ export default class EventPicker extends React.Component {
             page: 0,
             pageCount: 0,
             events: [],
-            search: this.props.initSearch ? this.props.initSearch : ""
+            search: this.props.initSearch ? this.props.initSearch : "",
+            loading: false,
         }
     }
     componentDidMount() {
@@ -20,6 +22,7 @@ export default class EventPicker extends React.Component {
     }
     getListDetails() {
         const search = this.state.search || "";
+        this.setState({loading: true});
         server.post('events/list', {'page': this.state.page, 'search': search})
             .then(result => {
                 const events = result.events || [];
@@ -29,7 +32,7 @@ export default class EventPicker extends React.Component {
                     e.creationDate = new Date(e.creationDate);
                     return e;
                 }
-                ), pageCount: result.pageCount});
+                ), pageCount: result.pageCount, loading: false});
             });
     }
     handlePageNavigation(page){
@@ -81,6 +84,7 @@ export default class EventPicker extends React.Component {
                         {rows}
                     </tbody>
                 </table>
+                <LoadSpinner visibility={this.state.loading} align={"center"}/>
                 <PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
             </div>
         )
