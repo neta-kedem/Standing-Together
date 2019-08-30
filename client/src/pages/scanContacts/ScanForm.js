@@ -12,6 +12,7 @@ export default class ScanForm extends React.Component {
         super(props);
         this.state = {
             onPublish: this.props.onPublish,
+            pendingServerResponse: false,
             selectedImage: false,
             selectedImageSrc: false,
             scanUrl: null,
@@ -66,6 +67,9 @@ export default class ScanForm extends React.Component {
         this.setState({eventId: id});
     }
     handlePost(){
+        if(this.state.pendingServerResponse)
+            return;
+        this.setState({pendingServerResponse: true});
         this.canvasRef.current.toBlob(file => {
             const formWrap = new FormData();
             formWrap.append("scan", file);
@@ -92,6 +96,7 @@ export default class ScanForm extends React.Component {
                     return;
                 }
                 this.reset();
+                this.setState({pendingServerResponse: false});
                 this.state.onPublish(res.id);
             });
     }
