@@ -41,7 +41,7 @@ const unlockUser = async function (userId){
 const lockByToken = async function (token){
     if(!token || !token.length)
         return false;
-    Activist.findOneAndUpdate({'login.lockToken': token}, {$set : {'login.locked': true}}).exec().then((err, user) => {
+    return Activist.findOneAndUpdate({'login.lockToken': token}, {$set : {'login.locked': true}}).exec().then((err, user) => {
         if (err) return {success: false, error: err};
         sendLockedByUserEmail(user);
         return true;

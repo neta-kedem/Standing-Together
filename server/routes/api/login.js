@@ -14,8 +14,8 @@ module.exports = (app) => {
 	app.get('/api/logout', (req, res) => {
 		logoutManager.logout(req, res);
 	});
-	app.get('/api/lock/email', (req, res) => {
-		lockManager.lockByToken(req.params.lockToken).then(result => res.json(result));
+	app.post('/api/lock/email', (req, res) => {
+		lockManager.lockByToken(req.body.lockToken).then(result => res.json(result));
 	});
 	app.post('/api/lock/user', (req, res) => {
 		Authentication.hasRole(req, "isOrganizer").then(result => {

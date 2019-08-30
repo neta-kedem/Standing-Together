@@ -8,6 +8,7 @@ import Alert from './UIComponents/Alert/Alert'
 
 import NoMatch from "./pages/404";
 import Login from "./pages/Login";
+import LockMe from "./pages/LockMe";
 import Organizer from "./pages/Organizer";
 import Activist from "./pages/Activist";
 import EventManagement from "./pages/EventManagement";
@@ -74,6 +75,7 @@ export default class App extends React.Component {
             <Switch>
               <Route path="/" exact component={Login}/>
               <Route path="/Login" exact component={Login}/>
+              <Route path="/LockMe" exact component={LockMe}/>
               <Route path="/Organizer" component={Organizer}/>
               <Route path="/Activist" component={Activist}/>
               <Route path="/EventManagement" component={EventManagement}/>

@@ -15,7 +15,7 @@ const identifyViaEmail = function (email){
         {
             $set : {
                 'login.loginCode': code,
-                'lockToken': lockToken
+                'login.lockToken': lockToken
             }
         }).then(() => {
         sendCodeViaMail(code, lockToken, email);
@@ -122,7 +122,7 @@ const sendCodeViaMail = function(code, lockToken, email)
     <div dir="rtl" style="text-align: right;">
         <h3 style="color: #60076e">קוד הכניסה שלך למערכת של "עומדים ביחד": ${code}</h3>
         <p>הקוד הזה נשלח כחלק מניסיון התחברות למערכת באמצעות כתובת המייל הזאת.</p>
-        <p>אם לא ניסית להיכנס למערכת, <a href="https://management.standing-together.org/lockMe?token=${lockToken}">נא ללחוץ כאן</a>.</p>
+        <p>אם לא ניסית להיכנס למערכת, <a href="https://management.standing-together.org/LockMe?lockToken=${lockToken}">נא ללחוץ כאן</a>.</p>
         <p>אחרי שמונה דקות של חוסר פעילות במערכת, תוקף הקוד יפוג, ותצטרכו להתחבר אליה מחדש.</p>
         <p>אם נכנסת למערכת ממחשב ציבורי, חשוב להתנתק בסוף העבודה הן מהמערכת עצמה, והן מחשבון המייל, שגישה אליו מאפשרת כניסה למערכת.</p>
     </div>
