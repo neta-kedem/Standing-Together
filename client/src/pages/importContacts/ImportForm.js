@@ -12,6 +12,7 @@ export default class ImportForm extends React.Component {
         super(props);
         this.state = {
             onPublish: this.props.onPublish,
+            pendingServerResponse: false,
             eventId: null,
             contacts: [],
             fields: [
@@ -79,6 +80,9 @@ export default class ImportForm extends React.Component {
         this.setState({eventId: id});
     }
     publishScan(){
+        if(this.state.pendingServerResponse)
+            return;
+        this.setState({pendingServerResponse: true});
         const contacts = this.state.contacts.slice();
         if(!this.ActivistFieldsValidation.validateAll(contacts)){
             this.setState({postAttempted: true});
@@ -91,6 +95,7 @@ export default class ImportForm extends React.Component {
         const data ={"eventId": this.state.eventId, "activists": contacts};
         server.post('contactScan/importActivists', data)
             .then((res) => {
+                this.setState({pendingServerResponse: false});
                 if(res.err){
                     alert(res.err);
                     return;
