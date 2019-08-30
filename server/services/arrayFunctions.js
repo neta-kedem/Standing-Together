@@ -17,16 +17,16 @@ const indexByField = function(array, indexBy){
  * Whenever a key is encountered that passes the supplied condition,
  * the value stored in said key undergoes the specified transformation.
  * @param obj - the object to traverse
- * @param keyCondition - a function that, given a key, return true IFF the value stored under said key should be transformed
+ * @param condition - a function that, given a key, return true IFF the value stored under said key should be transformed
  * @param valueMapping - a function that, given a value, performs the desired transformation
  */
-const deepFix = function(obj, keyCondition, valueMapping){
+const deepFix = function(obj, condition, valueMapping){
     Object.keys(obj).forEach(key => {
-        if(keyCondition(key)){
+        if(condition(key, obj[key])){
             obj[key] = valueMapping(obj[key]);
         }
         if (typeof obj[key] === 'object') {
-            deepFix(obj[key], keyCondition, valueMapping)
+            deepFix(obj[key], condition, valueMapping)
         }
     })
 };

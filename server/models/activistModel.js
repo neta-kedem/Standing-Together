@@ -89,10 +89,19 @@ const activistSchema = new mongoose.Schema({
 	},
 	login: {
 		loginCode: String,
+		locked: {
+			type: Boolean,
+			default: false,
+		},
+		lockToken: {
+			type: String,
+			required: false
+		},
 		tokens: [{
 			token: {type: String},
 			issuedAt: {type: Date},
-			lastUsage: {type: Date}
+			lastUsage: {type: Date},
+			unlockToken: {type: String, required: false}
 		}],
 		failedLoginCount:{
 			type: Number,

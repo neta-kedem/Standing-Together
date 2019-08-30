@@ -14,6 +14,7 @@ import QueryResultsActionMenu from './organizer/QueryResultsActionMenu'
 import PageNav from "../UIComponents/PageNav/PageNav";
 import FileSaver from 'file-saver';
 import './organizer/Organizer.scss'
+import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 
 
 export default class Organizer extends React.Component {
@@ -26,6 +27,7 @@ constructor(props) {
 		activistCount: 0,
 		events: [],
 		activists: [],
+		loadingActivists: false,
 		sortBy: null,
 		sortOptions: FilterFields.sortOptions,
 		fieldsFilterOptions: FilterFields.fieldsFilterOptions,
@@ -69,10 +71,17 @@ fetchActivistsByQuery(){
 	const query = this.state.query;
 	const sortBy = this.state.sortBy;
 	const page = this.state.page;
+	this.setState({loadingActivists: true});
 	server.post('selectActivists', {'query': query, 'sortBy': sortBy, 'page': page})
 		.then(json => {
-			if(json && json.activists)
-				this.setState({activists: json.activists, pageCount: json.pageCount, activistCount: json.activistCount});
+			if(json && json.activists) {
+				this.setState({
+					activists: json.activists,
+					pageCount: json.pageCount,
+					activistCount: json.activistCount,
+					loadingActivists: false
+				});
+			}
 		});
 }
 
@@ -123,6 +132,7 @@ render() {
 	const currPage = this.state.page;
 	const pageCount = this.state.pageCount;
 	const activistCount = this.state.activistCount;
+	const loadingActivists = this.state.loadingActivists;
 	const tableFieldsMultiSelect = <MultiSelect
 		values={this.state.tableFields}
 		label='key'
@@ -178,7 +188,7 @@ render() {
 					/>
 					<br/>
 					<div className="textual-query">
-						{this.state.query}
+						{/*this.state.query*/}
 					</div>
 				</div>
 				<div className="main-panel">
@@ -191,6 +201,9 @@ render() {
 					<div className="results-wrap">
 						<div className="query-results">
 							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields} onDoubleClick={this.goToActivistPage.bind(this)}/>
+							<div className="loading-query-wrap">
+								<LoadSpinner visibility={loadingActivists}/>
+							</div>
 							<PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
 						</div>
 					</div>

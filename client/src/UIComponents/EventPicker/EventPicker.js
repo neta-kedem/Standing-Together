@@ -22,7 +22,7 @@ export default class EventPicker extends React.Component {
         const search = this.state.search || "";
         server.post('events/list', {'page': this.state.page, 'search': search})
             .then(result => {
-                const events = result.events;
+                const events = result.events || [];
                 this.setState({events: events.map((event)=>{
                     let e = event;
                     e.date = new Date(e.date);

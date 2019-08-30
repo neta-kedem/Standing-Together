@@ -31,6 +31,8 @@ export default class InputField extends React.Component {
 						value={fieldValue}
 						onChange = {(date) => {this.syncStateToInput(date)}}
 						disableCalendar = {true}
+						clearIcon = {null}
+						maxDate = {new Date()}
 						format="yy-M-d"
 					/>
 				:	<input

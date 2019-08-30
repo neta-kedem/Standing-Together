@@ -96,7 +96,7 @@ const filterableFields = {
         fieldName: "linked.participatedEvents",
         options: {
             membershipStatus: {label: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
-                valueMapper:v => {return {"_id":{"$eq": v._id}}},
+                valueMapper:v => {return {"_id":{"$eq": v._id, "castToId": true}}},
             },
         }
     },
@@ -108,7 +108,7 @@ const filterableFields = {
         options: {
             membershipStatus: {label: 'השתתתפו באירוע מקטגוריה', sortPosition: 0, acceptMultiple: false,
                 operator: "$elemMatch", inputType: "select", options: "eventCategories",
-                valueMapper:v => {return {"eventDetails.category":v}}
+                valueMapper:v => {return {"eventDetails.category":{"$eq": v, "castToId": true}}},
             },
         }
     }

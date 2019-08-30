@@ -1,8 +1,11 @@
 import React from 'react';
 import server from '../../services/server';
+import FieldValidation from '../../services/FieldValidation'
 import './ImportContacts.scss';
 import EventPicker from '../../UIComponents/EventPicker/EventPicker';
 import ExcelUploader from '../../UIComponents/ExcelUploader/ExcelUploader'
+import PubSub from "pubsub-js";
+import events from "../../lib/events";
 
 export default class ImportForm extends React.Component {
     constructor(props) {
@@ -12,15 +15,40 @@ export default class ImportForm extends React.Component {
             eventId: null,
             contacts: [],
             fields: [
-                    {key: "firstName", he: "שם פרטי", ar: "الاسم الشخصي", dir: "right", width: 15},
-                    {key: "lastName", he: "שם משפחה", ar: "اسم العائلة", dir: "right", width: 15},
-                    {key: "residency", he: "יישוב", ar: "البلد", dir: "right", width: 25},
-                    {key: "phone", he: "טלפון", ar: "رقم الهاتف", dir: "left", width: 15},
-                    {key: "email", he: "אימייל", ar: "البريد الإلكتروني", dir: "left", width: 30}
+                {
+                    name: "firstName", he: "שם פרטי", ar: "الاسم الشخصي", dir: "right", width: 15,
+                    validation: /^.{2,}$/,
+                    required: true},
+                {
+                    name: "lastName", he: "שם משפחה", ar: "اسم العائلة", dir: "right", width: 15,
+                    validation: /^.{2,}$/,
+                    required: true
+                },
+                {
+                    name: "residency", he: "יישוב", ar: "البلد", dir: "right", width: 25,
+                    validation: /^.{2,}$/,
+                    required: false
+                },
+                {
+                    name: "phone", he: "טלפון", ar: "رقم الهاتف", dir: "left", width: 15,
+                    validation: /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,}$/,
+                    required: false
+                },
+                {
+                    name: "email", he: "אימייל", ar: "البريد الإلكتروني", dir: "left", width: 30,
+                    validation: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    required: false
+                }
                 ],
-            selectedFile: false
+            selectedFile: false,
+            postAttempted: false
         };
     }
+    componentDidMount() {
+        this.ActivistFieldsValidation = new FieldValidation();
+        this.ActivistFieldsValidation.setFields(this.state.fields.slice());
+    }
+
     handleDataSelection(data) {
         if(!data.length){
             this.setState({selectedFile: false})
@@ -31,9 +59,10 @@ export default class ImportForm extends React.Component {
             const contact = {};
             for(let j = 0; j < fields.length; j++){
                 if(row[j])
-                    contact[fields[j].key] = row[j].toString().trim();
+                    contact[fields[j].name] = row[j].toString().trim();
                 else
-                    contact[fields[j].key] = "";
+                    contact[fields[j].name] = "";
+                contact[fields[j].name + "Valid"] = this.ActivistFieldsValidation.validate(contact[fields[j].name], fields[j].name);
             }
             contact.scanRow = i;
             return contact
@@ -43,13 +72,23 @@ export default class ImportForm extends React.Component {
     handleTypedInput(event, row, field){
         const contacts = this.state.contacts.slice();
         contacts[row][field] = event.target.value;
+        contacts[row][field + "Valid"] = this.ActivistFieldsValidation.validate(event.target.value, field);
         this.setState({contacts: contacts})
     }
     handleEventSelection(id){
         this.setState({eventId: id});
     }
     publishScan(){
-        const data ={"eventId": this.state.eventId, "activists": this.state.contacts.slice()};
+        const contacts = this.state.contacts.slice();
+        if(!this.ActivistFieldsValidation.validateAll(contacts)){
+            this.setState({postAttempted: true});
+            PubSub.publish(events.alert, {content: <div dir={"rtl"}>
+                <p>חלק מהשדות אינם תקינים - וודאו שלא חסרים שמות פרטיים או שמות משפחה, ושמספרי הטלפון וכתובות האימייל בפורמט נכון</p>
+                <p>חלק מהשדות אינם תקינים - וודאו שלא חסרים שמות פרטיים או שמות משפחה, ושמספרי הטלפון וכתובות האימייל בפורמט נכון</p>
+            </div>});
+            return;
+        }
+        const data ={"eventId": this.state.eventId, "activists": contacts};
         server.post('contactScan/importActivists', data)
             .then((res) => {
                 if(res.err){
@@ -95,8 +134,17 @@ export default class ImportForm extends React.Component {
                         return <tr key={"contact_" + i}>
                             {
                                 fields.map(f=>{
-                                    return <td key={"contact_" + i + "_" + f.key} style={{"textAlign":f.dir, "width":f.width+"%"}}>
-                                        <input value={contact[f.key]} onChange={(e)=>{this.handleTypedInput(e, i, f.key)}}/>
+                                    return <td key={"contact_" + i + "_" + f.name}
+                                               style={{
+                                                   "textAlign": f.dir,
+                                                   "direction": f.dir === "left" ? "ltr" : "rtl",
+                                                   "width": f.width+"%"
+                                               }}
+                                               className={(!contact[f.name + "Valid"] && this.state.postAttempted)?"invalid-field":""}>
+                                        <input
+                                            value={contact[f.name]}
+                                            onChange={(e)=>{this.handleTypedInput(e, i, f.name)}}
+                                        />
                                     </td>
                                 })
                             }

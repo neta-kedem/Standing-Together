@@ -4,9 +4,9 @@ const Activist = require('../models/activistModel');
 const Event = require('../models/eventModel');
 
 const saveEvent = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isOrganizer").then(result=>{
+        if(result.error)
+            return res.json({error: result.error});
         if(req.body.event._id){
             updateEvent(req, res);
         }
@@ -16,9 +16,9 @@ const saveEvent = function(req, res){
     })
 };
 const insertEvent = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isOrganizer").then(result=>{
+        if(result.error)
+            return res.json({error: result.error});
         const eventObject = req.body.event;
         const today = new Date();
         eventObject.metadata={
@@ -41,9 +41,9 @@ const insertEvent = function(req, res){
     })
 };
 const updateEvent = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isOrganizer").then(result=>{
+        if(result.error)
+            return res.json({error: result.error});
         const eventObject = req.body.event;
         const today = new Date();
         const schedule = eventObject.eventDetails.date.split("/");
@@ -66,9 +66,9 @@ const updateEvent = function(req, res){
     })
 };
 const inviteByQuery = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isOrganizer").then(result=>{
+        if(result.error)
+            return res.json({error: result.error});
         const query = req.body.query;
         const eventId = req.body.eventId;
         Activist.find(query, (err, activists) => {

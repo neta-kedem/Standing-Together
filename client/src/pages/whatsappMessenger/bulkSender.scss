@@ -1,0 +1,69 @@
+@import "../../lib/variables";
+.bulk-sender-wrap {
+  margin: 2.5%;
+  .whatsapp-qr-wrap {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto 5%;
+  }
+
+  .whatsapp-qr {
+    position: relative;
+  }
+
+  .whatsapp-logo-overlay {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .profile-image-wrap {
+  }
+
+  .profile-image-label{
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .profile-image {
+    display: block;
+    margin: 1em auto;
+    width: 6em;
+    border-radius: 6em;
+  }
+
+  .sending-progress-bar{
+    height: 1.5em;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #bbb;
+    position: relative;
+  }
+
+  .sending-progress{
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    width: 50%;
+    background-color: #00AA88;
+  }
+
+  .sent-count{
+    line-height: 1.5em;
+    display: block;
+    text-align: center;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: $purple-darker;
+    text-shadow: 0 0 1px white;
+  }
+}
