@@ -5,15 +5,21 @@ export default class FieldValidation {
         this.fields = f;
         let tests = [];
         for(let i = 0; i < f.length; i++){
-            tests[f[i].name] = f[i].validation
+            tests[f[i].name] = (val) => {
+                if(!val && !f[i].required)
+                    return true;
+                if(!val && f[i].required)
+                    return false;
+                return f[i].validation.test(val)
+            }
         }
         this.tests = tests;
     }
     validate(value, field){
         const test = this.tests[field];
         const fieldVal = value;
-        if(test !== null && test !== undefined){
-           return test.test(fieldVal);
+        if(test !== null && test !== undefined && typeof fieldVal === "function"){
+           return test(fieldVal);
         }
         return true;
     }

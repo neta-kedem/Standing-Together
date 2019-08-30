@@ -35,9 +35,9 @@ const getAssociatedActivists = function(scanData){
 };
 
 const getContactScan = function(req, res){
-    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isTyper").then(result => {
+        if(result.error)
+            return res.json({"error": result.error});
         const requestedId = req.query.scanId;
         const typerId = Authentication.getMyId();
         const now = new Date();
@@ -90,16 +90,9 @@ const getContactScanById = async function(scanId){
     });
     return promise;
 };
-const getByActivistId = function(activistId){
-    const query = ContactScan.find({"activists.activistId": activistId});
-    return query.exec().then(results=>{
-        return results;
-    });
-};
 
 module.exports = {
     getContactScan,
-    getContactScanById,
-    getByActivistId
+    getContactScanById
 };
 

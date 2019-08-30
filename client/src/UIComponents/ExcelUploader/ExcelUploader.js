@@ -16,6 +16,8 @@ export default class ExcelUploader extends React.Component {
 	fileSelectionHandler(event)
 	{
 		const file = event.target.files[0];
+		if(!file)
+			return;
 		if(file.name.indexOf(".xls") !== -1) {
 			readXLSXFile(file).then(data => {
 				this.state.onSelect(data);

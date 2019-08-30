@@ -1,13 +1,12 @@
 import React from "react";
 import "./QueryCreator.scss";
-import {Draggable} from 'react-beautiful-dnd'
 import SingleCondition from "./SingleCondition";
 import AddFiltersBtn from "./AddFiltersBtn";
 import orIcon from "../../static/or.png";
 import andIcon from "../../static/and.png";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-class GroupCondition extends React.Component {
+export default class GroupCondition extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,43 +35,38 @@ class GroupCondition extends React.Component {
   }
 
   render() {
-    const {group, groupIndex, provided} = this.props;
+    const {group, groupIndex} = this.props;
     const groupStr = [];
     groupStr.push(
-      <div className="remove-group" onClick={()=>{this.props.removeGroup(this.props.groupIndex)}}>
+      <div key={"remove-group"} className="remove-group" onClick={()=>{this.props.removeGroup(this.props.groupIndex)}}>
         <FontAwesomeIcon icon="times"/>
       </div>
     );
     groupStr.push(
-      group.filters.map((condition, conditionIndex) => {
-          return(
-            <div key={conditionIndex} className={"single-condition-wrap"}>
-              <img
-                className={"filter-icon " + (conditionIndex === 0 ? "hidden " : "")}
-                src={!this.props.outerOr ? orIcon : andIcon}
-                alt="logical operator"
-                onMouseDown={() => this._toggleLogicalOperator()}
-              />
-              <Draggable draggableId={condition.id} index={condition.id}>
-                {provided => (
+       <div key={"conditions"}>
+         {
+           group.filters.map((condition, conditionIndex) => {
+             return (
+                <div key={conditionIndex} className={"single-condition-wrap"}>
+                  <img
+                      className={"filter-icon " + (conditionIndex === 0 ? "hidden " : "")}
+                      src={!this.props.outerOr ? orIcon : andIcon}
+                      alt="logical operator"
+                      onMouseDown={() => this._toggleLogicalOperator()}
+                  />
                   <SingleCondition
                       condition={condition}
                       conditionIndex={conditionIndex}
                       updateCondition={this.updateCondition.bind(this)}
                       filterableFields={this.props.filterableFields}
                       fieldsFilterOptions={this.props.fieldsFilterOptions}
-                      removeCondition={() =>this.state.removeCondition(groupIndex, condition.id)}
-                      provided={provided}
-                      innerRef={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+                      removeCondition={() => this.state.removeCondition(groupIndex, condition.id)}
                   />
-                )}
-              </Draggable>
-              {provided.placeholder}
-            </div>
-          );
-      })
+                </div>
+             );
+           })
+         }
+       </div>
     );
     groupStr.push(
       <AddFiltersBtn
@@ -82,8 +76,10 @@ class GroupCondition extends React.Component {
         onClick={()=>{this.addCondition()}}
       />
     );
-    return (<div className="condition-group">{groupStr}</div>)
+    return (
+        <div className="condition-group">
+          {groupStr}
+        </div>
+    )
   }
 }
-
-export default GroupCondition;

@@ -9,7 +9,7 @@ export default class CircleManagement extends React.Component {
         super(props);
         this.state = {
             circles: [],
-            mailchimpLists: []
+            mailchimpLists: [],
         }
     }
     componentDidMount() {
@@ -25,7 +25,8 @@ export default class CircleManagement extends React.Component {
     getMailchimpLists() {
         server.get('mailchimp/lists/', {})
             .then(mailchimpLists => {
-                this.setState({"mailchimpLists": mailchimpLists.lists});
+                if(mailchimpLists.lists)
+                    this.setState({"mailchimpLists": mailchimpLists.lists});
             });
     }
     setCircleName(name, index) {

@@ -11,8 +11,13 @@ const dev = process.env.NODE_ENV !== 'production';
 //db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
-mongoose.set('debug', true);
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true }).then(()=>{});
+if(dev){
+	mongoose.set('debug', true);
+}
+//ensures no deprecated functions are used
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.connect(MONGODB_URI, {'useNewUrlParser': true}).then(()=>{});
 mongoose.Promise = global.Promise;
 const app = express();
 //setup server to use accept calls whose body contains files up to 5 mgb
@@ -56,8 +61,8 @@ app.post("/webhooks/github", function (req, res) {
 });
 
 app.get('/admin/sync', (req, res) => {
-	authentication.hasRole(req, res, "isOrganizer").then(user=>{
-		if(!user)
+	Authentication.hasRole(req, "isOrganizer").then(result => {
+		if(!result || result.error)
 		{
 			res.end();
 		}
@@ -69,8 +74,8 @@ app.get('/admin/sync', (req, res) => {
 	});
 });
 app.get('/admin/fixDB', (req, res) => {
-	authentication.hasRole(req, res, "isOrganizer").then(user=>{
-		if(!user)
+	Authentication.hasRole(req, "isOrganizer").then(result => {
+		if(!result || result.error)
 		{
 			res.end();
 		}
@@ -82,7 +87,7 @@ app.get('/admin/fixDB', (req, res) => {
 	});
 });
 // THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS
-app.get('*', (req, res) => {
+app.get('*', (req) => {
 	return app.render('/Login', req.query);
 });
 const port = process.env.PORT || 5000;

@@ -1,63 +1,35 @@
 const Activist = require('../models/activistModel');
 const mongoose = require('mongoose');
 const objectIdMapper = require("./dbHelper/objectIdMapper");
-const Authentication = require('./authentication');
-const EventFetcher = require("./eventFetcher");
 
-const getActivists = function (req, res){
-    Authentication.isUser(req, res).then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
-        Activist.find((err, activists) => {
-            if (err) return res.json({success: false, error: err});
-            let activistsList = [];
-            for(let activist of activists)
-            {
-                activistsList.push({
-                    "_id":activist._id,
-                    "phone":activist.profile.phone,
-                    "email":activist.profile.email,
-                    "name":activist.profile.firstName+" "+activist.profile.lastName,
-                    "city":activist.profile.residency,
-                    "isCaller":activist.role.isCaller,
-                    "lastEvent":activist.profile.participatedEvents[activist.profile.participatedEvents.length-1]
-                });
-            }
-            return res.json(activistsList);
-        });
-    })
-};
 const getActivistsByIds = function (ids){
-    const query = Activist.find({"_id":{$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}});
-    const activistsPromise = query.exec().then((activists) => {
-        // this array holds promises to queries fetching information about events and contact scans relevant to the activists
-        const additionalDataPromises = [];
-        for(let i = 0; i < activists.length; i++){
-            const a = activists[i];
-            if(a.profile.participatedEvents && a.profile.participatedEvents.length){
-                const getEvents = EventFetcher.getEventsByIds(a.profile.participatedEvents).then(events=>{
-                    a.profile.participatedEvents = events.map((event)=>{return {
-                        _id: event._id, date: event.eventDetails.date, location: event.eventDetails.location
-                    }});
-                    console.log(a.profile.participatedEvents);
-                });
-                additionalDataPromises.push(getEvents);
+    const query = Activist.aggregate([
+        {
+            $lookup: {
+                from: 'events',
+                localField: "profile.participatedEvents",
+                foreignField: "_id",
+                as: "participatedEvents"
             }
-            /*const getScans = contactScanFetcher.getByActivistId(a._id).then((scans) => {
-                a.profile.scans = scans.map((scan)=>{return {_id:scan._id, url:scan.scanUrl}});
-                console.log("console.log(Object.keys(a.profile));");
-                console.log(Object.keys(a.profile));
-                console.log("console.log(JSON.stringify(a.profile))");
-                console.log(JSON.stringify(a.profile));
-                console.log(typeof a.profile.scans);
-            });
-            additionalDataPromises.push(getScans);*/
-        }
-        return Promise.all(additionalDataPromises).then(() => {
-            return activists;
-        })
+        },
+        {
+            $match: {"_id": {$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}}
+        },
+    ]);
+    return query.exec().then((activists) => {
+        return activists.map(a => {
+            return {
+                "metadata": a.metadata,
+                "role": a.role,
+                "profile": a.profile,
+                "membership": a.membership,
+                "participatedEvents": a.participatedEvents || [],
+                "login": {
+                    locked: a.login ? a.login.locked : false
+                }
+            };
+        });
     });
-    return activistsPromise;
 };
 const queryActivists = function(query, sortBy, page, callback){
     try{
@@ -127,7 +99,7 @@ const downloadActivistsByQuery = function(query, callback){
         {
             //add - to phone number, so that it won't be parsed as a number by excel
             let phone = activist.profile.phone ? activist.profile.phone.replace("-", "") : "";
-            phone = phone.substring(0, 3) + "-" + phone.substring(4, phone.length);
+            phone = phone.substring(0, 3) + "-" + phone.substring(3, phone.length + 4);
             activistsList.push({
                 "phone": phone,
                 "email": activist.profile.email,
@@ -147,7 +119,7 @@ const downloadActivistsByQuery = function(query, callback){
 };
 const searchDuplicates = function(phones, emails){
     const query =  Activist.find({$or: [{"profile.phone":{$in:phones}}, {"profile.email":{$in:emails}}]});
-    const duplicatesPromise = query.exec().then((activists) => {
+    return query.exec().then((activists) => {
         let activistsList = [];
         for(let activist of activists)
         {
@@ -159,10 +131,8 @@ const searchDuplicates = function(phones, emails){
         }
         return activistsList;
     });
-    return duplicatesPromise;
 };
 module.exports = {
-    getActivists,
     queryActivists,
     searchDuplicates,
     getActivistsByIds,

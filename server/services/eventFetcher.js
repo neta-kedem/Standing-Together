@@ -34,9 +34,9 @@ const getEventById = function(eventId){
     return promise;
 };
 const getEventByCode = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isOrganizer").then(result=>{
+        if(result.error)
+            return res.json({error: result.error});
         const eventCode = req.params.code;
         Event.findOne({"campaign.eventCode": eventCode}, (err, eventData) => {
             if (err) return res.json({success: false, error: err});
@@ -51,9 +51,9 @@ const getEventByCode = function(req, res){
     })
 };
 const getCampaignLess = function(req, res){
-    Authentication.hasRole(req, res, "isOrganizer").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isOrganizer").then(result=>{
+        if(result.error)
+            return res.json({error: result.error});
         Event.find({"campaign" : {$exists:false}}, (err, events) => {
             if (err) return res.json({success: false, error: err});
             let eventList = [];
@@ -70,9 +70,9 @@ const getCampaignLess = function(req, res){
     })
 };
 const listEvents = function(req, res){
-    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
-        if(!isUser)
-            return res.json({"error" : "missing token"});
+    Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
+        if(result.error)
+            return res.json({"error": result.error});
         const page = req.body.page;
         const search = req.body.search || "";
         if(page < 0)

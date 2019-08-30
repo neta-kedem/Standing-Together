@@ -4,9 +4,7 @@ import {Link, withRouter} from "react-router-dom";
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar';
 import EventPicker from "../UIComponents/EventPicker/EventPicker";
 export default withRouter(class EventManagement extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+
     goToEvent(id){
         this.props.history.push('/EventCreation?id='+id);
     }
