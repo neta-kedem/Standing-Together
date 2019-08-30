@@ -2,6 +2,8 @@ import React from 'react';
 import server from '../../services/server';
 import { withRouter } from 'react-router-dom'
 import './UnsuspendSession.scss'
+import PubSub from "pubsub-js";
+import events from "../../lib/events";
 
 export default withRouter(class UnsuspendSession extends React.Component {
     constructor(props) {
@@ -31,7 +33,8 @@ export default withRouter(class UnsuspendSession extends React.Component {
     logout = function(){
         server.get('logout', {})
             .then(() => {
-                this.props.history.push('/Login')
+                this.props.history.push('/Login');
+                PubSub.publish(events.clearAlert, {clearAll: true});
             });
     }.bind(this);
 
