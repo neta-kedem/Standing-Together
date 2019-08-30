@@ -108,9 +108,13 @@ const idifyEvents = function(){
     });
 };
 
+const fix = async function(){
+    await idifyParticipatedEvents();
+    await idifyContactScans();
+    await idifyEvents();
+    await getParticipatedEventsFromScans();
+};
+
 module.exports = {
-    idifyParticipatedEvents,
-    idifyContactScans,
-    idifyEvents,
-    getParticipatedEventsFromScans
+    fix
 };

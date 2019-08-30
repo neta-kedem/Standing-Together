@@ -76,7 +76,7 @@ app.get('/admin/fixDB', (req, res) => {
 			res.end();
 		}
 		else{
-			dbFixer.idifyParticipatedEvents().then(()=>{
+			dbFixer.fix().then(()=>{
 				return true
 			});
 		}
