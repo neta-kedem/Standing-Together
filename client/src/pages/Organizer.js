@@ -37,8 +37,6 @@ constructor(props) {
 			groups: [
 				{
 					filters: [
-						{fieldType: "circle", value: "תל אביב - יפו", option:"associatedWith"},
-						{fieldType: "firstName", value: "נטע", option:"includes"},
 					]
 				}
 			]
