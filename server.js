@@ -3,9 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cron = require('./server/services/cron');
-const authentication = require('./server/services/authentication');
-const SQLSync = require('./server/services/SQLSync');
-const dbFixer = require('./server/services/dbFixer');
+const Authentication = require('./server/services/authentication');
 
 const dev = process.env.NODE_ENV !== 'production';
 //db
@@ -26,7 +24,7 @@ app.use(bodyParser.urlencoded({extended:false, limit:1024*1024*callSizeLimit, ty
 app.use(bodyParser.json({limit:1024*1024*callSizeLimit, type:'application/json'}));
 app.use(cookieParser());
 const auth = function(req, res, next) {
-	authentication.isUser(req, res).then((isUser)=>{
+	Authentication.isUser(req, res).then((isUser)=>{
 		if (isUser) {
 			next();
 		}
@@ -55,36 +53,6 @@ app.post("/webhooks/github", function (req, res) {
 	if(branch.indexOf('master') > -1){
 		deploy(res);
 	}
-});
-app.get('/admin/sync', (req, res) => {
-	Authentication.hasRole(req, "isOrganizer").then(result => {
-		if(!result || result.error)
-		{
-			res.end();
-		}
-		else{
-			SQLSync.syncAll().then(()=>{
-				return true
-			});
-		}
-	});
-});
-app.get('/admin/fixDB', (req, res) => {
-	Authentication.hasRole(req, "isOrganizer").then(result => {
-		if(!result || result.error)
-		{
-			res.end();
-		}
-		else{
-			dbFixer.fix().then(()=>{
-				return true
-			});
-		}
-	});
-});
-// THIS IS THE DEFAULT ROUTE, DON'T EDIT THIS
-app.get('*', (req) => {
-	return app.render('/Login', req.query);
 });
 const port = process.env.PORT || 5000;
 
