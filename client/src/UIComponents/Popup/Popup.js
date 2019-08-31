@@ -17,7 +17,7 @@ export default class Popup extends React.Component {
 		return this.props.visibility?(
 			<div className="popup-wrapper">
 				<div className="popup-background" onClick={this.handleBackgroundClick.bind(this)}/>
-				<div className="popup" style={{
+				<div className="popup purple-background" style={{
 					width: this.state.width ? this.state.width : "50%",
 					height: this.state.height ? this.state.height : "fit-content"
 				}}>

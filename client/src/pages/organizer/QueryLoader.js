@@ -5,6 +5,7 @@ import "./QueryLoader.scss";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import LoadSpinner from "../../UIComponents/LoadSpinner/LoadSpinner";
 library.add(faSave, faFolderOpen);
 
 export default class QueryLoader extends React.Component {
@@ -13,17 +14,22 @@ export default class QueryLoader extends React.Component {
         this.state = {
             setFilters: this.props.setFilters,
             savedQueries: [],
+            loadingQueries: false,
             displayLoadQueryPopup: false,
             displaySaveQueryPopup: false,
             saveName: "",
             saveId: null
         };
+    }
+
+    componentDidMount() {
         this.getSavedQueries();
     }
 
     getSavedQueries() {
+        this.setState({loadingQueries: true});
         server.get('queries').then(queries => {
-           this.setState({savedQueries: queries});
+           this.setState({savedQueries: queries, loadingQueries: false});
         });
     }
 
@@ -99,18 +105,22 @@ export default class QueryLoader extends React.Component {
                     </button>
                 </div>
                 <Popup visibility={this.state.displayLoadQueryPopup} toggleVisibility={this.toggleLoadPopup}>
+                    <h3>טעינת שאילתה</h3>
                     {
                         queries.map((q, i) => {
                             return <div key={i} className={"saved-query"} onClick={()=>{this.loadSavedQuery(q._id)}}>{q.name}</div>
                         })
                     }
+                    <LoadSpinner visibility={this.state.loadingQueries} align={"center"}/>
                 </Popup>
                 <Popup visibility={this.state.displaySaveQueryPopup} toggleVisibility={this.toggleSavePopup}>
+                    <h3>שמירת שאילתה</h3>
                     {
                         queries.map((q, i) => {
                             return <div key={i} className={"saved-query"} onClick={()=>{this.overrideQuery(q)}}>{q.name}</div>
                         })
                     }
+                    <LoadSpinner visibility={this.state.loadingQueries} align={"center"}/>
                     <div className={"save-query-wrap"}>
                         <input value={this.state.saveName} className={"save-query-name-input"} onChange={(e)=>{this.setSaveName(e.target.value)}}/>
                         <button type={"button"} className={"save-query-button"} onClick={this.saveQuery}>save</button>

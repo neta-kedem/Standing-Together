@@ -23,6 +23,14 @@
   -ms-transform: translateZ(0);
   transform: translateZ(0);
 }
+.purple-background .load-spinner {
+  background: #90278e;
+  background: -moz-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+  background: -webkit-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+  background: -o-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+  background: -ms-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+  background: linear-gradient(to right, #fff 10%, rgba(255, 255, 255, 0) 42%);
+}
 .load-spinner:before {
   width: 50%;
   height: 50%;
@@ -32,6 +40,9 @@
   top: 0;
   left: 0;
   content: '';
+}
+.purple-background .load-spinner:before {
+  background: #fff;
 }
 .load-spinner:after {
   background: #fff;
@@ -45,6 +56,9 @@
   left: 0;
   bottom: 0;
   right: 0;
+}
+.purple-background .load-spinner:after {
+  background: #90278e;
 }
 @-webkit-keyframes load {
   0% {
