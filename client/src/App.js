@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import meta from './lib/meta';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PubSub from 'pubsub-js';

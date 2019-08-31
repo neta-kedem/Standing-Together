@@ -37,4 +37,12 @@ module.exports = (app) => {
 	app.post('/api/suspend/unsuspend', (req, res) => {
 		suspensionManager.unsuspend(req.cookies.token, req.body.code).then(result => res.json(result));
 	});
+	app.post('/api/permissions/check', (req, res) => {
+		Authentication.hasRole(req, req.body.roles).then(result => {
+			if (result.error)
+				return res.json(false);
+			else
+				return res.json(true);
+		});
+	});
 };
