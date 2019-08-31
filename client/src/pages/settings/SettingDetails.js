@@ -27,17 +27,18 @@ export default class SettingDetails extends React.Component {
 
 	render() {
 		const settingValues = this.props.details.values.slice();
+		const singleValue = this.props.details.singleValue;
 		return (
 			<div>
 				<div className={"setting-title"}>{this.state.details.name}</div>
 				<div className={"setting-content-wrap"}>
 					{settingValues.map((set, i)=>{
 						return <div className={"setting-value-wrap"} key={this.state.details.name+"_"+i}>
-							<div className={"remove-setting-value"} onClick={()=>{this.removeValue(i)}}>✖</div>
+							{!singleValue ? <div className={"remove-setting-value"} onClick={()=>{this.removeValue(i)}}>✖</div> : null}
 							<input className={"setting-value-input"} type={this.state.details.type} value={set} onChange={(event)=>{this.setValue(event, i)}}/>
 						</div>
 					})}
-					<div className={"add-setting-value"} onClick={this.addValue}>🞢</div>
+					{!singleValue ? <div className={"add-setting-value"} onClick={this.addValue}>🞢</div> : null}
 				</div>
 			</div>
 		);

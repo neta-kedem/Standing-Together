@@ -1,11 +1,10 @@
 const fetch = require('node-fetch');
 const Activist = require('../models/activistModel');
-const config = require('../config');
 
 const fetchMembers = function(){
     let date = new Date();
     date.setMonth(date.getMonth()-1);
-    const url = config.wixApiPath+'members';
+    const url = process.env.WIX_API+'members';
     const promise = fetch(url, {
         "async": true,
         "crossDomain": true,
