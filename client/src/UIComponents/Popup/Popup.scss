@@ -26,6 +26,11 @@
   z-index: 1;
   box-shadow: 0 1px 5px 0 black;
 }
+.popup-content-wrap{
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
 .popup a:link {
   color: #fff;
 }

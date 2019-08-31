@@ -21,7 +21,9 @@ export default class Popup extends React.Component {
 					width: this.state.width ? this.state.width : "50%",
 					height: this.state.height ? this.state.height : "fit-content"
 				}}>
-					{this.props.children}
+					<div className="popup-content-wrap">
+						{this.props.children}
+					</div>
 				</div>
 			</div>
 		):<div/>

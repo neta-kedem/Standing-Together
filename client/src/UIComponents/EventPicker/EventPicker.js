@@ -84,7 +84,7 @@ export default class EventPicker extends React.Component {
                         {rows}
                     </tbody>
                 </table>
-                <LoadSpinner visibility={this.state.loading} align={"center"}/>
+                <LoadSpinner visibility={(this.state.loading && !events.length)} align={"center"}/>
                 <PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
             </div>
         )
