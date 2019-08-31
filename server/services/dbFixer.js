@@ -5,6 +5,7 @@ const Event = require('../models/eventModel');
 
 
 const idifyParticipatedEvents = function(){
+    console.log("casting the eventId field (in participated events) of activist objects to ObjectId");
     const bulk = Activist.collection.initializeOrderedBulkOp();
     Activist.find({}).then(activists=>{
         for(let i = 0; i< activists.length; i++){
@@ -15,8 +16,6 @@ const idifyParticipatedEvents = function(){
                         return mongoose.Types.ObjectId(e);
                     return e;
                 });
-                console.log(idified);
-                console.log(`bulk.find({_id: ${a._id}}).updateOne({$set:{"profile.participatedEvents": ${idified}}});`);
                 bulk.find({_id: a._id}).updateOne({$set:{"profile.participatedEvents": idified}});
             }
         }
@@ -27,6 +26,7 @@ const idifyParticipatedEvents = function(){
 };
 
 const getParticipatedEventsFromScans = function(){
+    console.log("update the list of events activists have participated in based on references to them in contact scans");
     const bulk = Activist.collection.initializeOrderedBulkOp();
     const activistDict = {};
     ContactScan.find({}).then(scans=>{
@@ -51,6 +51,7 @@ const getParticipatedEventsFromScans = function(){
     });
 };
 const idifyContactScans = function(){
+    console.log("casting the creatorId, typerId, and eventId fields of contactScan objects to ObjectId");
     const bulk = ContactScan.collection.initializeOrderedBulkOp();
     return ContactScan.find({}).then(scans=>{
         for(let i = 0; i< scans.length; i++){
@@ -87,6 +88,7 @@ const idifyContactScans = function(){
     });
 };
 const idifyEvents = function(){
+    console.log("casting the creatorId and category fields of event objects to ObjectId");
     const bulk = Event.collection.initializeOrderedBulkOp();
     return Event.find({}).then(events=>{
         for(let i = 0; i< events.length; i++){
@@ -108,11 +110,17 @@ const idifyEvents = function(){
     });
 };
 
+const removeFictitiousPhones = function(){
+    console.log("removing phones containing the string 'fic'");
+    Activist.updateMany({"profile.phone":{"$regex":"fic"}}, {$set:{"profile.phone":""}}).exec();
+};
+
 const fix = async function(){
     await idifyParticipatedEvents();
     await idifyContactScans();
     await idifyEvents();
     await getParticipatedEventsFromScans();
+    await removeFictitiousPhones();
 };
 
 module.exports = {

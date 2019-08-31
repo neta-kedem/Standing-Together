@@ -42,6 +42,13 @@ export default class EventCategoriesManagement extends React.Component {
         this.setState({settings: settings})
     }
 
+    dbFix() {
+        server.get('admin/fixDB', {})
+    }
+    sqlSync() {
+        server.get('admin/sync', {})
+    }
+
     render() {
         const settings = this.state.settings.slice();
         const rows = settings.map((set,i)=>{
@@ -64,6 +71,8 @@ export default class EventCategoriesManagement extends React.Component {
                 </TopNavBar>
                 {rows}
                 <button type="button" className="save-settings-button" onClick={this.saveSettings.bind(this)}>שמירה</button>
+                <button type="button" className={""} onClick={this.sqlSync}>sync mysql</button>
+                <button type="button" className={""} onClick={this.dbFix}>run db fixes</button>
             </div>
         )
     }

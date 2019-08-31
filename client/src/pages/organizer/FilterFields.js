@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised, faPeace} from '@fortawesome/free-solid-svg-icons';
 library.add(faBuilding, faUserCircle, faEnvelope, faPhone, faFistRaised, faPeace);
 const sortOptions = [
-    {label:"שם פרטי", key:"profile.firstName"},
-    {label:"שם משפחה", key:"profile.lastName"},
-    {label:"אימייל", key:"profile.email"},
+    {label:"الاسم الشخصي שם פרטי", key:"profile.firstName"},
+    {label:"اسم العائلة שם משפחה", key:"profile.lastName"},
+    {label:"البريد الإلكتروني אימייל", key:"profile.email"},
     {label:"תאריך הוספה למערכת", key:"metadata.creationDate"},
     {label:"תאריך שינוי אחרון", key:"metadata.lastUpdate"},
     {label:"תאריך הרשמה לתנועה", key:"membership.joiningDate"},
@@ -24,7 +24,7 @@ const fieldsFilterOptions = {
 const filterableFields = {
     residency:{
         sortPosition: 0,
-            label: "מגורים",
+            label: "البلد מגורים",
             icon: <FontAwesomeIcon icon="building"/>,
             fieldName: "profile.residency",
             options: {
@@ -34,7 +34,7 @@ const filterableFields = {
     },
     circle:{
         sortPosition: 1,
-            label: "מעגל",
+            label: "دائرة מעגל",
             icon: <FontAwesomeIcon icon="building"/>,
             fieldName: "profile.circle",
             options: {
@@ -44,7 +44,7 @@ const filterableFields = {
     },
     firstName:{
         sortPosition: 2,
-            label: "שם פרטי",
+            label: "الاسم الشخصي שם פרטי",
             icon: <FontAwesomeIcon icon="user-circle"/>,
             fieldName: "profile.firstName",
             options: {
@@ -54,7 +54,7 @@ const filterableFields = {
     },
     lastName:{
         sortPosition: 3,
-            label: "שם משפחה",
+            label: "اسم العائلة שם משפחה",
             icon: <FontAwesomeIcon icon="user-circle"/>,
             fieldName: "profile.lastName",
             options: {
@@ -64,7 +64,7 @@ const filterableFields = {
     },
     email:{
         sortPosition: 4,
-        label: "אימייל",
+        label: "البريد الإلكتروني אימייל",
         icon: <FontAwesomeIcon icon="envelope"/>,
         fieldName: "profile.email",
         options: {
@@ -73,7 +73,7 @@ const filterableFields = {
     },
     phone:{
         sortPosition: 5,
-        label: "טלפון",
+        label: "رقم الهاتف טלפון",
         icon: <FontAwesomeIcon icon="phone"/>,
         fieldName: "profile.phone",
         options: {
@@ -91,7 +91,7 @@ const filterableFields = {
     },
     event:{
         sortPosition: 7,
-        label: "אירוע",
+        label: "حدث אירוע",
         icon: <FontAwesomeIcon icon="peace"/>,
         fieldName: "linked.participatedEvents",
         options: {

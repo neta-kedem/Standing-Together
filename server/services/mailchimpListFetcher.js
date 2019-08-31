@@ -1,6 +1,4 @@
 const fetch = require('node-fetch');
-const config = require('../config');
-//a6f28b7b74 test list id
 const fetchLists = function(req, res){
     let date = new Date();
     date.setMonth(date.getMonth()-1);
@@ -9,7 +7,7 @@ const fetchLists = function(req, res){
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': config.mailChimpKey
+            'Authorization': process.env.MAILCHIMP_KEY
         },
         credentials: 'same-origin'
     }).then(res => res.json())

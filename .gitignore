@@ -30,3 +30,4 @@ yarn-error.log*
 
 # server config
 server/config.js
+dump/

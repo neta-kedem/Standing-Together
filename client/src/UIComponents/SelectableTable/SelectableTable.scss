@@ -19,9 +19,6 @@
 	border-right-color: transparent !important;
 	border-left-color: transparent !important;
 }
-.list-table-header-field.hidden{
-	display: none;
-}
 .list-table-header-icon{
 	display:inline-block;
 	text-align: center;
@@ -75,10 +72,7 @@
 	border-collapse: collapse;
 }
 .list-table-field.no-padding{
-	padding: 0px;
-}
-.list-table-field.hidden{
-	display: none;
+	padding: 0;
 }
 .list-row-selection-indicator{
 	padding: 2.5px;

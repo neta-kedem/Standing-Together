@@ -1,6 +1,7 @@
 import React from "react";
 import "./variables.scss";
 import "./global.scss";
+import "./classes.scss";
 import favicon from "../static/favicon.ico"
 export default () => (
 	<div>
