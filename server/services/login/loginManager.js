@@ -6,21 +6,23 @@ const LOGIN_CODE_LENGTH = 12;
 const LOCK_CODE_LENGTH = 32;
 const TOKEN_LENGTH = 32;
 
-const identifyViaEmail = function (email){
+const identifyViaEmail = function (email) {
     email = email.toLowerCase();
     const code = Math.random().toString(36).substr(2, LOGIN_CODE_LENGTH);
     const lockToken = generateLockToken();
     return Activist.findOneAndUpdate(
-        {'profile.email':email},
+        {'profile.email': email},
         {
-            $set : {
+            $set: {
                 'login.loginCode': code,
                 'login.lockToken': lockToken
             }
-        }).then(() => {
-        sendCodeViaMail(code, lockToken, email);
-        return true;
-    });
+        }).exec().then((doc) => {
+            if(doc && doc.profile){
+                sendCodeViaMail(code, lockToken, email);
+            }
+            return true;
+        });
 };
 
 const loginViaMail = async function (email, code){
