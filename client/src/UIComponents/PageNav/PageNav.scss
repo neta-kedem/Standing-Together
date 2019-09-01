@@ -1,0 +1,44 @@
+.list-page-nav
+{
+  margin: 1em;
+  text-align: center;
+}
+.list-page-nav div
+{
+  display:inline-block;
+  vertical-align:  middle;
+}
+.page-nav-btn.prev
+{
+  margin-right: 0;
+}
+.page-nav-btn.next
+{
+  margin-left: 0;
+}
+.page-nav-btn.disabled
+{
+  color:#bbb;
+}
+.page-nav-btn:not(.disabled):hover
+{
+  text-shadow:0 0 1px black;
+}
+.page-director
+{
+  font-size:1.2em;
+  padding:0 0.25em;
+  cursor: pointer;
+}
+.page-director.curr-page
+{
+  text-shadow:0 0 1px black;
+}
+.purple-background .page-director.curr-page
+{
+  text-shadow:0 0 3px white;
+}
+.page-director:hover
+{
+  text-shadow:0 0 1px #90278e;
+}

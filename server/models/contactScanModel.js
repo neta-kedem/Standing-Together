@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+Schema = mongoose.Schema;
 
 const contactScanSchema = new mongoose.Schema({
 	metadata: {
@@ -14,7 +15,8 @@ const contactScanSchema = new mongoose.Schema({
 		},
 		//_id of the activist (user) who created the event
 		creatorId: {
-			type: String,
+			type: Schema.Types.ObjectId,
+			ref: 'activist',
 			required: true,
 		}
 	},
@@ -26,8 +28,16 @@ const contactScanSchema = new mongoose.Schema({
 		type: [{
 			creationDate: {type: Date},
 			lastUpdate: {type: Date},
-			activistId: {type: String},
-			typerId: {type: String},
+			activistId: {
+				type: Schema.Types.ObjectId,
+				ref: 'activist',
+				required: true
+			},
+			typerId: {
+				type: Schema.Types.ObjectId,
+				ref: 'activist',
+				required: true
+			},
 			pos: {type: Number},
 			new: {type: Boolean},
 			comments: {type: String}
@@ -40,8 +50,15 @@ const contactScanSchema = new mongoose.Schema({
 	//as long as the las ping wasn't too long ago, the activist won't show up on any other to-type lists.
 	lastPing: {type: Date},
 	//_id of the activist who was last tasked with typing down this entry
-	typerId: {type: String},
-	eventId: {type: String, required: true},
+	typerId: {
+		type: Schema.Types.ObjectId,
+		ref: 'activist'
+	},
+	eventId: {
+		type: Schema.Types.ObjectId,
+		ref: 'event',
+		required: true
+	},
 });
 
 module.exports = mongoose.model('contactScan',contactScanSchema);

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
+const aggregatePaginate = require('mongoose-aggregate-paginate-v2');
+Schema = mongoose.Schema;
 
 const activistSchema = new mongoose.Schema({
 	metadata: {
@@ -44,7 +46,9 @@ const activistSchema = new mongoose.Schema({
 			default: 'not subscribed',
 			enum: ['subscribed', 'unsubscribed' , 'not subscribed', 'cleaned', 'pending']
 		},
-		participatedEvents: [String],
+		participatedEvents: [
+			{type: Schema.Types.ObjectId, ref: 'event'}
+		],
 	},
 	membership:{
 		joiningDate: {
@@ -85,10 +89,19 @@ const activistSchema = new mongoose.Schema({
 	},
 	login: {
 		loginCode: String,
+		locked: {
+			type: Boolean,
+			default: false,
+		},
+		lockToken: {
+			type: String,
+			required: false
+		},
 		tokens: [{
 			token: {type: String},
 			issuedAt: {type: Date},
-			lastUsage: {type: Date}
+			lastUsage: {type: Date},
+			unlockToken: {type: String, required: false}
 		}],
 		failedLoginCount:{
 			type: Number,
@@ -98,5 +111,6 @@ const activistSchema = new mongoose.Schema({
 	}
 });
 activistSchema.plugin(mongoosePaginate);
+activistSchema.plugin(aggregatePaginate);
 const activistModel = mongoose.model('activist',activistSchema);
 module.exports = activistModel;

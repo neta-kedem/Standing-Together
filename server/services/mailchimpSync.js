@@ -1,32 +1,32 @@
 const fetch = require('node-fetch');
 const Activist = require('../models/activistModel');
-const config = require('../config');
+const settingsManager = require('../services/settingsManager');
 //the web id of the main contact list - all our contacts should appear in this list
-const mainListId = "a6f28b7b74";
-//a6f28b7b74 test list id
-const fetchMembers = function(){
+const fetchMembers = async function () {
     let date = new Date();
-    date.setMonth(date.getMonth()-1);
+    const mainListId = await settingsManager.getSettingByName("dailySummaryRecipients");
+    date.setMonth(date.getMonth() - 1);
     const url = 'https://us14.api.mailchimp.com/3.0/lists/' + mainListId + '/members?' +
         'fields=members.email_address,members.status' +
-        '&since_last_changed='+date.toISOString();
+        '&since_last_changed=' + date.toISOString();
     const promise = fetch(url, {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': config.mailChimpKey
+            'Authorization': process.env.MAILCHIMP_KEY
         },
         credentials: 'same-origin'
     }).then(res => res.json())
         .then(contacts => {
-            if(!contacts || !contacts.members.length)
+            if (!contacts || !contacts.members.length)
                 return false;
-            updateNewsletterStatus(contacts.members).then(()=>{
+            updateNewsletterStatus(contacts.members).then(() => {
                 return true;
             })
         });
     return promise;
 };
+
 const updateNewsletterStatus = function(contacts){
     let updatePromises = [];
     for(let i=0; i<contacts.length; i++){
@@ -38,9 +38,15 @@ const updateNewsletterStatus = function(contacts){
     }
     return Promise.all(updatePromises);
 };
-const createContacts = function(contacts, list=null){
+
+const createContacts = async function (contacts, list = null) {
+    const mainListId = await settingsManager.getSettingByName("dailySummaryRecipients");
+    if (process.env.NODE_ENV === 'development')
+        return new Promise((resolve) => {
+            resolve(true)
+        });
     let updatePromises = [];
-    for(let i=0; i<contacts.length; i++){
+    for (let i = 0; i < contacts.length; i++) {
         const contact = contacts[i];
         const url = 'https://us14.api.mailchimp.com/3.0/lists/' + (list ? list : mainListId) + '/members/';
         const data = {
@@ -59,7 +65,7 @@ const createContacts = function(contacts, list=null){
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Content-Length': JSON.stringify(data).length,
-                'Authorization': config.mailChimpKey,
+                'Authorization': process.env.MAILCHIMP_KEY,
             },
             body: JSON.stringify(data),
             credentials: 'same-origin'

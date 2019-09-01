@@ -1,0 +1,33 @@
+@import "../../lib/variables.scss";
+.addBtn{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 21px;
+  cursor: pointer;
+  width: 5em;
+  height: auto;
+  border-radius: 0.3em;
+  line-height: 1em;
+  padding: 0.5em 0.1em;
+  margin: 0.5em auto 0;
+  transition: background-color 0.2s, box-shadow 0.2s;
+};
+.addBtn:hover {
+  background-color: #f8ecef;
+}
+.addBtn:active{
+  background-color: #F3DBEA;
+}
+.addBtn:focus{
+  background-color: #F3DBEA;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+.addGroupButton{
+  font-size: 21px;
+  color: $purple-darker;
+  border: 3px solid $purple-main;
+  padding: 10px
+};

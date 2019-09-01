@@ -1,0 +1,99 @@
+.list-table{
+	width: 100%;
+	border-collapse: collapse;
+	font-size:16px;
+	border-spacing: 0;
+}
+.list-table-header{
+	color: #616B6F;
+	font-weight: 700;
+	margin: 0 auto;
+	width: 100%;
+	text-align: start;
+}
+.list-table-header-field{
+	box-sizing: border-box;
+	padding-bottom: 5px;
+	text-align: start;
+	border-top-color: transparent !important;
+	border-right-color: transparent !important;
+	border-left-color: transparent !important;
+}
+.list-table-header-icon{
+	display:inline-block;
+	text-align: center;
+	margin-left: 0.5em;
+	vertical-align: middle;
+}
+.list-table-header-titles{
+	display:inline-block;
+	vertical-align: middle;
+}
+.list-table thead{
+	display: block;
+	margin: 0 auto;
+	width: fit-content;
+	max-width: 76vw;
+	overflow: hidden;
+	border-collapse: collapse;
+ }
+.list-table tbody{
+	display: block;
+	margin: 0 auto;
+	height: fit-content;
+	max-height: 65vh;
+	width: fit-content;
+	max-width: 76vw;
+	overflow: auto;
+	border-bottom: 1px solid #888;
+	border-collapse: collapse;
+}
+.list-table-row{
+	background-color:#fff;
+	white-space: nowrap;
+	transition: background-color 1.5s;
+	border-collapse: collapse;
+}
+.selected-table-row{
+	background-color:#FF4C94;
+}
+.list-table-row:hover{
+	background-color: #fafafa;
+	transition: background-color 0.5s;
+}
+.list-table-field{
+	box-sizing: border-box;
+	border: 1px solid #888;
+	height: 1.5em;
+	color: rgb(103,111,117);
+	padding: 2px 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	border-collapse: collapse;
+}
+.list-table-field.no-padding{
+	padding: 0;
+}
+.list-row-selection-indicator{
+	padding: 2.5px;
+	width: 5px;
+	cursor: pointer;
+}
+.select-all-checkbox{
+	color: rgb(128, 134, 138);
+	font-weight: 700;
+	cursor: pointer;
+}
+.checkbox{
+	display: inline-block;
+	margin-right: 10px;
+	color: rgba(86, 95, 108, .7);
+}
+.checkbox-checked{
+	color: #FF4C94;
+}
+.checkbox-label{
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 0.5em;
+}

@@ -1,0 +1,124 @@
+@import "../../lib/variables.scss";
+.city-selector {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+
+    .map-selector-wrap {
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        font-size: 1.25em;
+        height: 100%;
+        width: 30vh;
+    }
+
+    .selected-cities-list {
+        display: inline-block;
+        vertical-align: top;
+        height: 100%;
+        width: calc(90vw - 40vh);
+        max-width: 15em;
+        overflow: auto;
+        margin-right: 2em;
+        text-align: right;
+    }
+
+    .map-view {
+        display: block;
+        height: calc(100% - 1.5em);
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .highlighted-city-label {
+        width: 100%;
+        line-height: 1.5em;
+        height: 1.5em;
+        text-align: center;
+        color: white;
+        background-color: $purple-darker;
+        font-weight: bold;
+    }
+
+    .selection-mechanism {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+    }
+
+    .selection-mode {
+        cursor: pointer;
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        background-color: #ddd;
+        background-size: cover;
+        background-repeat: no-repeat;
+        border: none;
+        width: 3em;
+        height: 2.25em;
+        transition: filter 0.15s;
+    }
+
+    .selection-mode:hover {
+        filter: brightness(80%);
+    }
+
+    .selection-mode:active {
+        filter: brightness(60%);
+    }
+
+    .selection-mode.active-mode {
+        filter: invert(100%);
+    }
+
+    .rect-selection {
+        background-image: url("../../static/rect_select.png");
+    }
+
+    .poly-selection {
+        background-image: url("../../static/poly_select.png");
+    }
+
+    .selected-city {
+        background-color: #00000000;
+        transition: background-color 0.25s;
+    }
+
+    .selected-city:hover {
+        background-color: $purple-dark;
+    }
+
+    .selected-city {
+        width: fit-content;
+        padding: 0.2em;
+    }
+
+    .selected-city-name, .deselect-city {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .deselect-city {
+        cursor: pointer;
+    }
+
+    .selected-city-name {
+        margin-right: 1em;
+        width: 10em;
+    }
+
+    .select-city-wrap {
+        width: fit-content;
+        padding: 0.2em 0.1em 0.2em 0.2em;
+    }
+
+    .select-city {
+        margin-right: 1em;
+        width: 12.3em;
+    }
+}

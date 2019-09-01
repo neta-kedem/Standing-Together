@@ -35,9 +35,9 @@ const getAssociatedActivists = function(scanData){
 };
 
 const getContactScan = function(req, res){
-    Authentication.hasRole(req, res, "isTyper").then(isUser=>{
-        if(!isUser)
-            return res.json({"error":"missing token"});
+    Authentication.hasRole(req, "isTyper").then(result => {
+        if(result.error)
+            return res.json({"error": result.error});
         const requestedId = req.query.scanId;
         const typerId = Authentication.getMyId();
         const now = new Date();
@@ -72,7 +72,7 @@ const getContactScan = function(req, res){
             });
     })
 };
-const getById = function(scanId){
+const getContactScanById = async function(scanId){
     let scanObjectId;
     try{
         scanObjectId = mongoose.Types.ObjectId(scanId);
@@ -81,25 +81,18 @@ const getById = function(scanId){
         return {error: "incorrect id supplied"};
     }
     const query = ContactScan.findOne({"_id": scanObjectId});
-    const promise = query.exec().then((res)=>{
-        if (!res || !res._id)
+    const promise = query.exec().then((event)=>{
+        if (!event || !event._id)
             return {"error":"couldn't find a matching scan"};
-        return res;
+        return event;
     }).catch((err)=>{
         return {success: false, error: err};
     });
     return promise;
 };
-const getByActivistId = function(activistId){
-    const query = ContactScan.find({"activists.activistId": activistId});
-    return query.exec().then(results=>{
-        return results;
-    });
-};
 
 module.exports = {
     getContactScan,
-    getById,
-    getByActivistId
+    getContactScanById
 };
 

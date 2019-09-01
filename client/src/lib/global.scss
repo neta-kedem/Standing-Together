@@ -1,0 +1,20 @@
+@import "variables.scss";
+@import url('https://fonts.googleapis.com/css?family=Alef:400,700|Assistant|Cabin|Cairo|Rubik&display=swap');
+body {
+  margin: 0;
+  font-family: Cabin, Cairo, Rubik, sans-serif !important;
+}
+input, textarea, select, button {
+  font-family: Cabin, Cairo, Rubik, sans-serif !important;
+}
+::selection {
+  background: $purple-main;
+  color: white;
+}
+button{
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}

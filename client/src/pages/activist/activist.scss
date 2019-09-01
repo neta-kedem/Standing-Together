@@ -1,0 +1,165 @@
+.page-wrap-activist {
+	/*Scroll Bar*/
+	::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+		background: #999;
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: #4D4D4D;
+	}
+
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+		background: #555;
+	}
+
+	.contact-form-wrap {
+		width: 100%;
+		height: max-content;
+		padding-bottom: 3em;
+		border-bottom: 2px solid #888;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	label {
+		width: 45%;
+		height: 3em;
+		color: #4D4D4D;
+		margin-left: 2.5%;
+		margin-top: 1.5em;
+	}
+
+	label div {
+		margin-bottom: 0.5em;
+		margin-left: 2em;
+		white-space: nowrap;
+		line-height: 1.2em;
+		color: #60666E;
+		font-weight: bold;
+	}
+
+	label.inline-label {
+		flex-direction: row;
+	}
+
+	textarea, input, select {
+		resize: none;
+		background-color: white;
+		color: #4D4D4D;
+		outline: none;
+		width: 100%;
+		height: 1.5em;
+		padding: 0.5em;
+		box-sizing: border-box;
+		border: 1px solid #AEB3B9;
+		font-size: 1em;
+	}
+
+	select {
+		padding: 0;
+	}
+
+	.checkbox-label {
+		width: 25%;
+		height: 1.5em;
+	}
+
+	.checkbox-label div {
+		display: inline-block;
+		line-height: 1.5em;
+	}
+
+	input[type='checkbox'] {
+		width: 1.5em;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	body {
+		background-color: #F9F9F9;
+	}
+
+	.content-wrap {
+		height: calc(100vh - 55px);
+		padding: 2em 4em;
+		box-sizing: border-box;
+		overflow-y: auto;
+	}
+
+	.save-activist-button {
+		display: block;
+		margin: 1.5em auto 0;
+		padding: 1% 5%;
+		font-size: 1.25em;
+		color: white;
+		background-color: #90278e;
+		border: none;
+		outline: none;
+	}
+
+	.save-activist-button:hover {
+		background-color: #80177e;
+	}
+
+	.save-activist-button:active {
+		background-color: #70076e;
+	}
+
+	.save-activist-button-label {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1em;
+	}
+
+	.save-activist-button-icon {
+		display: inline-block;
+		vertical-align: middle;
+		font-size: 2em;
+		margin-right: 0.5em;
+	}
+
+	.lock-activist-button {
+		display: block;
+		margin-top: 1.5em;
+		padding: 0.2em 1em;
+		font-size: 1em;
+		color: white;
+		background-color: #b00;
+		border: none;
+		outline: none;
+	}
+
+	.lock-activist-button:hover {
+		background-color: #800;
+	}
+
+	.lock-activist-button:active {
+		background-color: #500;
+	}
+
+	.lock-activist-button-label {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1em;
+	}
+
+	.lock-activist-button-icon {
+		display: inline-block;
+		vertical-align: middle;
+		font-size: 2em;
+		margin-right: 0.5em;
+	}
+
+	.loader-wrap{
+		margin: 1em auto;
+		width: fit-content;
+	}
+}
