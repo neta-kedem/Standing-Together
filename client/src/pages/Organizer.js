@@ -34,6 +34,7 @@ constructor(props) {
 			groups: [
 				{
 					filters: [
+						{}
 					]
 				}
 			]

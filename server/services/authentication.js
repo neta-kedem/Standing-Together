@@ -1,7 +1,7 @@
 const Activist = require('../models/activistModel');
 
 //expire tokens that have been issued this long ago:
-const TOKEN_EXPIRATION = 1000 * 60 * 60 * 24;
+const TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 3;
 //or have been used this long ago:
 const LAST_TOKEN_USAGE = 1000 * 60 * 60;
 //suspend sessions that have been inactive for:
@@ -73,7 +73,7 @@ const updateLastTokenUsage = function(user, token){
 const isUser = function(req){
 	const token = req.cookies.token;
 	return getUserByToken(token).then((user) => {
-		return !user.error;
+		return user && !user.error;
 	});
 };
 

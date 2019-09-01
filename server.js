@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cron = require('./server/services/cron');
@@ -29,14 +30,13 @@ const auth = function(req, res, next) {
 			next();
 		}
 		else{
-			res.redirect('/Login');
 			next(false);
 			res.end();
 		}
 	});
 };
 app.use('/uploads', auth);
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 //set cron
 cron.scheduleSync();
 const childProcess = require('child_process');
