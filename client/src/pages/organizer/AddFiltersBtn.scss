@@ -1,33 +1,45 @@
 @import "../../lib/variables.scss";
-.addBtn{
+.add-button{
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: transparent;
-  border: none;
-  outline: none;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 2.25em;
+  height: 2.25em;
+  box-sizing: border-box;
+  line-height: 1em;
+  margin: 0.5em auto 0;
   font-size: 21px;
   cursor: pointer;
-  width: 5em;
-  height: auto;
-  border-radius: 0.3em;
-  line-height: 1em;
-  padding: 0.5em 0.1em;
-  margin: 0.5em auto 0;
-  transition: background-color 0.2s, box-shadow 0.2s;
+  border-radius: 2em;
+  border: none;
+  outline: none;
+  transition: background-color 0.2s, box-shadow 0.2s, color 0.2s, border-color 0.2s;
 };
-.addBtn:hover {
+.add-button:hover {
   background-color: #f8ecef;
 }
-.addBtn:active{
+.add-button:active{
   background-color: #F3DBEA;
 }
-.addBtn:focus{
+.add-button:focus{
   background-color: #F3DBEA;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
-.addGroupButton{
+.add-button.add-group{
   font-size: 21px;
   color: $purple-darker;
   border: 3px solid $purple-main;
   padding: 10px
+};
+.add-button.add-group:hover{
+  background-color: $purple-main;
+  color: white;
+};
+.add-button.add-group:active{
+  background-color: $purple-darker;
+  border-color: $purple-darker;
+  color: white;
 };

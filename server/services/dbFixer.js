@@ -115,12 +115,36 @@ const removeFictitiousPhones = function(){
     Activist.updateMany({"profile.phone":{"$regex":"fic"}}, {$set:{"profile.phone":""}}).exec();
 };
 
+const castMemberJoinDate = function(){
+    console.log("casting the joining date field of members to Date");
+    const bulk = Activist.collection.initializeOrderedBulkOp();
+    Activist.find({}).then(activists=>{
+        for(let i = 0; i< activists.length; i++){
+            let a = activists[i];
+            if(a.membership && typeof a.membership.joiningDate === "string"){
+                let date = null;
+                if(a.membership.joiningDate.length){
+                    date = new Date(Date.parse(a.membership.joiningDate));
+                }
+                else{
+                    date = new Date(Date.parse("01/01/2017"));
+                }
+                bulk.find({_id: a._id}).updateOne({$set:{"membership.joiningDate": date}});
+            }
+        }
+        return bulk.execute().then(res=>{
+            console.log(res)
+        });
+    });
+};
+
 const fix = async function(){
     await idifyParticipatedEvents();
     await idifyContactScans();
     await idifyEvents();
     await getParticipatedEventsFromScans();
     await removeFictitiousPhones();
+    await castMemberJoinDate();
 };
 
 module.exports = {

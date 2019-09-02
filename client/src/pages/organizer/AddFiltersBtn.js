@@ -1,5 +1,9 @@
 import React from 'react';
 import './AddFiltersBtn.scss';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+library.add(faPlus);
 
 class AddFiltersBtn extends React.Component {
 
@@ -13,20 +17,20 @@ class AddFiltersBtn extends React.Component {
   componentDidMount() {
     const type = this.props.type;
     if(type === 'single'){
-      this.setState({class: 'addFilterButton'});
+      this.setState({class: 'add-filter'});
     } else if(type === 'group'){
-      this.setState({class: 'addGroupButton'});
+      this.setState({class: 'add-group'});
     }
   }
 
   render() {
     return(
-      <section>
+      <section className={"add-button-wrap"}>
         <button type={"button"}
-            className={"addBtn " + this.state.class}
+            className={"add-button " + this.state.class}
             onClick={this.props.onClick}
         >
-          {this.props.text}
+          <FontAwesomeIcon icon={"plus"}/>
         </button>
       </section>
     )

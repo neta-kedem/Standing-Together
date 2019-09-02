@@ -117,7 +117,7 @@ render() {
 		<div className="page-wrap page-wrap-organizer" dir="rtl">
 			<TopNavBar>
 				<div className="title-wrap">
-					<span className="title-lang">ניהול אנשי קשר</span>
+					<span className="title-lang">ادارة جهات اتصال</span>
 					<span className="title-lang">ניהול אנשי קשר</span>
 				</div>
 			</TopNavBar>
