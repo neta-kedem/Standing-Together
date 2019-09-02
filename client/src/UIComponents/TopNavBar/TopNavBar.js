@@ -71,7 +71,7 @@ export default withRouter(class TopNavBar extends React.Component {
 										<div className="sidebar-item-he">התנתקות מהמערכת</div>
 									</div>
 									{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("Organizer")}}>
-										<div className="sidebar-item-ar">ניהול אנשי קשר</div>
+										<div className="sidebar-item-ar">ادارة جهات اتصال</div>
 										<div className="sidebar-item-he">ניהול אנשי קשר</div>
 									</div>:""}
 									{permissions.isOrganizer?<div className="sidebar-item button" onClick={()=>{this.goToPage("EventManagement")}}>
