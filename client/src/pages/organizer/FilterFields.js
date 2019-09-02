@@ -10,7 +10,7 @@ const sortOptions = [
     {label:"البريد الإلكتروني אימייל", key:"profile.email"},
     {label:"תאריך הוספה למערכת", key:"metadata.creationDate"},
     {label:"תאריך שינוי אחרון", key:"metadata.lastUpdate"},
-    {label:"תאריך הרשמה לתנועה", key:"membership.joiningDate"},
+    {label:"תאריך הרשמה לתנועה", key:"-membership.joiningDate"},
 ];
 const fieldsFilterOptions = {
     cities: [],

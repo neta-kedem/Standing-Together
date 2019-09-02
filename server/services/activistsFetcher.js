@@ -70,6 +70,7 @@ const queryActivists = function(query, sortBy, page, callback){
                 "city":activist.profile.residency,
                 "isCaller":activist.role.isCaller,
                 "participatedEvents":activist.linked.participatedEvents,
+                "memberSince": activist.membership ? activist.membership.joiningDate : "",
             });
         }
         return callback({activists: activistsList, pageCount: result.totalPages, activistCount: result.totalDocs});
@@ -111,7 +112,8 @@ const downloadActivistsByQuery = function(query, callback){
                 "circle": activist.profile.circle,
                 "isMember": activist.profile.isMember,
                 "isPaying": activist.profile.isPaying,
-                "isNewsletter": activist.profile.isNewsletter
+                "isNewsletter": activist.profile.isNewsletter,
+                "memberSince": activist.membership ? activist.membership.joiningDate : "",
             });
         }
         return callback({activists: activistsList});
