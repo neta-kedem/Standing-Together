@@ -52,6 +52,7 @@ export default class GroupCondition extends React.Component {
                       className={"filter-icon " + (conditionIndex === 0 ? "hidden " : "")}
                       src={!this.props.outerOr ? orIcon : andIcon}
                       alt="logical operator"
+                      title={!this.props.outerOr ? "or" : "and"}
                       onMouseDown={() => this._toggleLogicalOperator()}
                   />
                   <SingleCondition
