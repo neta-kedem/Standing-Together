@@ -31,7 +31,7 @@ const auth = function(req, res, next) {
 		}
 		else{
 			next(false);
-			res.end();
+			return res.end();
 		}
 	});
 };

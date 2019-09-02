@@ -29,12 +29,12 @@ export default class MemberRegistration extends React.Component {
                 tz: ""
             },
             paymentInfo: {
-                CVV: "123",
-                CardTypeId: "1",
-                CreditCardNo: "9111111111111111",
+                CVV: "",
+                CardTypeId: null,
+                CreditCardNo: "",
                 selectedAmount: null,
-                month: "2020",
-                year: "01"
+                month: "",
+                year: ""
             },
             termsAccepted: false,
             postAttempted: false,
