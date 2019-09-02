@@ -105,6 +105,7 @@ export default class QueryLoader extends React.Component {
                     </button>
                 </div>
                 <Popup visibility={this.state.displayLoadQueryPopup} toggleVisibility={this.toggleLoadPopup}>
+                    <h3>تحميل البيانات</h3>
                     <h3>טעינת שאילתה</h3>
                     {
                         queries.map((q, i) => {
@@ -114,6 +115,7 @@ export default class QueryLoader extends React.Component {
                     <LoadSpinner visibility={this.state.loadingQueries} align={"center"}/>
                 </Popup>
                 <Popup visibility={this.state.displaySaveQueryPopup} toggleVisibility={this.toggleSavePopup}>
+                    <h3>حفظ البيانات</h3>
                     <h3>שמירת שאילתה</h3>
                     {
                         queries.map((q, i) => {

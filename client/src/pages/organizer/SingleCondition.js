@@ -83,7 +83,7 @@ class SingleCondition extends React.Component {
             Object.keys(filterableFields)
                 .map(f => {return {key: f, field: filterableFields[f]}})
                 .sort((a, b) => (a.field.sortPosition - b.field.sortPosition))
-                .map((f) => <option key={"field_type_"+f.key} value={f.key}>{f.field.label}</option>)
+                .map((f) => <option key={"field_type_"+f.key} value={f.key}>{f.field.labelAr + " " + f.field.labelHe}</option>)
           }
         </select>
       </div>
@@ -102,12 +102,15 @@ class SingleCondition extends React.Component {
           Object.keys(options)
               .map(o => {return {key: o, option: field.options[o]}})
               .sort((a, b) => (a.option.sortPosition - b.option.sortPosition))
-              .map((f) => <option key={"field_option_"+f.key} value={f.key}>{f.option.label}</option>)
+              .map((f) => <option key={"field_option_"+f.key} value={f.key}>{f.option.labelAr + " " + f.option.labelHe}</option>)
         }
       </select>
     }
     else{
-      return <div>{field.options[condition.option].label}</div>
+      return <div className={"fixed-field-option"}>
+        <div>{field.options[condition.option].labelAr}</div>
+        <div>{field.options[condition.option].labelHe}</div>
+      </div>
     }
   };
 
@@ -137,7 +140,7 @@ class SingleCondition extends React.Component {
         }
         return <div onClick={e => {e.stopPropagation();}}>
           <div onClick={()=>{this.setState({displayCitySelectorPopup: true})}} className="condition-input condition-selected-cities">
-            {condition.value? selectionPreview : "בחירת ערים"}
+            {(condition.value && condition.value.length) ? selectionPreview : "בחירת ערים"}
           </div>
           <Popup
               visibility={this.state.displayCitySelectorPopup}
@@ -192,7 +195,8 @@ class SingleCondition extends React.Component {
               {this.props.filterableFields[this.state.condition.fieldType].icon}
             </div>
             <div className="condition-title">
-              {this.props.filterableFields[this.state.condition.fieldType].label}
+              <div>{this.props.filterableFields[this.state.condition.fieldType].labelAr}</div>
+              <div>{this.props.filterableFields[this.state.condition.fieldType].labelHe}</div>
             </div>
         </div>
         <div className="remove-condition" onClick={this.props.removeCondition}>

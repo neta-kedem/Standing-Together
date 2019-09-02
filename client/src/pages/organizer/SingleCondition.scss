@@ -26,11 +26,14 @@
 		margin-left: 0.5em;
 	}
 	.condition-title{
+		line-height: 1em;
+		padding: 0.5em 0;
 		display: inline-block;
 		vertical-align: middle;
 	}
 	.remove-condition{
-		align-self: center;
+		margin-top: 0.5em;
+		align-self: baseline;
 		cursor: pointer;
 	}
 	.condition-container{
@@ -54,17 +57,23 @@
 		border-bottom: 1.5px solid rgb(86, 95, 108);
 		transition: background-color 0.2s;
 	}
+	select.condition-option-selection, select.condition-input, select.field-select{
+		min-height: 2em;
+	}
 	.condition-option-selection:hover, .condition-input:hover, .field-select:hover{
 		background-color: #ffffff35;
 	}
 	.condition-option-selection:focus, .condition-input:focus, .field-select:focus{
 		background-color: #ffffff70;
 	}
+	.fixed-field-option{
+		line-height: 1em;
+	}
 	.condition-input, .field-select{
 		width: 100%;
 	}
 	.condition-option-selection{
-		width: 50%;
+		width: 100%;
 	}
 	.condition-selected-cities{
 		cursor: pointer;

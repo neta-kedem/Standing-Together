@@ -23,9 +23,11 @@ class QueryResultsActionMenu extends React.Component {
 		);
 		return(
 			<div className="query-results-wrapper">
+				<div className="results-count">لقد تم العثور على {this.props.activistCount} جهات اتصال</div>
 				<div className="results-count">{this.props.activistCount} פעילים נמצאו</div>
 				<button type="button" className="action-button" onClick={this.state.downloadActivistsByQuery}>
 					<img alt="export to excel" className="action-button-icon" src={excel}/>
+					تحويل لملف اكسل
 					ייצוא לאקסל
 				</button>
 				{items}
