@@ -86,7 +86,8 @@ const filterableFields = {
         icon: <FontAwesomeIcon icon="fist-raised"/>,
         fieldName: "membership",
         options: {
-            membershipStatus: {label: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$exists", inputType: "select", options: "membershipStatus"},
+            membershipStatus: {label: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$exists", inputType: "select", options: "membershipStatus",
+                valueMapper:v => v === 'true'},
         }
     },
     event:{
