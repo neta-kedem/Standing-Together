@@ -150,7 +150,8 @@ export default class MemberRegistration extends React.Component {
         let activistWrap = [activist];
         if(!this.ProfileFieldValidation.validateAll(activistWrap)){
             this.setState({postAttempted: true, activistData: activistWrap[0]});
-            window.scrollTo(0, this.registrationFormRef.current.offsetTop);
+            //window.scrollTo(0, this.registrationFormRef.current.offsetTop);
+            window.parent.postMessage({error: true, scrollTo: this.registrationFormRef.current.offsetTop}, "*");
             return;
         }
         //validate payment info
@@ -158,7 +159,8 @@ export default class MemberRegistration extends React.Component {
         let paymentWrap = [paymentInfo];
         if(!this.PaymentFieldValidation.validateAll(paymentWrap)){
             this.setState({postAttempted: true, paymentInfo: paymentWrap[0]});
-            window.scrollTo(0, this.paymentFormRef.current.offsetTop);
+            //window.scrollTo(0, this.paymentFormRef.current.offsetTop);
+            window.parent.postMessage({error: true, scrollTo: this.registrationFormRef.current.offsetTop}, "*");
             return;
         }
         this.setState({processingDonation: true}, ()=>{
@@ -177,6 +179,7 @@ export default class MemberRegistration extends React.Component {
                     if(result.err){
                         this.setState({processingDonation: false});
                         this.handleDonationFailedPopupToggle();
+                        window.parent.postMessage({error: true, scrollTo: this.registrationFormRef.current.offsetTop}, "*");
                     }
                     else{
                         window.parent.postMessage({donationSuccessful: true}, "*");
