@@ -69,7 +69,7 @@ class SingleCondition extends React.Component {
             <FontAwesomeIcon icon="filter"/>
           </div>
           <div className="condition-title">
-            בחירת שדה
+            اختيار خانة בחירת שדה
           </div>
         </div>
         <div className="remove-condition" onClick={this.props.removeCondition}>

@@ -34,20 +34,20 @@ export default class PaymentForm extends React.Component {
         const contributionButtons = <div className={"contribution-options"}>
             {contributionAmounts.map((sum)=>{
                 return <button  type="button" className={"contribution-button"} key={"sum_" + sum} onClick={()=>{this.handleContributionAmountSelection(sum)}}>
+                    <div className={"contribution-amount"}>
                         <span className={"contribution-value"}>{sum}</span>
-                        <span className={"contribution-units"}>
-                            <div className={"shekels"}>₪</div>
-                            <div>
-                                <div>شهريًا</div>
-                                <div>לחודש</div>
-                            </div>
-                        </span>
-                    </button>;
+                        <span className={"contribution-units shekels"}>₪</span>
+                    </div>
+                    <div className={"contribution-frequency"}>
+                        <div>شهريًا</div>
+                        <div>לחודש</div>
+                    </div>
+                </button>;
             })}
         </div>;
         const contributionForm = <div className="contributionForm">
             <div>تسديد رسوم عضوية بمبلغ {paymentData.selectedAmount}₪ شهريًا</div>
-            <div>תשלום חברות חודשי של {paymentData.selectedAmount}₪ לחודש</div>
+            <div>תשלום חברות חודשי של ₪{paymentData.selectedAmount} לחודש</div>
             <div className={"close-payment-form"}>
                 <button type={"button"} onClick={this.closeContributionForm} className="close-payment-form-icon" id={"close-payment-form-icon"}>
                     <FontAwesomeIcon icon="arrow-right"/>

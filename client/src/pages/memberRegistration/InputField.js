@@ -33,7 +33,7 @@ export default class InputField extends React.Component {
 						disableCalendar = {true}
 						clearIcon = {null}
 						maxDate = {new Date()}
-						format="yy-M-d"
+						format="d-M-yy"
 					/>
 				:	<input
 						value={fieldValue} type={f.type} name={f.name} id={"field-"+f.name}

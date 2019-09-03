@@ -71,3 +71,7 @@
         color: #731f72;
     }
 }
+.highlight-invalid-fields .registration-form .invalid input,
+.highlight-invalid-fields .registration-form .invalid select {
+    background-color: rgb(255, 150, 160);
+}
