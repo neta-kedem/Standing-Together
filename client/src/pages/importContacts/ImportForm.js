@@ -22,8 +22,7 @@ export default class ImportForm extends React.Component {
                     required: true},
                 {
                     name: "lastName", he: "שם משפחה", ar: "اسم العائلة", dir: "right", width: 15,
-                    validation: /^.{2,}$/,
-                    required: true
+                    required: false
                 },
                 {
                     name: "residency", he: "יישוב", ar: "البلد", dir: "right", width: 25,

@@ -8,12 +8,14 @@ import logo from "../static/logo_purple.svg"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faSignInAlt} from '@fortawesome/free-solid-svg-icons'
+import QueryString from "query-string";
 library.add(faSignInAlt);
 
 export default class Login extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
+		redirect: QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).redirect,
 		phone: "",
 		email: "",
 		code: "",
@@ -87,6 +89,15 @@ verifyLoginCode()
 		{
 			cookie.set('token', json.token, {expires: 30});
 			cookie.set('permissions', JSON.stringify(json.permissions), {expires: 30});
+			if(this.state.redirect){
+				try{
+					this.props.history.push(decodeURIComponent(this.state.redirect));
+					return;
+				}
+				catch(e){
+					console.log(e)
+				}
+			}
 			if(json.permissions.isOrganizer){
 				this.props.history.push('/Organizer');
 				return;

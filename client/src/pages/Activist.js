@@ -32,8 +32,7 @@ export default class Activist extends React.Component {
                 },
                 {
                     name: "lastName", type: "text", ar: "اسم العائلة", he: "שם משפחה",
-                    validation: /^.{2,}$/,
-                    required: true
+                    required: false
                 },
                 {
                     name: "phone", type: "tel", ar: "رقم الهاتف", he: "טלפון",

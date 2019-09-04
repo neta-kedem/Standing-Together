@@ -2,15 +2,15 @@ import fetch from 'node-fetch';
 import config from './config';
 import { withRouter } from "react-router";
 import PubSub from "pubsub-js";
-import serverAlerts from "./serverAlerts";
 import events from "../lib/events";
 import React from "react";
 import UnsuspendSession from "../UIComponents/UnsuspendSession/UnsuspendSession";
 
 const apiPath='api/';
 let refetchQueue = [];
+
 function get(path){
-	const promise = fetch(config.serverPath+apiPath+path, {
+	return fetch(config.serverPath+apiPath+path, {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
@@ -21,10 +21,9 @@ function get(path){
 	.then(json => {
 		return handleResult(json, "get", path);
 	});
-	return promise;
 }
 function post(path, data){
-	const promise = fetch(config.serverPath+apiPath+path, {
+	return fetch(config.serverPath+apiPath+path, {
 		method: 'post',
 		body: JSON.stringify(data),
 		headers: {
@@ -37,18 +36,18 @@ function post(path, data){
 	.then(json => {
 		return handleResult(json, "post", path, data);
 	});
-	return promise;
 }
 
 function handleResult(json, method, path, data){
+	const currPosition = encodeURIComponent(window.location.pathname + window.location.search);
 	return new Promise((resolve) => {
 		if(json.error === "missing token")
 		{
-			PubSub.publish(events.alert, serverAlerts.missingToken);
+			PubSub.publish(events.alert, alerts("missingToken", currPosition));
 		}
 		else if(json.error === "missing permissions")
 		{
-			PubSub.publish(events.alert, serverAlerts.missingPermission);
+			PubSub.publish(events.alert, alerts("missingPermission", currPosition));
 		}
 		else if(json.error === "suspended session")
 		{
@@ -57,22 +56,55 @@ function handleResult(json, method, path, data){
 					resolve(result)
 				})
 			});
-			const onUnsuspend = () => {
-				PubSub.publish(events.clearAlert, {clearAll: true});
-				runRefetchQueue();
-			};
-			const popupOptions = {
-				content: <UnsuspendSession onSuccess={onUnsuspend}/>,
-				flush: true,
-				opaque: true,
-				onClose: () => window.location.href = '/Login',
-			};
-			PubSub.publish(events.alert, popupOptions);
+			PubSub.publish(events.alert, alerts("suspendedSession", currPosition));
 		}
 		else{
 			resolve(json);
 		}
 	});
+}
+
+
+function alerts (type, path) {
+	switch(type){
+		case "missingPermission": return {
+			content: "you don't have permissions to view this page, switch user?",
+				flush: true,
+				opaque: true,
+				onClose: () => window.location.href = '/Login?redirect=' + path,
+				resolutionOptions: [
+				{
+					label: "yes",
+					onClick: () => window.location.href = '/Login?redirect=' + path,
+				},
+				{
+					label: "no",
+					onClick: () => window.location.href = '/Welcome',
+				},
+			]
+		};
+		case "missingToken": return {
+			content: "you aren't logged in",
+				flush: true,
+				opaque: true,
+				onClose: () => window.location.href = '/Login?redirect=' + path,
+				resolutionOptions: [
+				{
+					label: "ok",
+					onClick: () => window.location.href = '/Login?redirect=' + path,
+				}
+			]
+		};
+		case "suspendedSession": return {
+			content: <UnsuspendSession onSuccess={() => {
+				PubSub.publish(events.clearAlert, {clearAll: true});
+				runRefetchQueue();
+			}}/>,
+				flush: true,
+				opaque: true,
+				onClose: () => window.location.href = '/Login?redirect=' + path,
+		};
+	}
 }
 
 //called after a session is un-suspended

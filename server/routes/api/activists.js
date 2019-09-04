@@ -27,7 +27,7 @@ module.exports = (app) => {
 			if(result.error)
 				return res.json({error: result.error});
 			activistFetcher.getActivistsByIds([req.params.id]).then((activists)=>{
-				return res.json(activists[0]);
+				return (activists && activists.length) ? res.json(activists[0]) : res.json({error: "not found"});
 			});
 		})
 	});
