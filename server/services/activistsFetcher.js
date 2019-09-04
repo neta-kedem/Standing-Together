@@ -120,6 +120,8 @@ const downloadActivistsByQuery = function(query, callback){
     });
 };
 const searchDuplicates = function(phones, emails){
+    phones = phones.filter((p) => (p && p.length > 3));
+    emails = emails.filter((e) => (e && e.length > 3));
     const query =  Activist.find({$or: [{"profile.phone":{$in:phones}}, {"profile.email":{$in:emails}}]});
     return query.exec().then((activists) => {
         let activistsList = [];
