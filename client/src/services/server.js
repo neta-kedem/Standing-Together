@@ -39,7 +39,7 @@ function post(path, data){
 }
 
 function handleResult(json, method, path, data){
-	const currPosition = window.location.pathname;
+	const currPosition = encodeURIComponent(window.location.pathname + window.location.search);
 	return new Promise((resolve) => {
 		if(json.error === "missing token")
 		{

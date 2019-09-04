@@ -90,8 +90,13 @@ verifyLoginCode()
 			cookie.set('token', json.token, {expires: 30});
 			cookie.set('permissions', JSON.stringify(json.permissions), {expires: 30});
 			if(this.state.redirect){
-				this.props.history.push(this.state.redirect);
-				return;
+				try{
+					this.props.history.push(decodeURIComponent(this.state.redirect));
+					return;
+				}
+				catch(e){
+					console.log(e)
+				}
 			}
 			if(json.permissions.isOrganizer){
 				this.props.history.push('/Organizer');
