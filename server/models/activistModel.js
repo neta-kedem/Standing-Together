@@ -29,7 +29,7 @@ const activistSchema = new mongoose.Schema({
 		},
 		lastName: {
 			type:String,
-			required: true,
+			required: false,
 		},
 		phone: String,
 		email: String,

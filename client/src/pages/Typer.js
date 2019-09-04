@@ -31,8 +31,7 @@ export default class Typer extends React.Component {
 				},
 				{
 					name: "lastName", type: "text", ar: "اسم العائلة", he: "שם משפחה",
-					validation: /^.{2,}$/,
-					required: true
+					required: false
 				},
 				{
 					name: "residency", type: "select", ar: "البلد", he: "עיר",
