@@ -109,7 +109,9 @@ export default class CircleManagement extends React.Component {
                     שמירה
                 </button>
                 <CitySelector
-                    cities={this.state.cities}
+                    cities={cities}
+                    selected={[]}
+                    onSelect={()=>{}}
                     width={1000}
                     height={1000}
                     top={33.344888}

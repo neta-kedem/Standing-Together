@@ -31,7 +31,10 @@ export default class CitySelector extends React.Component {
             polygonSelectionPoints: [],
             highlightedCity: null,
             canvas: null,
-            ctx: null
+            ctx: null,
+            translateX: 0,
+            translateY: 0,
+            zoom: 1
         };
         this.canvasRef = React.createRef();
         this.imgRef = React.createRef();
@@ -50,6 +53,8 @@ export default class CitySelector extends React.Component {
         canvas.addEventListener("dblclick", this.onDblClick, false);
         window.addEventListener('keydown',this.onKeyPress,false);
         window.addEventListener('keyup',this.onKeyRelease,false);
+        canvas.addEventListener('DOMMouseScroll', this.handleScroll,false);
+        canvas.addEventListener('mousewheel', this.handleScroll,false);
         //initialize wrapper canvas to have the same size as the image it's wrapping
         canvas.width = this.state.width;
         canvas.height = Math.floor(this.state.width/(right-left)*(top-bottom));
@@ -61,13 +66,29 @@ export default class CitySelector extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
-        const cities = prevState.cities;
-        if(!cities)
+        const cities = nextProps.cities;
+        if(!cities.length) {
             return null;
+        }
+        if(prevState.length) {
+            return null;
+        }
+        const width = prevState.canvas.width;
+        const height = prevState.canvas.height;
+        const top = prevState.top;
+        const bottom = prevState.bottom;
+        const left = prevState.left;
+        const right = prevState.right;
+        cities.forEach(c => {
+            if(c.location && c.location.lng && c.location.lat) {
+                let pos = CitySelector.coordinatesToPosition(width, height, top, bottom, left, right, c.location.lng, c.location.lat, true);
+                c.x = pos.x;
+                c.y = pos.y;
+            }
+        });
         if(prevState.providedSelection !== nextProps.selected){
             const selected = nextProps.selected || [];
             const selectedDict = af.toDict(selected);
-            console.log(selectedDict);
             for(let i = 0; i < cities.length; i++){
                 let city = cities[i];
                 city.selected = !!(selectedDict[city.nameHe]);
@@ -77,6 +98,12 @@ export default class CitySelector extends React.Component {
             cities: cities,
             providedSelection: nextProps.selected
         };
+    }
+
+    static coordinatesToPosition(width, height, top, bottom, left, right, lng, lat, floor){
+        const x = (lng - left)/(right-left)*width;
+        const y = height - (lat - bottom)/(top-bottom)*height;
+        return {x: floor ? Math.floor(x) : x, y: floor ? Math.floor(y) : y};
     }
 
     componentWillUnmount() {
@@ -97,16 +124,16 @@ export default class CitySelector extends React.Component {
         const cities = this.state.cities.slice();
         ctx.fillStyle="#90278E";
         ctx.strokeStyle="#50003E";
+        ctx.beginPath();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
             if(!city.location || !city.location.lat || !city.location.lng)
                 continue;
-            const cityPosition = this.coordinatesToPosition(ctx.canvas, city.location.lng, city.location.lat);
-            ctx.beginPath();
-            ctx.arc(cityPosition.x, cityPosition.y, (city.selected || city.toBeSelected) ? 10 : 5, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.stroke();
+            ctx.moveTo(city.x + 5, city.y);
+            ctx.arc(city.x, city.y, (city.selected || city.toBeSelected) ? 10 : 5, 0, 2 * Math.PI);
         }
+        ctx.fill();
+        ctx.stroke();
     }
 
     drawRectSelectionArea(ctx){
@@ -130,8 +157,8 @@ export default class CitySelector extends React.Component {
             return;
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
-        ctx.strokeStyle="#005544";
-        ctx.lineWidth = 3;
+        ctx.strokeStyle="#409584";
+        ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.moveTo(vertices[0].x, vertices[0].y);
         for(let i = 0; i < vertices.length; i++){
@@ -140,10 +167,6 @@ export default class CitySelector extends React.Component {
         }
         ctx.lineTo(mouseX, mouseY);
         ctx.stroke();
-        ctx.setLineDash([10, 10]);
-        ctx.strokeStyle="#fff";
-        ctx.stroke();
-        ctx.setLineDash([]);
     }
 
     drawCityHighlight(ctx){
@@ -152,9 +175,8 @@ export default class CitySelector extends React.Component {
         if(highlighted !== null){
             ctx.fillStyle="#60278E30";
             ctx.strokeStyle="#005544";
-            const cityPosition = this.coordinatesToPosition(ctx.canvas, cities[highlighted].location.lng, cities[highlighted].location.lat);
             ctx.beginPath();
-            ctx.arc(cityPosition.x, cityPosition.y, 20, 0, 2 * Math.PI);
+            ctx.arc(cities[highlighted].x, cities[highlighted].y, 20, 0, 2 * Math.PI);
             ctx.fill();
             ctx.stroke();
         }
@@ -163,6 +185,9 @@ export default class CitySelector extends React.Component {
     draw = function() {
         const canvas = this.state.canvas;
         const ctx = this.state.ctx;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.translate(this.state.translateX, this.state.translateY);
+        ctx.scale(this.state.zoom, this.state.zoom);
         this.drawMap(ctx, canvas.width, canvas.height);
         this.drawCities(ctx);
         if(this.state.rectSelectionMode)
@@ -170,17 +195,9 @@ export default class CitySelector extends React.Component {
         if(this.state.polygonSelectionMode)
             this.drawPolygonSelectionArea(ctx);
         this.drawCityHighlight(ctx);
+        ctx.scale(1/this.state.zoom, 1/this.state.zoom);
+        ctx.translate(-this.state.translateX, -this.state.translateY);
     }.bind(this);
-
-    coordinatesToPosition(canvas, lng, lat){
-        const top = this.state.top;
-        const bottom = this.state.bottom;
-        const left = this.state.left;
-        const right = this.state.right;
-        const x = (lng - left)/(right-left)*canvas.width;
-        const y = canvas.height - (lat - bottom)/(top-bottom)*canvas.height;
-        return {x: x, y: y};
-    }
 
     getClosestCity(x, y, cutoffDist){
         const cities = this.state.cities.slice();
@@ -193,8 +210,7 @@ export default class CitySelector extends React.Component {
             const city = cities[i];
             if(!city.location || !city.location.lat || !city.location.lng)
                 continue;
-            const cityPosition = this.coordinatesToPosition(canvas, city.location.lng, city.location.lat);
-            let distFromCursor = (Math.abs(cityPosition.y - mouseY) + Math.abs(cityPosition.x - mouseX));
+            let distFromCursor = (Math.abs(city.y - mouseY) + Math.abs(city.x - mouseX));
             if(minDistFromCursor > distFromCursor){
                 minDistFromCursor = distFromCursor;
                 closestToCursor = i;
@@ -259,8 +275,7 @@ export default class CitySelector extends React.Component {
             const city = cities[i];
             if(!city.location || !city.location.lat || !city.location.lng)
                 continue;
-            const cityPosition = this.coordinatesToPosition(this.state.canvas, city.location.lng, city.location.lat);
-            if(cityPosition.x >= minX && cityPosition.x <= maxX && cityPosition.y >= minY && cityPosition.y <= maxY){
+            if(city.x >= minX && city.x <= maxX && city.y >= minY && city.y <= maxY){
                 selectedCities.push(i);
             }
         }
@@ -279,11 +294,10 @@ export default class CitySelector extends React.Component {
             for(let j = 0; j < points.length; j++){
                 const start = points[j];
                 const end = points[(j + 1) % points.length];
-                const cityPosition = this.coordinatesToPosition(this.state.canvas, city.location.lng, city.location.lat);
-                if((cityPosition.y < start.y && cityPosition.y < end.y) || (cityPosition.y > start.y && cityPosition.y > end.y))
+                if((city.y < start.y && city.y < end.y) || (city.y > start.y && city.y > end.y))
                     continue;
-                const intersectionX = start.x + ((cityPosition.y - start.y) / (end.y - start.y) * (end.x - start.x));
-                if(intersectionX >= cityPosition.x){
+                const intersectionX = start.x + ((city.y - start.y) / (end.y - start.y) * (end.x - start.x));
+                if(intersectionX >= city.x){
                     intersectionToTheRight++;
                 }
             }
@@ -363,6 +377,52 @@ export default class CitySelector extends React.Component {
     onKeyRelease = function(evt) {
         if(evt.keyCode === 16)
             this.setState({additiveSelection: false})
+    }.bind(this);
+
+    handleScroll = function(e){
+        const factor = 0.1;
+        const max_scale = 6;
+        const mouseX = this.state.mouseX;
+        const mouseY = this.state.mouseY;
+        const width = this.state.canvas.width;
+        const height = this.state.canvas.height;
+        let translateX = this.state.translateX;
+        let translateY = this.state.translateY;
+        let zoom = this.state.zoom;
+        let delta = e.delta || e.wheelDeltaY;
+        if (delta === undefined && e.originalEvent) {
+            delta = e.originalEvent.wheelDelta;
+        }
+        if(delta === undefined && e.originalEvent){
+            //we are on firefox
+            delta = e.originalEvent.detail;
+        }
+        delta = Math.max(-1,Math.min(1, delta)); // cap the delta to [-1,1] for cross browser consistency
+
+        // determine the point on where the slide is zoomed in
+        const zoomTargetX = (mouseX - translateX)/zoom;
+        const zoomTargetY = (mouseY - translateY)/zoom;
+
+        // apply zoom
+        zoom += delta * factor * zoom;
+        zoom = Math.max(1,Math.min(max_scale,zoom));
+
+        // calculate x and y based on zoom
+        translateX = -zoomTargetX * zoom + mouseX;
+        translateY = -zoomTargetY * zoom + mouseY;
+
+
+        // Make sure the slide stays in its container area when zooming out
+        if(translateX>0)
+            translateX = 0;
+        if(translateX+width*zoom<width)
+            translateX = -width*(zoom-1);
+        if(translateY>0)
+            translateY = 0;
+        if(translateY+height*zoom<height)
+            translateY = -height*(zoom-1);
+        this.setState({translateX, translateY, zoom});
+        e.preventDefault();
     }.bind(this);
 
     selectCityById = function(id){
