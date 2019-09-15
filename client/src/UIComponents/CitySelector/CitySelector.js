@@ -16,12 +16,21 @@ export default class CitySelector extends React.Component {
             onSelect: this.props.onSelect,
             width: this.props.width,
             height: this.props.height,
+            //the north-most coordinate visible in the map
             top: this.props.top,
+            //the south-most coordinate visible in the map
             bottom: this.props.bottom,
+            //the west-most coordinate visible in the map
             left: this.props.left,
+            //the east-most coordinate visible in the map
             right: this.props.right,
+            //the mouse position on the canvas, adjusted for zoom and translate transforms
             mouseX: 0,
             mouseY: 0,
+            //the mouse position on the canvas, not adjusted for zoom and translate transforms (used for further zoom)
+            mouseXOffset: 0,
+            mouseYOffset: 0,
+            //is the left-mouse currently pressed
             mousePressed: false,
             mousePressTime: 0,
             additiveSelection: false,
@@ -34,7 +43,8 @@ export default class CitySelector extends React.Component {
             ctx: null,
             translateX: 0,
             translateY: 0,
-            zoom: 1
+            zoom: 1,
+            translateDragStart: null
         };
         this.canvasRef = React.createRef();
         this.imgRef = React.createRef();
@@ -123,7 +133,6 @@ export default class CitySelector extends React.Component {
     drawCities(ctx){
         const cities = this.state.cities.slice();
         ctx.fillStyle="#90278E";
-        ctx.strokeStyle="#50003E";
         ctx.beginPath();
         for(let i = 0; i < cities.length; i++){
             const city = cities[i];
@@ -133,7 +142,6 @@ export default class CitySelector extends React.Component {
             ctx.arc(city.x, city.y, (city.selected || city.toBeSelected) ? 10 : 5, 0, 2 * Math.PI);
         }
         ctx.fill();
-        ctx.stroke();
     }
 
     drawRectSelectionArea(ctx){
@@ -152,13 +160,12 @@ export default class CitySelector extends React.Component {
     }
 
     drawPolygonSelectionArea(ctx){
+        const zoom = this.state.zoom;
         const vertices = this.state.polygonSelectionPoints.slice();
         if(!vertices.length)
             return;
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
-        ctx.strokeStyle="#409584";
-        ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.moveTo(vertices[0].x, vertices[0].y);
         for(let i = 0; i < vertices.length; i++){
@@ -166,6 +173,11 @@ export default class CitySelector extends React.Component {
             ctx.lineTo(vertex.x, vertex.y);
         }
         ctx.lineTo(mouseX, mouseY);
+        ctx.strokeStyle="#ffffff80";
+        ctx.lineWidth = Math.floor(16 / zoom);
+        ctx.stroke();
+        ctx.strokeStyle="#409584";
+        ctx.lineWidth = Math.floor(10 / zoom);
         ctx.stroke();
     }
 
@@ -219,19 +231,6 @@ export default class CitySelector extends React.Component {
         return closestToCursor;
     }
 
-    previewSelection(indexesToSelect){
-        const cities = this.state.cities.slice();
-        for(let i = 0; i < cities.length; i++){
-            const city = cities[i];
-            city.toBeSelected = false;
-        }
-        for(let i = 0; i < indexesToSelect.length; i++){
-            const city = cities[indexesToSelect[i]];
-            city.toBeSelected = true;
-        }
-        this.setState({cities: cities});
-    }
-
     commitSelection(indexesToSelect){
         const additiveSelection = this.state.additiveSelection;
         const cities = this.state.cities.slice();
@@ -279,7 +278,7 @@ export default class CitySelector extends React.Component {
                 selectedCities.push(i);
             }
         }
-        this.previewSelection(selectedCities);
+        this.commitSelection(selectedCities);
     }
 
     updatePolygonSelection(){
@@ -316,49 +315,81 @@ export default class CitySelector extends React.Component {
     //track mouse
     getPosition = function(evt) {
         const canvas = this.state.canvas;
+        const zoom = this.state.zoom;
+        let translateX = this.state.translateX;
+        let translateY = this.state.translateY;
         const rect = canvas.getBoundingClientRect();
-        const mouseX = Math.round((evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
-        const mouseY = Math.round((evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
-        if(this.state.rectSelectionMode){
-            this.updateRectSelection();
-        }
+        //calculate the mouse position, disregarding zoom and translation
+        const mouseXOffset = Math.round((evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
+        const mouseYOffset = Math.round((evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
+        //calculate the mouse position including zoom and translation
+        const mouseX = (mouseXOffset - translateX) / zoom;
+        const mouseY = (mouseYOffset - translateY) / zoom;
         this.highlightCity();
-        this.setState({mouseX: mouseX, mouseY: mouseY});
-    }.bind(this);
-
-    onPress = function() {
-        if(this.state.rectSelectionMode)
-            this.setState({rectSelectionStart: {x: this.state.mouseX, y: this.state.mouseY}, selectionEnd:{}});
-        this.setState({mousePressTime: new Date()});
-    }.bind(this);
-
-    onRelease = function() {
-        if(this.state.rectSelectionStart){
-            this.commitSelection();
-            this.setState({rectSelectionStart: null});
+        const translateDragStart = this.state.translateDragStart;
+        if(translateDragStart){
+            translateX += mouseX - translateDragStart.x;
+            translateY += mouseY - translateDragStart.y;
+            // Make sure the slide stays in its container area when zooming out
+            if(translateX>0)
+                translateX = 0;
+            if(translateX+canvas.width*zoom<canvas.width)
+                translateX = -canvas.width*(zoom-1);
+            if(translateY>0)
+                translateY = 0;
+            if(translateY+canvas.height*zoom<canvas.height)
+                translateY = -canvas.height*(zoom-1);
         }
-        if(this.state.polygonSelectionMode){
-            const points = this.state.polygonSelectionPoints;
-            points.push({x: this.state.mouseX, y: this.state.mouseY});
-            this.setState({polygonSelectionPoints: points})
+        this.setState({mouseX, mouseY, mouseXOffset, mouseYOffset, translateX, translateY});
+    }.bind(this);
+
+    onPress = function(evt) {
+        if(evt.button === 0) {
+            if (this.state.rectSelectionMode)
+                this.setState({rectSelectionStart: {x: this.state.mouseX, y: this.state.mouseY}, selectionEnd: {}});
+            this.setState({mousePressTime: new Date()});
+        }
+        if(evt.button === 1) {
+            this.setState({translateDragStart: {x: this.state.mouseX, y: this.state.mouseY}})
+            evt.preventDefault();
         }
     }.bind(this);
 
-    onClick = function() {
-        //this practically fires whenever a mouse release is detected
-        //so a timediff is used to filter out long presses
-        if(new Date() - this.state.mousePressTime > 300)
-            return;
-        //and a position diff to detect quick selections
-        if(this.state.rectSelectionMode && this.state.rectSelectionStart)
-            if(this.state.rectSelectionStart.x - this.state.mouseX > 5 || this.state.rectSelectionStart.x - this.state.mouseX > 5 )
-            return;
-        //if a click was detected, we find the closest city, and select it
-        const cityToSelect = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
-        if(cityToSelect !== null)
-            this.commitSelection([cityToSelect]);
-        else
-            this.commitSelection([]);
+    onRelease = function(evt) {
+        if(evt.button === 0) {
+            if (this.state.rectSelectionStart) {
+                this.updateRectSelection();
+                this.setState({rectSelectionStart: null});
+            }
+            if (this.state.polygonSelectionMode) {
+                const points = this.state.polygonSelectionPoints;
+                points.push({x: this.state.mouseX, y: this.state.mouseY});
+                this.setState({polygonSelectionPoints: points})
+            }
+        }
+        if(evt.button === 1) {
+            this.setState({translateDragStart: null})
+            evt.preventDefault();
+        }
+    }.bind(this);
+
+    onClick = function(evt) {
+        if(evt.button === 0) {
+            //this practically fires whenever a mouse release is detected
+            //so a timediff is used to filter out long presses
+            if (new Date() - this.state.mousePressTime > 300)
+                return;
+            //and a position diff to detect quick selections
+            if (this.state.rectSelectionMode && this.state.rectSelectionStart)
+                if (this.state.rectSelectionStart.x - this.state.mouseX > 5 || this.state.rectSelectionStart.x - this.state.mouseX > 5)
+                    return;
+            //if a click was detected, we find the closest city, and select it
+            const cityToSelect = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
+            if (cityToSelect !== null)
+                this.commitSelection([cityToSelect]);
+            else
+                this.commitSelection([]);
+        }
     }.bind(this);
 
     onDblClick = function(evt) {
@@ -382,8 +413,8 @@ export default class CitySelector extends React.Component {
     handleScroll = function(e){
         const factor = 0.1;
         const max_scale = 6;
-        const mouseX = this.state.mouseX;
-        const mouseY = this.state.mouseY;
+        const mouseX = this.state.mouseXOffset;
+        const mouseY = this.state.mouseYOffset;
         const width = this.state.canvas.width;
         const height = this.state.canvas.height;
         let translateX = this.state.translateX;
@@ -443,7 +474,7 @@ export default class CitySelector extends React.Component {
         return (
             <div dir={"rtl"} className={"city-selector"}>
                 <div className={"map-selector-wrap"}>
-                    <canvas ref={this.canvasRef} className="map-view"/>
+                    <canvas ref={this.canvasRef} className="map-view" style={{cursor: this.state.translateDragStart ? "move" : "crosshair"}}/>
                     <div className={"highlighted-city-label"}>
                         {highlightedCityLabel}
                     </div>
