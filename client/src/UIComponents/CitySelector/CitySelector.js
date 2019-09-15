@@ -2,7 +2,7 @@ import React from 'react';
 import ia from "../../services/canvas/imageAdjustor";
 import af from "../../services/arrayFunctions"
 import "./CitySelector.scss";
-import map from "../../static/map.jpg";
+import map from "../../static/israelPalestineLow.svg";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTimes, faPlus} from '@fortawesome/free-solid-svg-icons'
@@ -132,16 +132,29 @@ export default class CitySelector extends React.Component {
 
     drawCities(ctx){
         const cities = this.state.cities.slice();
+        ctx.lineWidth = 3;
         ctx.fillStyle="#90278E";
+        ctx.strokeStyle="#40005e";
         ctx.beginPath();
-        for(let i = 0; i < cities.length; i++){
-            const city = cities[i];
+        cities.filter(city => !city.selected).forEach(city=>{
             if(!city.location || !city.location.lat || !city.location.lng)
-                continue;
+                return;
             ctx.moveTo(city.x + 5, city.y);
-            ctx.arc(city.x, city.y, (city.selected || city.toBeSelected) ? 10 : 5, 0, 2 * Math.PI);
-        }
+            ctx.arc(city.x, city.y, 5, 0, 2 * Math.PI);
+        });
         ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle="#409584";
+        ctx.strokeStyle="#005544";
+        ctx.beginPath();
+        cities.filter(city => city.selected).forEach(city=>{
+            if(!city.location || !city.location.lat || !city.location.lng)
+                return;
+            ctx.moveTo(city.x + 10, city.y);
+            ctx.arc(city.x, city.y, 10, 0, 2 * Math.PI);
+        });
+        ctx.fill();
+        ctx.stroke();
     }
 
     drawRectSelectionArea(ctx){
@@ -185,6 +198,7 @@ export default class CitySelector extends React.Component {
         const cities = this.state.cities.slice();
         const highlighted = this.state.highlightedCity;
         if(highlighted !== null){
+            ctx.lineWidth = 3;
             ctx.fillStyle="#60278E30";
             ctx.strokeStyle="#005544";
             ctx.beginPath();
