@@ -83,8 +83,8 @@ export default class CitySelector extends React.Component {
         if(prevState.length) {
             return null;
         }
-        const width = prevState.canvas.width;
-        const height = prevState.canvas.height;
+        const width = prevState.width;
+        const height = prevState.height;
         const top = prevState.top;
         const bottom = prevState.bottom;
         const left = prevState.left;
@@ -322,8 +322,9 @@ export default class CitySelector extends React.Component {
     }
 
     highlightCity(){
-        const highlighted = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
-        this.setState({highlightedCity: highlighted});
+        const highlightedCity = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
+        if(highlightedCity !== this.state.highlightedCity)
+            this.setState({highlightedCity});
     }
 
     //track mouse
@@ -339,7 +340,7 @@ export default class CitySelector extends React.Component {
         //calculate the mouse position including zoom and translation
         const mouseX = (mouseXOffset - translateX) / zoom;
         const mouseY = (mouseYOffset - translateY) / zoom;
-        this.highlightCity();
+        //this.highlightCity();
         const translateDragStart = this.state.translateDragStart;
         if(translateDragStart){
             translateX += mouseX - translateDragStart.x;
