@@ -142,8 +142,8 @@ export default class CitySelector extends React.Component {
             ctx.moveTo(city.x + 5, city.y);
             ctx.arc(city.x, city.y, 5, 0, 2 * Math.PI);
         });
-        ctx.fill();
         ctx.stroke();
+        ctx.fill();
         ctx.fillStyle="#409584";
         ctx.strokeStyle="#005544";
         ctx.beginPath();
@@ -153,8 +153,8 @@ export default class CitySelector extends React.Component {
             ctx.moveTo(city.x + 10, city.y);
             ctx.arc(city.x, city.y, 10, 0, 2 * Math.PI);
         });
-        ctx.fill();
         ctx.stroke();
+        ctx.fill();
     }
 
     drawRectSelectionArea(ctx){
@@ -199,7 +199,7 @@ export default class CitySelector extends React.Component {
         const highlighted = this.state.highlightedCity;
         if(highlighted !== null){
             ctx.lineWidth = 3;
-            ctx.fillStyle="#60278E30";
+            ctx.fillStyle="#60278E70";
             ctx.strokeStyle="#005544";
             ctx.beginPath();
             ctx.arc(cities[highlighted].x, cities[highlighted].y, 20, 0, 2 * Math.PI);
