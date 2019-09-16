@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Activist = require('../models/activistModel');
 const MemberRegistrationLog = require('../models/memberRegistrationModel');
 const mailchimpSync = require('../services/mailchimpSync');
+const mailer = require("./mailer");
+const settingsManager = require("./settingsManager");
 const circleMatcher = require("./circleMatcher");
 const activistDuplicateDetector = require("./activistDuplicateDetector");
 const israelGivesSearch = require("./israelGivesSearch");
@@ -32,7 +34,7 @@ const logRegistration = function(activistData, donationId) {
 };
 
 const registerMember = async function (activistData){
-    let donationId = null;
+    let donation = null;
     const recentDonations = await israelGivesSearch.getRecentDonations();
     //iterate over recent donations, look for one corresponding to the email of the new member
     for(let i = 0; i < recentDonations.length; i++){
@@ -40,12 +42,12 @@ const registerMember = async function (activistData){
             continue;
         let currEmail = recentDonations[i]["donor_email"]["#cdata-section"].toLowerCase();
         if(currEmail === activistData.email.toLowerCase()) {
-            donationId = recentDonations[i].donation;
-            console.log(util.inspect(donationId, {showHidden: false, depth: null}));
+            donation = recentDonations[i].donation;
+            //console.log(util.inspect(donation, {showHidden: false, depth: null}));
         }
     }
-    logRegistration(activistData, donationId);
-    if(!donationId) {
+    logRegistration(activistData, donation);
+    if(!donation) {
         return {"err": "donation not found"};
     }
     const today = new Date();
@@ -106,6 +108,13 @@ const registerMember = async function (activistData){
             else{
                 //if the member doesn't already appear in our db
                 return Activist.create(activistObject).then(()=>{
+                    const realDonations = donation.filter(d => d.sum);
+                    let sum = 0;
+                    if(realDonations.length){
+                        sum = realDonations[0].sum;
+                    }
+                    notifyAdmins(activistData.firstName, activistData.lastName, sum);
+                    //notifyMember(activistData.email, activistData.firstName, activistData.lastName);
                     return true;
                 }).catch((err)=>{
                     console.log(err);
@@ -114,6 +123,50 @@ const registerMember = async function (activistData){
                 });
             }
         });
+    });
+};
+
+const notifyAdmins = async function (firstName, lastName, sum) {
+    const today = new Date();
+    const recipients = await settingsManager.getSettingByName("newMemberAlertRecipients");
+    const htmlBody = `
+    <div dir="rtl" style="text-align: right;">
+        <h3 style="color: #60076e">
+            ${firstName} ${lastName} נרשמה לתנועה 
+        </h3>
+        <p>ההרשמה התבצעה בתאריך ${today.getUTCFullYear + "-" + (today.getUTCMonth() + 1) + "-" + today.getUTCDate()}</p>
+        <p>דמי החבר החודשיים: ${sum}₪</p>
+    </div>
+    `;
+    const textBody = `${firstName} ${lastName} נרשמה לתנועה 
+      ההרשמה התבצעה בתאריך ${today.getUTCFullYear + "-" + (today.getUTCMonth() + 1) + "-" + today.getUTCDate()}
+      דמי החבר החודשיים: ${sum}₪
+    `;
+    mailer.sendEmail({
+        from: 'info@standing-together.org',
+        to: recipients.join(", "),
+        subject: '✊ חבר/ה חדש/ה נרשמ/ה לתנועה! ✊',
+        text: textBody,
+        html: htmlBody
+    });
+};
+
+const notifyMember = async function (email, firstName, lastName) {
+    const htmlBody = `
+    <div dir="rtl" style="text-align: right;">
+        <h3 style="color: #60076e">
+            איזה יופי
+        </h3>
+        <p>איזה יופי</p>
+    </div>
+    `;
+    const textBody = "איזה יופי";
+    mailer.sendEmail({
+        from: 'info@standing-together.org',
+        to: email,
+        subject: 'נרשמת לתנועת עומדים ביחד!',
+        text: textBody,
+        html: htmlBody
     });
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import ia from "../../services/canvas/imageAdjustor";
 import af from "../../services/arrayFunctions"
 import "./CitySelector.scss";
-import map from "../../static/map.jpg";
+import map from "../../static/israelPalestineLow.svg";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTimes, faPlus} from '@fortawesome/free-solid-svg-icons'
@@ -16,12 +16,21 @@ export default class CitySelector extends React.Component {
             onSelect: this.props.onSelect,
             width: this.props.width,
             height: this.props.height,
+            //the north-most coordinate visible in the map
             top: this.props.top,
+            //the south-most coordinate visible in the map
             bottom: this.props.bottom,
+            //the west-most coordinate visible in the map
             left: this.props.left,
+            //the east-most coordinate visible in the map
             right: this.props.right,
+            //the mouse position on the canvas, adjusted for zoom and translate transforms
             mouseX: 0,
             mouseY: 0,
+            //the mouse position on the canvas, not adjusted for zoom and translate transforms (used for further zoom)
+            mouseXOffset: 0,
+            mouseYOffset: 0,
+            //is the left-mouse currently pressed
             mousePressed: false,
             mousePressTime: 0,
             additiveSelection: false,
@@ -31,7 +40,11 @@ export default class CitySelector extends React.Component {
             polygonSelectionPoints: [],
             highlightedCity: null,
             canvas: null,
-            ctx: null
+            ctx: null,
+            translateX: 0,
+            translateY: 0,
+            zoom: 1,
+            translateDragStart: null
         };
         this.canvasRef = React.createRef();
         this.imgRef = React.createRef();
@@ -50,6 +63,8 @@ export default class CitySelector extends React.Component {
         canvas.addEventListener("dblclick", this.onDblClick, false);
         window.addEventListener('keydown',this.onKeyPress,false);
         window.addEventListener('keyup',this.onKeyRelease,false);
+        canvas.addEventListener('DOMMouseScroll', this.handleScroll,false);
+        canvas.addEventListener('mousewheel', this.handleScroll,false);
         //initialize wrapper canvas to have the same size as the image it's wrapping
         canvas.width = this.state.width;
         canvas.height = Math.floor(this.state.width/(right-left)*(top-bottom));
@@ -61,13 +76,29 @@ export default class CitySelector extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
-        const cities = prevState.cities;
-        if(!cities)
+        const cities = nextProps.cities;
+        if(!cities.length) {
             return null;
+        }
+        if(prevState.length) {
+            return null;
+        }
+        const width = prevState.canvas.width;
+        const height = prevState.canvas.height;
+        const top = prevState.top;
+        const bottom = prevState.bottom;
+        const left = prevState.left;
+        const right = prevState.right;
+        cities.forEach(c => {
+            if(c.location && c.location.lng && c.location.lat) {
+                let pos = CitySelector.coordinatesToPosition(width, height, top, bottom, left, right, c.location.lng, c.location.lat, true);
+                c.x = pos.x;
+                c.y = pos.y;
+            }
+        });
         if(prevState.providedSelection !== nextProps.selected){
             const selected = nextProps.selected || [];
             const selectedDict = af.toDict(selected);
-            console.log(selectedDict);
             for(let i = 0; i < cities.length; i++){
                 let city = cities[i];
                 city.selected = !!(selectedDict[city.nameHe]);
@@ -77,6 +108,12 @@ export default class CitySelector extends React.Component {
             cities: cities,
             providedSelection: nextProps.selected
         };
+    }
+
+    static coordinatesToPosition(width, height, top, bottom, left, right, lng, lat, floor){
+        const x = (lng - left)/(right-left)*width;
+        const y = height - (lat - bottom)/(top-bottom)*height;
+        return {x: floor ? Math.floor(x) : x, y: floor ? Math.floor(y) : y};
     }
 
     componentWillUnmount() {
@@ -95,18 +132,29 @@ export default class CitySelector extends React.Component {
 
     drawCities(ctx){
         const cities = this.state.cities.slice();
+        ctx.lineWidth = 3;
         ctx.fillStyle="#90278E";
-        ctx.strokeStyle="#50003E";
-        for(let i = 0; i < cities.length; i++){
-            const city = cities[i];
+        ctx.strokeStyle="#40005e";
+        ctx.beginPath();
+        cities.filter(city => !city.selected).forEach(city=>{
             if(!city.location || !city.location.lat || !city.location.lng)
-                continue;
-            const cityPosition = this.coordinatesToPosition(ctx.canvas, city.location.lng, city.location.lat);
-            ctx.beginPath();
-            ctx.arc(cityPosition.x, cityPosition.y, (city.selected || city.toBeSelected) ? 10 : 5, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.stroke();
-        }
+                return;
+            ctx.moveTo(city.x + 5, city.y);
+            ctx.arc(city.x, city.y, 5, 0, 2 * Math.PI);
+        });
+        ctx.stroke();
+        ctx.fill();
+        ctx.fillStyle="#409584";
+        ctx.strokeStyle="#005544";
+        ctx.beginPath();
+        cities.filter(city => city.selected).forEach(city=>{
+            if(!city.location || !city.location.lat || !city.location.lng)
+                return;
+            ctx.moveTo(city.x + 10, city.y);
+            ctx.arc(city.x, city.y, 10, 0, 2 * Math.PI);
+        });
+        ctx.stroke();
+        ctx.fill();
     }
 
     drawRectSelectionArea(ctx){
@@ -125,13 +173,12 @@ export default class CitySelector extends React.Component {
     }
 
     drawPolygonSelectionArea(ctx){
+        const zoom = this.state.zoom;
         const vertices = this.state.polygonSelectionPoints.slice();
         if(!vertices.length)
             return;
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
-        ctx.strokeStyle="#005544";
-        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(vertices[0].x, vertices[0].y);
         for(let i = 0; i < vertices.length; i++){
@@ -139,22 +186,23 @@ export default class CitySelector extends React.Component {
             ctx.lineTo(vertex.x, vertex.y);
         }
         ctx.lineTo(mouseX, mouseY);
+        ctx.strokeStyle="#ffffff80";
+        ctx.lineWidth = Math.floor(16 / zoom);
         ctx.stroke();
-        ctx.setLineDash([10, 10]);
-        ctx.strokeStyle="#fff";
+        ctx.strokeStyle="#409584";
+        ctx.lineWidth = Math.floor(10 / zoom);
         ctx.stroke();
-        ctx.setLineDash([]);
     }
 
     drawCityHighlight(ctx){
         const cities = this.state.cities.slice();
         const highlighted = this.state.highlightedCity;
         if(highlighted !== null){
-            ctx.fillStyle="#60278E30";
+            ctx.lineWidth = 3;
+            ctx.fillStyle="#60278E70";
             ctx.strokeStyle="#005544";
-            const cityPosition = this.coordinatesToPosition(ctx.canvas, cities[highlighted].location.lng, cities[highlighted].location.lat);
             ctx.beginPath();
-            ctx.arc(cityPosition.x, cityPosition.y, 20, 0, 2 * Math.PI);
+            ctx.arc(cities[highlighted].x, cities[highlighted].y, 20, 0, 2 * Math.PI);
             ctx.fill();
             ctx.stroke();
         }
@@ -163,6 +211,9 @@ export default class CitySelector extends React.Component {
     draw = function() {
         const canvas = this.state.canvas;
         const ctx = this.state.ctx;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.translate(this.state.translateX, this.state.translateY);
+        ctx.scale(this.state.zoom, this.state.zoom);
         this.drawMap(ctx, canvas.width, canvas.height);
         this.drawCities(ctx);
         if(this.state.rectSelectionMode)
@@ -170,17 +221,9 @@ export default class CitySelector extends React.Component {
         if(this.state.polygonSelectionMode)
             this.drawPolygonSelectionArea(ctx);
         this.drawCityHighlight(ctx);
+        ctx.scale(1/this.state.zoom, 1/this.state.zoom);
+        ctx.translate(-this.state.translateX, -this.state.translateY);
     }.bind(this);
-
-    coordinatesToPosition(canvas, lng, lat){
-        const top = this.state.top;
-        const bottom = this.state.bottom;
-        const left = this.state.left;
-        const right = this.state.right;
-        const x = (lng - left)/(right-left)*canvas.width;
-        const y = canvas.height - (lat - bottom)/(top-bottom)*canvas.height;
-        return {x: x, y: y};
-    }
 
     getClosestCity(x, y, cutoffDist){
         const cities = this.state.cities.slice();
@@ -193,27 +236,13 @@ export default class CitySelector extends React.Component {
             const city = cities[i];
             if(!city.location || !city.location.lat || !city.location.lng)
                 continue;
-            const cityPosition = this.coordinatesToPosition(canvas, city.location.lng, city.location.lat);
-            let distFromCursor = (Math.abs(cityPosition.y - mouseY) + Math.abs(cityPosition.x - mouseX));
+            let distFromCursor = (Math.abs(city.y - mouseY) + Math.abs(city.x - mouseX));
             if(minDistFromCursor > distFromCursor){
                 minDistFromCursor = distFromCursor;
                 closestToCursor = i;
             }
         }
         return closestToCursor;
-    }
-
-    previewSelection(indexesToSelect){
-        const cities = this.state.cities.slice();
-        for(let i = 0; i < cities.length; i++){
-            const city = cities[i];
-            city.toBeSelected = false;
-        }
-        for(let i = 0; i < indexesToSelect.length; i++){
-            const city = cities[indexesToSelect[i]];
-            city.toBeSelected = true;
-        }
-        this.setState({cities: cities});
     }
 
     commitSelection(indexesToSelect){
@@ -259,12 +288,11 @@ export default class CitySelector extends React.Component {
             const city = cities[i];
             if(!city.location || !city.location.lat || !city.location.lng)
                 continue;
-            const cityPosition = this.coordinatesToPosition(this.state.canvas, city.location.lng, city.location.lat);
-            if(cityPosition.x >= minX && cityPosition.x <= maxX && cityPosition.y >= minY && cityPosition.y <= maxY){
+            if(city.x >= minX && city.x <= maxX && city.y >= minY && city.y <= maxY){
                 selectedCities.push(i);
             }
         }
-        this.previewSelection(selectedCities);
+        this.commitSelection(selectedCities);
     }
 
     updatePolygonSelection(){
@@ -279,11 +307,10 @@ export default class CitySelector extends React.Component {
             for(let j = 0; j < points.length; j++){
                 const start = points[j];
                 const end = points[(j + 1) % points.length];
-                const cityPosition = this.coordinatesToPosition(this.state.canvas, city.location.lng, city.location.lat);
-                if((cityPosition.y < start.y && cityPosition.y < end.y) || (cityPosition.y > start.y && cityPosition.y > end.y))
+                if((city.y < start.y && city.y < end.y) || (city.y > start.y && city.y > end.y))
                     continue;
-                const intersectionX = start.x + ((cityPosition.y - start.y) / (end.y - start.y) * (end.x - start.x));
-                if(intersectionX >= cityPosition.x){
+                const intersectionX = start.x + ((city.y - start.y) / (end.y - start.y) * (end.x - start.x));
+                if(intersectionX >= city.x){
                     intersectionToTheRight++;
                 }
             }
@@ -302,49 +329,81 @@ export default class CitySelector extends React.Component {
     //track mouse
     getPosition = function(evt) {
         const canvas = this.state.canvas;
+        const zoom = this.state.zoom;
+        let translateX = this.state.translateX;
+        let translateY = this.state.translateY;
         const rect = canvas.getBoundingClientRect();
-        const mouseX = Math.round((evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
-        const mouseY = Math.round((evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
-        if(this.state.rectSelectionMode){
-            this.updateRectSelection();
-        }
+        //calculate the mouse position, disregarding zoom and translation
+        const mouseXOffset = Math.round((evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
+        const mouseYOffset = Math.round((evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
+        //calculate the mouse position including zoom and translation
+        const mouseX = (mouseXOffset - translateX) / zoom;
+        const mouseY = (mouseYOffset - translateY) / zoom;
         this.highlightCity();
-        this.setState({mouseX: mouseX, mouseY: mouseY});
-    }.bind(this);
-
-    onPress = function() {
-        if(this.state.rectSelectionMode)
-            this.setState({rectSelectionStart: {x: this.state.mouseX, y: this.state.mouseY}, selectionEnd:{}});
-        this.setState({mousePressTime: new Date()});
-    }.bind(this);
-
-    onRelease = function() {
-        if(this.state.rectSelectionStart){
-            this.commitSelection();
-            this.setState({rectSelectionStart: null});
+        const translateDragStart = this.state.translateDragStart;
+        if(translateDragStart){
+            translateX += mouseX - translateDragStart.x;
+            translateY += mouseY - translateDragStart.y;
+            // Make sure the slide stays in its container area when zooming out
+            if(translateX>0)
+                translateX = 0;
+            if(translateX+canvas.width*zoom<canvas.width)
+                translateX = -canvas.width*(zoom-1);
+            if(translateY>0)
+                translateY = 0;
+            if(translateY+canvas.height*zoom<canvas.height)
+                translateY = -canvas.height*(zoom-1);
         }
-        if(this.state.polygonSelectionMode){
-            const points = this.state.polygonSelectionPoints;
-            points.push({x: this.state.mouseX, y: this.state.mouseY});
-            this.setState({polygonSelectionPoints: points})
+        this.setState({mouseX, mouseY, mouseXOffset, mouseYOffset, translateX, translateY});
+    }.bind(this);
+
+    onPress = function(evt) {
+        if(evt.button === 0) {
+            if (this.state.rectSelectionMode)
+                this.setState({rectSelectionStart: {x: this.state.mouseX, y: this.state.mouseY}, selectionEnd: {}});
+            this.setState({mousePressTime: new Date()});
+        }
+        if(evt.button === 1) {
+            this.setState({translateDragStart: {x: this.state.mouseX, y: this.state.mouseY}})
+            evt.preventDefault();
         }
     }.bind(this);
 
-    onClick = function() {
-        //this practically fires whenever a mouse release is detected
-        //so a timediff is used to filter out long presses
-        if(new Date() - this.state.mousePressTime > 300)
-            return;
-        //and a position diff to detect quick selections
-        if(this.state.rectSelectionMode && this.state.rectSelectionStart)
-            if(this.state.rectSelectionStart.x - this.state.mouseX > 5 || this.state.rectSelectionStart.x - this.state.mouseX > 5 )
-            return;
-        //if a click was detected, we find the closest city, and select it
-        const cityToSelect = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
-        if(cityToSelect !== null)
-            this.commitSelection([cityToSelect]);
-        else
-            this.commitSelection([]);
+    onRelease = function(evt) {
+        if(evt.button === 0) {
+            if (this.state.rectSelectionStart) {
+                this.updateRectSelection();
+                this.setState({rectSelectionStart: null});
+            }
+            if (this.state.polygonSelectionMode) {
+                const points = this.state.polygonSelectionPoints;
+                points.push({x: this.state.mouseX, y: this.state.mouseY});
+                this.setState({polygonSelectionPoints: points})
+            }
+        }
+        if(evt.button === 1) {
+            this.setState({translateDragStart: null})
+            evt.preventDefault();
+        }
+    }.bind(this);
+
+    onClick = function(evt) {
+        if(evt.button === 0) {
+            //this practically fires whenever a mouse release is detected
+            //so a timediff is used to filter out long presses
+            if (new Date() - this.state.mousePressTime > 300)
+                return;
+            //and a position diff to detect quick selections
+            if (this.state.rectSelectionMode && this.state.rectSelectionStart)
+                if (this.state.rectSelectionStart.x - this.state.mouseX > 5 || this.state.rectSelectionStart.x - this.state.mouseX > 5)
+                    return;
+            //if a click was detected, we find the closest city, and select it
+            const cityToSelect = this.getClosestCity(this.state.mouseX, this.state.mouseY, 10);
+            if (cityToSelect !== null)
+                this.commitSelection([cityToSelect]);
+            else
+                this.commitSelection([]);
+        }
     }.bind(this);
 
     onDblClick = function(evt) {
@@ -365,6 +424,52 @@ export default class CitySelector extends React.Component {
             this.setState({additiveSelection: false})
     }.bind(this);
 
+    handleScroll = function(e){
+        const factor = 0.1;
+        const max_scale = 6;
+        const mouseX = this.state.mouseXOffset;
+        const mouseY = this.state.mouseYOffset;
+        const width = this.state.canvas.width;
+        const height = this.state.canvas.height;
+        let translateX = this.state.translateX;
+        let translateY = this.state.translateY;
+        let zoom = this.state.zoom;
+        let delta = e.delta || e.wheelDeltaY;
+        if (delta === undefined && e.originalEvent) {
+            delta = e.originalEvent.wheelDelta;
+        }
+        if(delta === undefined && e.originalEvent){
+            //we are on firefox
+            delta = e.originalEvent.detail;
+        }
+        delta = Math.max(-1,Math.min(1, delta)); // cap the delta to [-1,1] for cross browser consistency
+
+        // determine the point on where the slide is zoomed in
+        const zoomTargetX = (mouseX - translateX)/zoom;
+        const zoomTargetY = (mouseY - translateY)/zoom;
+
+        // apply zoom
+        zoom += delta * factor * zoom;
+        zoom = Math.max(1,Math.min(max_scale,zoom));
+
+        // calculate x and y based on zoom
+        translateX = -zoomTargetX * zoom + mouseX;
+        translateY = -zoomTargetY * zoom + mouseY;
+
+
+        // Make sure the slide stays in its container area when zooming out
+        if(translateX>0)
+            translateX = 0;
+        if(translateX+width*zoom<width)
+            translateX = -width*(zoom-1);
+        if(translateY>0)
+            translateY = 0;
+        if(translateY+height*zoom<height)
+            translateY = -height*(zoom-1);
+        this.setState({translateX, translateY, zoom});
+        e.preventDefault();
+    }.bind(this);
+
     selectCityById = function(id){
         const cities = this.state.cities.slice();
         for(let i = 0; i < cities.length; i++){
@@ -383,7 +488,7 @@ export default class CitySelector extends React.Component {
         return (
             <div dir={"rtl"} className={"city-selector"}>
                 <div className={"map-selector-wrap"}>
-                    <canvas ref={this.canvasRef} className="map-view"/>
+                    <canvas ref={this.canvasRef} className="map-view" style={{cursor: this.state.translateDragStart ? "move" : "crosshair"}}/>
                     <div className={"highlighted-city-label"}>
                         {highlightedCityLabel}
                     </div>

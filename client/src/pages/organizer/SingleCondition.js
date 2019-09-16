@@ -153,10 +153,10 @@ class SingleCondition extends React.Component {
                 onSelect={this.setConditionValue}
                 width={1000}
                 height={1000}
-                top={33.344888}
-                bottom={29.463942}
-                left={34.2170233}
-                right={35.949}
+                top={33.450494}
+                bottom={29.5105482}
+                left={34.2386817}
+                right={35.9453925}
             />
           </Popup>
         </div>;

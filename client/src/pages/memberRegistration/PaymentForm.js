@@ -61,7 +61,7 @@ export default class PaymentForm extends React.Component {
             </div>
             <select name="CardTypeId" value={paymentData.CardTypeId} onChange={this.handleInputChange}
                     className={paymentData["CardTypeIdValid"] === false ? "invalid" : ""}>
-                <option value="0">اختاروا وسيلة الدفع בחרו אמצעי תשלום</option>
+                <option value="0">اختاروا وسيلة الدفع בחר/י אמצעי תשלום</option>
                 <option value="1">فيزا ויזה</option>
                 <option value="2">ماستركارد מאסטרקארד</option>
                 <option value="4">أمريكان إكسبرس אמריקן אקספרס</option>

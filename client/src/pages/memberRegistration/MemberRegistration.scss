@@ -1,9 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Mirza:400,500,600,700&display=swap&subset=arabic');
 .page-wrap-member-registration {
-        font-family: 'Alef', Rubik, Cabin, sans-serif;
-        font-size: 18px;
-        color: #4D4D4D;
-        background: none !important;
+    font-family: Alef, Mirza, Rubik, Cabin, sans-serif;
+    font-size: 18px;
+    color: #4D4D4D;
+    background: none !important;
+
+    input, select, button{
+        font-family: Alef, Mirza, Rubik, Cabin, sans-serif !important;
+    }
 
     .form-container {
         width: 100%;
