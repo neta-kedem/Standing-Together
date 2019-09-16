@@ -114,7 +114,7 @@ const registerMember = async function (activistData){
                         sum = realDonations[0].sum;
                     }
                     notifyAdmins(activistData.firstName, activistData.lastName, sum);
-                    notifyMember(activistData.email, activistData.firstName, activistData.lastName);
+                    //notifyMember(activistData.email, activistData.firstName, activistData.lastName);
                     return true;
                 }).catch((err)=>{
                     console.log(err);
