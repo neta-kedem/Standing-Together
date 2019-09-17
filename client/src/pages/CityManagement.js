@@ -113,7 +113,7 @@ export default class CircleManagement extends React.Component {
                     selected={[]}
                     onSelect={()=>{}}
                     width={1000}
-                    height={1000}
+                    height={2308}
                     top={33.450494}
                     bottom={29.5105482}
                     left={34.2386817}
