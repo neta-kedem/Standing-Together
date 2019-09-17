@@ -141,6 +141,11 @@
 	opacity: 1;
 }
 
+.sidebar-options{
+	height: calc(100vh - 55px);
+	overflow-y: auto;
+}
+
 .sidebar-options .sidebar-item {
 	display: block;
 	width: 100%;

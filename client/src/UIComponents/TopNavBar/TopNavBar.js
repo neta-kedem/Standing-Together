@@ -62,10 +62,10 @@ export default withRouter(class TopNavBar extends React.Component {
 						<div className="sidebar-background" onClick={this.toggleMenu}/>
 						<div className={"sidebar-wrap"}>
 							<div className={"sidebar"}>
+								<div className="sidebar-title">
+									قائمة - תפריט
+								</div>
 								<div className="sidebar-options">
-									<div className="sidebar-title">
-										قائمة - תפריט
-									</div>
 									<div className="sidebar-item button" onClick={this.logout.bind(this)}>
 										<div className="sidebar-item-ar">התנתקות מהמערכת</div>
 										<div className="sidebar-item-he">התנתקות מהמערכת</div>
