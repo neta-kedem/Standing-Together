@@ -9,6 +9,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import QueryString from "query-string";
+import PubSub from "pubsub-js";
+import events from "../lib/events";
 library.add(faSignInAlt);
 
 export default class Login extends React.Component {
@@ -83,7 +85,80 @@ verifyLoginCode()
 	.then(json => {
 		if(json.error)
 		{
-			alert(json.error);
+			switch(json.error){
+				case "incorrect credentials":
+					PubSub.publish(events.alert, {
+						content: "the email or code you've entered are incorrect - try again.",
+						flush: false,
+						opaque: false,
+						onClose: () => {},
+						resolutionOptions: [
+							{
+								label: "ok",
+								onClick: () => {PubSub.publish(events.clearAlert, {})},
+							}
+						]
+					});
+					break;
+				case "missing identification":
+					PubSub.publish(events.alert, {
+						content: "please provide an email address",
+						flush: false,
+						opaque: false,
+						onClose: () => {},
+						resolutionOptions: [
+							{
+								label: "ok",
+								onClick: () => {PubSub.publish(events.clearAlert, {})},
+							}
+						]
+					});
+					break;
+				case "locked":
+					PubSub.publish(events.alert, {
+						content: "your account has been locked. " +
+							"contact the system administrators to unlock your account.",
+						flush: false,
+						opaque: false,
+						onClose: () => {},
+						resolutionOptions: [
+							{
+								label: "ok",
+								onClick: () => {PubSub.publish(events.clearAlert, {})},
+							}
+						]
+					});
+					break;
+				case "tooManyLogins":
+					PubSub.publish(events.alert, {
+						content: "you have made too many incorrect login attempts, and your user has been locked out of the system. " +
+							"contact the system administrators to unlock your account.",
+						flush: false,
+						opaque: false,
+						onClose: () => {},
+						resolutionOptions: [
+							{
+								label: "ok",
+								onClick: () => {PubSub.publish(events.clearAlert, {})},
+							}
+						]
+					});
+					break;
+				default:
+					PubSub.publish(events.alert, {
+						content: "an unknown error has occurred. Try again later.",
+						flush: false,
+						opaque: false,
+						onClose: () => {},
+						resolutionOptions: [
+							{
+								label: "ok",
+								onClick: () => {PubSub.publish(events.clearAlert, {})},
+							}
+						]
+					});
+					break;
+			}
 		}
 		if(json.token)
 		{

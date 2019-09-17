@@ -60,7 +60,7 @@ export default class PageNav extends React.Component {
                         : ""
                     }
                 </div>
-                <div className="page-director clickable" onClick={()=>{this.goToPage(pageIndex - 1)}}>{">"}</div>
+                <div className="page-director clickable" onClick={()=>{this.goToPage(pageIndex + 1)}}>{">"}</div>
             </div>
             </div>;
     }
