@@ -56,7 +56,7 @@ const loginViaMail = async function (email, code){
                 },
             ).exec().then(
                 () => {
-                    return {"error": "you've been locked out of the system, please contact an organizer"};
+                    return {"error": "locked"};
                 }
             );
         }
@@ -69,7 +69,7 @@ const loginViaMail = async function (email, code){
                 },
             ).exec().then(
                 () => {
-                    return {"error": "you've been locked out of the system due to too many failed login attempts, please contact an organizer"};
+                    return {"error": "tooManyLogins"};
                 }
             );
         }
