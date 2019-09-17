@@ -7,6 +7,7 @@ const settingsManager = require("./settingsManager");
 const circleMatcher = require("./circleMatcher");
 const activistDuplicateDetector = require("./activistDuplicateDetector");
 const israelGivesSearch = require("./israelGivesSearch");
+const membershipEmail = require("./membershipEmail");
 const util = require('util');
 
 const addToCircle = function(activist){
@@ -159,148 +160,7 @@ const notifyAdmins = async function (firstName, lastName, sum) {
 };
 
 const notifyMember = async function (email, firstName, lastName) {
-    const htmlBody = `<html><head>
-    <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet" type="text/css">
-			<link href="https://fonts.googleapis.com/css?family=Cairo" rel="stylesheet" type="text/css">
-			<link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet" type="text/css">
-			<link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" type="text/css">
-			<link href="{favicon}" rel="icon" type="image/x-icon">
-			<link href="https://fonts.googleapis.com/css?family=Alef:400,700&amp;subset=hebrew" rel="stylesheet" type="text/css">
-<style>
-    @import url('https://fonts.googleapis.com/css?family=Mirza:400,500,600,700&display=swap&subset=arabic');
-    body {
-  margin: 0;
-    font-family: Alef, Mirza, Rubik, Cabin, sans-serif;
-}
-</style>
-</head><body dir="rtl"><div style="
-    border:  5px solid purple;
-    padding: 3em;
-    margin:  5em auto;
-    width: 70%;
-">
-    <p align="center">
-    <img width="147" height="75" src="https://static.wixstatic.com/media/7ff315_69d5a4e4e5c44ae9a3fb526ee0095976~mv2.png/v1/fit/w_700,h_75,al_c,q_100/image.png" alt="https://static.wixstatic.com/media/7ff315_69d5a4e4e5c44ae9a3fb526ee0095976~mv2.png/v1/fit/w_700,h_75,al_c,q_100/image.png">
-</p>
-<p align="center" dir="RTL">
-    <strong>היי </strong>
-    <strong>مرحبًا!</strong>
-    <strong></strong>
-</p>
-<p align="center" dir="RTL">
-    <strong>
-        ברוכים הבאים לתנועת עומדים ביחד! שמחים שהצטרפת! רצינו, בכמה מילים, לספר
-        לכם על התנועה שלנו – ושלך
-    </strong>
-    <strong>
-        أهلًا وسهلًا بك في حراك نقف معًا! سعداء لانضمامك! نودّ أن نروي لك
-        باختصار عن حراكنا - وحراكك
-    </strong>
-</p>
-<p dir="RTL">
-    <strong>"עומדים ביחד" </strong>
-    היא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים, ששותפים בה
-    חברים וחברות מכל קצוות הארץ. אנחנו נאבקים למען שלום, עצמאות וצדק לשני
-    העמים; למען שוויון מלא לכל מי שחיים בארץ הזו; למען צדק חברתי אמיתי. אנחנו
-    תנועה דמוקרטית, שבה החברות והחברים הן שיוזמים את הפעילות, מובילים אותה, וגם
-    יכולים לבחור ולהיבחר להנהגת התנועה.
-</p>
-<p dir="RTL">
-    <strong>"</strong>
-    <strong>نقف معًا"</strong>
-    هو حراك سياسي يسعى للنضال والأمل، يحمل قيمًا اشتراكية، ويتألف من أعضاء
-    وعضوات من كل بقاع البلاد. نحن نناضل من أجل السلام، الاستقلالية والعدالة
-    للشعبين؛ من أجل المساواة التامة لكل من يعيش في هذه البلاد؛ من أجل عدالة
-    اجتماعية حقيقية. حراكنا ديمقراطي، يبادر لنشاطاته ويقودها العضوات والأعضاء،
-    وبإمكانهم أيضًا الترشح والترشيح لقيادة الحراك.
-</p>
-<p align="center" dir="RTL">
-    <strong>אז מה אפשר לעשות עכשיו?</strong>
-    <br>
-    <strong>إذًا، ما الذي يمكنك فعله الآن؟</strong>
-</p>
-<p dir="RTL">
-    1.<strong> להצטרף למעגל המקומי באזור מגוריך. </strong>עומדים ביחד פרושה
-    כיום בתשעה מעגלי פעילות ברחבי הארץ, ושם מתחילה הפעילות שלנו. אם כבר קיים
-    מעגל מקומי באזור שלך, אז ממש בקרוב יפנו אליך ויצרפו אותך לקבוצת הפעילות של
-    המעגל. לא חייבים לקחת חלק בפעילות ובמעגל – אבל אנחנו בהחלט מעודדים את
-    החברות והחברים שלנו להיות פעילים בתנועה. אם עוד אין מעגל באזור שלך, אז זה
-    כמובן הזמן להתחיל ולבנות אותו, בליווי צוות האורגנייזינג של התנועה.
-    <br>
-    ١. <strong>ألانضمام للحلقة المحلية بمنطقة سكنك.</strong> لنقف معًا اليوم
-    تسع حلقات ناشطة في أنحاء البلاد، ومنها تبدأ نشاطاتنا. إن كانت هناك حلقة
-    محلية في منطقة سكنك، فبالوقت القريب سيتمّ التواصل معك لضمّك لمجموعة العمل
-    في الحلقة. لست مجبرًا على الانضمام للعمل وللحلقة - ولكننا حتمًا نشجع رفاقنا
-    ورفيقاتنا على أن يكونوا ناشطين في الحراك. بحال عدم تواجد حلقة في منطقة
-    سكنك، إذًا فهذا هو بالطبع الوقت الملائم للمباشرة ببنائها، وذلك بمرافقة طاقم
-    التنظيم الحراكي.
-</p>
-<p dir="RTL">
-    2. <strong>לומד/ת במכללה או באוניברסיטה?</strong> אפשר
-    <a href="https://forms.gle/aDySPDtR9ue8nk8V8" target="_blank">
-        להירשם כאן
-    </a>
-    וניצור קשר בהקדם, כדי לדבר איתך על הפעילות שלנו בקמפוסים.
-    <br>
-    ٢. <strong>تتعلم/ين في كلية أو جامعة؟</strong> يمكنك
-    <u>
-        <a href="https://forms.gle/aDySPDtR9ue8nk8V8" target="_blank">
-            التسجيل هنا
-        </a>
-    </u>
-    وسنتصل بك قريبًا، كي نتحدث معك عن أنشطتنا داخل مؤسسات التعليم العالي.
-</p>
-<p dir="RTL">
-    3. <strong>רוצה לארח חוג בית?</strong> מעולה. כתבו לנו בחזרה ונתחיל ללכת על
-    זה.
-    <br>
-    ٣. <strong>ترغب/ين باستضافة لقاء بيتي؟</strong> ممتاز. أكتبوا لنا ردًا على
-    هذه الرسالة وسنخطط لذلك سويةً.
-</p>
-<p dir="RTL">
-    4. <strong>למדו עוד על התנועה:</strong>
-    <br>
-    * ככה אנחנו פועלים בחברה הישראלית:
-    <a href="https://www.standing-together.org/theoryofchange?utm_campaign=b01844cf-19fe-452c-9950-17b6314c66ab&amp;utm_source=so&amp;utm_medium=mail_lp&amp;cid=00000000-0000-0000-0000-000000000000" target="_blank">
-        קראו את מסמך תיאוריית השינוי של התנועה
-    </a>
-    , שגובש בתהליך משותף ודמוקרטי בידי חברות וחברי התנועה מכל הארץ.
-    <br>
-    * ככה אנחנו מאורגנים:
-    <a href="https://www.standing-together.org/structure?utm_campaign=b01844cf-19fe-452c-9950-17b6314c66ab&amp;utm_source=so&amp;utm_medium=mail_lp&amp;cid=00000000-0000-0000-0000-000000000000" target="_blank">
-        קראו את הכללים הארגוניים של התנועה
-    </a>
-    , כדי לדעת מה המבנה שלה ואיך אפשר להשפיע.
-    <br>
-    ٤. <strong>إعرفوا المزيد عن الحراك:</strong>
-    <br>
-    * نعمل داخل المجتمع الإسرائيلي على النحو التالي:
-    <a href="https://www.standing-together.org/theoryofchange?utm_campaign=b01844cf-19fe-452c-9950-17b6314c66ab&amp;utm_source=so&amp;utm_medium=mail_lp&amp;cid=00000000-0000-0000-0000-000000000000" target="_blank">
-        إقرأوا وثيقة نظرية التغيير التي وضعها
-    </a>
-    الحراك بعد عمل مشترك وديمقراطي قام به عضوات وأعضاء الحراك من أنحاء البلاد.
-    <br>
-    * نحن منظمون بهذا الشكل:
-    <a href="https://www.standing-together.org/structure?utm_campaign=b01844cf-19fe-452c-9950-17b6314c66ab&amp;utm_source=so&amp;utm_medium=mail_lp&amp;cid=00000000-0000-0000-0000-000000000000" target="_blank">
-        إقرأوا القواعد التنظيمية للحراك
-    </a>
-    ، للتعرف على مبناه وكيفية التأثير داخله.
-</p>
-<p align="center">
-    <strong>מחכים לראות אתכן ואתכם בשטח, במאבקים ובפגישות השוטפות</strong>
-    <strong>,</strong>
-    <strong>
-        ننتظر لقاءكم ولقاءكن في الميدان، بالنضالات وبالاجتماعات الدورية،
-    </strong>
-</p>
-<p align="center">
-    <strong>המזכירות של תנועת עומדים ביחד</strong>
-    <strong> </strong>
-    <strong>سكرتارية حراك نقف معًا</strong>
-</p>
-<p align="center">
-    <img border="0" width="624" height="290" src="https://static.wixstatic.com/media/b85840_73f95c658e8f4c90b581581d3d7cee49~mv2.jpg/v1/fit/w_700,h_2000,al_c,q_85/image.jpg" alt="https://static.wixstatic.com/media/b85840_73f95c658e8f4c90b581581d3d7cee49~mv2.jpg/v1/fit/w_700,h_2000,al_c,q_85/image.jpg">
-</p></div></body></html>`;
+    const htmlBody = membershipEmail.getEmail();
     const textBody = " \n" +
         "היי مرحبًا!\n" +
         "ברוכים הבאים לתנועת עומדים ביחד! שמחים שהצטרפת! רצינו, בכמה מילים, לספר לכם על התנועה שלנו – ושלך أهلًا وسهلًا بك في حراك نقف معًا! سعداء لانضمامك! نودّ أن نروي لك باختصار عن حراكنا - وحراكك\n" +
