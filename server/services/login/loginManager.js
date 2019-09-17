@@ -124,7 +124,7 @@ const sendCodeViaMail = function(code, lockToken, email)
     <div dir="rtl" style="text-align: right;">
         <h3 style="color: #60076e">קוד הכניסה שלך למערכת של "עומדים ביחד": ${code}</h3>
         <p>הקוד הזה נשלח כחלק מניסיון התחברות למערכת באמצעות כתובת המייל הזאת.</p>
-        <p>אם לא ניסית להיכנס למערכת, <a href="https://management.standing-together.org/LockMe?lockToken=${lockToken}">נא ללחוץ כאן</a>.</p>
+        <p style="background-color: #c00; color: white;">אם לא ניסית להיכנס למערכת, <a style="color: white;" href="https://management.standing-together.org/LockMe?lockToken=${lockToken}">נא ללחוץ כאן</a>.</p>
         <p>אחרי שמונה דקות של חוסר פעילות במערכת, תוקף הקוד יפוג, ותצטרכו להתחבר אליה מחדש.</p>
         <p>אם נכנסת למערכת ממחשב ציבורי, חשוב להתנתק בסוף העבודה הן מהמערכת עצמה, והן מחשבון המייל, שגישה אליו מאפשרת כניסה למערכת.</p>
     </div>
@@ -134,6 +134,7 @@ const sendCodeViaMail = function(code, lockToken, email)
         "הקוד הזה נשלח כחלק מניסיון התחברות למערכת באמצעות כתובת המייל הזאת." + "\n" +
         "אם לא ניסית להיכנס למערכת, נא ללחוץ כאן:" + "\n" +
         "אחרי שמונה דקות של חוסר פעילות במערכת, תוקף הקוד יפוג, ותצטרכו להתחבר אליה מחדש." + "\n" +
+        "https://management.standing-together.org/LockMe?lockToken=" + lockToken + "\n" +
         "אם נכנסת למערכת ממחשב ציבורי, חשוב להתנתק בסוף העבודה הן מהמערכת עצמה, והן מחשבון המייל, שגישה אליו מאפשרת כניסה למערכת." + "\n"
     );
     Mailer.sendEmail({
