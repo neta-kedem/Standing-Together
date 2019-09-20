@@ -19,6 +19,7 @@ git clone https://github.com/user-name/Standing-Together.git
 Install and run it with
 ```bash
 yarn install
+cd client && yarn install && cd ../
 yarn dev
 ```
 Open browser to http://localhost:3000
