@@ -26,6 +26,12 @@ export default class ContactsTable extends React.Component {
         this.state.updateContacts(contacts);
     }.bind(this);
 
+    handleContactMessageVersionChange = function(contactIndex, messageIndex){
+        const contacts = this.props.contacts.slice();
+        contacts[contactIndex].messageVersion = messageIndex;
+        this.state.updateContacts(contacts);
+    }.bind(this);
+
     handleContactParamChange = function(contactIndex, paramIndex, value){
         const contacts = this.props.contacts.slice();
         contacts[contactIndex].params[paramIndex] = value;
@@ -51,7 +57,8 @@ export default class ContactsTable extends React.Component {
     };
 
     previewMessage = function(contact){
-        let message = this.props.message;
+        const messages = this.props.messages;
+        let message = messages[contact.messageVersion].content;
         const params = this.props.params.slice();
         for(let i = 0; i < params.length; i++){
             message = message.replace("$" + params[i], contact.params[i])
@@ -141,6 +148,7 @@ export default class ContactsTable extends React.Component {
                     <tr>
                         <td>הודעה</td>
                         <td>טל'</td>
+                        <td>גרסת הודעה</td>
                         {params.map((p, i) => {
                             return <td className={"contact-param-cell"} key={"param_" + i} dir={"ltr"}>
                                 <div className={"contact-param-wrap"}>
@@ -182,6 +190,15 @@ export default class ContactsTable extends React.Component {
                                             dir={"ltr"}
                                             placeholder={"972..."}
                                         />
+                                    </td>
+                                    <td>
+                                        <select
+                                            className={"contact-info-input message-version-selection"}
+                                            value={c.messageVersion}
+                                            onChange={(e) => {this.handleContactMessageVersionChange(i, e.target.value)}}
+                                        >
+                                            {this.props.messages.map((m, i) => <option value={i}>{m.name}</option>)}
+                                        </select>
                                     </td>
                                     {params.map((p, j) => {
                                         return <td key={"contact_" + i + "_" + j}>{
