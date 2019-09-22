@@ -3,19 +3,28 @@ import server from '../../services/server'
 import whatsappLogoOverlay from '../../static/whatsapp_qr_overlay.svg'
 import './bulkSender.scss'
 
-export default class WhatsappMessenger extends React.Component {
+export default class BulkSender extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             getContacts: this.props.getContacts,
             session: {
-                profileImg: "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F55816479_372583536678251_3253873730325053440_n.jpg%3Foe%3D5D659E52%26oh%3D74366511136940451b2ab381818c7ee5&t=s&u=972527306600%40c.us&i=1487087430"
+                initiated: null,
+                qrUrl: null,
+                profileImg: null,
+                contactCount: null,
+                processedContactCount: null,
             },
             sessionPingInterval: null
         }
     }
 
     initiateSession = function() {
+        if(this.state.session.initiated)
+            return;
+        const session = this.state.session;
+        session.initiated = true;
+        this.setState({session});
         server.post('whatsapp/send', {
             messages: this.state.getContacts(),
         }).then(result => {
@@ -39,13 +48,18 @@ export default class WhatsappMessenger extends React.Component {
     };
 
     render() {
+        const initiated = this.state.session.initiated;
         const qrUrl = this.state.session.qrUrl;
         const profileImg = this.state.session.profileImg;
         const contactCount = this.state.session.contactCount;
         const processedContactCount = this.state.session.processedContactCount;
         return (
             <div className={"bulk-sender-wrap"}>
-                <button type={"button"} onClick={this.initiateSession}>SEND WHATSAPP</button>
+                {
+                    initiated ? (
+                        <button type={"button"} onClick={this.initiateSession}>SEND WHATSAPP</button>
+                    ) : null
+                }
                 {
                     (qrUrl && !profileImg) ? (
                         <div className={"whatsapp-qr-wrap"}>

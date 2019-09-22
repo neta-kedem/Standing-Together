@@ -113,7 +113,8 @@ export default class MemberRegistration extends React.Component {
             ],
             processingDonation: false,
             displayFailedDonationPopup: false,
-            donationSuccessful: false
+            registrationSuccessful: false,
+            donationSuccessful: false,
         };
     }
 
@@ -170,20 +171,27 @@ export default class MemberRegistration extends React.Component {
     }.bind(this);
 
     registerMember = function(activist, paymentInfo){
-        IsraelGivesDonator.donate(activist, paymentInfo).then(() => {
+        new Promise((resolve, reject) => {
+            if(this.state.donationSuccessful)
+                resolve(true);
+            IsraelGivesDonator.donate(activist, paymentInfo).then(()=>{
+                resolve(true);
+            })
+        }).then(() => {
             const data ={
                 "activistData": activist
             };
             server.post('membership', data)
                 .then((result) => {
                     if(result.err){
-                        this.setState({processingDonation: false});
+                        this.setState({processingDonation: false, donationSuccessful: result.donation});
                         this.handleDonationFailedPopupToggle();
                         window.scrollTo(0, this.registrationFormRef.current.offsetTop);
                         window.parent.postMessage({error: true, scrollTo: "top"}, "*");
                     }
                     else{
-                        window.parent.postMessage({donationSuccessful: true}, "*");
+                        this.setState({processingDonation: false, registrationSuccessful: true});
+                        window.parent.postMessage({registrationSuccessful: true}, "*");
                     }
                 });
         });
@@ -291,6 +299,10 @@ export default class MemberRegistration extends React.Component {
                             בסדר
                         </button>
                     </div>
+                </Popup>
+                <Popup visibility={this.state.registrationSuccessful} toggleVisibility={()=>{}}>
+                    <h1>شكرًا على انضمامك لحراك نقف معًا. هلمّوا إلى الثورة :)</h1>
+                    <h1>תודה שהצטרפת לתנועת עומדים  ביחד. יאללה, מהפכה :)</h1>
                 </Popup>
             </div>
         );

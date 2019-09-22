@@ -12,7 +12,7 @@ export default class WhatsappMessenger extends React.Component {
                 {content: "", name: "version 1"}
             ],
             contacts: [
-                {number: "", params: []}
+                {number: "", params: [], messageVersion: 0}
             ],
             selectedVersion: 0,
             params: ["FIRSTNAME", "LASTNAME"],
@@ -22,9 +22,9 @@ export default class WhatsappMessenger extends React.Component {
     componentDidMount() {
     }
 
-    handleMessageChange = function(message, index){
+    handleMessageChange = function(message){
         const messages = this.state.messages.slice();
-        messages[index].content = message;
+        messages[this.state.selectedVersion].content = message;
         this.setState({messages});
     }.bind(this);
 
@@ -52,10 +52,10 @@ export default class WhatsappMessenger extends React.Component {
     getMessageList = function(){
         const contacts = this.state.contacts.slice();
         const params = this.state.params.slice();
-        const message = this.state.message;
+        const messages = this.state.messages;
         const messageList = [];
         contacts.forEach((c) => {
-            let personalized = message;
+            let personalized = messages[c.messageVersion];
             for(let i = 0; i < params.length; i++){
                 personalized = personalized.replace("$" + params[i], c.params[i])
             }
@@ -84,7 +84,7 @@ export default class WhatsappMessenger extends React.Component {
                 <ContactsTable
                     contacts={this.state.contacts}
                     params={this.state.params}
-                    message={this.state.message}
+                    messages={this.state.messages}
                     onContactsChange={this.handleContactsChange}
                     onParamsChange={this.handleParamsChange}
                 />
