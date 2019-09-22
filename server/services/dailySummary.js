@@ -140,9 +140,11 @@ compileSummary = function(events){
                     if(isNew){
                         newContactsInSheet.push(activist);
                         newContactsCount++;
+                        if(activist && activist.activistDetails && activist.activistDetails.profile){
                         let currCity = activist.activistDetails.profile.residency;
                         if(currCity && currCity.length > 1)
                             cityCounter[currCity] = cityCounter[currCity] === undefined ? 1 : cityCounter[currCity] +1;
+                        }
                     }
                     else{
                         existingContactsInSheet.push(activist);
