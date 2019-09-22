@@ -49,7 +49,7 @@ const registerMember = async function (activistData){
     }
     logRegistration(activistData, donation);
     if(!donation) {
-        return {"err": "donation not found"};
+        return {"err": "donation not found", "donation": false};
     }
     const today = new Date();
     const activistObject = {
@@ -108,9 +108,10 @@ const registerMember = async function (activistData){
                     await notifyMember(activistData.email, activistData.firstName, activistData.lastName);
                     return true;
                 }).catch((err)=>{
+                    console.log("updating member details in activists collection failed");
                     console.log(err);
                     //catch errors updating the new member's details in our db
-                    return err;
+                    return {"err": "unknown error", "donation": true};
                 });
             }
             else{
@@ -125,12 +126,21 @@ const registerMember = async function (activistData){
                     await notifyMember(activistData.email, activistData.firstName, activistData.lastName);
                     return true;
                 }).catch((err)=>{
+                    console.log("inserting member into activists collection failed");
                     console.log(err);
                     //catch errors inserting the new member's details in our db
-                    return err;
+                    return {"err": "unknown error", "donation": true};
                 });
             }
+        }).catch((err)=>{
+            console.log("circle association failed");
+            console.log(err);
+            return {"err": "unknown error", "donation": true};
         });
+    }).catch((err)=>{
+        console.log("duplicate detection failed");
+        console.log(err);
+        return {"err": "unknown error", "donation": true};
     });
 };
 
