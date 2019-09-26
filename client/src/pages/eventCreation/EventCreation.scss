@@ -121,4 +121,27 @@
 		font-size: 2em;
 		margin: 0 0.5em;
 	}
+    .event-table .delete-row-wrap {
+		background-color: transparent;
+		width: 2em;
+		height: 0;
+		border: none;
+		position: relative;
+		padding: 0;
+		cursor: pointer;
+		overflow: hidden;
+    }
+
+	.event-table .delete-row-wrap .delete-row, .event-table .delete-row-wrap .delete-row {
+		display: block;
+	}
+
+	.delete-row-wrap:hover .delete-row {
+		color: rgba(86, 95, 108, 1);
+	}
+
+	.delete-row-wrap:active .delete-row {
+		color: #444;
+	}
+
 }

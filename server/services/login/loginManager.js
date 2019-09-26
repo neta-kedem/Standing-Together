@@ -120,6 +120,9 @@ const assignToken = function(userId) {
 
 const sendCodeViaMail = function(code, lockToken, email)
 {
+	if (process.env.NODE_ENV == 'development') {
+		return;
+	}
     const htmlBody = `
     <div dir="rtl" style="text-align: right;">
         <h3 style="color: #60076e">קוד הכניסה שלך למערכת של "עומדים ביחד": ${code}</h3>

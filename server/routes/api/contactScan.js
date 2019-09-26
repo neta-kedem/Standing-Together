@@ -3,9 +3,8 @@ const ContactScanFetcher = require('../../services/contactScanFetcher');
 const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
-	app.get('/api/contactScan', (req, res) => {
-		ContactScanFetcher.getContactScan(req, res);
-	});
+	app.get('/api/contactScan', ContactScanFetcher.getContactScan);
+	app.get('/api/contactScan/list', ContactScanFetcher.list);
 	app.post('/api/contactScan', (req, res) => {
 		Authentication.hasRole(req, ["isOrganizer", "isTyper"]).then(result => {
 			if (result.error)
