@@ -113,7 +113,13 @@ const downloadActivistsByQuery = function(query, callback){
                 "isMember": activist.profile.isMember,
                 "isPaying": activist.profile.isPaying,
                 "isNewsletter": activist.profile.isNewsletter,
-                "memberSince": activist.membership ? activist.membership.joiningDate : "",
+                "memberSince": activist.membership ? activist.membership.joiningDate : "-",
+                "tz": activist.membership ? activist.membership.TZ : "-",
+                "street": activist.membership ? activist.membership.street : "-",
+                "houseNum": activist.membership ? activist.membership.houseNum : "-",
+                "apartmentNum": activist.membership ? activist.membership.apartmentNum : "-",
+                "mailbox": activist.membership ? activist.membership.mailbox : "-",
+                "birthday": activist.membership ? activist.membership.birthday : "-",
             });
         }
         return callback({activists: activistsList});
