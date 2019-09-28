@@ -46,7 +46,7 @@ export default class ContactsTable extends React.Component {
 
     addContact = function(){
         const contacts = this.props.contacts.slice();
-        contacts.push({params: []});
+        contacts.push({params: [], phone:null, messageVersion: 0});
         this.state.updateContacts(contacts);
     }.bind(this);
 
@@ -110,6 +110,7 @@ export default class ContactsTable extends React.Component {
                 }
                 contact.params[j] = row[j+1]
             }
+            contact.messageVersion = 0;
             newContacts.push(contact);
         }
         const existingContacts = this.props.contacts.slice();
@@ -197,7 +198,7 @@ export default class ContactsTable extends React.Component {
                                             value={c.messageVersion}
                                             onChange={(e) => {this.handleContactMessageVersionChange(i, e.target.value)}}
                                         >
-                                            {this.props.messages.map((m, i) => <option value={i}>{m.name}</option>)}
+                                            {this.props.messages.map((m, i) => <option value={i} key={m.name}>{m.name}</option>)}
                                         </select>
                                     </td>
                                     {params.map((p, j) => {

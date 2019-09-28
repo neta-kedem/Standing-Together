@@ -85,7 +85,7 @@ export default class MessageEditor extends React.Component {
                                 return <button
                                     key={"version_" + i}
                                     type={"button"}
-                                    className={"message-version"}
+                                    className={"message-version " + ((i === this.props.selectedVersion) ? "selected " : "")}
                                     onClick={()=>{this.state.selectVersion(i)}}
                                 >{m.name}</button>
                             })

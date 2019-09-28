@@ -1,6 +1,21 @@
 @import "../../lib/variables";
 .bulk-sender-wrap {
   margin: 2.5%;
+  button.initiate-session{
+    display: block;
+    margin: 0 auto;
+    padding: 0.2em 1em;
+    color: white;
+    background-color: #009688;
+    transition: background-color 0.2s;
+    font-size: 1.2em;
+  }
+  button.initiate-session:hover{
+    background-color: #006456;
+  }
+  button.initiate-session:active{
+    background-color: #003224;
+  }
   .whatsapp-qr-wrap {
     position: relative;
     width: fit-content;
@@ -32,7 +47,7 @@
   .profile-image {
     display: block;
     margin: 1em auto;
-    width: 6em;
+    width: 12em;
     border-radius: 6em;
   }
 
@@ -51,6 +66,7 @@
     left: 0;
     width: 50%;
     background-color: #00AA88;
+    transition: width 0.5s;
   }
 
   .sent-count{
@@ -65,5 +81,10 @@
     right: 0;
     color: $purple-darker;
     text-shadow: 0 0 1px white;
+  }
+  .done-message{
+    text-align: center;
+    font-size: 2em;
+    text-shadow: 0 0 5px $purple-main;
   }
 }

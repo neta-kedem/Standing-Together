@@ -55,7 +55,7 @@ export default class WhatsappMessenger extends React.Component {
         const messages = this.state.messages;
         const messageList = [];
         contacts.forEach((c) => {
-            let personalized = messages[c.messageVersion];
+            let personalized = messages[c.messageVersion].content;
             for(let i = 0; i < params.length; i++){
                 personalized = personalized.replace("$" + params[i], c.params[i])
             }
