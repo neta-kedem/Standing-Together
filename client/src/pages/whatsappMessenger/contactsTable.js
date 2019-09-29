@@ -18,7 +18,7 @@ export default class ContactsTable extends React.Component {
     componentDidMount() {
     }
 
-    phoneRegex = /972([0-9]){9}$/;
+    phoneRegex = /^([0-9]){12}$/;
 
     handleContactPhoneChange = function(contactIndex, value){
         const contacts = this.props.contacts.slice();
@@ -182,7 +182,7 @@ export default class ContactsTable extends React.Component {
                                             <FontAwesomeIcon icon={"eye"}/>
                                         </button>
                                     </td>
-                                    <td className={this.phoneRegex.test(c.number) || !c.number || !c.number.length ? "" : "invalid-contact-phone"}>
+                                    <td className={"contact-phone-wrap " + ((this.phoneRegex.test(c.number) || (!this.props.highlightErrors && (!c.number || !c.number.length))) ? "" : "error")}>
                                         <input
                                             className={"contact-info-input phone-input"}
                                             value={c.number || ""}
@@ -202,12 +202,15 @@ export default class ContactsTable extends React.Component {
                                         </select>
                                     </td>
                                     {params.map((p, j) => {
-                                        return <td key={"contact_" + i + "_" + j}>{
-                                            <input
-                                                value={c.params[j] || ""}
-                                                className={"contact-info-input"}
-                                                onChange={(e) => {this.handleContactParamChange(i, j, e.target.value)}}/>
-                                        }</td>
+                                        return <td key={"contact_" + i + "_" + j}
+                                                   className={"contact-info-wrap " + ((this.props.highlightErrors && (!c.params[j] || !c.params[j].length)) ? "error" : "")}>
+                                            {
+                                                <input
+                                                    value={c.params[j] || ""}
+                                                    className={"contact-info-input"}
+                                                    onChange={(e) => {this.handleContactParamChange(i, j, e.target.value)}}/>
+                                            }
+                                        </td>
                                     })}
                                     <td className={"delete-contact-cell"}>
                                         <button type="button" onClick={i => this.deleteContact(i)}>

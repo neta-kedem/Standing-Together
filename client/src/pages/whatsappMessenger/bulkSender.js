@@ -3,6 +3,15 @@ import server from '../../services/server'
 import whatsappLogoOverlay from '../../static/whatsapp_qr_overlay.svg'
 import './bulkSender.scss'
 import LoadSpinner from "../../UIComponents/LoadSpinner/LoadSpinner";
+import PubSub from "pubsub-js";
+import events from "../../lib/events";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faThumbsUp} from '@fortawesome/free-solid-svg-icons'
+library.add(faThumbsUp);
+
+const MAX_CONTACTS_WITHOUT_WARNING = 50;
+const PING_SESSION_INTERVAL = 1500;
 
 export default class BulkSender extends React.Component {
     constructor(props) {
@@ -18,23 +27,78 @@ export default class BulkSender extends React.Component {
                 processedContactCount: null,
             },
             finishedSession: false,
-            sessionPingInterval: null
+            sessionPingInterval: null,
+            messages: []
         }
     }
 
-    initiateSession = function() {
+    validateMessages = function() {
+        if(this.state.initiatedSession)
+            return;
+        const messages = this.state.getContacts();
+        this.setState({messages});
+        if(!messages){
+            PubSub.publish(events.alert, {
+                content: <div dir={"rtl"}>
+                    <h3 style={{marginTop: 0}}>חלק ממספרי הטלפון או הפרמטרים חסרים</h3>
+                    <p>וודאו שכל הטלפונים הם בפורמט 972123456789, ואין פרמטרים ריקים בשום רשומה</p>
+                </div>,
+                flush: false,
+                opaque: false,
+                onClose: () => {},
+                resolutionOptions: [
+                    {
+                        label: <FontAwesomeIcon icon={"thumbs-up"}/>,
+                        onClick: () => {PubSub.publish(events.clearAlert, {})},
+                    }
+                ]
+            });
+            return;
+        }
+        if(messages.length >= MAX_CONTACTS_WITHOUT_WARNING){
+            PubSub.publish(events.alert, {
+                content: <div dir={"rtl"}>
+                    <h2 style={{marginTop: 0}}>ברשימת הנמענים יש יותר מ-{MAX_CONTACTS_WITHOUT_WARNING} רשומות</h2>
+                    <p>שליחת הרבה הודעות וואטצאפ בבת אחת עלולה לגרור חסימה של חשבון הוואטצאפ שלך (לנצח).</p>
+                    <p>במקרה של רשימות ארוכות, מומלץ לפצל את השליחה ליותר מחלק אחד, ולחכות כמה דקות בין שליחת החלקים, או לשלוח את ההודעות ממשתמשים שונים.</p>
+                    <p>אם להערכתך רוב הנמענים שמרו אותך ברשימת אנשי הקשר שלהם, או לפחות מכירים אותך, לא תהיה בעיה.</p>
+                    <p>אחרת, שווה לשקול לבקש מפעילים אחרים בתנועה לעזור בשליחת ההודעות, או לקנות SIM ייעודי.</p>
+                </div>,
+                flush: false,
+                opaque: false,
+                onClose: () => {},
+                resolutionOptions: [
+                    {
+                        label: "בסדר, לא לשלוח בינתיים",
+                        onClick: () => {PubSub.publish(events.clearAlert, {})},
+                    },
+                    {
+                        label: "הבנתי, להמשיך בשליחה בכל מקרה",
+                        onClick: () => {
+                            this.initiateSession(messages);
+                            PubSub.publish(events.clearAlert, {});
+                        },
+                    }
+                ]
+            });
+            return;
+        }
+        this.initiateSession(messages);
+    }.bind(this);
+
+    initiateSession = function(messages) {
         if(this.state.initiatedSession)
             return;
         const session = this.state.session;
         this.setState({session, initiatedSession: true, loadingSession: true});
         server.post('whatsapp/send', {
-            messages: this.state.getContacts(),
+            messages: messages,
         }).then(result => {
             if(this.state.sessionPingInterval)
                 clearInterval(this.state.sessionPingInterval);
             this.setState({sessionPingInterval, finishedSession: true, session: {}});
         });
-        const sessionPingInterval = setInterval(this.pingSession, 1500);
+        const sessionPingInterval = setInterval(this.pingSession, PING_SESSION_INTERVAL);
     }.bind(this);
 
     pingSession = function(){
@@ -64,12 +128,13 @@ export default class BulkSender extends React.Component {
         const profileImg = this.state.session.profileImg;
         const contactCount = this.state.session.contactCount;
         const processedContactCount = this.state.session.processedContactCount;
+        const messages = this.state.messages;
         return (
             <div className={"bulk-sender-wrap"}>
                 <LoadSpinner visibility={initiated && !qrUrl && !profileImg && !finished} align={"center"}/>
                 {
                     !initiated ? (
-                        <button type={"button"} className={"initiate-session"} onClick={this.initiateSession}>SEND WHATSAPP</button>
+                        <button type={"button"} className={"initiate-session"} onClick={this.validateMessages}>SEND WHATSAPP</button>
                     ) : null
                 }
                 {
@@ -94,6 +159,16 @@ export default class BulkSender extends React.Component {
                             <div className={"sending-progress"} style={{"width":((processedContactCount / contactCount) * 100) + "%"}}/>
                             <div className="sent-count">
                                 {processedContactCount + "/" + contactCount}
+                            </div>
+                        </div>
+                    ) : null
+                }
+                {
+                    (profileImg && contactCount && messages && messages.length) ? (
+                        <div>
+                            <h3>כרגע נשלחת הודעה ל-{messages[Math.min(processedContactCount, messages.length - 1)].number}</h3>
+                            <div>
+                                {messages[Math.min(processedContactCount, messages.length - 1)].message}
                             </div>
                         </div>
                     ) : null

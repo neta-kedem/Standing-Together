@@ -16,7 +16,7 @@ export default class WhatsappMessenger extends React.Component {
             ],
             selectedVersion: 0,
             params: ["FIRSTNAME", "LASTNAME"],
-            qrSrc: null
+            attemptedPost: false
         }
     }
     componentDidMount() {
@@ -49,18 +49,33 @@ export default class WhatsappMessenger extends React.Component {
         this.setState({params});
     }.bind(this);
 
+    validatePhoneNumber = function(phone){
+        return /^([0-9]){12}$/.test(phone);
+    }.bind(this);
+
     getMessageList = function(){
+        this.setState({attemptedPost: true});
         const contacts = this.state.contacts.slice();
         const params = this.state.params.slice();
         const messages = this.state.messages;
         const messageList = [];
+        let foundErrors = false;
         contacts.forEach((c) => {
+            if(!this.validatePhoneNumber(c.number)){
+                foundErrors = true;
+            }
             let personalized = messages[c.messageVersion].content;
             for(let i = 0; i < params.length; i++){
-                personalized = personalized.replace("$" + params[i], c.params[i])
+                personalized = personalized.replace("$" + params[i], c.params[i]);
+                if(!c.params[i] || !c.params[i].length){
+                    foundErrors = true;
+                }
             }
             messageList.push({number: c.number, message: personalized})
         });
+        if(foundErrors){
+            return false;
+        }
         return messageList;
     }.bind(this);
 
@@ -87,6 +102,7 @@ export default class WhatsappMessenger extends React.Component {
                     messages={this.state.messages}
                     onContactsChange={this.handleContactsChange}
                     onParamsChange={this.handleParamsChange}
+                    highlightErrors={this.state.attemptedPost}
                 />
                 <BulkSender
                     getContacts={this.getMessageList}

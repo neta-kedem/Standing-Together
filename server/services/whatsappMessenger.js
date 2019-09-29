@@ -4,6 +4,7 @@ const WhatsappSession = require('../models/whatsappSessionModel');
 const Authentication = require('./authentication');
 
 let sessionId = null;
+let currentContactIndex = 0;
 
 createSession = async (messages) => {
     const today = new Date();
@@ -117,6 +118,16 @@ getProgress = async () => {
     return query.exec().then((session) => {
         return session
     });
+};
+
+startSending = async (sessionId) => {
+    const query = WhatsappSession.updateOne(
+        {"_id": sessionId},
+        {"$set": {"metadata.lastUpdate": now, qrUrl: src}});
+    return query.exec().then(
+        (err, result) => {
+            return {"err":err, "result":result};
+        });
 };
 module.exports = {
     sendMessage,
