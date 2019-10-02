@@ -41,15 +41,15 @@ function post(path, data){
 function handleResult(json, method, path, data){
 	const currPosition = encodeURIComponent(window.location.pathname + window.location.search);
 	return new Promise((resolve) => {
-		if(json.error === "missing token")
+		if(json && json.error === "missing token")
 		{
 			PubSub.publish(events.alert, alerts("missingToken", currPosition));
 		}
-		else if(json.error === "missing permissions")
+		else if(json && json.error === "missing permissions")
 		{
 			PubSub.publish(events.alert, alerts("missingPermission", currPosition));
 		}
-		else if(json.error === "suspended session")
+		else if(json && json.error === "suspended session")
 		{
 			refetchQueue.push(() => {
 				refetch(method, path, data).then((result) => {

@@ -50,10 +50,10 @@
     border-bottom: 2px solid rgb(0, 150, 136);
     outline: none;
   }
-  .message-version:hover{
+  .message-version:hover, .add-version:hover{
     background-color: #00AA8820
   }
-  .message-version:active{
+  .message-version:active, .add-version:active{
     background-color: #00AA8860
   }
   .message-version.selected{

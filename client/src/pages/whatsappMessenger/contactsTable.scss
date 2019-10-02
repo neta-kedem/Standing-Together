@@ -26,8 +26,9 @@
     width: fit-content;
     border: none;
   }
-  .invalid-contact-phone{
+  .contact-info-wrap.error, .contact-phone-wrap.error{
     background-color: #e6647d80;
+    color: #600030;
   }
   .contact-info-input{
     width: 100%;

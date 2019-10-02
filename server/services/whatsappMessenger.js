@@ -4,6 +4,7 @@ const WhatsappSession = require('../models/whatsappSessionModel');
 const Authentication = require('./authentication');
 
 let sessionId = null;
+let currentContactIndex = 0;
 
 createSession = async (messages) => {
     const today = new Date();
@@ -24,20 +25,29 @@ createSession = async (messages) => {
     });
 };
 
-setQR = async (src) => {
+setQR = async (page) => {
     const now = new Date();
-    const query = WhatsappSession.update(
-        {"_id": sessionId},
-        {"$set": {"metadata.lastUpdate": now, qrUrl: src}});
-    return query.exec().then(
-        (err, result) => {
-            return {"err":err, "result":result};
+    try {
+        const src = await page.evaluate(() => {
+            const qrImg = document.querySelector("img[alt='Scan me!']");
+            return qrImg ? qrImg.src : null;
         });
+        const query = WhatsappSession.updateOne(
+            {"_id": sessionId},
+            {"$set": {"metadata.lastUpdate": now, qrUrl: src}});
+        return query.exec().then(
+            (err, result) => {
+                return {"err":err, "result":result};
+            });
+    }
+    catch(err){
+        console.log(err)
+    }
 };
 
 setProfileImage = async (src) => {
     const now = new Date();
-    const query = WhatsappSession.update(
+    const query = WhatsappSession.updateOne(
         {"_id": sessionId},
         {"$set": {"metadata.lastUpdate": now, profileImg: src}});
     return query.exec().then(
@@ -48,7 +58,7 @@ setProfileImage = async (src) => {
 
 setProgress = async (processedCount) => {
     const now = new Date();
-    const query = WhatsappSession.update(
+    const query = WhatsappSession.updateOne(
         {"_id": sessionId},
         {"$set": {"metadata.lastUpdate": now, processedContactCount: processedCount}});
     return query.exec().then(
@@ -63,17 +73,18 @@ closeSession = async () => {
 
 sendMessage = async (messages) => {
     const session = await createSession(messages);
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
+    page.setDefaultTimeout(10000000);
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36');
     await page.goto('https://web.whatsapp.com');
     await page.waitForSelector("img[alt='Scan me!']");
-    const qr = await page.evaluate(()=>{
-        const qrImg = document.querySelector("img[alt='Scan me!']");
-        return qrImg.src;
-    });
-    setQR(qr);
+    setQR(page);
+    const qrInterval = setInterval(() => {
+        setQR(page);
+    }, 1000);
     await page.waitForSelector("img[src*='https://web.whatsapp.com/pp?']");
+    clearInterval(qrInterval);
     const profileImg = await page.evaluate(()=>{
         const profileImg = document.querySelector("img[src*='https://web.whatsapp.com/pp?']");
         return profileImg.src;
@@ -84,10 +95,17 @@ sendMessage = async (messages) => {
         if(!message.number || !message.number.length){
             continue;
         }
+        await page.evaluate(() => {
+            window.onbeforeunload = null;
+            return true;
+        });
         await page.goto("https://web.whatsapp.com/send?phone=" + message.number + "&text=" + message.message);
         await page.waitForSelector("div.copyable-text");
-        await page.type(String.fromCharCode(13), "");
-        await page.keyboard.press(String.fromCharCode(13));
+        await page.evaluate(() => {
+            document.querySelector("span[data-icon='send']").parentElement.click();
+            window.onbeforeunload = null;
+            return true;
+        });
         await setProgress(i + 1);
     }
     await browser.close();
@@ -100,6 +118,16 @@ getProgress = async () => {
     return query.exec().then((session) => {
         return session
     });
+};
+
+startSending = async (sessionId) => {
+    const query = WhatsappSession.updateOne(
+        {"_id": sessionId},
+        {"$set": {"metadata.lastUpdate": now, qrUrl: src}});
+    return query.exec().then(
+        (err, result) => {
+            return {"err":err, "result":result};
+        });
 };
 module.exports = {
     sendMessage,

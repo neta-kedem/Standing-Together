@@ -64,12 +64,19 @@
   transition: background-color 0.2s;
 }
 
+.alert-option:focus {
+  background-color: $purple-dark;
+  box-shadow: 1px 1px 9px -2px $purple-darker inset;
+}
+
 .alert-option:hover {
   background-color: $purple-dark;
+  box-shadow: 2px 2px 15px -2px $purple-darker inset;
 }
 
 .alert-option:active {
-  background-color: $purple-darker;
+  background-color: $purple-dark;
+  box-shadow: 4px 4px 35px -2px $purple-darker inset;
 }
 
 @media only screen and (max-width: 480px){
