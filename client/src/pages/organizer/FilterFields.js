@@ -97,8 +97,21 @@ const filterableFields = {
                 valueMapper:v => v === 'true'},
         }
     },
-    event:{
+    membershipJoinDate:{
         sortPosition: 7,
+        labelAr: "تاريخ التسجيل للحراك",
+        labelHe: "תאריך הרשמה לתנועה",
+        icon: <FontAwesomeIcon icon="calendar"/>,
+        fieldName: "membership.joiningDate",
+        options: {
+            after: {labelAr: 'אחרי', labelHe: 'אחרי', sortPosition: 0, acceptMultiple: false, operator: "$gte", inputType: "date",
+                valueMapper:v => {return {"castToDate":v}},},
+            before: {labelAr: 'לפני', labelHe: 'לפני', sortPosition: 1, acceptMultiple: false, operator: "$lt", inputType: "date",
+                valueMapper:v => {return {"castToDate":v}},},
+        }
+    },
+    event:{
+        sortPosition: 8,
         labelAr: "حدث",
         labelHe: "אירוע",
         icon: <FontAwesomeIcon icon="peace"/>,
@@ -110,7 +123,7 @@ const filterableFields = {
         }
     },
     eventCategory:{
-        sortPosition: 8,
+        sortPosition: 9,
         labelAr: "نوعية الحدث",
         labelHe: "קטגוריית אירועים",
         icon: <FontAwesomeIcon icon="peace"/>,

@@ -1,5 +1,6 @@
 import React from 'react';
 import './SingleCondition.scss';
+import DatePicker from 'react-date-picker';
 import Popup from "../../UIComponents/Popup/Popup";
 import CitySelector from "../../UIComponents/CitySelector/CitySelector";
 import EventPicker from "../../UIComponents/EventPicker/EventPicker";
@@ -172,6 +173,18 @@ class SingleCondition extends React.Component {
           >
             <EventPicker handleSelection={(id, event)=>{this.setConditionValue(event); this.setState({displayEventSelectorPopup: false});}} selected={condition.value ? condition.value._id : null}/>
           </Popup>
+        </div>;
+      case "date":
+        return <div dir="ltr">
+          <DatePicker
+              dir = "ltr"
+              value={condition.value}
+              onChange = {(date) => {this.setConditionValue(date)}}
+              disableCalendar = {true}
+              clearIcon = {null}
+              maxDate = {new Date()}
+              format="d-M-yy"
+          />
         </div>;
       case "text":
       default:

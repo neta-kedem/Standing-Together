@@ -1,6 +1,7 @@
 const Activist = require('../models/activistModel');
 const mongoose = require('mongoose');
 const objectIdMapper = require("./dbHelper/objectIdMapper");
+const objectDateMapper = require("./dbHelper/objectDateMapper");
 
 const getActivistsByIds = function (ids){
     const query = Activist.aggregate([
@@ -39,6 +40,7 @@ const queryActivists = function(query, sortBy, page, callback){
       console.log(err);
     }
     objectIdMapper.idifyObject(query);
+    objectDateMapper.castDates(query);
     if(page < 0)
         return callback({"error":"illegal page"});
     const PAGE_SIZE = 50;
@@ -84,6 +86,7 @@ const downloadActivistsByQuery = function(query, callback){
         console.log(err);
     }
     objectIdMapper.idifyObject(query);
+    objectDateMapper.castDates(query);
     Activist.aggregate([
         {
             $lookup: {
