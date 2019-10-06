@@ -77,5 +77,5 @@ const createContacts = async function (contacts, list = null) {
 
 module.exports = {
     fetchMembers,
-    createContacts
+    createContacts,
 };

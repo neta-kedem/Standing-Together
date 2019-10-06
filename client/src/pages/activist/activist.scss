@@ -94,6 +94,17 @@
 		overflow-y: auto;
 	}
 
+	.mailchimp-status-wrap{
+		display: flex;
+		flex-direction: row;
+	}
+
+	.mailchimp-status-wrap button{
+		color: white;
+		padding: 0.2em 0.5em;
+		margin: 0 1em;
+	}
+
 	.save-activist-button {
 		display: block;
 		margin: 1.5em auto 0;

@@ -1,5 +1,6 @@
 import React from 'react'
 import server from '../services/server'
+import arrayFunctions from '../services/arrayFunctions'
 import './activist/activist.scss'
 import {Link} from "react-router-dom";
 import QueryString from 'query-string';
@@ -81,14 +82,54 @@ export default class Activist extends React.Component {
                 {
                     name: "birthday", type: "text", he: "ארגון",
                 },
-
             ],
+            mailchimpLists: null,
+            mailchimpData: null,
+            mailchimpStatus: {
+                unenrolled: {
+                    name: "אין הרשמה",
+                    actions: [
+                        {label: "רישום", color: "#052", func: ()=>{}},
+                    ]
+                },
+                subscribed: {
+                    name: "הרשמה לעדכונים",
+                    actions: [
+                        {label: "ביטול הרשמה", color: "#501", func: ()=>{}},
+                    ]
+                },
+                unsubscribed: {
+                    name: "הרשמה בוטלה",
+                    actions: []
+                },
+                cleaned: {
+                    name: "מייל לא תקין",
+                    actions: [
+                        {label: "תיקון", color: "#973", func: ()=>{}},
+                    ]
+                },
+                pending: {
+                    name: "הרשמה בהשהייה עד אישור במייל",
+                    actions: [
+                        {label: "ביטול הרשמה", color: "#501", func: ()=>{}},
+                    ]
+                },
+                transactional: {
+                    name: "מייל אישי",
+                    actions: []
+                },
+                archived: {
+                    name: "ברשמה הועברה לארכיון",
+                    actions: []
+                },
+            },
             unsaved: false
         };
     }
     componentDidMount() {
         this.fetchCities();
         this.fetchCircles();
+        this.fetchMailchimpLists();
         if(this.state["_id"]){
             this.fetchActivist();
         }
@@ -110,6 +151,9 @@ export default class Activist extends React.Component {
                     activist: activist,
                     loadingDetails: false
                 });
+                if(activist && activist.profile && activist.profile.email && activist.profile.email.length){
+                    this.fetchMailchimpData(activist.profile.email);
+                }
             });
     }
 
@@ -133,6 +177,21 @@ export default class Activist extends React.Component {
                 });
                 this.setState({profileDataLists: dataLists})
             });
+    }
+
+    fetchMailchimpLists(){
+        server.get('mailchimp/lists/', {})
+        .then(mailchimpLists => {
+            if(mailchimpLists.lists)
+                this.setState({"mailchimpLists": mailchimpLists.lists});
+        });
+    }
+
+    fetchMailchimpData(email){
+        server.get('mailchimp/search?email=' + email)
+        .then(mailchimpData => {
+            this.setState({mailchimpData: arrayFunctions.indexByField(mailchimpData, "list_id")});
+        });
     }
 
     handleTypedInput = function (name, value, form){
@@ -182,6 +241,9 @@ export default class Activist extends React.Component {
         const profileFields = this.state.profileFields.slice();
         const roleFields = this.state.roleFields.slice();
         const memberFields = this.state.memberFields.slice();
+        const mailchimpLists = this.state.mailchimpLists ? this.state.mailchimpLists.slice() : null;
+        const mailchimpData = this.state.mailchimpData;
+        const mailchimpStatus = this.state.mailchimpStatus;
         const savingInProcess = this.state.savingInProcess;
         const loading = this.state.loadingDetails;
         return (
@@ -254,6 +316,31 @@ export default class Activist extends React.Component {
                                     : null
                             }
                             {
+                                mailchimpLists && mailchimpData ?
+                                    <div>
+                                        <h2>הרשמה במיילצ'ימפ</h2>
+                                        {
+                                            mailchimpLists.map(l => {
+                                                const status = mailchimpData[l.id] ? mailchimpData[l.id].status : "unenrolled";
+                                                return <div>
+                                                    <h3>{l.name}</h3>
+                                                    <div className={"mailchimp-status-wrap"}>
+                                                        <div>{mailchimpStatus[status].name}</div>
+                                                        {
+                                                            mailchimpStatus[status].actions.map(a => {
+                                                                return <button type={"button"} style={{backgroundColor: a.color}}>
+                                                                    {a.label}
+                                                                </button>
+                                                            })
+                                                        }
+                                                    </div>
+                                                </div>
+                                            })
+                                        }
+                                    </div>
+                                    : null
+                            }
+                            {
                                 activist.login && !activist.login.locked
                                     ? <button type={"button"} onClick={this.lockUser.bind(this)} className="lock-activist-button">
                                         <div className="lock-activist-button-label">
@@ -267,7 +354,7 @@ export default class Activist extends React.Component {
                                     : null
                             }
                             {
-                                activist.login && activist.login.locked
+                                activist.profile && activist.login.locked
                                     ? <button type={"button"} onClick={this.unlockUser.bind(this)} className="lock-activist-button">
                                         <div className="lock-activist-button-label">
                                             <div>ביטול נעילה</div>
