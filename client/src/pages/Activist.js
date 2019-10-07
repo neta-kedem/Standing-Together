@@ -23,7 +23,6 @@ export default class Activist extends React.Component {
             profileDataLists: {
                 residency:{field:"residency", data:[]},
                 circle:{field:"circle", data:[]},
-                isNewsletter:{field:"isNewsletter", data:['subscribed', 'unsubscribed' , 'not subscribed', 'cleaned', 'pending']}
             },
             profileFields: [
                 {
@@ -50,9 +49,6 @@ export default class Activist extends React.Component {
                 },
                 {
                     name: "circle", type: "select", ar: "", he: "מעגל",
-                },
-                {
-                    name: "isNewsletter", type: "select", ar: "", he: "חבר בתנועה",
                 },
             ],
             roleFields: [
@@ -89,13 +85,13 @@ export default class Activist extends React.Component {
                 unenrolled: {
                     name: "אין הרשמה",
                     actions: [
-                        {label: "רישום", color: "#052", func: ()=>{}},
+                        {label: "רישום", color: "#052", func: this.enrollActivist},
                     ]
                 },
                 subscribed: {
                     name: "הרשמה לעדכונים",
                     actions: [
-                        {label: "ביטול הרשמה", color: "#501", func: ()=>{}},
+                        {label: "ביטול הרשמה", color: "#501", func: this.unenrollActivist},
                     ]
                 },
                 unsubscribed: {
@@ -111,7 +107,7 @@ export default class Activist extends React.Component {
                 pending: {
                     name: "הרשמה בהשהייה עד אישור במייל",
                     actions: [
-                        {label: "ביטול הרשמה", color: "#501", func: ()=>{}},
+                        {label: "ביטול הרשמה", color: "#501", func: this.unenrollActivist},
                     ]
                 },
                 transactional: {
@@ -181,9 +177,11 @@ export default class Activist extends React.Component {
 
     fetchMailchimpLists(){
         server.get('mailchimp/lists/', {})
-        .then(mailchimpLists => {
-            if(mailchimpLists.lists)
-                this.setState({"mailchimpLists": mailchimpLists.lists});
+        .then(lists => {
+            if(lists && lists.lists){
+                const mailchimpLists = lists.lists.sort((a, b) => b.stats.member_count - a.stats.member_count);
+                this.setState({mailchimpLists});
+            }
         });
     }
 
@@ -192,6 +190,18 @@ export default class Activist extends React.Component {
         .then(mailchimpData => {
             this.setState({mailchimpData: arrayFunctions.indexByField(mailchimpData, "list_id")});
         });
+    }
+
+    enrollActivist(activist, list){
+        server.post('mailchimp/enroll/', {activist: activist, listId: list}).then(res => {
+            alert("ההרשמה התבצעה בהצלחה")
+        })
+    }
+
+    unenrollActivist(activist, list){
+        server.post('mailchimp/unenroll/', {activist: activist, listId: list}).then(res => {
+            alert("ביטול ההרשמה התבצע בהצלחה")
+        })
     }
 
     handleTypedInput = function (name, value, form){
@@ -322,15 +332,20 @@ export default class Activist extends React.Component {
                                         {
                                             mailchimpLists.map(l => {
                                                 const status = mailchimpData[l.id] ? mailchimpData[l.id].status : "unenrolled";
-                                                return <div>
-                                                    <h3>{l.name}</h3>
+                                                return <div key={l.id}>
+                                                    <h3>{l.name}&#8207; - &#8207;{l.stats.member_count}&#8207; רשומים&#8207;</h3>
                                                     <div className={"mailchimp-status-wrap"}>
                                                         <div>{mailchimpStatus[status].name}</div>
                                                         {
                                                             mailchimpStatus[status].actions.map(a => {
-                                                                return <button type={"button"} style={{backgroundColor: a.color}}>
-                                                                    {a.label}
-                                                                </button>
+                                                                return (
+                                                                    <button
+                                                                        type={"button"} style={{backgroundColor: a.color}}
+                                                                        onClick={() => {a.func(activist, l.id)}}
+                                                                    >
+                                                                        {a.label}
+                                                                    </button>
+                                                                )
                                                             })
                                                         }
                                                     </div>
