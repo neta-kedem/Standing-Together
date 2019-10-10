@@ -41,7 +41,7 @@ module.exports = (app) => {
 		})
 	});
 	app.post('/api/activists/uploadTyped', (req, res) => {
-		Authentication.hasRole(req, "isTyper").then(result => {
+		Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
 			if (result.error)
 				return res.json({"error": result.error});
 			activistUpdater.uploadTypedActivists(req.body.activists, req.body.scanId, req.body.markedDone).then((result)=>{
