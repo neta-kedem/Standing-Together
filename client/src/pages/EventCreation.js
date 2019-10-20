@@ -125,7 +125,7 @@ render() {
 						<input size="80" dir="ltr" type="text" name="date" value={this.state.date} onChange={this.handleInputChange.bind(this)} placeholder="DD.MM.YYYY"/>
 					</label>
 					<label className="label" id="event-location">
-						<div>التاريخ<br/>מיקום</div>
+						<div>مكان الحدث<br/>מיקום</div>
 						<input type="text" name="location" list="city-data-list" value={this.state.location} onChange={this.handleInputChange.bind(this)}/>
 					</label>
 					<label className="label" id="event-cat">

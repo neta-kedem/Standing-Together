@@ -8,6 +8,11 @@ module.exports = (app) => {
              return res.json(cities);
          });
     });
+    app.get('/api/cities/used', (req, res) => {
+        cityFetcher.getUsedCities().then(cities=>{
+            return res.json(cities);
+        });
+    });
     app.post('/api/cities', (req, res) => {
         Authentication.hasRole(req, "isOrganizer").then(result => {
             if (result.error)

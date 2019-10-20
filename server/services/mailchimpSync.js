@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const md5 = require('md5');
 const Activist = require('../models/activistModel');
 const settingsManager = require('../services/settingsManager');
 //the web id of the main contact list - all our contacts should appear in this list
@@ -75,7 +76,36 @@ const createContacts = async function (contacts, list = null) {
     return Promise.all(updatePromises);
 };
 
+const deleteContacts = async function (contacts, list = null) {
+    const mainListId = await settingsManager.getSettingByName("dailySummaryRecipients");
+    if (process.env.NODE_ENV === 'development')
+        return new Promise((resolve) => {
+            resolve(true)
+        });
+    let updatePromises = [];
+    for (let i = 0; i < contacts.length; i++) {
+        const contact = contacts[i];
+        const url = 'https://us14.api.mailchimp.com/3.0/lists/' + (list ? list : mainListId) + '/members/' +
+            md5(contact.profile.email.toLowerCase());
+        const data = {"status": "unsubscribed"};
+        const query = {
+            method: 'PATCH',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Content-Length': JSON.stringify(data).length,
+                'Authorization': process.env.MAILCHIMP_KEY,
+            },
+            body: JSON.stringify(data),
+            credentials: 'same-origin'
+        };
+        updatePromises.push(fetch(url, query));
+    }
+    return Promise.all(updatePromises);
+};
+
 module.exports = {
     fetchMembers,
-    createContacts
+    createContacts,
+    deleteContacts
 };

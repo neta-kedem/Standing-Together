@@ -11,6 +11,10 @@ const whatsappSessionSchema = new mongoose.Schema({
             type: Date,
             required: true,
         },
+        lastPing: {
+            type: Date,
+            required: false,
+        },
         userId: {
             type: Schema.Types.ObjectId,
             ref: 'activist',

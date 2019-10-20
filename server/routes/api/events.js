@@ -9,7 +9,7 @@ module.exports = (app) => {
 		eventUpdater.inviteByQuery(req, res);
 	});
 	app.get('/api/events/eventById/:id', (req, res) => {
-		Authentication.hasRole(req, "isTyper").then(result=>{
+		Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result=>{
 			if(result.error)
 				return res.json({error: result.error});
 			eventFetcher.getEventById(req.params.id).then((result)=>{

@@ -6,16 +6,16 @@ module.exports = (app) => {
         Authentication.hasRole(req, "isOrganizer").then(result=>{
         if(result.error)
             return res.json({error: result.error});
-            whatsappMessenger.sendMessage(req.body.messages).then(qr =>{
+            whatsappMessenger.sendMessage(req.body.messages, req.body.sessionId).then(qr =>{
                 return res.json({qrSrc: qr});
             });
         })
     });
-    app.get('/api/whatsapp/progress', (req, res) => {
+    app.get('/api/whatsapp/progress/:sessionId', (req, res) => {
         Authentication.hasRole(req, "isOrganizer").then(result=>{
         if(result.error)
             return res.json({error: result.error});
-            whatsappMessenger.getProgress().then(progress =>{
+            whatsappMessenger.pingSession(req.params.sessionId).then(progress =>{
                 return res.json(progress);
             });
         })

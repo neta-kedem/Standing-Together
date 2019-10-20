@@ -16,7 +16,7 @@ module.exports = (app) => {
 		});
 	});
 	app.post('/api/contactScan/pingScan', (req, res) => {
-		Authentication.hasRole(req, "isTyper").then(result => {
+		Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
 			if (result.error)
 				return res.json({"error": result.error});
 			ContactScanUpdater.pingScan(req.body.scanId).then((result) => {
@@ -25,7 +25,7 @@ module.exports = (app) => {
 		});
 	});
 	app.post('/api/contactScan/importActivists', (req, res) => {
-		Authentication.hasRole(req, "isTyper").then(result => {
+		Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
 			if (result.error)
 				return res.json({"error": result.error});
 			ContactScanUpdater.importContacts(req.body.eventId, req.body.activists).then((result)=>{

@@ -18,8 +18,10 @@ export default class BulkSender extends React.Component {
         super(props);
         this.state = {
             getContacts: this.props.getContacts,
+            displayEditor: this.props.displayEditor,
             loadingSession: false,
             initiatedSession: false,
+            sessionId: null,
             session: {
                 qrUrl: null,
                 profileImg: null,
@@ -45,7 +47,7 @@ export default class BulkSender extends React.Component {
                 </div>,
                 flush: false,
                 opaque: false,
-                onClose: () => {},
+                onClose: () => {this.state.displayEditor()},
                 resolutionOptions: [
                     {
                         label: <FontAwesomeIcon icon={"thumbs-up"}/>,
@@ -66,11 +68,14 @@ export default class BulkSender extends React.Component {
                 </div>,
                 flush: false,
                 opaque: false,
-                onClose: () => {},
+                onClose: () => {this.state.displayEditor()},
                 resolutionOptions: [
                     {
                         label: "בסדר, לא לשלוח בינתיים",
-                        onClick: () => {PubSub.publish(events.clearAlert, {})},
+                        onClick: () => {
+                            this.state.displayEditor();
+                            PubSub.publish(events.clearAlert, {});
+                            },
                     },
                     {
                         label: "הבנתי, להמשיך בשליחה בכל מקרה",
@@ -90,9 +95,13 @@ export default class BulkSender extends React.Component {
         if(this.state.initiatedSession)
             return;
         const session = this.state.session;
-        this.setState({session, initiatedSession: true, loadingSession: true});
+        const sessionIdGen = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) =>
+            s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
+        const sessionId = sessionIdGen();
+        this.setState({session, sessionId: sessionId, initiatedSession: true, loadingSession: true});
         server.post('whatsapp/send', {
             messages: messages,
+            sessionId: sessionId,
         }).then(result => {
             if(this.state.sessionPingInterval)
                 clearInterval(this.state.sessionPingInterval);
@@ -102,7 +111,7 @@ export default class BulkSender extends React.Component {
     }.bind(this);
 
     pingSession = function(){
-        server.get('whatsapp/progress').then(session => {
+        server.get('whatsapp/progress/' + this.state.sessionId).then(session => {
             if(session && session.qrUrl){
                 this.setState({loadingSession: false});
             }
@@ -139,17 +148,23 @@ export default class BulkSender extends React.Component {
                 }
                 {
                     (qrUrl && !profileImg) ? (
-                        <div className={"whatsapp-qr-wrap"}>
-                            <img alt={"qr"} className={"whatsapp-qr"} src={qrUrl}/>
-                            <img alt={"qr-logo"} className={"whatsapp-logo-overlay"} src={whatsappLogoOverlay}/>
+                        <div>
+                            <h1>סרקו את ה-QR מתוך אפליקציית הוואטצאפ בטלפון</h1>
+                            <div className={"whatsapp-qr-wrap"}>
+                                <img alt={"qr"} className={"whatsapp-qr"} src={qrUrl}/>
+                                <img alt={"qr-logo"} className={"whatsapp-logo-overlay"} src={whatsappLogoOverlay}/>
+                            </div>
                         </div>
                     ) : null
                 }
                 {
                     (profileImg) ? (
-                        <div className={"profile-image-wrap"}>
-                            <div className={"profile-image-label"}>ההודעות נשלחות מ:</div>
-                            <img alt={"profile"} className={"profile-image"} src={this.cleanProfileImageUrl(profileImg)}/>
+                        <div>
+                            <h1>התחלנו לשלוח את ההודעות</h1>
+                            <div className={"profile-image-wrap"}>
+                                <div className={"profile-image-label"}>ההודעות נשלחות מ:</div>
+                                <img alt={"profile"} className={"profile-image"} src={this.cleanProfileImageUrl(profileImg)}/>
+                            </div>
                         </div>
                     ) : null
                 }
@@ -167,8 +182,10 @@ export default class BulkSender extends React.Component {
                     (profileImg && contactCount && messages && messages.length) ? (
                         <div>
                             <h3>כרגע נשלחת הודעה ל-{messages[Math.min(processedContactCount, messages.length - 1)].number}</h3>
-                            <div>
-                                {messages[Math.min(processedContactCount, messages.length - 1)].message}
+                            <div className={"text-bubble"}>
+                                {messages[Math.min(processedContactCount, messages.length - 1)].message.split("%0a").map((paragraph, i) =>
+                                    <p key={"message-" + processedContactCount + "-paragraph-" + i}>{paragraph}</p>
+                                )}
                             </div>
                         </div>
                     ) : null

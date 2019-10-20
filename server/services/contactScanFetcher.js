@@ -35,7 +35,7 @@ const getAssociatedActivists = function(scanData){
 };
 
 const getContactScan = function(req, res){
-    Authentication.hasRole(req, "isTyper").then(result => {
+    Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
         if(result.error)
             return res.json({"error": result.error});
         const requestedId = req.query.scanId;

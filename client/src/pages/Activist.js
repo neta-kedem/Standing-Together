@@ -1,5 +1,6 @@
 import React from 'react'
 import server from '../services/server'
+import arrayFunctions from '../services/arrayFunctions'
 import './activist/activist.scss'
 import {Link} from "react-router-dom";
 import QueryString from 'query-string';
@@ -22,7 +23,6 @@ export default class Activist extends React.Component {
             profileDataLists: {
                 residency:{field:"residency", data:[]},
                 circle:{field:"circle", data:[]},
-                isNewsletter:{field:"isNewsletter", data:['subscribed', 'unsubscribed' , 'not subscribed', 'cleaned', 'pending']}
             },
             profileFields: [
                 {
@@ -49,9 +49,6 @@ export default class Activist extends React.Component {
                 },
                 {
                     name: "circle", type: "select", ar: "", he: "מעגל",
-                },
-                {
-                    name: "isNewsletter", type: "select", ar: "", he: "חבר בתנועה",
                 },
             ],
             roleFields: [
@@ -81,14 +78,54 @@ export default class Activist extends React.Component {
                 {
                     name: "birthday", type: "text", he: "ארגון",
                 },
-
             ],
+            mailchimpLists: null,
+            mailchimpData: null,
+            mailchimpStatus: {
+                unenrolled: {
+                    name: "אין הרשמה",
+                    actions: [
+                        {label: "רישום", color: "#052", func: this.enrollActivist},
+                    ]
+                },
+                subscribed: {
+                    name: "הרשמה לעדכונים",
+                    actions: [
+                        {label: "ביטול הרשמה", color: "#501", func: this.unenrollActivist},
+                    ]
+                },
+                unsubscribed: {
+                    name: "הרשמה בוטלה",
+                    actions: []
+                },
+                cleaned: {
+                    name: "מייל לא תקין",
+                    actions: [
+                        {label: "תיקון", color: "#973", func: ()=>{}},
+                    ]
+                },
+                pending: {
+                    name: "הרשמה בהשהייה עד אישור במייל",
+                    actions: [
+                        {label: "ביטול הרשמה", color: "#501", func: this.unenrollActivist},
+                    ]
+                },
+                transactional: {
+                    name: "מייל אישי",
+                    actions: []
+                },
+                archived: {
+                    name: "ברשמה הועברה לארכיון",
+                    actions: []
+                },
+            },
             unsaved: false
         };
     }
     componentDidMount() {
         this.fetchCities();
         this.fetchCircles();
+        this.fetchMailchimpLists();
         if(this.state["_id"]){
             this.fetchActivist();
         }
@@ -110,6 +147,9 @@ export default class Activist extends React.Component {
                     activist: activist,
                     loadingDetails: false
                 });
+                if(activist && activist.profile && activist.profile.email && activist.profile.email.length){
+                    this.fetchMailchimpData(activist.profile.email);
+                }
             });
     }
 
@@ -133,6 +173,35 @@ export default class Activist extends React.Component {
                 });
                 this.setState({profileDataLists: dataLists})
             });
+    }
+
+    fetchMailchimpLists(){
+        server.get('mailchimp/lists/', {})
+        .then(lists => {
+            if(lists && lists.lists){
+                const mailchimpLists = lists.lists.sort((a, b) => b.stats.member_count - a.stats.member_count);
+                this.setState({mailchimpLists});
+            }
+        });
+    }
+
+    fetchMailchimpData(email){
+        server.get('mailchimp/search?email=' + email)
+        .then(mailchimpData => {
+            this.setState({mailchimpData: arrayFunctions.indexByField(mailchimpData, "list_id")});
+        });
+    }
+
+    enrollActivist(activist, list){
+        server.post('mailchimp/enroll/', {activist: activist, listId: list}).then(res => {
+            alert("ההרשמה התבצעה בהצלחה")
+        })
+    }
+
+    unenrollActivist(activist, list){
+        server.post('mailchimp/unenroll/', {activist: activist, listId: list}).then(res => {
+            alert("ביטול ההרשמה התבצע בהצלחה")
+        })
     }
 
     handleTypedInput = function (name, value, form){
@@ -182,6 +251,9 @@ export default class Activist extends React.Component {
         const profileFields = this.state.profileFields.slice();
         const roleFields = this.state.roleFields.slice();
         const memberFields = this.state.memberFields.slice();
+        const mailchimpLists = this.state.mailchimpLists ? this.state.mailchimpLists.slice() : null;
+        const mailchimpData = this.state.mailchimpData;
+        const mailchimpStatus = this.state.mailchimpStatus;
         const savingInProcess = this.state.savingInProcess;
         const loading = this.state.loadingDetails;
         return (
@@ -254,6 +326,36 @@ export default class Activist extends React.Component {
                                     : null
                             }
                             {
+                                mailchimpLists && mailchimpData ?
+                                    <div>
+                                        <h2>הרשמה במיילצ'ימפ</h2>
+                                        {
+                                            mailchimpLists.map(l => {
+                                                const status = mailchimpData[l.id] ? mailchimpData[l.id].status : "unenrolled";
+                                                return <div key={l.id}>
+                                                    <h3>{l.name}&#8207; - &#8207;{l.stats.member_count}&#8207; רשומים&#8207;</h3>
+                                                    <div className={"mailchimp-status-wrap"}>
+                                                        <div>{mailchimpStatus[status].name}</div>
+                                                        {
+                                                            mailchimpStatus[status].actions.map(a => {
+                                                                return (
+                                                                    <button
+                                                                        type={"button"} style={{backgroundColor: a.color}}
+                                                                        onClick={() => {a.func(activist, l.id)}}
+                                                                    >
+                                                                        {a.label}
+                                                                    </button>
+                                                                )
+                                                            })
+                                                        }
+                                                    </div>
+                                                </div>
+                                            })
+                                        }
+                                    </div>
+                                    : null
+                            }
+                            {
                                 activist.login && !activist.login.locked
                                     ? <button type={"button"} onClick={this.lockUser.bind(this)} className="lock-activist-button">
                                         <div className="lock-activist-button-label">
@@ -267,7 +369,7 @@ export default class Activist extends React.Component {
                                     : null
                             }
                             {
-                                activist.login && activist.login.locked
+                                activist.profile && activist.login.locked
                                     ? <button type={"button"} onClick={this.unlockUser.bind(this)} className="lock-activist-button">
                                         <div className="lock-activist-button-label">
                                             <div>ביטול נעילה</div>

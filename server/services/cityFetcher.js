@@ -1,4 +1,6 @@
 const City = require('../models/cityModel');
+const Activist = require('../models/activistModel')
+
 const getCities = function (){
     const query = City.find();
     const citiesPromise = query.exec().then((cities) => {
@@ -16,6 +18,23 @@ const getCities = function (){
         return cityList;
     });
     return citiesPromise;
+};
+const getUsedCities = function (){
+    return Activist.find().distinct('profile.residency').exec().then((used) => {
+        return City.find({"name.he": {"$in": used}}).exec().then((cities) => {
+            let cityList = [];
+            for (let city of cities) {
+                cityList.push({
+                    "_id": city._id,
+                    "nameHe": city.name.he,
+                    "nameAr": city.name.ar,
+                    "location": city.location,
+                    "defaultCircle": city.defaultCircle
+                });
+            }
+            return cityList;
+        });
+    });
 };
 const getCityByHeName = function (name){
     const query = City.find({"name.he": name});
@@ -69,5 +88,6 @@ module.exports = {
     getCities,
     getCityByName,
     getCityByArName,
-    getCityByHeName
+    getCityByHeName,
+    getUsedCities
 };

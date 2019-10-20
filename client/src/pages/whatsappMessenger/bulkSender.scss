@@ -87,4 +87,29 @@
     font-size: 2em;
     text-shadow: 0 0 5px $purple-main;
   }
+  .text-bubble{
+    position: relative;
+    background: #00AA8840;
+    border-radius: .4em;
+    width: 50em;
+    padding: 5px 20px;
+    margin: 1em 20px;
+    text-align: right;
+    font-weight: bold;
+    box-shadow: -1px 1px 1px #00000090;
+  }
+  .text-bubble:after{
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-left-color: #00AA8840;
+    border-right: 0;
+    border-top: 0;
+    margin-top: -10px;
+    margin-right: -20px;
+  }
 }

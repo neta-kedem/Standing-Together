@@ -14,6 +14,7 @@ export default class WhatsappMessenger extends React.Component {
             contacts: [
                 {number: "", params: [], messageVersion: 0}
             ],
+            hideEditor: false,
             selectedVersion: 0,
             params: ["FIRSTNAME", "LASTNAME"],
             attemptedPost: false
@@ -66,7 +67,7 @@ export default class WhatsappMessenger extends React.Component {
             }
             let personalized = messages[c.messageVersion].content;
             for(let i = 0; i < params.length; i++){
-                personalized = personalized.replace("$" + params[i], c.params[i]);
+                personalized = personalized.replace("$" + params[i], c.params[i]).replace("\n", "%0a");
                 if(!c.params[i] || !c.params[i].length){
                     foundErrors = true;
                 }
@@ -76,10 +77,12 @@ export default class WhatsappMessenger extends React.Component {
         if(foundErrors){
             return false;
         }
+        this.setState({hideEditor: true});
         return messageList;
     }.bind(this);
 
     render() {
+        const hideEditor = this.state.hideEditor;
         const params = this.state.params.slice();
         return (
             <div className={"page-wrap-whatsapp-sender"} dir="rtl">
@@ -89,23 +92,31 @@ export default class WhatsappMessenger extends React.Component {
                         <span className="title-lang">שליחת הודעות וואטסאפ</span>
                     </div>
                 </TopNavBar>
-                <MessageEditor
-                    messages={this.state.messages}
-                    selectVersion={this.selectVersion}
-                    addVersion={this.addVersion}
-                    selectedVersion={this.state.selectedVersion}
-                    onChange={(value) => {this.handleMessageChange(value)}}
-                    params={params}/>
-                <ContactsTable
-                    contacts={this.state.contacts}
-                    params={this.state.params}
-                    messages={this.state.messages}
-                    onContactsChange={this.handleContactsChange}
-                    onParamsChange={this.handleParamsChange}
-                    highlightErrors={this.state.attemptedPost}
-                />
+                {
+                    hideEditor ? null :
+                        <MessageEditor
+                            messages={this.state.messages}
+                            selectVersion={this.selectVersion}
+                            addVersion={this.addVersion}
+                            selectedVersion={this.state.selectedVersion}
+                            onChange={(value) => {this.handleMessageChange(value)}}
+                            params={params}
+                        />
+                }
+                {
+                    hideEditor ? null :
+                        <ContactsTable
+                            contacts={this.state.contacts}
+                            params={this.state.params}
+                            messages={this.state.messages}
+                            onContactsChange={this.handleContactsChange}
+                            onParamsChange={this.handleParamsChange}
+                            highlightErrors={this.state.attemptedPost}
+                        />
+                }
                 <BulkSender
                     getContacts={this.getMessageList}
+                    displayEditor={()=>{this.setState({hideEditor: false})}}
                 />
             </div>
         )

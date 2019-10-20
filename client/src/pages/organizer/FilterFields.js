@@ -138,7 +138,7 @@ const filterableFields = {
 };
 
 const getCities = function() {
-    server.get('cities', {})
+    server.get('cities/used', {})
         .then(cities => {
             fieldsFilterOptions.cities = cities;
         });
