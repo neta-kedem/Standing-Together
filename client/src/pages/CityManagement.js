@@ -10,17 +10,25 @@ export default class CircleManagement extends React.Component {
         super(props);
         this.state = {
             cities: [],
+            usedCities: [],
             circles: []
         }
     }
     componentDidMount() {
         this.getCities();
+        this.getUsedCities();
         this.getCircles();
     }
     getCities() {
         server.get('cities', {})
             .then(cities => {
                 this.setState({"cities": cities});
+            });
+    }
+    getUsedCities() {
+        server.get('cities/used', {})
+            .then(cities => {
+                this.setState({"usedCities": cities});
             });
     }
     getCircles() {
@@ -62,6 +70,7 @@ export default class CircleManagement extends React.Component {
 
     render() {
         const cities = this.state.cities.slice();
+        const usedCities = this.state.usedCities.slice();
         const circles = this.state.circles.slice();
         const rows = cities.map((city,i)=>{
             return <CityDetails
@@ -109,7 +118,7 @@ export default class CircleManagement extends React.Component {
                     שמירה
                 </button>
                 <CitySelector
-                    cities={cities}
+                    cities={usedCities}
                     selected={[]}
                     onSelect={()=>{}}
                     width={1000}
