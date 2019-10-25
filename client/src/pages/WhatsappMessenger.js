@@ -88,7 +88,7 @@ export default class WhatsappMessenger extends React.Component {
             <div className={"page-wrap-whatsapp-sender"} dir="rtl">
                 <TopNavBar>
                     <div className="title-wrap">
-                        <span className="title-lang">שליחת הודעות וואטסאפ</span>
+                        <span className="title-lang">ارسال رسائل واتساب</span>
                         <span className="title-lang">שליחת הודעות וואטסאפ</span>
                     </div>
                 </TopNavBar>

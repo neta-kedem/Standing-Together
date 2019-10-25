@@ -63,7 +63,8 @@ export default class MessageEditor extends React.Component {
         return (
             <div className={"whatsapp-message-wrap"}>
                 <div className={"whatsapp-message-label"}>
-                תוכן ההודעה:
+                    <div>مضمون الرسالة:</div>
+                    <div>תוכן ההודעה:</div>
                 </div>
                 <div className={"message-input-wrap"}>
                     {
