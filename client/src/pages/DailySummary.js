@@ -9,7 +9,8 @@ export default class DailySummary extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            summary: ""
+            summary: "",
+            loading: true
         }
     }
     componentDidMount() {
@@ -18,11 +19,11 @@ export default class DailySummary extends React.Component {
     getDailySummary() {
         server.get('dailySummary', {})
             .then(summary => {
-                this.setState({"summary": summary});
+                this.setState({"summary": summary, loading: false});
             });
     }
     render() {
-        const summary = this.state.summary ? this.state.summary : "לא התבצעה פעילות היום";
+        const summary = this.state.summary ? this.state.summary : (this.state.loading ? "loading..." : "לא התבצעה פעילות היום");
         const htmlToReactParser = new HtmlToReactParser();
         return (
             <div className={"page-wrap-daily-summary"}>

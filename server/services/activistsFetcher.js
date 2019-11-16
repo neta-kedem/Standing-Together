@@ -20,6 +20,7 @@ const getActivistsByIds = function (ids){
     return query.exec().then((activists) => {
         return activists.map(a => {
             return {
+                "_id": a._id,
                 "metadata": a.metadata,
                 "role": a.role,
                 "profile": a.profile,
