@@ -147,9 +147,18 @@ export default class ContactsTable extends React.Component {
                 <table className={"whatsapp-contacts-table"}>
                     <thead>
                     <tr>
-                        <td>הודעה</td>
-                        <td>טל'</td>
-                        <td>גרסת הודעה</td>
+                        <td>
+                            <div>الرسالة</div>
+                            <div>הודעה</div>
+                        </td>
+                        <td>
+                            <div>رقم الهاتف</div>
+                            <div>טל'</div>
+                        </td>
+                        <td>
+                            <div>نسخة الرسالة</div>
+                            <div>גרסת הודעה</div>
+                        </td>
                         {params.map((p, i) => {
                             return <td className={"contact-param-cell"} key={"param_" + i} dir={"ltr"}>
                                 <div className={"contact-param-wrap"}>

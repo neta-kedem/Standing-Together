@@ -182,8 +182,8 @@ compileSummary = function(events){
                 result += "<p>משתתפות שכבר הופיעו במערכת בעבר:</p>";
                 for(let j = 0; j < existingContactsInSheet.length; j++){
                     let activist = existingContactsInSheet[j];
-                    let activistDetails = activist.activistDetails;
-                    let typerDetails = activist.typerDetails;
+                    let activistDetails = activist.activistDetails ? activist.activistDetails : {profile:{}};
+                    let typerDetails = activist.typerDetails ? activist.typerDetails : {profile:{}};
                     result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
                     result += ", הפרטים הוקלדו על ידי " + typerDetails.profile.firstName + " " + typerDetails.profile.lastName;
                 }
