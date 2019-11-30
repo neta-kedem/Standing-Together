@@ -117,6 +117,7 @@ compileSummary = function(events){
         for(let i = 0; i < contactSheets.length; i++){
             sheetCount++;
             let contactSheet = contactSheets[i];
+            let isCSVUpload = contactSheet.scanUrl.indexOf("fromCSV") !== -1;
             //TODO - replace with more relevant info
             let uploader = contactSheet.creator ? contactSheet.creator.profile.firstName + " " + contactSheet.creator.profile.lastName : "?";
             let uploadDate = new Date(contactSheet.metadata.creationDate).toISOString().split('T')[0];
@@ -170,7 +171,7 @@ compileSummary = function(events){
                     let comments = activist.comments;
                     result += "<p>";
                     result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
-                    result += ", הפרטים הוקלדו על ידי " + typerDetails.profile.firstName + " " + typerDetails.profile.lastName;
+                    result += ", הפרטים "+(isCSVUpload?"יובאו":"הוקלדו")+" על ידי " + typerDetails.profile.firstName + " " + typerDetails.profile.lastName;
                     if(comments && comments.length){
                         result += " (הערה - " + comments + ")"
                     }
@@ -183,9 +184,7 @@ compileSummary = function(events){
                 for(let j = 0; j < existingContactsInSheet.length; j++){
                     let activist = existingContactsInSheet[j];
                     let activistDetails = activist.activistDetails ? activist.activistDetails : {profile:{}};
-                    let typerDetails = activist.typerDetails ? activist.typerDetails : {profile:{}};
-                    result += "     " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
-                    result += ", הפרטים הוקלדו על ידי " + typerDetails.profile.firstName + " " + typerDetails.profile.lastName;
+                    result += "   *   " + activistDetails.profile.firstName + " " + activistDetails.profile.lastName + " מ" + activistDetails.profile.residency;
                 }
             }
             result += "<br/>";
