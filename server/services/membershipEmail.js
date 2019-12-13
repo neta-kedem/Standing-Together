@@ -277,18 +277,37 @@ const getEmail = function(){
 </table>
 </td>
 </tr>
-<tr>
-<td class="mcnImageGroupBlockInner" style="padding: 9px; mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top">
-<table class="mcnImageGroupContentContainer" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" border="0" width="564" cellspacing="0" cellpadding="0" align="left">
-<tbody>
-<tr>
-<td class="mcnImageGroupContent" style="padding-left: 9px; padding-top: 0; padding-bottom: 0; mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top"><a class="" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" title="" href="https://chat.whatsapp.com/AK2b3KFxGruA67OqmlIMOg" target="_blank"> <img class="mcnImage" style="max-width: 591px; padding-bottom: 0; border: 0; height: auto; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; vertical-align: bottom;" src="https://gallery.mailchimp.com/0a47ce0c4473e8015e074c3c5/images/7fbda7c5-1220-4f31-b7dd-c8b736c6cccf.png" alt="" width="564" /> </a></td>
-</tr>
 </tbody>
 </table>
-</td>
-</tr>
-</tbody>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageGroupBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+    <tbody class="mcnImageGroupBlockOuter">
+        <tr>
+            <td valign="top" style="padding: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnImageGroupBlockInner">
+                <table align="left" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                    <tbody>
+                        <tr>
+                            <td class="mcnImageGroupContent" valign="top" style="padding-left: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                <a href="https://chat.whatsapp.com/AK2b3KFxGruA67OqmlIMOg" title="" class="" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                    <img alt="" src="https://gallery.mailchimp.com/0a47ce0c4473e8015e074c3c5/images/7fbda7c5-1220-4f31-b7dd-c8b736c6cccf.png" width="264" style="max-width: 591px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table align="right" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                    <tbody>
+                        <tr>
+                            <td class="mcnImageGroupContent" valign="top" style="padding-right: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                <a href="https://chat.whatsapp.com/CVzHVgsnFteHKNNGmJxbbs" title="" class="" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                    <img alt="" src="https://gallery.mailchimp.com/0a47ce0c4473e8015e074c3c5/images/cb14ac0d-d032-4c56-9f0c-e196cd01b708.jpeg" width="264" style="max-width: 591px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
 </table>
 <table class="mcnTextBlock" style="min-width: 100%; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" border="0" width="100%" cellspacing="0" cellpadding="0">
 <tbody class="mcnTextBlockOuter">
