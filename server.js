@@ -7,9 +7,47 @@ const cron = require('./server/services/cron');
 const Authentication = require('./server/services/authentication');
 
 const dev = process.env.NODE_ENV !== 'production';
-//db
+// db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
+// logger
+require('winston-daily-rotate-file');
+const { createLogger, format, transports } = require('winston');
+const { combine, timestamp, printf } = format;
+
+const myFormat = printf(({ level, message, timestamp }) => {
+	return `{ "timestamp": "${timestamp}", "level": "${level}", "message": "${message}" }`;
+});
+
+const transport = new (transports.DailyRotateFile)({
+	filename: 'log/%DATE%-all.log',
+	datePattern: 'YYYY-MM-DD-HH',
+	zippedArchive: true,
+	maxSize: '20m',
+	maxFiles: '1000',
+});
+
+const errorTransport = new (transports.DailyRotateFile)({
+	filename: 'log/%DATE%-error.log',
+	datePattern: 'YYYY-MM-DD-HH',
+	zippedArchive: true,
+	maxSize: '20m',
+	maxFiles: '1000',
+	level: 'error'
+});
+
+const logger = createLogger({
+	format: combine(
+			timestamp(),
+			myFormat
+	),
+	transports: [transport, new transports.Console(), errorTransport]
+});
+
+console.log = (...args) => logger.info(args)
+console.warn = (...args) => logger.warn(args)
+console.error = (...args) => logger.error(args)
+
 if(dev){
 	mongoose.set('debug', true);
 }
@@ -67,7 +105,7 @@ app.listen(port, err => {
 function deploy(res, branch){
 	childProcess.exec(`cd ~/scripts && ./pullST.sh ${branch}`, function(err, stdout, stderr){
 		if (err) {
-			console.error(err);
+			console.error('DEPLOY ERROR ' + err);
 			return res.send(500);
 		}
 		res.send(200);

@@ -20,7 +20,7 @@ const idifyParticipatedEvents = function(){
             }
         }
         return bulk.execute().then(res=>{
-            console.log(res)
+            console.log(`idifyParticipatedEvents ${res}`)
         });
     });
 };
@@ -46,7 +46,7 @@ const getParticipatedEventsFromScans = function(){
             bulk.find({_id: mongoose.Types.ObjectId(activists[i])}).updateOne({$set:{"profile.participatedEvents": activistDict[activists[i]]}});
         }
         return bulk.execute().then(res=>{
-            console.log(res)
+            console.log(`getParticipatedEventsFromScans ${res}`)
         });
     });
 };
@@ -83,7 +83,7 @@ const idifyContactScans = function(){
             }});
         }
         return bulk.execute().then(res=>{
-            console.log(res)
+            console.log(`idifyContactScans ${res}`)
         });
     });
 };
@@ -105,7 +105,7 @@ const idifyEvents = function(){
                 }});
         }
         return bulk.execute().then(res=>{
-            console.log(res)
+            console.log(`idifyEvents ${res}`)
         });
     });
 };
@@ -133,7 +133,7 @@ const castMemberJoinDate = function(){
             }
         }
         return bulk.execute().then(res=>{
-            console.log(res)
+            console.log(`castMemberJoinDate ${res}`)
         });
     });
 };
