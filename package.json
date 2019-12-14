@@ -5,7 +5,9 @@
     "client": "cd client && yarn start",
     "server": "nodemon --ignore 'client/' server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "start": "concurrently --kill-others-on-fail \"node server -p $PORT\" \"yarn client -p $PORT\" "
+    "start": "concurrently --kill-others-on-fail \"node server -p $PORT\" \"yarn client -p $PORT\" ",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "dependencies": {
     "body-parser": "latest",
@@ -31,6 +33,8 @@
     "puppeteer": "^1.19.0",
     "react-date-picker": "^7.8.1",
     "read-excel-file": "^4.0.1",
-    "request": "^2.88.0"
-  }
+    "request": "^2.88.0",
+    "snyk": "^1.258.2"
+  },
+  "snyk": true
 }
