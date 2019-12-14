@@ -28,6 +28,9 @@ yarn-error.log*
 # local config
 /services/config.js
 
+# logs
+/log
+
 # server config
 server/config.js
 dump/
