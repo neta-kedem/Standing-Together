@@ -116,6 +116,10 @@ const getEmail = function(){
 <td class="mcnTextContent" style="padding: 0px 18px 9px; line-height: 125%; mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; word-break: break-word; color: #202020; font-family: Helvetica; font-size: 18px; text-align: center;" valign="top">
 <div style="direction: rtl;">
 <div style="direction: rtl; text-align: center;">
+<a href="https://www.youtube.com/watch?v=iKWJ4EEJLb8&utm_source=רשימה ראשית של חברי התנועה הרשומים&utm_campaign=5eaf5a5879-EMAIL_CAMPAIGN_2019_08_11_06_24_COPY_01&utm_medium=email&utm_term=0_04f90ea7af-5eaf5a5879-">
+    <img class="mcnImage" style="max-width: 1200px; padding-bottom: 0; display: inline !important; vertical-align: bottom; border: 0; height: auto; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;"  src="https://static.wixstatic.com/media/86f9b7_ba6eb55907044fdfa333ffe576c55182~mv2.jpg/v1/fill/w_1178,h_653/welcome%20to%20st.jpg" alt="" width="564" align="center" />
+</a>
+<br/>
 <div style="direction: rtl; text-align: justify;"><br /> "עומדים ביחד" היא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים, ששותפים בה חברים וחברות מכל קצוות הארץ. אנחנו נאבקים למען שלום, עצמאות וצדק לשני העמים; למען שוויון מלא לכל מי שחיים בארץ הזו; למען צדק חברתי אמיתי. אנחנו תנועה דמוקרטית, שבה החברות והחברים הן שיוזמים את הפעילות, מובילים אותה, וגם יכולים לבחור ולהיבחר להנהגת התנועה.</div>
 <div style="direction: rtl; text-align: justify;"><span style="font-size: 16px;">"نقف معًا" هو حراك سياسي يسعى للنضال والأمل، يحمل قيمًا اشتراكية، ويتألف من أعضاء وعضوات من كل بقاع البلاد. نحن نناضل من أجل السلام، الاستقلالية والعدالة للشعبين؛ من أجل المساواة التامة لكل من يعيش في هذه البلاد؛ من أجل عدالة اجتماعية حقيقية. حراكنا ديمقراطي، يبادر لنشاطاته ويقودها العضوات والأعضاء، وبإمكانهم أيضًا الترشح والترشيح لقيادة الحراك.</span><br /> &nbsp;</div>
 </div>
@@ -273,18 +277,37 @@ const getEmail = function(){
 </table>
 </td>
 </tr>
-<tr>
-<td class="mcnImageGroupBlockInner" style="padding: 9px; mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top">
-<table class="mcnImageGroupContentContainer" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" border="0" width="564" cellspacing="0" cellpadding="0" align="left">
-<tbody>
-<tr>
-<td class="mcnImageGroupContent" style="padding-left: 9px; padding-top: 0; padding-bottom: 0; mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top"><a class="" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" title="" href="https://chat.whatsapp.com/AK2b3KFxGruA67OqmlIMOg" target="_blank"> <img class="mcnImage" style="max-width: 591px; padding-bottom: 0; border: 0; height: auto; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; vertical-align: bottom;" src="https://gallery.mailchimp.com/0a47ce0c4473e8015e074c3c5/images/7fbda7c5-1220-4f31-b7dd-c8b736c6cccf.png" alt="" width="564" /> </a></td>
-</tr>
 </tbody>
 </table>
-</td>
-</tr>
-</tbody>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageGroupBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+    <tbody class="mcnImageGroupBlockOuter">
+        <tr>
+            <td valign="top" style="padding: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnImageGroupBlockInner">
+                <table align="left" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                    <tbody>
+                        <tr>
+                            <td class="mcnImageGroupContent" valign="top" style="padding-left: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                <a href="https://chat.whatsapp.com/AK2b3KFxGruA67OqmlIMOg" title="" class="" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                    <img alt="" src="https://gallery.mailchimp.com/0a47ce0c4473e8015e074c3c5/images/7fbda7c5-1220-4f31-b7dd-c8b736c6cccf.png" width="264" style="max-width: 591px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table align="right" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                    <tbody>
+                        <tr>
+                            <td class="mcnImageGroupContent" valign="top" style="padding-right: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                <a href="https://chat.whatsapp.com/CVzHVgsnFteHKNNGmJxbbs" title="" class="" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                    <img alt="" src="https://gallery.mailchimp.com/0a47ce0c4473e8015e074c3c5/images/cb14ac0d-d032-4c56-9f0c-e196cd01b708.jpeg" width="264" style="max-width: 591px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
 </table>
 <table class="mcnTextBlock" style="min-width: 100%; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" border="0" width="100%" cellspacing="0" cellpadding="0">
 <tbody class="mcnTextBlockOuter">
