@@ -20,8 +20,8 @@ const myFormat = printf(({ level, message, timestamp }) => {
 });
 
 const transport = new (transports.DailyRotateFile)({
-	filename: 'log/%DATE%-all.log',
-	datePattern: 'YYYY-MM-DD-HH',
+	filename: 'logs/%DATE%-all.log',
+	datePattern: 'YYYY-MM-DD',
 	zippedArchive: true,
 	maxSize: '20m',
 	maxFiles: '1000',
@@ -30,7 +30,7 @@ const transport = new (transports.DailyRotateFile)({
 const errorTransport = new (transports.DailyRotateFile)({
 	filename: 'log/%DATE%-error.log',
 	datePattern: 'YYYY-MM-DD-HH',
-	zippedArchive: true,
+	zippedArchive: false,
 	maxSize: '20m',
 	maxFiles: '1000',
 	level: 'error'
