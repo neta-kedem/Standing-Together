@@ -17,7 +17,7 @@ module.exports = (app) => {
 				return res.json({error: result.error});
 			res.setHeader('Content-Type', 'text/csv');
 			res.setHeader('Content-Disposition', 'attachment; filename=\"' + 'download-' + Date.now() + '.csv\"');
-			activistFetcher.downloadActivistsByQuery(req.body.query, (result) => {
+			activistFetcher.downloadActivistsByQuery(req.body.query, req.body.sortBy, (result) => {
 				return res.json({"csv":excelExport.getCSV(result.activists, ["firstName", "lastName", "city", "phone", "email",  "isCaller", "creationDate", "circle", "isMember", "isPaying", "isNewsletter", "memberSince", "tz", "street", "houseNum", "apartmentNum", "mailbox", "birthday"])});
 			});
 		})
