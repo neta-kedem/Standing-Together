@@ -6,3 +6,6 @@ patch:
   SNYK-JS-TREEKILL-536781:
     - concurrently > tree-kill:
         patched: '2019-12-11T21:01:36.200Z'
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - puppeteer > https-proxy-agent:
+        patched: '2019-12-18T15:23:22.851Z'
