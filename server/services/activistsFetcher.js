@@ -79,12 +79,21 @@ const queryActivists = function(query, sortBy, page, callback){
         return callback({activists: activistsList, pageCount: result.totalPages, activistCount: result.totalDocs});
     });
 };
-const downloadActivistsByQuery = function(query, callback){
+const downloadActivistsByQuery = function(query, sortBy, callback){
     try{
         query = JSON.parse(query);
     }
     catch(err){
         console.warn(`error in downloadActivistsByQuery. message: ${err}`);
+    }
+    const sort = {};
+    if(sortBy){
+        const sortDir = sortBy.indexOf("-") === -1 ? 1 : -1;
+        sortBy = sortBy ? sortBy.replace("-", "") : null;
+        sort[sortBy]=sortDir;
+    }
+    else{
+        sort["profile.firstName"] = 1;
     }
     objectIdMapper.idifyObject(query);
     objectDateMapper.castDates(query);
@@ -98,6 +107,7 @@ const downloadActivistsByQuery = function(query, callback){
             }
         },
         {$match: query},
+        {$sort : sort}
     ]).exec().then((activists) => {
         let activistsList = [];
         for(let activist of activists)

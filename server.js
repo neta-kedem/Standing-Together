@@ -54,7 +54,10 @@ if(dev){
 //ensures no deprecated functions are used
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-mongoose.connect(MONGODB_URI, {'useNewUrlParser': true}).then(()=>{});
+mongoose.connect(MONGODB_URI, {'useNewUrlParser': true}).then(()=>{}).catch(err=>{
+	console.log("Please start your mongodb server.");
+	process.exit(1);
+});
 mongoose.Promise = global.Promise;
 const app = express();
 //setup server to use accept calls whose body contains files up to 5 mgb
