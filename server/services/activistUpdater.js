@@ -198,6 +198,7 @@ const checkForDuplicates = function (activists){
         //fetch all pre-existing activists whose email/phone is included in the emails/phones lists
         const duplicates = activistsFetcher.searchDuplicates(phones, emails).then(duplicates => {
             //index those existing activists once by phone, and once by email
+            //re-filtering is important in case some activists have an email address but no phone number
             const duplicatesWithPhones = duplicates.filter((d)=>(d.phone&&d.phone.length>3));
             const duplicatesByPhone = arrayFunctions.indexByField(duplicatesWithPhones, "phone");
             const duplicatesWithEmail = duplicates.filter((d)=>(d.email&&d.email.length>3));
