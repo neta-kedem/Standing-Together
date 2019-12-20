@@ -35,7 +35,7 @@ const getAssociatedActivists = function(scanData){
 };
 
 const getContactScan = function(req, res){
-    Authentication.hasRole(req, "isTyper").then(result => {
+    Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
         if(result.error)
             return res.json({"error": result.error});
         const requestedId = req.query.scanId;
@@ -73,22 +73,27 @@ const getContactScan = function(req, res){
     })
 };
 const debug = (x) => {console.log('!!! ' + x); return x};
+
 const list = (req, res) => {
-	let query = {};
-	if (req.query.eventId) {
-		let eventId;
-		try{
-			eventId = mongoose.Types.ObjectId(req.query.eventId);
-		}
-		catch{
-			return {error: "incorrect id supplied"};
-		}
-		query.eventId = eventId;
-	}
-	return ContactScan.find(query).exec()
-		.then(scans => res.json({scans}))
-		.catch(err => res.json({success: false, error: err}));
-}
+    Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
+        if (result.error)
+            return res.json({"error": result.error});
+        let query = {};
+        if (req.query.eventId) {
+            let eventId;
+            try {
+                eventId = mongoose.Types.ObjectId(req.query.eventId);
+            } catch {
+                return {error: "incorrect id supplied"};
+            }
+            query.eventId = eventId;
+        }
+        return ContactScan.find(query).exec()
+            .then(scans => res.json({scans}))
+            .catch(err => res.json({success: false, error: err}));
+    });
+};
+
 const getContactScanById = async function(scanId){
     let scanObjectId;
     try{

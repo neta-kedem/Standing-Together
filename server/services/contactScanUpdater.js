@@ -19,6 +19,13 @@ const insertContactScan = function(scanUrl, eventId){
        return {"id": scanObject._id};
    });
 };
+const deleteContactScan = function(scanId){
+    return ContactScan.deleteOne({_id: mongoose.Types.ObjectId(scanId)}).then(()=>{
+        return true;
+    }).catch(()=>{
+        return {"error": "scan not found"}
+    });
+};
 const pingScan = function(scanId){
     scanId = mongoose.Types.ObjectId(scanId);
     const now = new Date();
@@ -45,6 +52,7 @@ const importContacts = function(eventId, activists){
 module.exports = {
     insertContactScan,
     pingScan,
-    importContacts
+    importContacts,
+    deleteContactScan
 };
 

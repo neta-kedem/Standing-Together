@@ -97,7 +97,7 @@
 		display: block;
 		width: 15em;
 		text-align: center;
-		margin: 5em auto;
+		margin: 2.5em auto;
 		padding: 0.75% 2%;
 		font-size: 1em;
 		color: white;
@@ -121,18 +121,24 @@
 		font-size: 2em;
 		margin: 0 0.5em;
 	}
-    .event-table .delete-row-wrap {
+	.event-table{
+		margin-bottom: 2em;
+	}
+	.event-table .delete-row-wrap {
 		background-color: transparent;
 		width: 2em;
 		height: 0;
 		border: none;
 		position: relative;
-		padding: 0;
 		cursor: pointer;
 		overflow: hidden;
     }
 
-	.event-table .delete-row-wrap .delete-row, .event-table .delete-row-wrap .delete-row {
+	.event-table td, .event-table th{
+		padding: 0 1em;
+	}
+
+	.event-table .delete-row-wrap .delete-row{
 		display: block;
 	}
 
@@ -143,5 +149,4 @@
 	.delete-row-wrap:active .delete-row {
 		color: #444;
 	}
-
 }

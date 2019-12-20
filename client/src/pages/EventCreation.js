@@ -111,32 +111,44 @@ handleScanRowClick(scan) {
 	window.location.href = `/Typer?contactScan=${scan._id}`;
 }
 
+handleScanDeletion(scanIndex) {
+	const scans = this.state.scans.slice();
+	server.post('contactScan/delete', {'scanId': scans[scanIndex]._id})
+		.then(() => {
+			scans.splice(scanIndex, 1);
+			this.setState({scans});
+			alert("הסריקה הוסרה");
+		});
+}
+
 render() {
 	const categories = this.state.categories.slice();
 	const catOptions = categories.map((cat)=>{
 		return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
 	});
-	const rows = this.state.scans.map(scan=>
-		<tr onClick={() => this.handleScanRowClick(scan)} key={scan._id}>
-			<td className="delete-row-wrap">
-				<FontAwesomeIcon className="delete-row" icon="trash-alt"/>
-			</td>
-			<td>
-				<img
-					style={{height: 50}}
-					src={`../uploads/contactScans/${scan.scanUrl}`}
-				/>
-			</td>
-			<td>
-				{new Date(scan.metadata.creationDate).toLocaleDateString()}
-			</td>
-			<td>
-				{new Date(scan.metadata.lastUpdate).toLocaleDateString()}
-			</td>
-			<td>
-				{scan.activists.length}
-			</td>
-		</tr>
+	const rows = this.state.scans.map((scan, i)=> {
+			const preview = (scan.scanUrl === "fromCSV") ? "/static/media/Excel.be1669c6.svg" : "../uploads/contactScans/" + scan.scanUrl;
+			return <tr key={scan._id}>
+				<td className="delete-row-wrap" onClick={() => this.handleScanDeletion(i)}>
+					<FontAwesomeIcon className="delete-row" icon="trash-alt"/>
+				</td>
+				<td onClick={() => this.handleScanRowClick(scan)}>
+					<img
+						style={{height: "5em"}}
+						src={preview}
+					/>
+				</td>
+				<td>
+					{new Date(scan.metadata.creationDate).toLocaleDateString()}
+				</td>
+				<td>
+					{new Date(scan.metadata.lastUpdate).toLocaleDateString()}
+				</td>
+				<td>
+					{scan.activists.length}
+				</td>
+			</tr>
+		}
 	);
 	return (
 		<div style={{'height':'100vh'}} className={"page-wrap-event-creation"}>
@@ -185,13 +197,13 @@ render() {
 										<div>דף</div>
 									</th>
 									<th>
-										<div>נוצר</div>
+										<div>תאריך העלאה</div>
 									</th>
 									<th>
-										<div>עודכן</div>
+										<div>תאריך עדכון אחרון</div>
 									</th>
 									<th>
-										<div>רשומים</div>
+										<div>#רשומות</div>
 									</th>
 								</tr>
 							</thead>
