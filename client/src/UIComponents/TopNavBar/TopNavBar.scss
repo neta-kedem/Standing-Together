@@ -183,15 +183,11 @@
 
 .sidebar-item.button {
 	cursor: pointer;
-	transition: opacity 1s ease, background-color 0.25s;
-	-moz-transition: opacity 1s ease, background-color 0.25s;
-	-ms-transition: opacity 1s ease, background-color 0.25s;
-	-webkit-transition: opacity 1s ease, background-color 0.25s;
-	-o-transition: opacity 1s ease, background-color 0.25s;
 }
 
 .sidebar-item.button:hover {
 	background-color: #ddd;
+	transition: none;
 }
 
 .sidebar-item.button:active {
