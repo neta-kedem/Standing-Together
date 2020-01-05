@@ -6,6 +6,7 @@ import events from './lib/events';
 import Alert from './UIComponents/Alert/Alert'
 
 import NoMatch from "./pages/404";
+import LinkRedirect from "./pages/LinkRedirect";
 import Login from "./pages/Login";
 import LockMe from "./pages/LockMe";
 import Organizer from "./pages/Organizer";
@@ -92,6 +93,7 @@ export default class App extends React.Component {
               <Route path="/VotingResults" exact component={VotingResults}/>
               <Route path="/Welcome" exact component={Welcome}/>
               <Route path="/WhatsappMessenger" exact component={WhatsappMessenger}/>
+              <Route path="/LinkRedirect" component={LinkRedirect}/>
               <Route component={NoMatch}/>
             </Switch>
             <Alert setQueue={(alertQueue)=>this.setState({alertQueue})} queue={this.state.alertQueue}/>

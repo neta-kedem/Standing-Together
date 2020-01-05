@@ -108,7 +108,7 @@ handlePost() {
 }
 
 handleScanRowClick(scan) {
-	window.location.href = `/Typer?contactScan=${scan._id}`;
+	window.location.href = `management.standing-together.org/Typer?contactScan=${scan._id}`;
 }
 
 handleScanDeletion(scanIndex) {
@@ -127,19 +127,19 @@ render() {
 		return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
 	});
 	const rows = this.state.scans.map((scan, i)=> {
-			const preview = (scan.scanUrl === "fromCSV") ? "/static/media/Excel.be1669c6.svg" : "../uploads/contactScans/" + scan.scanUrl;
+			const preview = (scan.scanUrl === "fromCSV") ? "/static/media/Excel.be1669c6.svg" : "https://management.standing-together.org/uploads/contactScans/" + scan.scanUrl;
 			return <tr key={scan._id}>
 				<td className="delete-row-wrap" onClick={() => this.handleScanDeletion(i)}>
 					<FontAwesomeIcon className="delete-row" icon="trash-alt"/>
 				</td>
 				<td onClick={() => this.handleScanRowClick(scan)}>
 					<img
-						style={{height: "5em"}}
+						style={{height: "10em"}}
 						src={preview}
 					/>
 				</td>
 				<td>
-					{new Date(scan.metadata.creationDate).toLocaleDateString()}
+					{scan._id}
 				</td>
 				<td>
 					{new Date(scan.metadata.lastUpdate).toLocaleDateString()}

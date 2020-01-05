@@ -14,7 +14,7 @@ export default class ContactScanDisplay extends React.Component {
 		this.setState({scanWidth:img.naturalWidth, scanHeight:img.naturalHeight});
 	}
 	render() {
-		const scan = <img src={"../uploads/contactScans/"+this.props.scanUrl} alt="scan" className="scan-canvas" onLoad={this.handleImageLoaded.bind(this)} ref={this.scanCanvas}/>;
+		const scan = <img src={"https://management.standing-together.org/uploads/contactScans/"+this.props.scanUrl} alt="scan" className="scan-canvas" onLoad={this.handleImageLoaded.bind(this)} ref={this.scanCanvas}/>;
 		return (
 			<div>
 
