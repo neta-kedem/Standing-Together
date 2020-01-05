@@ -104,6 +104,8 @@ function alerts (type, path) {
 				opaque: true,
 				onClose: () => window.location.href = '/Login?redirect=' + path,
 		};
+		default:
+			break;
 	}
 }
 

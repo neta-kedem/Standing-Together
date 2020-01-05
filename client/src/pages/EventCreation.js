@@ -134,6 +134,7 @@ render() {
 				</td>
 				<td onClick={() => this.handleScanRowClick(scan)}>
 					<img
+						alt={"scan preview"}
 						style={{height: "10em"}}
 						src={preview}
 					/>

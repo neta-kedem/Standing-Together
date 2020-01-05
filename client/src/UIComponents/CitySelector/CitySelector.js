@@ -227,7 +227,7 @@ export default class CitySelector extends React.Component {
 
     getClosestCity(x, y, cutoffDist){
         const cities = this.state.cities.slice();
-        const canvas = this.state.canvas;
+        //const canvas = this.state.canvas;
         const mouseX = this.state.mouseX;
         const mouseY = this.state.mouseY;
         let closestToCursor = null;
