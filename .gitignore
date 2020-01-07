@@ -29,7 +29,7 @@ yarn-error.log*
 /services/config.js
 
 # logs
-/log
+/logs
 
 # server config
 server/config.js

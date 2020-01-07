@@ -5,15 +5,17 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cron = require('./server/services/cron');
 const Authentication = require('./server/services/authentication');
-
 const dev = process.env.NODE_ENV !== 'production';
 // db
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/StandingTogether`;
 const mongoose = require('mongoose');
 // logger
 require('winston-daily-rotate-file');
-const { createLogger, format, transports } = require('winston');
+const winston = require('winston');
+const { createLogger, format, transports } = winston;
 const { combine, timestamp, printf } = format;
+require('winston-mongodb');
+const expressWinston = require('express-winston')
 
 const myFormat = printf(({ level, message, timestamp }) => {
 	return `{ "timestamp": "${timestamp}", "level": "${level}", "message": "${message}" }`;
@@ -36,17 +38,32 @@ const errorTransport = new (transports.DailyRotateFile)({
 	level: 'error'
 });
 
+const options = {
+	db: MONGODB_URI,
+	collection: 'logs',
+	level: 'info',
+	storeHost: true,
+	capped: true
+}
+
 const logger = createLogger({
 	format: combine(
 			timestamp(),
 			myFormat
 	),
-	transports: [transport, new transports.Console(), errorTransport]
+	transports: [transport, new transports.Console(), errorTransport, new winston.transports.MongoDB(options)]
 });
 
 console.log = (...args) => logger.info(args)
 console.warn = (...args) => logger.warn(args)
 console.error = (...args) => logger.error(args)
+
+const init = (logger) => expressWinston.logger({
+	winstonInstance: logger, // a winston logger instance. If this is provided the transports option is ignored.
+	msg: 'HTTP {{res.statusCode}} {{req.method}} {{req.url}} {{res.responseTime}}ms {{JSON.stringify(req.body)}}', // customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}", "HTTP {{req.method}} {{req.url}}".
+	expressFormat: false, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors when colorize set to true
+	bodyWhitelist: ["body"] // Array of body properties to log. Overrides global bodyWhitelist for this instance
+})
 
 if(dev){
 	mongoose.set('debug', true);
@@ -75,6 +92,7 @@ const auth = function(req, res, next) {
 };
 app.use('/uploads', auth);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(init(logger));
 //set cron
 cron.scheduleSync();
 const childProcess = require('child_process');
@@ -91,9 +109,6 @@ app.post("/webhooks/github", function (req, res) {
 	if(branch.indexOf('master') > -1){
 		deploy(res, "master");
 	}
-	if(branch.indexOf('nextless') > -1){
-		deploy(res, "nextless");
-	}
 });
 const port = process.env.PORT || 5000;
 
@@ -103,7 +118,7 @@ app.listen(port, err => {
 });
 
 function deploy(res, branch){
-	childProcess.exec(`cd ~/scripts && ./pullST.sh ${branch}`, function(err, stdout, stderr){
+	childProcess.exec(`. ~/scripts/pullST.sh ${branch}`, function(err, stdout, stderr){
 		if (err) {
 			console.error('DEPLOY ERROR ' + err);
 			return res.send(500);

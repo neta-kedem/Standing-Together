@@ -6,6 +6,7 @@
     "server": "nodemon --ignore 'client/' server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "start": "concurrently --kill-others-on-fail \"node server -p $PORT\" \"yarn client -p $PORT\" ",
+    "prod": "concurrently --kill-others-on-fail \"node server -p $SERVER\" \"cd client && yarn prod\" ",
     "snyk-protect": "snyk protect",
     "prepare": "yarn run snyk-protect"
   },
@@ -16,6 +17,7 @@
     "dotenv": "^8.0.0",
     "excel4node": "^1.7.2",
     "express": "^4.16.3",
+    "express-winston": "^4.0.1",
     "fast-xml-parser": "^3.12.19",
     "file-loader": "^1.1.11",
     "file-saver": "^2.0.2",
@@ -36,7 +38,19 @@
     "request": "^2.88.0",
     "snyk": "^1.258.2",
     "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^4.4.0"
+    "winston-daily-rotate-file": "^4.4.0",
+    "winston-mongodb": "^5.0.1"
   },
-  "snyk": true
+  "snyk": true,
+  "devDependencies": {
+    "eslint-plugin-security": "^1.4.0"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "security"
+    ],
+    "extends": [
+      "plugin:security/recommended"
+    ]
+  }
 }
