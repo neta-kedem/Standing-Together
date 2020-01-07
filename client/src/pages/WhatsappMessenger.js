@@ -52,7 +52,7 @@ export default class WhatsappMessenger extends React.Component {
 
     validatePhoneNumber = function(phone){
         return /^([0-9]){12}$/.test(phone);
-    }.bind(this);
+    };
 
     getMessageList = function(){
         this.setState({attemptedPost: true});

@@ -19,13 +19,15 @@ constructor(props) {
 		category: "",
 		location: "",
 		categories: [],
-		cities: []
+		cities: [],
+		scans: [],
 	};
 	if(this.state["_id"]){
 		this.fetchEventDetails();
 	}
 	this.fetchCategories();
 	this.fetchCities();
+	this.fetchScans();
 }
 fetchEventDetails(){
 	server.get('events/eventById/'+this.state._id)
@@ -53,6 +55,10 @@ fetchCities(){
 		.then(json => {
 			this.setState({cities: json.map((city)=>{return city.nameHe;})})
 		});
+}
+fetchScans() {
+	server.get(`contactScan/list/?eventId=${this.state._id}`)
+		.then(scans=>this.setState({scans: scans.scans}));
 }
 handleInputChange(event) {
 	const target = event.target;
@@ -101,11 +107,50 @@ handlePost() {
 	});
 }
 
+handleScanRowClick(scan) {
+	window.location.href = `management.standing-together.org/Typer?contactScan=${scan._id}`;
+}
+
+handleScanDeletion(scanIndex) {
+	const scans = this.state.scans.slice();
+	server.post('contactScan/delete', {'scanId': scans[scanIndex]._id})
+		.then(() => {
+			scans.splice(scanIndex, 1);
+			this.setState({scans});
+			alert("הסריקה הוסרה");
+		});
+}
+
 render() {
 	const categories = this.state.categories.slice();
 	const catOptions = categories.map((cat)=>{
 		return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
 	});
+	const rows = this.state.scans.map((scan, i)=> {
+			const preview = (scan.scanUrl === "fromCSV") ? "/static/media/Excel.be1669c6.svg" : "https://management.standing-together.org/uploads/contactScans/" + scan.scanUrl;
+			return <tr key={scan._id}>
+				<td className="delete-row-wrap" onClick={() => this.handleScanDeletion(i)}>
+					<FontAwesomeIcon className="delete-row" icon="trash-alt"/>
+				</td>
+				<td onClick={() => this.handleScanRowClick(scan)}>
+					<img
+						alt={"scan preview"}
+						style={{height: "10em"}}
+						src={preview}
+					/>
+				</td>
+				<td>
+					{scan._id}
+				</td>
+				<td>
+					{new Date(scan.metadata.lastUpdate).toLocaleDateString()}
+				</td>
+				<td>
+					{scan.activists.length}
+				</td>
+			</tr>
+		}
+	);
 	return (
 		<div style={{'height':'100vh'}} className={"page-wrap-event-creation"}>
 			<TopNavBar>
@@ -143,6 +188,30 @@ render() {
 						<div className="save-event-button-icon">
 							<FontAwesomeIcon icon="save"/>
 						</div>
+					</div>
+					<div>
+						<table dir="rtl" className="event-table">
+							<thead>
+								<tr>
+									<th className="delete-row-wrap"/>
+									<th>
+										<div>דף</div>
+									</th>
+									<th>
+										<div>תאריך העלאה</div>
+									</th>
+									<th>
+										<div>תאריך עדכון אחרון</div>
+									</th>
+									<th>
+										<div>#רשומות</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody className="row-wrap">
+								{rows}
+							</tbody>
+						</table>
 					</div>
 					<datalist id="city-data-list">
 						<option value={"מקוון"}/>

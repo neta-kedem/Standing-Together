@@ -72,6 +72,28 @@ const getContactScan = function(req, res){
             });
     })
 };
+const debug = (x) => {console.log('!!! ' + x); return x};
+
+const list = (req, res) => {
+    Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
+        if (result.error)
+            return res.json({"error": result.error});
+        let query = {};
+        if (req.query.eventId) {
+            let eventId;
+            try {
+                eventId = mongoose.Types.ObjectId(req.query.eventId);
+            } catch {
+                return {error: "incorrect id supplied"};
+            }
+            query.eventId = eventId;
+        }
+        return ContactScan.find(query).exec()
+            .then(scans => res.json({scans}))
+            .catch(err => res.json({success: false, error: err}));
+    });
+};
+
 const getContactScanById = async function(scanId){
     let scanObjectId;
     try{
@@ -91,8 +113,11 @@ const getContactScanById = async function(scanId){
     return promise;
 };
 
+
+
 module.exports = {
     getContactScan,
-    getContactScanById
+    getContactScanById,
+	list,
 };
 

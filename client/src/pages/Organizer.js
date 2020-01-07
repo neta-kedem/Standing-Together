@@ -81,7 +81,8 @@ fetchActivistsByQuery(){
 
 downloadActivistsByQuery(){
 	const query = this.state.query;
-	server.post('queryToXLSX', {'query': query})
+	const sortBy = this.state.sortBy;
+	server.post('queryToXLSX', {'query': query, 'sortBy': sortBy})
 		.then(json => {
 			const blob = new Blob(["\uFEFF" + json.csv], {type: "text/csv;charset=utf-8,%EF%BB%BF"});
 			FileSaver.saveAs(blob, "contacts_export.csv");
