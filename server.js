@@ -30,7 +30,7 @@ const transport = new (transports.DailyRotateFile)({
 });
 
 const errorTransport = new (transports.DailyRotateFile)({
-	filename: 'log/%DATE%-error.log',
+	filename: 'logs/%DATE%-error.log',
 	datePattern: 'YYYY-MM-DD-HH',
 	zippedArchive: false,
 	maxSize: '20m',
@@ -71,7 +71,7 @@ if(dev){
 //ensures no deprecated functions are used
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-mongoose.connect(MONGODB_URI, {'useNewUrlParser': true}).then(()=>{}).catch(err=>{
+mongoose.connect(MONGODB_URI, {'useNewUrlParser': true, 'useUnifiedTopology': true}).then(()=>{}).catch(err=>{
 	console.log("Please start your mongodb server.");
 	process.exit(1);
 });

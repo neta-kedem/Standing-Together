@@ -6,7 +6,6 @@
     "server": "nodemon --ignore 'client/' server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "start": "concurrently --kill-others-on-fail \"node server -p $PORT\" \"yarn client -p $PORT\" ",
-    "prod": "concurrently --kill-others-on-fail \"node server -p $SERVER\" \"cd client && yarn prod\" ",
     "snyk-protect": "snyk protect",
     "prepare": "yarn run snyk-protect"
   },
