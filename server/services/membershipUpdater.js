@@ -14,7 +14,7 @@ const addToCircle = function(activist){
     if(!activist || !activist.profile.residency){
         return new Promise((resolve) => {resolve(activist)});
     }
-    return circleMatcher.getCircleByCity(activist.city).then((circle)=>{
+    return circleMatcher.getCircleByCity(activist.profile.residency).then((circle)=>{
         if(!circle)
             return activist;
         activist.profile.circle = circle._id;
