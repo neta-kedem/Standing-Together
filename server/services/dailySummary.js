@@ -6,12 +6,11 @@ const settingsManager = require("./settingsManager");
 const mailer = require("./mailer");
 
 const COVERED_PERIOD = 24*60*60*1000;
-const getDailySummary = function(){
-    return fetchRecentContactSheets().then((sheets)=>{
-        return fetchEventsAndActivistsByContactSheets(sheets).then((events)=>{
-            return compileSummary(events);
-        })
-    })
+const getDailySummary = async function(){
+    const sheets = await fetchRecentContactSheets();
+    const events = await fetchEventsAndActivistsByContactSheets(sheets);
+    const pendingScans = await fetchPendingScans();
+    return compileSummary(events, pendingScans);
 };
 const sendDailySummary = function(){
     settingsManager.getSettingByName("dailySummaryRecipients").then(emailTo=>{
@@ -27,6 +26,13 @@ const sendDailySummary = function(){
             }
             return emailBody;
         });
+    });
+};
+fetchPendingScans = function(){
+    return ContactScan.find(
+        {"complete": false}
+    ).exec().then((contactSheets)=> {
+        return contactSheets;
     });
 };
 fetchRecentContactSheets = function(){
@@ -90,7 +96,7 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
     });
 };
 
-compileSummary = function(events){
+compileSummary = function(events, pendingScans){
     let result = "<head title='daily-summary'> <style>" +
         "p{margin: 0;}" +
         "</style> </head> <body dir='rtl'>";
@@ -208,8 +214,9 @@ compileSummary = function(events){
         let city = citiesByPopularity[i];
         result += city.numOfNewContacts + " מ" + city.city + "<br/>";
     }
+    result += "<p><b>שימו לב! במערכת נותרו עוד " + pendingScans.length + " דפי קשר להקלדה</b></p>";
     result += "</body>";
-    if(eventCount === 0 && contactCount === 0)
+    if(eventCount === 0 && contactCount === 0 && pendingScans.length === 0)
         return false;
     return result;
 };
