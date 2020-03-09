@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const WhatsappSession = require('../models/whatsappSessionModel');
 const Authentication = require('./authentication');
 
-const CANCEL_AFTER_NO_PING_DURATION = 1000 * 10;
+const CANCEL_AFTER_NO_PING_DURATION = 1000 *60 * 60;
 let browser = null;
 let sessionId = null;
 let currentContactIndex = 0;
@@ -30,8 +30,8 @@ setQR = async (page) => {
     const now = new Date();
     try {
         const src = await page.evaluate(() => {
-            const qrImg = document.querySelector("img[alt='Scan me!']");
-            return qrImg ? qrImg.src : null;
+            const qrImg = document.querySelector("canvas[aria-label='Scan me!']");
+            return qrImg ? qrImg.toDataURL() : null;
         });
         const query = WhatsappSession.updateOne(
             {"_id": sessionId},
@@ -57,7 +57,7 @@ setProfileImage = async (src) => {
         });
 };
 
-setProgress = async (processedCount) => {
+setProgress = async (processedCount, success) => {
     const now = new Date();
     const query = WhatsappSession.updateOne(
         {"_id": sessionId},
@@ -77,12 +77,12 @@ closeSession = async () => {
 
 sendMessage = async (messages, sessionId) => {
     const session = await createSession(messages, sessionId);
-    browser = await puppeteer.launch({headless: true});
+    browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     page.setDefaultTimeout(10000000);
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36');
     await page.goto('https://web.whatsapp.com');
-    await page.waitForSelector("img[alt='Scan me!']");
+    await page.waitForSelector("canvas[aria-label='Scan me!']");
     setQR(page);
     const qrInterval = setInterval(() => {
         checkPing();
@@ -106,16 +106,36 @@ sendMessage = async (messages, sessionId) => {
         }
         await page.evaluate(() => {
             window.onbeforeunload = null;
+            console.log("here");
+            console.log("here");
+            document.body.innerHTML += "<a id='whatsapp-link' href='https://web.whatsapp.com/send?phone="
+                + message.number + "&text=" + message.message +"'>test</a>";
+            document.querySelector("#whatsapp-link").click();
             return true;
         });
         await page.goto("https://web.whatsapp.com/send?phone=" + message.number + "&text=" + message.message);
-        await page.waitForSelector("div.copyable-text");
-        await page.evaluate(() => {
-            document.querySelector("span[data-icon='send']").parentElement.click();
+        await page.waitFor(() =>
+            document.querySelectorAll('div.copyable-text').length||Array.from(document.querySelectorAll('div')).find(element => element.textContent === 'Phone number shared via url is invalid.')
+        );
+        const success = await page.evaluate(async () => {
+            /*const invalidNumber = Array.from(document.querySelectorAll('div')).find(element => element.textContent === 'Phone number shared via url is invalid.');
+            if(invalidNumber){
+                window.onbeforeunload = null;
+                console.log("\n\n\n\n\n\n\n\n HUH");
+                console.log(invalidNumber);
+                return false;
+            }*/
+            await(new Promise(resolve => setTimeout(resolve, 100)));
+            try{
+                document.querySelector("span[data-icon='send']").parentElement.click()
+            }
+            catch(e){
+                console.log(e);
+            }
             window.onbeforeunload = null;
             return true;
         });
-        await setProgress(i + 1);
+        await setProgress(i + 1, success);
     }
     await closeSession();
     return true;

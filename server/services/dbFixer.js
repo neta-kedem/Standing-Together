@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Activist = require('../models/activistModel');
+const City = require('../models/cityModel');
 const ContactScan = require('../models/contactScanModel');
 const Event = require('../models/eventModel');
 
@@ -138,13 +139,32 @@ const castMemberJoinDate = function(){
     });
 };
 
+const setCirclesByCity = function(){
+    const bulk = Activist.collection.initializeOrderedBulkOp();
+    City.find({}).then(cities=>{
+        for(let i = 0; i < cities.length; i++){
+            let c = cities[i];
+            if(c.defaultCircle && c.name.he && c.name.he.length){
+                bulk.find({
+                    $and: [
+                        {"profile.residency": c.name.he},
+                        {
+                            $or: [
+                                {"profile.circle": ""},
+                                {"profile.circle": {$exists:false}},
+                            ]
+                        },
+                    ]}).update({$set:{"profile.circle": c.defaultCircle}});
+            }
+        }
+        return bulk.execute().then(res=>{
+            console.log(res)
+        });
+    });
+};
+
 const fix = async function(){
-    await idifyParticipatedEvents();
-    await idifyContactScans();
-    await idifyEvents();
-    await getParticipatedEventsFromScans();
-    await removeFictitiousPhones();
-    await castMemberJoinDate();
+    await setCirclesByCity();
 };
 
 module.exports = {
