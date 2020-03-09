@@ -104,7 +104,7 @@ const registerMember = async function (activistData){
                     if (realDonations.length) {
                         sum = realDonations[0].sum;
                     }
-                    await notifyAdmins(activistData.firstName, activistData.lastName, sum, activistData.residency, activistObject.profile.circle, activistData.email, activistData.phone);
+                    await notifyAdmins(activistData.firstName, activistData.lastName, sum, activistData.residency, activistObject.profile.circle, activistData.email, activistData.phone, activistData.birthday);
                     await notifyMember(activistData.email, activistData.firstName, activistData.lastName);
                     return true;
                 }).catch((err)=>{
@@ -144,7 +144,7 @@ const registerMember = async function (activistData){
     });
 };
 
-const notifyAdmins = async function (firstName, lastName, sum, residency, circle, email, phone) {
+const notifyAdmins = async function (firstName, lastName, sum, residency, circle, email, phone, birthday) {
     const today = new Date();
     const recipients = await settingsManager.getSettingByName("newMemberAlertRecipients");
     const htmlBody = `
@@ -157,6 +157,7 @@ const notifyAdmins = async function (firstName, lastName, sum, residency, circle
         </br>
         <p>החברה החדשה מתגוררת ב${residency}, וצורפה אוטומטית למעגל ${circle}.</p>
         <p>אפשר ליצור איתה קשר במייל ${email} או בטלפון ${phone}</p>
+        <p>נולדה ב-: ${birthday}₪</p>
     </div>
     `;
     const textBody = `${firstName} ${lastName} נרשמה לתנועה 
