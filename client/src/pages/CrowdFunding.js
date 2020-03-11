@@ -238,7 +238,7 @@ export default class CrowdFunding extends React.Component {
             </div>
             <div className={"donation-amount-input-wrap"}>
                 <div className={"donation-amount-input-label"}>
-                    <div>תרומה של </div>
+                    <div>التبرع بمبلغ </div>
                     <div>תרומה של </div>
                 </div>
                 <div className={"donation-amount-input"}>
