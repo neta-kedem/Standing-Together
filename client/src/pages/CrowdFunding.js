@@ -7,6 +7,7 @@ import FieldValidation from "../services/FieldValidation";
 import IsraelGivesDonator from "../services/IsraelGivesCrowdFundingDonator";
 import Popup from '../UIComponents/Popup/Popup';
 import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export default class CrowdFunding extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ export default class CrowdFunding extends React.Component {
         this.state = {
             sumSoFar: 0,
             target: 100000,
-            base: 2000,
+            base: 24000,
             amounts: [50, 100, 150, 250, 500, 1000, 1500, 2500],
             displayForm: false,
             activistData: {
@@ -55,7 +56,7 @@ export default class CrowdFunding extends React.Component {
                     required: true
                 },
                 {
-                    name: "address", type: "text", ar: "כתובת", he: "כתובת", width: 37.5,
+                    name: "address", type: "text", ar: "عنوان", he: "כתובת", width: 37.5,
                 }
             ],
             paymentFields: [
@@ -129,6 +130,10 @@ export default class CrowdFunding extends React.Component {
         let info = this.state.paymentInfo;
         info["selectedAmount"] = amount ? Math.max(amount, 0) : amount;
         this.setState({paymentInfo: info});
+    }.bind(this);
+
+    closeContributionForm = function (){
+        this.setState({displayForm: false});
     }.bind(this);
 
     handleTypedProfileInput = function (name, value){
@@ -225,6 +230,12 @@ export default class CrowdFunding extends React.Component {
             </button>
         </div>;
         const DonationForm = <div className={"donation-form"}>
+            <div className={"close-payment-form"}>
+                <button type={"button"} onClick={this.closeContributionForm} className="close-payment-form-icon" id={"close-payment-form-icon"}>
+                    <FontAwesomeIcon icon="arrow-right"/>
+                </button>
+                <label className="close-payment-form-label" htmlFor="close-payment-form-icon">اختيار مبلغ آخر • בחירת סכום אחר</label>
+            </div>
             <div className={"donation-amount-input-wrap"}>
                 <div className={"donation-amount-input-label"}>
                     <div>תרומה של </div>
@@ -259,8 +270,8 @@ export default class CrowdFunding extends React.Component {
                     <button type={"button"}
                             className={"register-button"}
                             onClick={this.handlePost}>
-                        <div>אתרום</div>
-                        <div>אתרום</div>
+                        <div>موافقة وتبرع</div>
+                        <div>אישור ותרומה</div>
                     </button>
                     :''
                 }
@@ -283,7 +294,7 @@ export default class CrowdFunding extends React.Component {
             </div>
         </div>;
         return (
-            <div dir={"rtl"} className={"page-wrap-member-registration"}>
+            <div dir={"rtl"} className={"page-wrap-crowd-funding"}>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
                     {statusBar}
@@ -291,7 +302,7 @@ export default class CrowdFunding extends React.Component {
                 </div>
                 <Popup visibility={this.state.displayFailedDonationPopup} toggleVisibility={this.handleDonationFailedPopupToggle.bind(this)}>
                     <div className={"failed-donation-message"}>
-                        <h1>أوه لا! אוי לא!</h1>
+                        <h2>أوه لا! אוי לא!</h2>
                         <p>مع الأسف حصل خلل أثناء تلقّي التبرع، ولم يتم استيعابه.</p>
                         <p>לצערינו התרחשה שגיאה במהלך עיבוד התרומה, והיא לא נקלטה כראוי</p>
                         <p>تأكدوا من إدخالكم التفاصيل الصحيحة، وحاولوا مجددًا.</p>
@@ -306,8 +317,8 @@ export default class CrowdFunding extends React.Component {
                     </div>
                 </Popup>
                 <Popup visibility={this.state.registrationSuccessful} toggleVisibility={()=>{}}>
-                    <h1>شكرًا على انضمامك لحراك نقف معًا. هلمّوا إلى الثورة :)</h1>
-                    <h1>תודה שהצטרפת לתנועת עומדים ביחד. יאללה, מהפכה :)</h1>
+                    <h4>هلمّوا إلى الثورة :)</h4>
+                    <h4>יאללה, מהפכה :)</h4>
                 </Popup>
             </div>
         );
