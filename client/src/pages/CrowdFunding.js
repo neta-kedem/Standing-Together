@@ -307,7 +307,7 @@ export default class CrowdFunding extends React.Component {
                 </Popup>
                 <Popup visibility={this.state.registrationSuccessful} toggleVisibility={()=>{}}>
                     <h1>شكرًا على انضمامك لحراك نقف معًا. هلمّوا إلى الثورة :)</h1>
-                    <h1>תודה שהצטרפת לתנועת עומדים  ביחד. יאללה, מהפכה :)</h1>
+                    <h1>תודה שהצטרפת לתנועת עומדים ביחד. יאללה, מהפכה :)</h1>
                 </Popup>
             </div>
         );
