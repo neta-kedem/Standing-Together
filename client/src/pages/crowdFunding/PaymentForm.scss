@@ -1,0 +1,145 @@
+.contribution-options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+.contribution-button {
+    width: 3.5em;
+    height: 3.5em;
+    padding-top: 0.25em;
+    border-radius: 0.2em;
+    color: #932581;
+    background-color: white;
+    border: none;
+    margin: 2.5%;
+    cursor: pointer;
+    font-size: 1.75em;
+    text-align: center;
+    transition: background-color 0.1s linear, box-shadow 0.3s linear;
+    outline: none;
+}
+
+
+@media only screen and (max-device-width: 480px) {
+    .contribution-button {
+        background-color: #efefef;
+    }
+}
+
+.contribution-amount{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.contribution-value {
+    font-size: 1.3em;
+    display: block;
+    line-height: 0.8em;
+}
+
+.contribution-units.shekels{
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.contribution-frequency {
+    font-size: 0.75em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.25em;
+    margin-top: 0.2em;
+}
+
+.contribution-button:hover {
+    background-color: #efefef;
+}
+
+.contribution-button:active {
+    background-color: #e0e0e0;
+}
+
+.contribution-iframe {
+    border: none;
+    width: 100%;
+    height: 70vh;
+}
+
+.close-payment-form {
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.close-payment-form-icon {
+    cursor: pointer;
+    width: 4em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5%;
+    background-color: #c00;
+    color: #eee;
+    padding: 0.2em;
+    outline: none;
+}
+
+.close-payment-form-label {
+    cursor: pointer;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.close-payment-form:hover .close-payment-form-icon {
+    background-color: #a00;
+}
+
+.close-payment-form:active .close-payment-form-icon {
+    background-color: #800;
+}
+.close-payment-form-icon:focus{
+    box-shadow: 0 0px 5px 1px rgba(0, 0, 0, 0.6);
+}
+
+.credit-card-field-title {
+    margin-right: 0.5em;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25em;
+}
+
+.contributionForm input, .contributionForm select {
+    box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.3s;
+    border-radius: 4px;
+    font: normal normal normal 15px/1.4em arial, 'ｍｓ ｐゴシック', 'ms pgothic', '돋움', dotum, helvetica, sans-serif;
+    border-width: 0;
+    background-color: rgba(255, 255, 255, 1);
+    box-sizing: border-box !important;
+    color: #000000;
+    border-style: solid;
+    border-color: rgba(232, 232, 232, 1);
+    outline: none;
+    padding: 3px 10px;
+    margin: 0.25em 0.5em 0.75em;
+    max-width: 100%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    text-overflow: ellipsis;
+}
+
+.contributionForm input:focus, .contributionForm select:focus, .contribution-button:focus {
+    box-shadow: 0 3.5px 12px 1px rgba(0, 0, 0, 0.4);
+}
+
+.highlight-invalid-fields .contributionForm input.invalid,
+.highlight-invalid-fields .contributionForm select.invalid {
+    background-color: rgb(255, 150, 160);
+}

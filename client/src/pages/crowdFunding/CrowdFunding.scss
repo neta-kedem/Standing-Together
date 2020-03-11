@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css?family=Mirza:400,500,600,700&display=swap&subset=arabic');
+.page-wrap-member-registration {
+    font-family: Alef, Mirza, Rubik, Cabin, sans-serif;
+    font-size: 18px;
+    color: #4D4D4D;
+    background: none !important;
+
+    input, select, button{
+        font-family: Alef, Mirza, Rubik, Cabin, sans-serif !important;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 5%;
+        box-sizing: border-box;
+        background-color: white;
+        border-radius: 0.75em;
+    }
+
+    @media only screen and (max-width: 480px) {
+        .form-container {
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 0;
+        }
+    }
+    @media only screen and (max-device-width: 480px) {
+        .form-container {
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 0;
+        }
+    }
+
+    .logo {
+        width: 12em;
+        margin: 3% auto;
+        display: block;
+    }
+
+    .registration-form-title {
+        font-weight: bold;
+        font-size: 2em;
+        line-height: 1em;
+        text-align: center;
+        color: #932581;
+        margin: 0 0 5%;
+    }
+
+    .section-text{
+        line-height: 1.25em;
+    }
+
+    .section-instruction {
+        color: white;
+        background-color: rgb(45, 140, 145);
+        font-weight: bold;
+        line-height: 1.5em;
+    }
+
+    .registration-form, .payment-form {
+        margin: 2.5% auto;
+    }
+
+    .register-button-wrap div {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .register-button {
+        display: block;
+        margin: 5% auto 0;
+        border: none;
+        outline: none;
+        background-color: #932581;
+        color: white;
+        line-height: 1.2em;
+        font-weight: bold;
+        font-family: 'Alef', sans-serif;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 0.3em;
+        padding: 0.5em 1em;
+        transition: box-shadow 0.3s;
+    }
+
+    .register-button:focus {
+        box-shadow: 0 3.5px 12px 1px rgba(0, 0, 0, 0.8);
+    }
+
+    .register-button:hover {
+        background-color: #831561;
+    }
+
+    .register-button:active {
+        background-color: #630551;
+    }
+
+    button:disabled.register-button,
+    button[disabled].register-button {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .failed-donation-message {
+        padding: 5%;
+    }
+
+    .close-failed-donation-button {
+        display: block;
+        margin: 5% auto;
+        border: none;
+        outline: none;
+        background-color: #ddd;
+        color: #932581;
+        font-weight: bold;
+        font-family: 'Alef', sans-serif;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 0.3em;
+        padding: 0.5em 1em;
+        transition: box-shadow 0.3s, background-color 0.3s;
+    }
+
+    .close-failed-donation-button:hover {
+        box-shadow: 3px 3px 7px 1px rgba(0, 50, 70, 0.4) inset;
+        background-color: #eee;
+    }
+
+    .contribution-options {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: calc(14.5em + 7.5%);
+        margin: 0 auto;
+    }
+
+    .contribution-button {
+        width: 4.25em;
+        height: 4.25em;
+        transition: all 0.2s ease;
+        border-radius: 100%;
+        background: #0F495B;
+        color: #F8A895;
+        border: none;
+        margin: 2.5%;
+        padding-top: 0;
+        cursor: pointer;
+        font-size: 1em;
+        text-align: center;
+        outline: none;
+    }
+
+    .contribution-amount{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .contribution-value {
+        font-size: 1.3em;
+        display: block;
+        line-height: 1em;
+    }
+
+    .donation-amount-input-wrap{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .donation-amount-input{
+        font-size: 2em;
+    }
+    .donation-amount-input-label{
+        line-height: 0.9em;
+    }
+    .donation-amount-input input{
+        border: none;
+        outline: none;
+        background: none;
+        border-bottom: 2px solid black;
+        width: 2.5em;
+        margin-right: 1em;
+        font-size: 1em;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .contribution-units.shekels{
+        font-size: 0.8em;
+        font-weight: bold;
+    }
+
+    .contribution-button:hover {
+        background: #F8A895;
+        color: #0F495B;
+    }
+    .donation-sum-bar-wrap{
+        background: #F8A895;
+        color: white;
+        height: 1.5em;
+        direction: ltr;
+        text-align:center;
+        position: relative;
+    }
+    .donation-sum-bar{
+        background: #0F495B;
+        height: 1.5em;
+        transition: width 1s;
+    }
+    .donation-percentage{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+    .donation-ratio-details{
+        text-align: center;
+        font-weight: bold;
+        margin-top: 0.2em;
+        maargin-bottom: 0.75em;
+    }
+}
