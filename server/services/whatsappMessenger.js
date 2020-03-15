@@ -42,7 +42,7 @@ setQR = async (page) => {
             });
     }
     catch(err){
-        console.log(err)
+        console.error(`setQR failed. message ${err}`)
     }
 };
 

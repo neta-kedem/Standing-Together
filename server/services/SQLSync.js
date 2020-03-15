@@ -78,13 +78,13 @@ const updateMysql = function(queries){
     const con = mysql.createConnection(connectionConfig);
     con.connect((err) => {
         if(err){
-            console.log(err);
+            console.error('MYSQL ERROR '+ err);
             return;
         }
         for(let i = 0; i < queries.length; i++){
             con.query(queries[i], (err)=> {
-                console.log(err);
-                console.log("done");
+                console.warn(`error in query ${queries[i]} message: ${err}`);
+                console.warn(`run successfully ${queries[i]}`);
             });
         }
         con.end();

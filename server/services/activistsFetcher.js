@@ -38,7 +38,7 @@ const queryActivists = function(query, sortBy, page, callback){
       query = JSON.parse(query);
     }
     catch(err){
-      console.log(err);
+      console.warn(`error in queryActivists. message: ${err}`);
     }
     objectIdMapper.idifyObject(query);
     objectDateMapper.castDates(query);
@@ -84,7 +84,7 @@ const downloadActivistsByQuery = function(query, sortBy, callback){
         query = JSON.parse(query);
     }
     catch(err){
-        console.log(err);
+        console.warn(`error in downloadActivistsByQuery. message: ${err}`);
     }
     const sort = {};
     if(sortBy){

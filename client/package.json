@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000/",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.10.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.21",
@@ -31,15 +37,9 @@
     "react-modal": "^3.8.1",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.0",
+    "react-scripts": "3.3.0",
     "react-time-input": "^0.0.19",
     "styled-jsx": "latest"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

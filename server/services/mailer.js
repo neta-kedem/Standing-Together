@@ -10,7 +10,7 @@ const sendEmail=function(mailOptions){
 
 	transporter.sendMail(mailOptions, function(error, info){
 		if (error) {
-			console.log(error);
+			console.warn(`error in sendMail. message: ${error}`);
 		} else {
 			console.log('Email sent: ' + info.response);
 		}

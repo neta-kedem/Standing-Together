@@ -56,6 +56,7 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
             let activist = sheet.activists[j];
             activists.add(activist.activistId);
             activists.add(activist.typerId);
+            console.log(`fetchEventsAndActivistsByContactSheets- activist.typerId: ${activist.typerId}`);
         }
     }
     const activistsPromise = activistsFetcher.getActivistsByIds(Array.from(activists)).then((activistsData)=>{
@@ -68,6 +69,7 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
                 let activist = sheet.activists[j];
                 activist.activistDetails = activistDict[activist.activistId];
                 activist.typerDetails = activistDict[activist.typerId];
+                console.log(`fetchEventsAndActivistsByContactSheets- activist.typerDetails: ${activist.typerDetails}`);
             }
         }
         return true;
@@ -80,7 +82,7 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
             let eventId = sheet.eventId;
             //check for missing events
             if(!eventsData[eventId]){
-                console.log("error! this shouldn't happen. Some event wasn't fetched properly when compiling daily email");
+                console.error(`Some event wasn't fetched properly when compiling daily email. eventId: ${eventId}`);
             }
             if(eventsData[eventId].sheets === undefined){
                 eventsData[eventId].sheets = [];
