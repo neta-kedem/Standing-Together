@@ -17,9 +17,10 @@ const addToCircle = function(activist){
     return circleMatcher.getCircleByCity(activist.profile.residency).then((circle)=>{
         if(!circle)
             return activist;
-        activist.profile.circle = circle._id;
-        if(activist.profile.circle && circle.mailchimpList)
-            activist.push(mailchimpSync.createContacts([activist], circle.mailchimpList));
+        activist.profile.circle = circle.name;
+        if(activist.profile.circle && circle.mailchimpList) {
+            mailchimpSync.createContacts([activist], circle.mailchimpList);
+        }
         return activist;
     });
 };
@@ -35,6 +36,7 @@ const logRegistration = function(activistData, donationId) {
 };
 
 const registerMember = async function (activistData){
+    const development = process.env.NODE_ENV === 'development';
     let donation = null;
     const recentDonations = await israelGivesSearch.getRecentDonations();
     //iterate over recent donations, look for one corresponding to the email of the new member
@@ -48,7 +50,7 @@ const registerMember = async function (activistData){
         }
     }
     logRegistration(activistData, donation);
-    if(!donation) {
+    if(!donation && !development) {
         return {"err": "donation not found", "donation": false};
     }
     const today = new Date();

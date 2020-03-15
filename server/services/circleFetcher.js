@@ -32,7 +32,24 @@ const getCircleById = function (circleId){
     });
     return circlePromise;
 };
+const getCircleByName = function (circle){
+    const query = Circle.find({"name":circle});
+    const circlePromise = query.exec().then((circles) => {
+        if(circles && circles.length){
+            return {
+                "_id": circles[0]._id,
+                "name": circles[0].name,
+                "mailchimpList": circles[0].mailchimpList
+            };
+        }
+        else{
+            return null;
+        }
+    });
+    return circlePromise;
+};
 module.exports = {
     getCircles,
-    getCircleById
+    getCircleById,
+    getCircleByName
 };

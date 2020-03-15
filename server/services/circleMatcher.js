@@ -42,7 +42,10 @@ const getCircleByCity = function(city){
 const fetchCircleByCity = function(city){
     return cityFetcher.getCityByName(city).then((result) => {
         if(!result || !result.defaultCircle || !result.defaultCircle.length){
-            circleFetcher.getCircleById(result.defaultCircle).then((circle)=>{
+            return null;
+        }
+        else{
+            return circleFetcher.getCircleByName(result.defaultCircle).then((circle)=>{
                 return circle;
             })
         }
