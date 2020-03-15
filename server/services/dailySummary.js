@@ -56,7 +56,6 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
             let activist = sheet.activists[j];
             activists.add(activist.activistId);
             activists.add(activist.typerId);
-            console.log(`fetchEventsAndActivistsByContactSheets- activist.typerId: ${activist.typerId}`);
         }
     }
     const activistsPromise = activistsFetcher.getActivistsByIds(Array.from(activists)).then((activistsData)=>{
@@ -69,7 +68,6 @@ fetchEventsAndActivistsByContactSheets = function(sheets){
                 let activist = sheet.activists[j];
                 activist.activistDetails = activistDict[activist.activistId];
                 activist.typerDetails = activistDict[activist.typerId];
-                console.log(`fetchEventsAndActivistsByContactSheets- activist.typerDetails: ${activist.typerDetails}`);
             }
         }
         return true;
