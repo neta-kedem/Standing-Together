@@ -20,7 +20,7 @@ const initMatcher = function(){
 };
 
 const getCircleByCity = function(city){
-    if(!circleDict || !cityDict){
+    if(circleDict && cityDict){
         return new Promise((resolve)=>{
             if(!city || !cityDict[city]) {
                 resolve(null);
