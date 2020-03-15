@@ -4,6 +4,7 @@ const City = require('../models/cityModel');
 const Activist = require('../models/activistModel');
 const ContactScan = require('../models/contactScanModel');
 const EventCategory = require('../models/eventCategoryModel');
+const crowdfundingDonation = require('../models/crowdfundingDonationModel');
 const Event = require('../models/eventModel');
 
 const schemas = [
@@ -13,6 +14,7 @@ const schemas = [
     {tableName: "contact_scan", model: ContactScan, lastUpdate: "metadata.lastUpdate"},
     {tableName: "event_category", model: EventCategory, lastUpdate: "metadata.lastUpdate"},
     {tableName: "event", model: Event, lastUpdate: "metadata.lastUpdate"},
+    {tableName: "crowdfunding_donation", model: crowdfundingDonation, lastUpdate: "date"},
 
 ];
 const SYNC_LAST_HOURS = 240;

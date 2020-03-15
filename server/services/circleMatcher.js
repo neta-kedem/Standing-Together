@@ -20,7 +20,7 @@ const initMatcher = function(){
 };
 
 const getCircleByCity = function(city){
-    if(!circleDict || !cityDict){
+    if(circleDict && cityDict){
         return new Promise((resolve)=>{
             if(!city || !cityDict[city]) {
                 resolve(null);
@@ -42,7 +42,10 @@ const getCircleByCity = function(city){
 const fetchCircleByCity = function(city){
     return cityFetcher.getCityByName(city).then((result) => {
         if(!result || !result.defaultCircle || !result.defaultCircle.length){
-            circleFetcher.getCircleById(result.defaultCircle).then((circle)=>{
+            return null;
+        }
+        else{
+            return circleFetcher.getCircleByName(result.defaultCircle).then((circle)=>{
                 return circle;
             })
         }
