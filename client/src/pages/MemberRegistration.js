@@ -172,8 +172,6 @@ export default class MemberRegistration extends React.Component {
 
     registerMember = function(activist, paymentInfo){
         new Promise((resolve, reject) => {
-            resolve(true);
-            return;
             if(this.state.donationSuccessful)
                 resolve(true);
             IsraelGivesDonator.donate(activist, paymentInfo).then(()=>{
