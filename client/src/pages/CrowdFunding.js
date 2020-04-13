@@ -14,8 +14,8 @@ export default class CrowdFunding extends React.Component {
         super(props);
         this.state = {
             sumSoFar: 0,
-            target: 100000,
-            base: 24000,
+            target: 60000,
+            base: 7900,
             amounts: [50, 100, 150, 250, 500, 1000, 1500, 2500],
             displayForm: false,
             activistData: {
