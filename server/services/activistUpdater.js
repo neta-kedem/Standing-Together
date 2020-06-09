@@ -118,6 +118,11 @@ const updateDuplicateActivists = function(activists, eventId){
         //$addToSet is like $push, but doesn't allow duplicates
         const query = Activist.updateOne({'_id':curr._id}, {
             $addToSet: { "profile.participatedEvents": eventId },
+            "profile.firstName": curr.profile.firstName,
+            "profile.lastName": curr.profile.lastName,
+            "profile.email": curr.profile.email,
+            "profile.phone": curr.profile.phone,
+            "profile.residency": curr.profile.residency,
             "metadata.lastUpdate" : today
         });
         updatePromises.push(query.exec());
@@ -188,7 +193,7 @@ const checkForDuplicates = function (activists){
     return new Promise((resolve)=> {
         //get sets of phones and emails from the activists
         const phones = activists.map((a) => {
-            return a.profile.phone.replace(/[\-.():]/g, '')
+            return a.profile.phone.replace(/[\-.():]/g, '');
         }).filter(phone => phone && phone.length > 3);
         const emails = activists.map((a) => {
             return a.profile.email.toLowerCase()
@@ -206,11 +211,24 @@ const checkForDuplicates = function (activists){
             for (let i = 0; i < activists.length; i++) {
                 //select an activist out of the newly typed activists
                 let curr = activists[i];
+                let cleanedPhone = curr.profile.phone.replace(/[\-.():]/g, '');
+                let cleanedEmail = curr.profile.email.toLowerCase();
                 //if the activist's phone/email is a duplicate of an existing phone/email, this should point to the existing activist row
-                let duplicateOf = duplicatesByPhone[curr.profile.phone] || duplicatesByEmail[curr.profile.email];
+                let duplicateOf = duplicatesByPhone[cleanedPhone] || duplicatesByEmail[cleanedEmail];
                 if (duplicateOf) {
                     curr._id = duplicateOf._id;
                     curr.isDuplicate = true;
+                    //some profile fields of pre-existing activists should only be updated if they used to be empty
+                    if(duplicateOf.email && duplicateOf.email.length)
+                        curr.profile.email = duplicateOf.email;
+                    if(duplicateOf.phone && duplicateOf.phone.length)
+                        curr.profile.phone = duplicateOf.phone;
+                    if(duplicateOf.firstName && duplicateOf.firstName.length)
+                        curr.profile.firstName = duplicateOf.firstName;
+                    if(duplicateOf.lastName && duplicateOf.lastName.length)
+                        curr.profile.lastName = duplicateOf.lastName;
+                    if(duplicateOf.residency && duplicateOf.residency.length)
+                        curr.profile.residency = duplicateOf.residency;
                     oldActivists.push(curr);
                 } else {
                     curr.isDuplicate = false;

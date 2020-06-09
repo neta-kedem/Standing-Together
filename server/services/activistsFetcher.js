@@ -150,7 +150,10 @@ const searchDuplicates = function(phones, emails){
             activistsList.push({
                 "_id":activist._id,
                 "phone":activist.profile.phone,
-                "email":activist.profile.email
+                "email":activist.profile.email,
+                "firstName":activist.profile.firstName,
+                "lastName":activist.profile.lastName,
+                "residency":activist.profile.residency
             });
         }
         return activistsList;
