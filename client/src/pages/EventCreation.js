@@ -108,7 +108,7 @@ handlePost() {
 }
 
 handleScanRowClick(scan) {
-	window.location.href = `management.standing-together.org/Typer?contactScan=${scan._id}`;
+	window.location.href = `/Typer?contactScan=${scan._id}`;
 }
 
 handleScanDeletion(scanIndex) {
