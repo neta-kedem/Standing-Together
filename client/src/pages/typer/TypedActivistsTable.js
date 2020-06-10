@@ -11,6 +11,7 @@ export default class TypedActivistsTable extends React.Component {
 			handleRowFocus: props['handleRowFocus'],
 			handleRowDeletion: props['handleRowDeletion'],
 			handleRowEditToggle: props['handleRowEditToggle'],
+			handleAddRow: props['handleAddRow'],
 			fields: props['fields'],
 			dataLists: props['dataLists']
 		};
@@ -62,6 +63,7 @@ export default class TypedActivistsTable extends React.Component {
 					{rows}
 				</table>
 				{dataLists}
+				<button type="button" className={"add-row-button"} onClick={this.state.handleAddRow}>🞥</button>
 			</div>
 		);
 	}

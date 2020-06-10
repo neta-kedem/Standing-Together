@@ -246,7 +246,7 @@ export default class Typer extends React.Component {
 		}
 		//if no rows are left, create a new one
 		if(!activists.length) {
-			activists.push(this.generateRow());
+			//activists.push(this.generateRow());
 		}
 		//commit to state
 		this.setState({activists: activists, selectedRowIndex:selectedRowIndex});
@@ -426,6 +426,7 @@ export default class Typer extends React.Component {
 					handleRowFocus={this.handleRowFocus}
 					handleRowDeletion={this.handleRowDeletion}
 					handleRowEditToggle={this.handleRowEditToggle}
+					handleAddRow={this.addRow}
 					activists={activists}
 					selectedRow={selectedRowIndex}
 					highlightInvalidFields={this.state.postAttempted}/>
