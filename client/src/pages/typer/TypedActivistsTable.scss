@@ -18,7 +18,7 @@
 	}
 
 	.typed-rows-table.main-body {
-		height: calc(90vh - 300px - 6em);
+		max-height: calc(90vh - 300px - 6em);
 		overflow-y: auto;
 		display: block;
 	}
@@ -114,5 +114,16 @@
 
 	.highlight-invalid-fields .invalid {
 		background-color: rgb(255, 150, 160);
+	}
+
+	.add-row-button{
+		background-color: #90278e;
+		margin-top: 2em;
+		width: 2.5em;
+		height: 2.5em;
+		border-radius: 100%;
+		font-weight: bold;
+		color: white;
+		outline: none;
 	}
 }
