@@ -12,11 +12,13 @@ import PageNav from "../UIComponents/PageNav/PageNav";
 import FileSaver from 'file-saver';
 import './organizer/Organizer.scss'
 import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
+import QueryString from "query-string";
 
 
 export default class Organizer extends React.Component {
 constructor(props) {
 	super(props);
+	const search = QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).search;
 	this.state = {
 		query: "",
 		page: 0,
@@ -29,7 +31,7 @@ constructor(props) {
 		sortOptions: FilterFields.sortOptions,
 		fieldsFilterOptions: FilterFields.fieldsFilterOptions,
 		filterableFields: FilterFields.filterableFields,
-		currFilters: {
+		currFilters: search?JSON.parse(search):{
 			outerOr: true,
 			groups: [
 				{
@@ -53,6 +55,7 @@ constructor(props) {
 
 componentDidMount() {
 	FilterFields.mount();
+
 }
 
 handleQueryChange(query, sortBy) {
@@ -75,6 +78,7 @@ fetchActivistsByQuery(){
 					activistCount: json.activistCount,
 					loadingActivists: false
 				});
+				this.props.history.push('/Organizer?search='+JSON.stringify(this.state.currFilters));
 			}
 		});
 }
