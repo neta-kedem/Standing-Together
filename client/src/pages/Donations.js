@@ -5,11 +5,10 @@ import './memberRegistration/MemberRegistration.scss'
 import server from "../services/server";
 import FieldValidation from "../services/FieldValidation";
 import IsraelGivesDonator from "../services/IsraelGivesDonator";
-import Checkbox from '../UIComponents/Checkbox/Checkbox';
 import Popup from '../UIComponents/Popup/Popup';
 import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 
-export default class MemberRegistration extends React.Component {
+export default class Donations extends React.Component {
     constructor(props) {
         super(props);
         console.log(process.env);
@@ -141,9 +140,6 @@ export default class MemberRegistration extends React.Component {
         this.setState({paymentInfo: info});
     }.bind(this);
 
-    handleTermsAcceptance = function(checked){
-        this.setState({termsAccepted: checked});
-    }.bind(this);
 
     handlePost = function(){
         //validate profile details
@@ -206,13 +202,6 @@ export default class MemberRegistration extends React.Component {
             <div dir={"rtl"} className={"page-wrap-member-registration"}>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
-                    <div className={"section-text"}>
-                        הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.
-                    </div>
-                    <div className={"section-text"}>
-                        إنضمّوا ل<b>نقف معًا</b> وكونوا جزءًا من الحراك الميداني الأكبر في إسرائيل. حراك يقود النضال من أجل السلام، المساواة والعدالة الاجتماعية.
-                    </div>
-                    <br/>
                     <span className={"section-text section-instruction"}>
                         <span>١. يرجى تعبئة تفاصيلكم/ن الشخصية:</span>
                         <br/>
@@ -237,41 +226,9 @@ export default class MemberRegistration extends React.Component {
                             handleChange={this.handleTypedPaymentInput}
                             paymentData={this.state.paymentInfo}
                             amounts={[5.9, 18, 27, 50, 78, 100, 150, 250]}
-                            frequency={2}
-                            allowFrequencySwitch={false}
+                            frequency={1}
+                            allowFrequencySwitch={true}
                         />
-                    </div>
-                    <span className={"section-text section-instruction"}>
-                        <span className={"section-text"}>٣. يرجى قراءة شروط الانضمام والمصادقة عليها:</span>
-                        <br/>
-                        <span className={"section-text"}>3. אנא קראו והסכימו לתנאי ההצטרפות:</span>
-                    </span>
-                    <br/>
-                    <div className={"section-text"}>
-                        <div><b> ً انا الموقع\ة ادناه, اطلب االنضمام الى حراك »نقف معا« وان اعمل من خالله:</b></div>
-                        <div><b>אני, החתומ/ה מטה, מבקש/ת להצטרף להיות חבר/ה בתנועת "עומדים ביחד" ולפעול במסגרתה:</b></div>
-                    </div>
-                    <div className={"section-text"}>
-                        أريد الانضمام لحراك "نقف معًا" لأني أقبل بالمبادئ الفكريّة, السّياسيّة, والتنظيمية للحراك, والذي هو حراك سياسي يعنى بالنّضال والأمل, كما ويحمل مبادئ وقيم اشتراكيّة.
-                        إني أعي أنّ الحراك يضم شركاء وشريكات من كل انحاء البلاد - شبابًا وشيبًا, يهودًا وعربًا, نساءً ورجالًا, من المركز ومن الأرياف - وأنا مستعد\ة للعمل المشترك من منطلق إيماني بأننا وفقط عندما نكون معًا يمكننا تغيير المكان الذي نعيش به.
-                        أصرّح بهذا انّي سأعمل سويةً مع رفاقي ورفيقاتي في الحراك من أجل السعي لتحقيق المساواة الكاملة لكلّ من يعيش هنا؛ من أجل العدالة الاجتماعيّة الحقيقيّة؛ من أجل السّلام, ألاستقلال والعدالة لكلا الشعبين.
-                        سأعمل من خلال الحراك من أجل تغيير السّياسات الاجتماعيّة والسّياسيّة السّائدة اليوم, والتي لا تخدم مصالح الأغلبية في المجتمع, بل تصب في مصلحة أقليّة صغيرة هي المستفيدة من الوضع القائم.
-                        أتعهد أن أكون جزءًا من النضال من أجل وضع بديل شامل لليمين, من أجل إحداث تغيير جذري في المجتمع الإسرائيلي, وتحويل هذه البلاد لمكانٍ لنا جميعًا.
-                    </div>
-                    <div className={"section-text"}>
-                        אני רוצה להצטרף לתנועת "עומדים ביחד" כי אני מקבל/ת את עקרונותיה הרעיוניים, הפוליטיים והארגוניים, של התנועה, שהיא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים.
-                        אני מבינ/ה שבתנועה שותפים חברים וחברות מכל קצוות הארץ - צעירים ומבוגרים, ערבים ויהודים, נשים וגברים, מהפריפריה ומהמרכז - ואני מוכנ/ה לפעול במשותף מתוך אמונה שרק ביחד נוכל לשנות את המקום בו אנחנו חיים.
-                        אני מצהיר/ה שאפעל ביחד עם חברותיי וחבריי בתנועה כדי לחתור לשוויון מלא לכל מי שחיים כאן; לצדק חברתי אמיתי; לשלום, לעצמאות ולצדק לשני העמים.
-                        אפעל במסגרת התנועה כדי לשנות את השיטה החברתית והפוליטית הקיימת, שלא פועלת לטובת הרוב בחברה, אלא לטובת מיעוט קטן שנהנה מהמצב הקיים.
-                        אני מתחייב/ת להיות חלק מהמאבק להעמדת חלופה כוללת לימין, לשינוי מהותי בחברה הישראלית, ולהפיכת הארץ הזו למקום לכולנו.
-                    </div>
-                    <div>
-                        <Checkbox onChange={this.handleTermsAcceptance} checked={this.state.termsAccepted} label={
-                            <div>
-                                <div>أؤكد أني قرأت ووافقت</div>
-                                <div>אני מאשר/ת שקראתי והסכמתי</div>
-                            </div>
-                        }/>
                     </div>
                     <div className={"register-button-wrap"}>
                         {!this.state.processingDonation?

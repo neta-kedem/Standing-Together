@@ -164,7 +164,7 @@ const setCirclesByCity = function(){
 };
 
 const fix = async function(){
-    await setCirclesByCity();
+    await getParticipatedEventsFromScans();
 };
 
 module.exports = {

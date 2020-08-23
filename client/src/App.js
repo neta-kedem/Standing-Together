@@ -23,6 +23,7 @@ import ImportContacts from "./pages/ImportContacts";
 import DailySummary from "./pages/DailySummary";
 import Settings from "./pages/Settings";
 import MemberRegistration from "./pages/MemberRegistration";
+import Donations from "./pages/Donations";
 import CrowdFunding from "./pages/CrowdFunding";
 import Voting from "./pages/Voting";
 import VotingResults from "./pages/VotingResults";
@@ -90,6 +91,7 @@ export default class App extends React.Component {
               <Route path="/DailySummary" component={DailySummary}/>
               <Route path="/Settings" component={Settings}/>
               <Route path="/MemberRegistration" exact component={MemberRegistration}/>
+              <Route path="/Donate" exact component={Donations}/>
               <Route path="/CrowdFunding" exact component={CrowdFunding}/>
               <Route path="/Voting" exact component={Voting}/>
               <Route path="/VotingResults" exact component={VotingResults}/>
