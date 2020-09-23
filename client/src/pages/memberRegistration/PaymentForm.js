@@ -3,6 +3,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 import "./PaymentForm.scss"
+import SelectableButton from "../../UIComponents/SelectableButton/SelectableButton";
 library.add(faArrowRight);
 
 export default class PaymentForm extends React.Component {
@@ -10,7 +11,9 @@ export default class PaymentForm extends React.Component {
         super(props);
         this.state = {
             handleChange: props.handleChange,
-            amounts: [5.9, 18, 27, 50, 78, 100, 150, 250],
+            amounts: props.amounts,
+            frequency: props.frequency,
+            allowFrequencySwitch: props.allowFrequencySwitch,
             displayForm: false
         };
     }
@@ -27,21 +30,36 @@ export default class PaymentForm extends React.Component {
     closeContributionForm = function (){
         this.setState({displayForm: false});
     }.bind(this);
+    toggleContribution = function (value){
+        this.setState({frequency: value?2:1});
+    }.bind(this);
     render() {
         const paymentData = this.props.paymentData;
         const displayForm = this.state.displayForm;
         const contributionAmounts = this.state.amounts.slice();
+        const frequencyToggle = <div className={"frequency-toggle-wrap"}>
+            <SelectableButton label={"תרומה חד פעמית"} selected={this.state.frequency===1}
+                              handleClickFunction={()=>{this.setState({frequency:1})}}/>
+            <SelectableButton label={"תרומה חודשית"} selected={this.state.frequency===2}
+                              handleClickFunction={()=>{this.setState({frequency:2})}}/>
+        </div>;
         const contributionButtons = <div className={"contribution-options"}>
+            {this.state.allowFrequencySwitch ? frequencyToggle  : ""}
             {contributionAmounts.map((sum)=>{
                 return <button  type="button" className={"contribution-button"} key={"sum_" + sum} onClick={()=>{this.handleContributionAmountSelection(sum)}}>
                     <div className={"contribution-amount"}>
                         <span className={"contribution-value"}>{sum}</span>
                         <span className={"contribution-units shekels"}>₪</span>
                     </div>
-                    <div className={"contribution-frequency"}>
-                        <div>شهريًا</div>
-                        <div>לחודש</div>
-                    </div>
+                    {
+                        this.state.frequency === 2 ?
+                            <div className={"contribution-frequency"}>
+                                <div>شهريًا</div>
+                                <div>לחודש</div>
+                            </div>
+                            : ''
+                    }
+
                 </button>;
             })}
         </div>;

@@ -29,6 +29,14 @@
     }
 }
 
+.frequency-toggle-wrap{
+    width:100%;
+    clear: both;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .contribution-amount{
     display: flex;
     flex-direction: row;
