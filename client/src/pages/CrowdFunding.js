@@ -16,8 +16,9 @@ export default class CrowdFunding extends React.Component {
             sumSoFar: 0,
             target: 60000,
             base: 7900,
-            amounts: [50, 100, 150, 250, 500, 1000, 1500, 2500],
+            amounts: [10, 30, 50, 100, 200],
             displayForm: false,
+            displayStatusBar: false,
             activistData: {
                 email: "",
                 firstName: "",
@@ -297,7 +298,7 @@ export default class CrowdFunding extends React.Component {
             <div dir={"rtl"} className={"page-wrap-crowd-funding"}>
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
-                    {statusBar}
+                    {this.state.displayStatusBar?statusBar:""}
                     {this.state.displayForm?DonationForm:contributionButtons}
                 </div>
                 <Popup visibility={this.state.displayFailedDonationPopup} toggleVisibility={this.handleDonationFailedPopupToggle.bind(this)}>
