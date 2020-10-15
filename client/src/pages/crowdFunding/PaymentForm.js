@@ -30,7 +30,7 @@ export default class PaymentForm extends React.Component {
                 <div>אמצעי תשלום</div>
             </div>
             <select name="CardTypeId" value={paymentData.CardTypeId} onChange={this.handleInputChange}
-                    className={paymentData["CardTypeIdValid"] === false ? "invalid" : ""}>
+                    className={"input-field " + (paymentData["CardTypeIdValid"] === false ? "invalid" : "")}>
                 <option value="0">اختاروا وسيلة الدفع בחר/י אמצעי תשלום</option>
                 <option value="1">فيزا ויזה</option>
                 <option value="2">ماستركارد מאסטרקארד</option>
@@ -39,7 +39,7 @@ export default class PaymentForm extends React.Component {
             </select>
             </label>
             <label>
-                <div className={"credit-card-field-title"}>
+                <div className={"input-field " + ("credit-card-field-title")}>
                     <div>رقم البطاقة الائتمانية</div>
                     <div>מספר אשראי</div>
                 </div>
