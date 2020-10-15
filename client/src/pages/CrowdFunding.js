@@ -199,11 +199,11 @@ export default class CrowdFunding extends React.Component {
                         this.setState({processingDonation: false, donationSuccessful: result.donation});
                         this.handleDonationFailedPopupToggle();
                         window.scrollTo(0, this.registrationFormRef.current.offsetTop);
-                        window.parent.postMessage({error: true, scrollTo: "top"}, "*");
+                        window.parent.postMessage({error: true, scrollTo: "top", errorDetail: result.err}, "*");
                     }
                     else{
                         this.setState({processingDonation: false, registrationSuccessful: true});
-                        window.parent.postMessage({registrationSuccessful: true}, "*");
+                        window.parent.postMessage({registrationSuccessful: true, info: activist}, "*");
                     }
                 });
         });
