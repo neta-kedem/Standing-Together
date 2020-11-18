@@ -2,7 +2,7 @@ const Setting = require('../models/settingModel');
 const getSettings = function (){
     const query = Setting.find({});
     const settingPromise = query.exec().then((settings) => {
-        if (!settings || !settings.length)
+        if (!settings)
             return {"error": "no settings found"};
         for (let i = 0; i < settings.length; i++) {
             let setting = settings[i];
