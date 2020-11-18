@@ -38,6 +38,21 @@ async function getRecentDonations(){
 
 }
 
+async function searchDonationByEmail(email){
+    const recentDonations = await getRecentDonations();
+    //iterate over recent donations, look for one corresponding to the email of the new member
+    for(let i = 0; i < recentDonations.length; i++){
+        if(!recentDonations[i] || !recentDonations[i]["donor_email"] || !recentDonations[i]["donor_email"]["#cdata-section"])
+            continue;
+        let currEmail = recentDonations[i]["donor_email"]["#cdata-section"].toLowerCase();
+        if(currEmail === email.toLowerCase()) {
+            return recentDonations[i].donation;
+        }
+        return null;
+    }
+}
+
 module.exports = {
-    getRecentDonations
+    getRecentDonations,
+    searchDonationByEmail
 };
