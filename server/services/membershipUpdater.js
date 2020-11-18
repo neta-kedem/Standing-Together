@@ -37,22 +37,12 @@ const logRegistration = function(activistData, donationId) {
 
 const registerMember = async function (activistData){
     const development = process.env.NODE_ENV === 'development';
-    let donation = null;
-    const recentDonations = await israelGivesSearch.getRecentDonations();
+    let donation = await israelGivesSearch.searchDonationByEmail(activistData.email);
     //iterate over recent donations, look for one corresponding to the email of the new member
-    for(let i = 0; i < recentDonations.length; i++){
-        if(!recentDonations[i] || !recentDonations[i]["donor_email"] || !recentDonations[i]["donor_email"]["#cdata-section"])
-            continue;
-        let currEmail = recentDonations[i]["donor_email"]["#cdata-section"].toLowerCase();
-        if(currEmail === activistData.email.toLowerCase()) {
-            donation = recentDonations[i].donation;
-            //console.log(util.inspect(donation, {showHidden: false, depth: null}));
-        }
-    }
     logRegistration(activistData, donation);
-    if(!donation && !development) {
+    /*if(!donation && !development) {
         return {"err": "donation not found", "donation": false};
-    }
+    }*/
     const today = new Date();
     const activistObject = {
         "_id": mongoose.Types.ObjectId(),
