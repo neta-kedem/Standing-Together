@@ -179,7 +179,8 @@ export default class MemberRegistration extends React.Component {
             })
         }).then(() => {
             const data ={
-                "activistData": activist
+                "activistData": activist,
+                "sum": paymentInfo.sum
             };
             server.post('membership', data)
                 .then((result) => {
@@ -191,7 +192,7 @@ export default class MemberRegistration extends React.Component {
                     }
                     else{
                         this.setState({processingDonation: false, registrationSuccessful: true});
-                        window.parent.postMessage({registrationSuccessful: true}, "*");
+                        window.parent.postMessage({registrationSuccessful: true, scrollTo: "top", registration: data, sum: paymentInfo.sum}, "*");
                     }
                 });
         });
@@ -207,10 +208,10 @@ export default class MemberRegistration extends React.Component {
                 {/**<img src="../static/Logo.svg" alt="standing-together" className='logo'/>**/}
                 <div className={"form-container " + (this.state.postAttempted ? "highlight-invalid-fields" : "")}>
                     <div className={"section-text"}>
-                        הצטרפו ל<b>עומדים ביחד</b> והפכו לחלק מתנועת השטח הגדולה בישראל. תנועה המובילה את המאבק לשלום, לשוויון ולצדק חברתי.
+                        "עומדים ביחד" היא תנועה פוליטית של מאבק ושל תקווה, בעלת ערכים סוציאליסטיים, ששותפים בה חברים וחברות מכל קצוות הארץ. אנחנו מזמינים אתכם ואתכן להצטרף כחברים וכחברות בתנועת השטח הגדולה בישראל, לשלם דמי חבר ולקחת חלק בקבלת ההחלטות ובעיצוב דרכה.
                     </div>
                     <div className={"section-text"}>
-                        إنضمّوا ل<b>نقف معًا</b> وكونوا جزءًا من الحراك الميداني الأكبر في إسرائيل. حراك يقود النضال من أجل السلام، المساواة والعدالة الاجتماعية.
+                        “نقف معًا” هو حراك سياسيّ يعنى بالنّضال والأمل، يحمل افكارًا اشتراكيّة، وفيه شركاء وشريكات من كل أنحاء البلاد. ندعوكم وندعوكن للانتساب كأعضاء وعضوات في الحراك الميداني الأكبر في إسرائيل، تسديد رسوم عضوية وأخذ جزء من عمليات اتخاذ القرارات ورسم طريق وصورة الحراك.
                     </div>
                     <br/>
                     <span className={"section-text section-instruction"}>
