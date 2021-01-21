@@ -2,6 +2,7 @@ import React from "react";
 import "./voting/Voting.scss";
 import Meta from "../lib/meta";
 import server from "../services/server";
+import af from "../services/arrayFunctions";
 import Modal from "react-modal";
 import logo from "../static/logo_purple.svg"
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -10,7 +11,7 @@ import {faTimes} from '@fortawesome/free-solid-svg-icons'
 library.add(faTimes);
 
 
-const MAX_VOTES = 4;
+const MAX_VOTES = 6;
 
 export default class Voting extends React.Component {
   constructor(props) {
@@ -26,7 +27,9 @@ export default class Voting extends React.Component {
     };
 
     server.get("candidates/fetchCandidates", {}).then(candidates => {
-      if (candidates.length) this.setState({ candidates });
+      if (candidates.length){
+          this.setState({ candidates: af.shuffle(candidates) });
+      }
     });
 
     // this.selectCandidate = this.selectCandidate.bind(this);
@@ -143,9 +146,7 @@ export default class Voting extends React.Component {
                 backgroundImage: `url(${photo})`,
                 backgroundPosition: photoAlign
             }}
-            onClick={() => {
-              this.handleCandidatePopupToggle(index);
-            }}
+            onClick={this.selectCandidate.bind(this, candidate._id)}
           />
         </div>
         <div className="candidate-details-wrap">
@@ -199,42 +200,18 @@ export default class Voting extends React.Component {
              width={250}
             className={"voting-logo"}
         />
-        <div className={"introduction-wrap"}>
+          <div className={"introduction-wrap"}>
             <h1 className="voting-title">
-                {"انتخابات لطاقم التنسيق القطريّ لحراك نقف معًا"}
             </h1>
             <h1 className="voting-title">
-                    {"בחירות לצוות התיאום הארצי של תנועת עומדים ביחד"}
             </h1>
             <h3 className="introduction-paragraph">
-                طاقم التنسيق القطري للحراك - والذي يُعتبر بمثابة قيادته - انتُخِب بطريقة ديمقراطية وبانتخابات مباشرة وسرّية.
-                في انتخابات مندوبات ومندوبي حلقة تل-أبيب-يافا يمكن انتخاب حتى ٤ مرشحين ومرشحات.
             </h3>
             <h3>
-                لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع بكشك
-                التسجيل. يمكن التصويت لمرة واحدة فقط، ل-٤ مرشح/ة على الأكثر. بعد
-                انتخاب المرشحين يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام
-                عملية الانتخاب. لقراءة المزيد عن المرشّح/ة يجب الضغط على صورته/ا.
-            </h3>
-            <h3>كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.</h3>
-            <h3>
-                بحال واجهتم/ن مشاكل أو صعوبات اطلبوا المساعدة من أحد الناشطين/ات
-                بزاوية التصويت.
-            </h3>
-            <h3 className="introduction-paragraph">
-                צוות התיאום הארצי של התנועה - המהווה את הנהגתה - נבחר בצורה דמוקרטית ובבחירות ישירות וחשאיות.
-                בבחירות לנציגות ונציגי מעגל תל-אביב-יפו ניתן לבחור עד 4 מועמדים ומועמדות.
+                لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع. يمكن التصويت لمرة واحدة فقط، ل-٦ مرشحين/ات على الأكثر. بعد انتخاب المرشحين.ات يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام عملية الانتخاب. كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.
             </h3>
             <h3>
-              על מנת להצביע יש להזין את הקוד שקיבלתם בדוכן ההרשמה. ניתן להצביע רק
-              פעם אחת, עבור 4 מתמודדים/ות לכל היותר. לאחר בחירת המועמדים/ות יש לאשר
-              את הבחירה על ידי לחיצה ״סיימתי״, על מנת להשלים את תהליך הבחירה. לקריאה
-              נוספת על המועמד/ת יש ללחוץ על תמונתו/ה.
-            </h3>
-            <h3>הקוד הוא אקראי ואינו מאפשר את זיהוי הבוחר/ת.</h3>
-            <h3>
-              אם אתן/ם נתקלים/ות בקשיים בבקשה פנו לעזרה מאחד הפעילים/ות בעמדת
-              ההצבעה.
+                על מנת להצביע יש להזין את הקוד שקיבלתם. ניתן להצביע רק פעם אחת, עבור 6 מועמדים/ות לכל היותר. לאחר בחירת המועמדים/ות יש לאשר את הבחירה על ידי לחיצה ״סיימתי״, על מנת להשלים את תהליך הבחירה. הקוד הוא אקראי ואינו מאפשר את זיהוי הבוחר/ת.
             </h3>
         </div>
         <div className="code_validation" ref={this.codeFormRef}>
@@ -297,10 +274,11 @@ export default class Voting extends React.Component {
           ariaHideApp={false}
           style={{
             overlay: {
-              backgroundColor: "rgba(60,60,60,0.8)"
+                backgroundColor: "rgba(60,60,60,0.8)"
             },
             content: {
-              height: "fit-content"
+                height: "fit-content",
+                direction: "rtl"
             }
           }}
         >
@@ -316,7 +294,12 @@ export default class Voting extends React.Component {
               <br />
               هل أنت متأكد/ة من تصويتك؟ لا يمكن إلغاؤه لاحقًا
             </h3>
-            <button type={"button"} className="code_button" onClick={this.sendVote.bind(this)}>
+            <button type={"button"} className="vote_button" onClick={this.sendVote.bind(this)}
+                    style={{
+                        "border": "2px solid #90278e",
+                        "margin": "0 auto",
+                        "display": "block"
+                    }}>
               {"כן כן, זו ההצבעה שאני רוצה\n" +
                 "نعم نعم، هذا التصويت الذي أريده"}
             </button>
