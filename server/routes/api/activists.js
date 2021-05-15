@@ -31,6 +31,22 @@ module.exports = (app) => {
 			});
 		})
 	});
+	//my code
+	app.post('/api/activists/events/', (req, res) => {
+		console.log("hello12")
+		Authentication.hasRole(req, "isOrganizer").then(result=>{
+			if(result.error)
+				return res.json({error: result.error});
+			const query = `{\"linked.participatedEvents\":{\"$elemMatch\":{\"_id\":{\"$eq\":\"${req.body.id}\",\"castToId\":true}}}}`
+			return activistFetcher.queryActivists(query, null, req.body.page, (result)=>{return res.json(result)})
+			// const test =  activistFetcher.getActivistsByEvent(req.params.id)
+			// console.log(test)
+			// return test
+			// 	.then((activists)=>{
+			// 	return (activists) ? res.json(activists) : res.json({error: "not found"});
+			// })
+		})
+	})
 	app.post('/api/activists', (req, res) => {
 		Authentication.hasRole(req, "isOrganizer").then(result=>{
 			if(result.error)

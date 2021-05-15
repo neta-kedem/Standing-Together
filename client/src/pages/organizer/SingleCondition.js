@@ -103,7 +103,7 @@ class SingleCondition extends React.Component {
           Object.keys(options)
               .map(o => {return {key: o, option: field.options[o]}})
               .sort((a, b) => (a.option.sortPosition - b.option.sortPosition))
-              .map((f) => <option key={"field_option_"+f.key} value={f.key}>{f.option.labelAr + " " + f.option.labelHe}</option>)
+              .map((f) => <option key={"field_option_"+f.key} value={f.key}>{f.option.labelAr + ' ' + f.option.labelHe}</option>)
         }
       </select>
     }
