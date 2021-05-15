@@ -82,7 +82,7 @@ fetchActivistsByQuery(){
 			}
 		});
 }
-dfdfdf
+
 downloadActivistsByQuery(){
 	const query = this.state.query;
 	const sortBy = this.state.sortBy;

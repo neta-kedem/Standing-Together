@@ -17,7 +17,6 @@ const getActivistsByIds = function (ids){
             $match: {"_id": {$in: ids.map((id)=>{return mongoose.Types.ObjectId(id)})}}
         },
     ]);
-    console.log("got here")
     return query.exec().then((activists) => {
         return activists.map(a => {
             return {
@@ -35,7 +34,6 @@ const getActivistsByIds = function (ids){
     });
 };
 const queryActivists = function(query, sortBy, page, callback){
-    console.log("hello from second func")
     try{
       query = JSON.parse(query);
     }
@@ -58,7 +56,6 @@ const queryActivists = function(query, sortBy, page, callback){
         },
         {$match: query},
     ]);
-    console.log("hello again")
     return Activist.aggregatePaginate(aggregation, {
             page: page + 1, limit: PAGE_SIZE,
             sort: sortBy ? sortBy : "profile.firstName",
@@ -162,25 +159,10 @@ const searchDuplicates = function(phones, emails){
         return activistsList;
     });
 };
-//my code
-// const getActivistsByEvent = function (eventId){
-//     console.log("hello from first func")
-//     // const eventIdObject = mongoose.Types.ObjectId(eventId);
-//     // const query = Activist.find({"profile.participatedEvents": eventIdObject});
-//     const query = `{\"$or\": [{\"$and\": [{\"linked.participatedEvents\":{\"$elemMatch\":{\"_id\":{\"$eq\":\"${eventId}\",\"castToId\":true}}}}]}]}`
-//     const test =  queryActivists(query, null, 0, (result)=>{return res.json(result)})
-//     console.log(test)
-//     return test
-//
-//     // const activistsPromise = query.exec().then((activists) => {
-//     //     return activists
-//     // });
-//     // return activistsPromise;
-// }
+
 module.exports = {
     queryActivists,
     searchDuplicates,
     getActivistsByIds,
     downloadActivistsByQuery,
-    // getActivistsByEvent
 };

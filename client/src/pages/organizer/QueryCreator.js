@@ -61,9 +61,7 @@ class QueryCreator extends React.Component {
   }
 
   _removeCondition(groupIndex, conditionIndex) {
-      console.log("hi")
     const currFilters = QueryService.removeCondition(this.state.currFilters, groupIndex, conditionIndex);
-      console.log(currFilters)
     this.setState({ currFilters });
     this.updateQuery()
   }

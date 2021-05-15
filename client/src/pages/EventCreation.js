@@ -63,16 +63,14 @@ fetchEventDetails(){
 		});
 }
 fetchActivists(){
-	// !?!?!?!?!?!?!?!?
 	this.setState({loadingActivists : true})
-	console.log(this.state.loadingActivists)
 	server.post('activists/events/', {id : this.state._id, page : this.state.page})
 		.then(json => {
 			this.setState({
 				activists : json.activists,
 				pageCount : json.pageCount,
 				activistCount : json.activistCount,
-				// loadingActivists : false
+				loadingActivists : false
 			})
 	})
 }
@@ -260,7 +258,6 @@ render() {
 							</tbody>
 						</table>
 					</div>
-					{/*my work*/}
 					<div>
 						<div>
 							<h3>{activistCount} נכחו באירוע:</h3>
