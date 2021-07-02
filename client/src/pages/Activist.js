@@ -296,7 +296,7 @@ export default class Activist extends React.Component {
                                     /> : null
                             }
                             <h2>חברות בתנועה</h2>
-                            {activist.membership ? <p>חברה בתנועה מאז {activist.membership.joiningDate}</p> :
+                            {activist.profile && activist.profile.isMember ? <p>חברה בתנועה מאז {activist.membership? activist.membership.joiningDate : '[אין תאריך]'}</p> :
                                 <h4>לא בתנועה</h4>}
                             {
                                 activist.membership ?
