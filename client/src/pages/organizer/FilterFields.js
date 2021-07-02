@@ -91,9 +91,9 @@ const filterableFields = {
         labelAr: "عضوية في الحراك",
         labelHe: "חברות בתנועה",
         icon: <FontAwesomeIcon icon="fist-raised"/>,
-        fieldName: "membership",
+        fieldName: "profile.isMember",
         options: {
-            membershipStatus: {labelAr: 'حالة العضوية', labelHe: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$exists", inputType: "select", options: "membershipStatus",
+            membershipStatus: {labelAr: 'حالة العضوية', labelHe: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$eq", inputType: "select", options: "membershipStatus",
                 valueMapper:v => v === 'true'},
         }
     },
