@@ -74,6 +74,8 @@
 	}
 	.condition-option-selection{
 		width: 100%;
+		word-wrap: normal !important;
+		white-space: normal;
 	}
 	.condition-selected-cities{
 		cursor: pointer;
