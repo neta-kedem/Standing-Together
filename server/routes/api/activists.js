@@ -31,6 +31,14 @@ module.exports = (app) => {
 			});
 		})
 	});
+	app.post('/api/activists/events/', (req, res) => {
+		Authentication.hasRole(req, "isOrganizer").then(result=>{
+			if(result.error)
+				return res.json({error: result.error});
+			const query = `{\"linked.participatedEvents\":{\"$elemMatch\":{\"_id\":{\"$eq\":\"${req.body.id}\",\"castToId\":true}}}}`
+			return activistFetcher.queryActivists(query, null, req.body.page, (result)=>{return res.json(result)})
+		})
+	})
 	app.post('/api/activists', (req, res) => {
 		Authentication.hasRole(req, "isOrganizer").then(result=>{
 			if(result.error)
