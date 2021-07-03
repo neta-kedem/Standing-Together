@@ -9,7 +9,6 @@ import {faSave} from '@fortawesome/free-solid-svg-icons'
 import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
 import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 import PageNav from "../UIComponents/PageNav/PageNav";
-import {log} from "winston";
 library.add(faSave);
 
 export default class EventCreation extends React.Component {
