@@ -117,10 +117,10 @@ const filterableFields = {
         icon: <FontAwesomeIcon icon="peace"/>,
         fieldName: "linked.participatedEvents",
         options: {
-            membershipStatus: {labelAr: 'شاركوا بالحدث', labelHe: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
+            participated: {labelAr: 'شاركوا بالحدث', labelHe: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
                 valueMapper:v => {return {"_id":{"$eq": v._id, "castToId": true}}},
             },
-            NmembershipStatus: {labelAr: 'مش شاركوا بالحدث', labelHe: 'לא השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
+            notParticipated: {labelAr: 'مش شاركوا بالحدث', labelHe: 'לא השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
                 valueMapper:v => {return {"_id":{"$ne": v._id, "castToId": true}}},
             }
         }
