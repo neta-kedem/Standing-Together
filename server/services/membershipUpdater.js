@@ -8,6 +8,7 @@ const circleMatcher = require("./circleMatcher");
 const activistDuplicateDetector = require("./activistDuplicateDetector");
 const israelGivesSearch = require("./israelGivesSearch");
 const membershipEmail = require("./membershipEmail");
+const activistFetcher = require("./activistsFetcher");
 const util = require('util');
 
 const addToCircle = function(activist){
@@ -35,6 +36,48 @@ const logRegistration = function(activistData, donationId) {
     );
 };
 
+const updateMembership = async (activistId) => {
+    try {
+        logRegistration(activistId, {});
+        const today = new Date();
+        const activistDatas = await activistFetcher.getActivistsByIds([activistId])
+        const activistData = activistDatas[0];
+        const activistObject = {
+            "_id": mongoose.Types.ObjectId(),
+            "metadata": {
+                "lastUpdate": today,
+                "joiningMethod": "manual",
+            },
+            "profile": {
+                "firstName": activistData.profile.firstName,
+                "lastName": activistData.profile.lastName,
+                "phone": activistData.profile.phone.replace(/[\-.():]/g, ''),
+                "email": activistData.profile.email.toLowerCase(),
+                "residency": activistData.profile.residency,
+                "isMember": true,
+                "isPaying": activistData.profile.isPaying
+            },
+            "membership": {
+                "joiningDate": today,
+            },
+        };
+        const query = Activist.updateOne({"_id": activistId}, {
+            $set: {
+                "profile": activistObject.profile,
+                "membership": activistObject.membership,
+                "metadata.lastUpdate": activistObject.metadata.lastUpdate
+            }
+        });
+        await query.exec()
+        await notifyAdmins(activistData.firstName, activistData.lastName, 0, activistData.residency, activistData.profile.circle, activistData.email, activistData.phone, activistData.birthday);
+        await notifyMember(activistData.email, activistData.firstName, activistData.lastName);
+        activistData.membership = activistObject.membership
+        activistData.metadata = activistObject.metadata
+        return activistData;
+    } catch(error) {
+        console.error('failed updating membership to user '+ activistId, error)
+    }
+}
 const registerMember = async function (activistData){
     const development = process.env.NODE_ENV === 'development';
     let donation = await israelGivesSearch.searchDonationByEmail(activistData.email);
@@ -208,5 +251,6 @@ const notifyMember = async function (email, firstName, lastName) {
 };
 
 module.exports = {
+    updateMembership,
     registerMember
 };

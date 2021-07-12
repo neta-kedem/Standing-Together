@@ -246,6 +246,14 @@ export default class Activist extends React.Component {
             });
     }.bind(this);
 
+    updateMembership = function() {
+        this.setState({loadingDetails: true});
+        server.post(`membership/${this._id}`)
+                .then(() => {
+                    this.fetchActivist()
+                });
+    }.bind(this);
+
     render() {
         const activist = this.state.activist;
         const profileFields = this.state.profileFields.slice();
@@ -296,8 +304,13 @@ export default class Activist extends React.Component {
                                     /> : null
                             }
                             <h2>חברות בתנועה</h2>
-                            {activist.profile && activist.profile.isMember ? <p>חברה בתנועה מאז {activist.membership? activist.membership.joiningDate : '[אין תאריך]'}</p> :
-                                <h4>לא בתנועה</h4>}
+                            {activist.profile && activist.profile.isMember ?
+                                <p>חברה בתנועה מאז {activist.membership? activist.membership.joiningDate : '[אין תאריך]'}</p> :
+                                <>
+                                    <h4>לא בתנועה</h4>
+                                    <button type="button" className="update-membership-button" onClick={this.updateMembership}>לעדכן חברות</button>
+                                </>
+                            }
                             {
                                 activist.profile && activist.profile.isMember ?
                                     <FormSegment
@@ -401,5 +414,4 @@ export default class Activist extends React.Component {
             </div>
         )
     }
-
 }

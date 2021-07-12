@@ -189,7 +189,7 @@ class SingleCondition extends React.Component {
       case "text":
       default:
         return <div>
-          <input type={"text"} value={condition.value}
+          <input type={"text"} defaultValue={condition.value}
                  onChange={(e)=>{this.setConditionValue(e.target.value, false)}}
                  onKeyDown={(e)=>{if(e.key === 'Enter'){this.updateCondition();}}}
                  className="condition-input condition-text-filter"/>
