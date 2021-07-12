@@ -248,7 +248,7 @@ export default class Activist extends React.Component {
 
     updateMembership = function() {
         this.setState({loadingDetails: true});
-        server.post(`membership/${this._id}`)
+        server.post(`membership/${this.state._id}`)
                 .then(() => {
                     this.fetchActivist()
                 });
