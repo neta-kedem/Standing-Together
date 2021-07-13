@@ -37,7 +37,7 @@
     "request": "^2.88.0",
     "snyk": "^1.262.2",
     "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^4.4.0",
+    "winston-daily-rotate-file": "^4.5.5",
     "winston-mongodb": "^5.0.1"
   },
   "snyk": true,
