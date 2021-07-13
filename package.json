@@ -13,7 +13,7 @@
     "body-parser": "latest",
     "concurrently": "^4.1.1",
     "cookie-parser": "^1.4.3",
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.6.0",
     "excel4node": "^1.7.2",
     "express": "^4.16.3",
     "express-winston": "^4.0.1",
