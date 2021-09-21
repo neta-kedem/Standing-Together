@@ -9,7 +9,6 @@ const activistDuplicateDetector = require("./activistDuplicateDetector");
 const israelGivesSearch = require("./israelGivesSearch");
 const membershipEmail = require("./membershipEmail");
 const activistFetcher = require("./activistsFetcher");
-const util = require('util');
 
 const addToCircle = function(activist){
     if(!activist || !activist.profile.residency){
@@ -79,7 +78,6 @@ const updateMembership = async (activistId) => {
     }
 }
 const registerMember = async function (activistData){
-    const development = process.env.NODE_ENV === 'development';
     let donation = await israelGivesSearch.searchDonationByEmail(activistData.email);
     //iterate over recent donations, look for one corresponding to the email of the new member
     logRegistration(activistData, donation);
@@ -252,5 +250,8 @@ const notifyMember = async function (email, firstName, lastName) {
 
 module.exports = {
     updateMembership,
-    registerMember
+    registerMember,
+    logRegistration,
+    notifyAdmins,
+    notifyMember
 };
