@@ -235,7 +235,7 @@ export default class Activist extends React.Component {
             });
     }.bind(this);
 
-    handlePost = function() {
+    saveActivist = function() {
         if(this.state.savingInProcess)
             return;
         this.setState({savingInProcess: true});
@@ -247,11 +247,17 @@ export default class Activist extends React.Component {
     }.bind(this);
 
     updateMembership = function() {
-        this.setState({loadingDetails: true});
-        server.post(`membership/${this.state._id}`)
-                .then(() => {
-                    this.fetchActivist()
-                });
+        const today = new Date().toISOString().split('Z')[0];
+        let updatedActivist = this.state.activist;
+        updatedActivist.profile.isMember = true;
+        updatedActivist.membership.joiningDate = today;
+        this.setState({activist: updatedActivist});
+    }.bind(this);
+
+    removeMembership = function() {
+        let updatedActivist = this.state.activist;
+        updatedActivist.profile.isMember = false;
+        this.setState({activist: updatedActivist});
     }.bind(this);
 
     render() {
@@ -313,13 +319,16 @@ export default class Activist extends React.Component {
                             }
                             {
                                 activist.profile && activist.profile.isMember ?
-                                    <FormSegment
-                                        segmentName={"membership"}
-                                        dataLists={this.state.profileDataLists}
-                                        fields={memberFields}
-                                        values={activist.membership || {}}
-                                        handleChange={this.handleTypedInput}
-                                    /> : null
+                                    <div>
+                                        <button type="button" className="update-membership-button" onClick={this.removeMembership}>להסיר חברות</button>
+                                        <FormSegment
+                                            segmentName={"membership"}
+                                            dataLists={this.state.profileDataLists}
+                                            fields={memberFields}
+                                            values={activist.membership || {}}
+                                            handleChange={this.handleTypedInput}
+                                        />
+                                    </div> : null
                             }
                             <h2>השתתפות באירועים</h2>
                             {
@@ -398,7 +407,7 @@ export default class Activist extends React.Component {
                                 savingInProcess
                                     ? <LoadSpinner visibility={true}/>
                                     :(
-                                        <button type={"button"} onClick={this.handlePost.bind(this)} className="save-activist-button">
+                                        <button type={"button"} onClick={this.saveActivist.bind(this)} className="save-activist-button">
                                             <div className="save-activist-button-label">
                                                 <div>حفظ</div>
                                                 <div>שמירה</div>

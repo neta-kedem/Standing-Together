@@ -8,17 +8,25 @@ const contactScanFetcher = require("./contactScanFetcher");
 const cityFetcher = require("./cityFetcher");
 const activistsFetcher = require("./activistsFetcher");
 const arrayFunctions = require("./arrayFunctions");
-
+const { logRegistration, notifyAdmins, notifyMember } = require("./membershipUpdater")
 /**
  * @param activists
  * gets an array of activist objects, complete with an _id field for each one, and under the assumption that they appear in the db, updates their details
  * @returns {Promise<any[]>} - the promise, once resolved, returns an array of all the update query results - one for each activist
  */
-const updateActivists = function(activists){
+const updateActivists = async (activists) => {
     let updateQueries = [];
-    for(let i = 0; i < activists.length; i++)
-    {
+    for(let i = 0; i < activists.length; i++) {
         let a = activists[i];
+        const prevActivist = await Activist.findOne({_id:mongoose.Types.ObjectId(a._id)})
+        // if it's a new member registration
+        if(!prevActivist.profile.isMember && a.profile.isMember) {
+            logRegistration(a._id, {});
+            notifyAdmins(a.firstName, a.lastName, 0, a.residency, a.profile.circle, a.email, a.phone, a.birthday);
+            notifyMember(a.email, a.firstName, a.lastName);
+            const today = new Date();
+            a.membership.joiningDate = today;
+        }
         updateQueries.push(Activist.updateOne({_id: mongoose.Types.ObjectId(a._id)},
             {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": new Date()}).exec());
     }
