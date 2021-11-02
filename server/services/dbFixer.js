@@ -1,9 +1,38 @@
 const mongoose = require('mongoose');
 const Activist = require('../models/activistModel');
 const City = require('../models/cityModel');
+const Circle = require('../models/circleModel');
+const EventCategory = require('../models/eventCategoryModel');
 const ContactScan = require('../models/contactScanModel');
 const Event = require('../models/eventModel');
 
+
+const idifyAll =  function(){
+    //const models = [Activist, Circle, City, EventCategory, ContactScan, Event];
+    const models = [{"m": ContactScan, "c":"contactscans"}];
+    console.log("****************************************");
+    models.forEach((t)=>{
+        let bulk = mongoose.connection.db.collection(t.c+'Duplicate').initializeUnorderedBulkOp();
+        t.m.find({}).then(results=>{
+            for(let i = 0; i < results.length; i++){
+                let a = results[i];
+                try {
+                    a._id = mongoose.Types.ObjectId(a._id);
+                }
+                catch(err){
+                    console.log(a._id);
+                }
+                bulk.insert(a);
+            }
+            return bulk.execute().then(res=>{
+                console.log(`idifyAll:`);
+                console.log(JSON.stringify(res));
+            }).catch(err=>{
+                console.log(err);
+            });
+        })
+    })
+};
 
 const idifyParticipatedEvents = function(){
     console.log("casting the eventId field (in participated events) of activist objects to ObjectId");
@@ -164,7 +193,9 @@ const setCirclesByCity = function(){
 };
 
 const fix = async function(){
-    await getParticipatedEventsFromScans();
+    await idifyParticipatedEvents();
+    await idifyContactScans();
+    await idifyEvents();
 };
 
 module.exports = {
