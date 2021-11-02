@@ -16,19 +16,24 @@ const { logRegistration, notifyAdmins, notifyMember } = require("./membershipUpd
  */
 const updateActivists = async (activists) => {
     let updateQueries = [];
-    for(let i = 0; i < activists.length; i++) {
+
+    let now = new Date();
+    for(let i = 0; i < activists.length; i++)
+    {
         let a = activists[i];
-        const prevActivist = await Activist.findOne({_id:mongoose.Types.ObjectId(a._id)})
-        // if it's a new member registration
-        if(!prevActivist.profile.isMember && a.profile.isMember) {
-            logRegistration(a._id, {});
-            notifyAdmins(a.firstName, a.lastName, 0, a.residency, a.profile.circle, a.email, a.phone, a.birthday);
-            notifyMember(a.email, a.firstName, a.lastName);
-            const today = new Date();
-            a.membership.joiningDate = today;
+        if(a._id){
+            updateQueries.push(Activist.updateOne(
+                {_id: mongoose.Types.ObjectId(a._id)},
+                {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": now}
+                ).exec());
         }
-        updateQueries.push(Activist.updateOne({_id: mongoose.Types.ObjectId(a._id)},
-            {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": new Date()}).exec());
+        else{
+            updateQueries.push(Activist.insertOne({
+                "_id": mongoose.Types.ObjectId(),
+                "metadata": {"creationDate": now, "lastUpdate": now, "joiningMethod": "manuallyAdded"},
+                "profile": a.profile, "role": a.role,
+            }).exec())
+        }
     }
     return Promise.all(updateQueries);
 };
@@ -183,10 +188,10 @@ const addToRegionalMailchimpCircle = function(activists){
         for(let i = 0; i < activists.length; i++){
             let curr = activists[i];
             if (curr.profile.circle && circlesDict[curr.profile.circle]){
-                updatePromises.push(mailchimpSync.createContacts([curr], circlesDict[curr.profile.circle].mailchimpList));
+                // updatePromises.push(mailchimpSync.createContacts([curr], circlesDict[curr.profile.circle].mailchimpList));
             }
         }
-        updatePromises.push(mailchimpSync.createContacts(activists));
+        // updatePromises.push(mailchimpSync.createContacts(activists));
     });
     return Promise.all(updatePromises);
 };
@@ -336,9 +341,9 @@ const uploadTypedActivists = async function (typedRows, scanId, markedDone) {
                     //insert the new activists into
                     tasks.push(Activist.insertMany(nonDuplicates));
                     //create a mailchimp record in the main contact list
-                    tasks.push(mailchimpSync.createContacts(nonDuplicates));
+                    //tasks.push(mailchimpSync.createContacts(nonDuplicates));
                     //create a mailchimp record in the circle-specific contact list
-                    tasks.push(addToRegionalMailchimpCircle(nonDuplicates));
+                    //tasks.push(addToRegionalMailchimpCircle(nonDuplicates));
                     //update the contact scan to contain data on the typed activists
                     //mark the activist as typed in the relevant contact scan
                     let activistRows = duplicates.map((a) => {

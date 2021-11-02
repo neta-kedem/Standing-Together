@@ -34,7 +34,7 @@ const placeVote = async function(req, res) {
     { _id: mongoose.Types.ObjectId(codeDb._id) },
     { isUsed: true }
   );
-  let vote = new Votes({ voterCode: code, votes: votes });
+  let vote = new Votes({ voterCode: "xxx", votes: votes });
   let updateVotePromise = vote.save();
   return Promise.all([updateCodePromise, updateVotePromise])
       .then(() => res.json(true))
