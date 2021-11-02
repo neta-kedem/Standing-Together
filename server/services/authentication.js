@@ -3,9 +3,9 @@ const Activist = require('../models/activistModel');
 //expire tokens that have been issued this long ago:
 const TOKEN_EXPIRATION = process.env.NODE_ENV === "development" ? 1000 * 60 * 60 * 24 * 100 : 1000 * 60 * 60 * 24 * 3;
 //or have been used this long ago:
-const LAST_TOKEN_USAGE = process.env.NODE_ENV === "development" ? 1000 * 60 * 60 * 24 * 100 : 1000 * 60 * 60;
+const LAST_TOKEN_USAGE = process.env.NODE_ENV === "development" ? 1000 * 60 * 60 * 24 * 100 : 1000 * 60 * 120;
 //suspend sessions that have been inactive for:
-const SUSPEND_AFTER = process.env.NODE_ENV === "development" ? 1000 * 60 * 60 * 24 * 100 : 1000 * 60 * 7;
+const SUSPEND_AFTER = process.env.NODE_ENV === "development" ? 1000 * 60 * 60 * 24 * 100 : 1000 * 60 * 60;
 
 let myId = "";
 const getUserByToken = function(token){
