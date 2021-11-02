@@ -90,7 +90,6 @@ export default class App extends React.Component {
               <Route path="/ImportContacts" component={ImportContacts}/>
               <Route path="/DailySummary" component={DailySummary}/>
               <Route path="/Settings" component={Settings}/>
-              <Route path="/MemberRegistration" exact component={MemberRegistration}/>
               <Route path="/Donate" exact component={Donations}/>
               <Route path="/CrowdFunding" exact component={CrowdFunding}/>
               <Route path="/Voting" exact component={Voting}/>
