@@ -16,11 +16,23 @@ const arrayFunctions = require("./arrayFunctions");
  */
 const updateActivists = function(activists){
     let updateQueries = [];
+    let now = new Date();
     for(let i = 0; i < activists.length; i++)
     {
         let a = activists[i];
-        updateQueries.push(Activist.updateOne({_id: mongoose.Types.ObjectId(a._id)},
-            {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": new Date()}).exec());
+        if(a._id){
+            updateQueries.push(Activist.updateOne(
+                {_id: mongoose.Types.ObjectId(a._id)},
+                {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": now}
+                ).exec());
+        }
+        else{
+            updateQueries.push(Activist.insertOne({
+                "_id": mongoose.Types.ObjectId(),
+                "metadata": {"creationDate": now, "lastUpdate": now, "joiningMethod": "manuallyAdded"},
+                "profile": a.profile, "role": a.role,
+            }).exec())
+        }
     }
     return Promise.all(updateQueries);
 };
@@ -328,9 +340,9 @@ const uploadTypedActivists = async function (typedRows, scanId, markedDone) {
                     //insert the new activists into
                     tasks.push(Activist.insertMany(nonDuplicates));
                     //create a mailchimp record in the main contact list
-                    tasks.push(mailchimpSync.createContacts(nonDuplicates));
+                    //tasks.push(mailchimpSync.createContacts(nonDuplicates));
                     //create a mailchimp record in the circle-specific contact list
-                    tasks.push(addToRegionalMailchimpCircle(nonDuplicates));
+                    //tasks.push(addToRegionalMailchimpCircle(nonDuplicates));
                     //update the contact scan to contain data on the typed activists
                     //mark the activist as typed in the relevant contact scan
                     let activistRows = duplicates.map((a) => {
