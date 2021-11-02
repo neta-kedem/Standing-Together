@@ -69,6 +69,7 @@ fetchActivistsByQuery(){
 	const sortBy = this.state.sortBy;
 	const page = this.state.page;
 	this.setState({loadingActivists: true});
+	this.props.history.push('/Organizer?search='+JSON.stringify(this.state.currFilters));
 	server.post('selectActivists', {'query': query, 'sortBy': sortBy, 'page': page})
 		.then(json => {
 			if(json && json.activists) {
@@ -78,7 +79,6 @@ fetchActivistsByQuery(){
 					activistCount: json.activistCount,
 					loadingActivists: false
 				});
-				this.props.history.push('/Organizer?search='+JSON.stringify(this.state.currFilters));
 			}
 		});
 }
