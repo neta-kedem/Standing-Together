@@ -1,6 +1,5 @@
 import React from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 import "./PaymentForm.scss"
 library.add(faArrowRight);
@@ -39,7 +38,7 @@ export default class PaymentForm extends React.Component {
             </select>
             </label>
             <label>
-                <div className={"input-field " + ("credit-card-field-title")}>
+                <div className={"input-field credit-card-field-title"}>
                     <div>رقم البطاقة الائتمانية</div>
                     <div>מספר אשראי</div>
                 </div>

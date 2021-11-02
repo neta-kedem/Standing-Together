@@ -235,7 +235,7 @@ export default class Activist extends React.Component {
             });
     }.bind(this);
 
-    handlePost = function() {
+    saveActivist = function() {
         if(this.state.savingInProcess)
             return;
         this.setState({savingInProcess: true});
@@ -244,6 +244,20 @@ export default class Activist extends React.Component {
                 alert("saved");
                 this.props.history.push('/Organizer');
             });
+    }.bind(this);
+
+    updateMembership = function() {
+        const today = new Date().toISOString().split('Z')[0];
+        let updatedActivist = this.state.activist;
+        updatedActivist.profile.isMember = true;
+        updatedActivist.membership.joiningDate = today;
+        this.setState({activist: updatedActivist});
+    }.bind(this);
+
+    removeMembership = function() {
+        let updatedActivist = this.state.activist;
+        updatedActivist.profile.isMember = false;
+        this.setState({activist: updatedActivist});
     }.bind(this);
 
     render() {
@@ -296,17 +310,25 @@ export default class Activist extends React.Component {
                                     /> : null
                             }
                             <h2>חברות בתנועה</h2>
-                            {activist.membership ? <p>חברה בתנועה מאז {activist.membership.joiningDate}</p> :
-                                <h4>לא בתנועה</h4>}
+                            {activist.profile && activist.profile.isMember ?
+                                <p>חברה בתנועה מאז {activist.membership? activist.membership.joiningDate : '[אין תאריך]'}</p> :
+                                <>
+                                    <h4>לא בתנועה</h4>
+                                    <button type="button" className="update-membership-button" onClick={this.updateMembership}>לעדכן חברות</button>
+                                </>
+                            }
                             {
-                                activist.membership ?
-                                    <FormSegment
-                                        segmentName={"membership"}
-                                        dataLists={this.state.profileDataLists}
-                                        fields={memberFields}
-                                        values={activist.membership}
-                                        handleChange={this.handleTypedInput}
-                                    /> : null
+                                activist.profile && activist.profile.isMember ?
+                                    <div>
+                                        <button type="button" className="update-membership-button" onClick={this.removeMembership}>להסיר חברות</button>
+                                        <FormSegment
+                                            segmentName={"membership"}
+                                            dataLists={this.state.profileDataLists}
+                                            fields={memberFields}
+                                            values={activist.membership || {}}
+                                            handleChange={this.handleTypedInput}
+                                        />
+                                    </div> : null
                             }
                             <h2>השתתפות באירועים</h2>
                             {
@@ -385,7 +407,7 @@ export default class Activist extends React.Component {
                                 savingInProcess
                                     ? <LoadSpinner visibility={true}/>
                                     :(
-                                        <button type={"button"} onClick={this.handlePost.bind(this)} className="save-activist-button">
+                                        <button type={"button"} onClick={this.saveActivist.bind(this)} className="save-activist-button">
                                             <div className="save-activist-button-label">
                                                 <div>حفظ</div>
                                                 <div>שמירה</div>
@@ -401,6 +423,4 @@ export default class Activist extends React.Component {
             </div>
         )
     }
-
 }
-

@@ -8,14 +8,15 @@ const contactScanFetcher = require("./contactScanFetcher");
 const cityFetcher = require("./cityFetcher");
 const activistsFetcher = require("./activistsFetcher");
 const arrayFunctions = require("./arrayFunctions");
-
+const { logRegistration, notifyAdmins, notifyMember } = require("./membershipUpdater")
 /**
  * @param activists
  * gets an array of activist objects, complete with an _id field for each one, and under the assumption that they appear in the db, updates their details
  * @returns {Promise<any[]>} - the promise, once resolved, returns an array of all the update query results - one for each activist
  */
-const updateActivists = function(activists){
+const updateActivists = async (activists) => {
     let updateQueries = [];
+
     let now = new Date();
     for(let i = 0; i < activists.length; i++)
     {

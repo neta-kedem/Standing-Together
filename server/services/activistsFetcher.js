@@ -159,9 +159,10 @@ const searchDuplicates = function(phones, emails){
         return activistsList;
     });
 };
+
 module.exports = {
     queryActivists,
     searchDuplicates,
     getActivistsByIds,
-    downloadActivistsByQuery
+    downloadActivistsByQuery,
 };

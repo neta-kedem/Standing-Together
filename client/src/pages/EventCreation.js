@@ -6,6 +6,9 @@ import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faSave} from '@fortawesome/free-solid-svg-icons'
+import SelectableTable from '../UIComponents/SelectableTable/SelectableTable'
+import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
+import PageNav from "../UIComponents/PageNav/PageNav";
 library.add(faSave);
 
 export default class EventCreation extends React.Component {
@@ -21,9 +24,23 @@ constructor(props) {
 		categories: [],
 		cities: [],
 		scans: [],
+		activists : [],
+		tableFields:[
+			{title: ["اسم", "שם"],  visibility: true, key: "name", icon:"user", type:"text", width:"15em"},
+			{title: ["البلد", "עיר"],  visibility: true, key: "city", icon:"building", type:"text", width:"12em"},
+			{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"phone", type:"text", width:"12em"},
+			{title: ["البريد الإلكتروني", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text", width:"15em"},
+			{title: ["اخر ظهور", "נראתה לאחרונה"],  visibility: false, key: "lastSeen", icon:"calendar", type:"text", width:"12em"},
+			{title: ["اخر حدث", "אירוע אחרון"],  visibility: false, key: "lastEvent", icon:"calendar-check", type:"text", width:"8em"},
+		],
+		page: 0,
+		pageCount: 1,
+		activistCount: 0,
+		loadingActivists: false,
 	};
 	if(this.state["_id"]){
 		this.fetchEventDetails();
+		this.fetchActivists();
 	}
 	this.fetchCategories();
 	this.fetchCities();
@@ -43,6 +60,18 @@ fetchEventDetails(){
 				category: event.eventDetails.category
 			});
 		});
+}
+fetchActivists(){
+	this.setState({loadingActivists : true})
+	server.post('activists/events/', {id : this.state._id, page : this.state.page})
+		.then(json => {
+			this.setState({
+				activists : json.activists,
+				pageCount : json.pageCount,
+				activistCount : json.activistCount,
+				loadingActivists : false
+			})
+	})
 }
 fetchCategories() {
 	server.get('eventCategories', {})
@@ -121,7 +150,22 @@ handleScanDeletion(scanIndex) {
 		});
 }
 
+handlePageNavigation(page){
+	this.setState({page: page}, ()=>{
+		this.fetchActivists();
+	});
+}
+
+goToActivistPage(activist){
+	this.props.history.push('/Activist?id='+activist._id);
+}
+
 render() {
+	const currPage = this.state.page;
+	const pageCount = this.state.pageCount;
+	const activistCount = this.state.activistCount
+	const loadingActivists = this.state.loadingActivists
+
 	const categories = this.state.categories.slice();
 	const catOptions = categories.map((cat)=>{
 		return <option key={"cat_" + cat._id} value={cat._id}>{cat.name.he}</option>
@@ -212,6 +256,19 @@ render() {
 								{rows}
 							</tbody>
 						</table>
+					</div>
+					<div>
+						<div>
+							<h3>{activistCount} נכחו באירוע:</h3>
+							<h3>{activistCount} נכחו באירוע:</h3>
+						</div>
+						<div className="query-results">
+							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields} onDoubleClick={this.goToActivistPage.bind(this)}/>
+							<div className="loading-query-wrap">
+								<LoadSpinner visibility={this.state.loadingActivists}/>
+							</div>
+							<PageNav currPage={currPage} pageCount={pageCount} goToPage={this.handlePageNavigation.bind(this)}/>
+						</div>
 					</div>
 					<datalist id="city-data-list">
 						<option value={"מקוון"}/>

@@ -1,3 +1,5 @@
+@import "../../lib/variables.scss";
+
 .page-wrap-activist {
   /*Scroll Bar*/
   ::-webkit-scrollbar {
@@ -180,5 +182,11 @@
   .loader-wrap {
     margin: 1em auto;
     width: fit-content;
+  }
+
+  .update-membership-button {
+    background-color: $purple-main;
+    color: white;
+    padding: 8px;
   }
 }

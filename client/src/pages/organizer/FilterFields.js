@@ -91,9 +91,9 @@ const filterableFields = {
         labelAr: "عضوية في الحراك",
         labelHe: "חברות בתנועה",
         icon: <FontAwesomeIcon icon="fist-raised"/>,
-        fieldName: "membership",
+        fieldName: "profile.isMember",
         options: {
-            membershipStatus: {labelAr: 'حالة العضوية', labelHe: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$exists", inputType: "select", options: "membershipStatus",
+            membershipStatus: {labelAr: 'حالة العضوية', labelHe: 'סטטוס חברות', sortPosition: 0, acceptMultiple: false, operator: "$eq", inputType: "select", options: "membershipStatus",
                 valueMapper:v => v === 'true'},
         }
     },
@@ -117,9 +117,12 @@ const filterableFields = {
         icon: <FontAwesomeIcon icon="peace"/>,
         fieldName: "linked.participatedEvents",
         options: {
-            membershipStatus: {labelAr: 'شاركوا بالحدث', labelHe: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
+            participated: {labelAr: 'شاركوا بالحدث', labelHe: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
                 valueMapper:v => {return {"_id":{"$eq": v._id, "castToId": true}}},
             },
+            notParticipated: {labelAr: 'مش شاركوا بالحدث', labelHe: 'לא השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
+                valueMapper:v => {return {"_id":{"$ne": v._id, "castToId": true}}},
+            }
         }
     },
     eventCategory:{
