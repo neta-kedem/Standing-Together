@@ -31,6 +31,7 @@ constructor(props) {
 		sortOptions: FilterFields.sortOptions,
 		fieldsFilterOptions: FilterFields.fieldsFilterOptions,
 		filterableFields: FilterFields.filterableFields,
+		lastQueryTime: 0,
 		currFilters: search?JSON.parse(search):{
 			outerOr: true,
 			groups: [
@@ -68,10 +69,14 @@ fetchActivistsByQuery(){
 	const query = this.state.query;
 	const sortBy = this.state.sortBy;
 	const page = this.state.page;
-	this.setState({loadingActivists: true});
+	const time = Date.now();
+	this.setState({loadingActivists: true, lastQueryTime: time});
 	this.props.history.push('/Organizer?search='+JSON.stringify(this.state.currFilters));
 	server.post('selectActivists', {'query': query, 'sortBy': sortBy, 'page': page})
 		.then(json => {
+			if(this.state.lastQueryTime > time){
+				return;
+			}
 			if(json && json.activists) {
 				this.setState({
 					activists: json.activists,
