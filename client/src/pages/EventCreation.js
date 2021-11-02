@@ -164,7 +164,6 @@ render() {
 	const currPage = this.state.page;
 	const pageCount = this.state.pageCount;
 	const activistCount = this.state.activistCount
-	const loadingActivists = this.state.loadingActivists
 
 	const categories = this.state.categories.slice();
 	const catOptions = categories.map((cat)=>{

@@ -39,6 +39,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.3.0",
     "react-time-input": "^0.0.19",
+    "shuffle-seed": "^1.1.6",
     "styled-jsx": "latest"
   },
   "eslintConfig": {

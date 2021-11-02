@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PubSub from 'pubsub-js';
 import events from './lib/events';
 import Alert from './UIComponents/Alert/Alert'
-
 import NoMatch from "./pages/404";
 import LinkRedirect from "./pages/LinkRedirect";
 import Login from "./pages/Login";
@@ -22,7 +21,6 @@ import ScanContacts from "./pages/ScanContacts";
 import ImportContacts from "./pages/ImportContacts";
 import DailySummary from "./pages/DailySummary";
 import Settings from "./pages/Settings";
-import MemberRegistration from "./pages/MemberRegistration";
 import Donations from "./pages/Donations";
 import CrowdFunding from "./pages/CrowdFunding";
 import Voting from "./pages/Voting";

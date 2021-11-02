@@ -8,10 +8,11 @@ import logo from "../static/logo_purple.svg"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import cookie from 'js-cookie';
+
 library.add(faTimes);
 
-
-const MAX_VOTES = 15;
+const MAX_VOTES = 2;
 
 export default class Voting extends React.Component {
   constructor(props) {
@@ -28,12 +29,15 @@ export default class Voting extends React.Component {
 
     server.get("candidates/fetchCandidates", {}).then(candidates => {
       if (candidates.length){
-          this.setState({ candidates: af.shuffle(candidates) });
+          let seed = cookie.get('seed')
+          if(!seed) {
+              seed = String(Date.now())
+              cookie.set('seed', seed)
+          }
+          this.setState({ candidates: af.seedShuffle(candidates, seed) });
       }
     });
 
-    // this.selectCandidate = this.selectCandidate.bind(this);
-    this.generateCandidate = this.generateCandidate.bind(this);
     this.validateCode = this.validateCode.bind(this);
     //used to auto-scroll back to the voting code input
     this.codeFormRef = React.createRef();
@@ -148,7 +152,8 @@ export default class Voting extends React.Component {
             }}
             onClick={() => {
                 this.handleCandidatePopupToggle(index);
-            }}          />
+            }}
+          />
         </div>
         <div className="candidate-details-wrap">
           <div className="candidate_name">
