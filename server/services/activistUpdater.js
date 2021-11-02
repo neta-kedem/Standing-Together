@@ -175,10 +175,10 @@ const addToRegionalMailchimpCircle = function(activists){
         for(let i = 0; i < activists.length; i++){
             let curr = activists[i];
             if (curr.profile.circle && circlesDict[curr.profile.circle]){
-                updatePromises.push(mailchimpSync.createContacts([curr], circlesDict[curr.profile.circle].mailchimpList));
+                // updatePromises.push(mailchimpSync.createContacts([curr], circlesDict[curr.profile.circle].mailchimpList));
             }
         }
-        updatePromises.push(mailchimpSync.createContacts(activists));
+        // updatePromises.push(mailchimpSync.createContacts(activists));
     });
     return Promise.all(updatePromises);
 };
