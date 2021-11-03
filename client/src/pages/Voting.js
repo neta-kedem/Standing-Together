@@ -213,7 +213,7 @@ export default class Voting extends React.Component {
               <h1 className="voting-title">
                   {"انتخابات لطاقم التنسيق القطريّ لحراك نقف معًا"}
               </h1>
-              <h3 className="introduction-paragraph">
+              <h3 className="introduction-paragraph hebrew">
                   צוות התיאום הארצי של התנועה – המהווה את הנהגת התנועה – נבחר באופן דמוקרטי ובבחירות חשאיות וישירות בידי חברות וחברי התנועה. באסיפה הארצית תוכל כל חברה לבחור 15 מועמדות ומועמדים לכל היותר, כאשר לבסוף יבחרו 25 חברות וחברים לצוות התיאום הארצי. בחודש שלאחר האסיפה הארצית יתקיימו בחירות גם במעגלים המקומיים, וייבחרו לצוות התיאום הארצי חברות וחברים נוספים, כנציגי המעגלים.
               </h3>
               <h3>
@@ -225,7 +225,7 @@ export default class Voting extends React.Component {
               <h3>
                   אם אתן/ם נתקלים/ות בקשיים בבקשה פנו לעזרה מאחד הפעילים/ות בעמדת ההצבעה.
               </h3>
-              <h3 className="introduction-paragraph">
+              <h3 className="introduction-paragraph hebrew">
                   طاقم التنسيق القطري للحراك - الذي يمثل قيادة الحراك - يُنتخَب بشكلٍ ديمقراطيّ وبانتخاباتٍ سرية ومباشرة على يد عضوات وأعضاء الحراك. في الاجتماع القطريّ سيكون بإمكان كل عضوة انتخاب ١٥ مرشحة ومرشح على الأكثر، بحيث أنه بنهاية المطاف سيتم انتخاب ٢٥ عضوة وعضو لطاقم التنسيق القطري. بالشهر الذي سيلي الاجتماع القطري ستقام انتخابات أيضًا في الحلقات المحلية، وسيُنتخَب لطاقم التنسيق القطري عضوات وأعضاء إضافيين، كمندوبين عن الحلقات.
               </h3>
               <h3>
@@ -356,9 +356,18 @@ export default class Voting extends React.Component {
                   backgroundPosition: focusedCandidatePhotoAlign
               }}
             />
-            <div className="popup-candidate-description">
+            <div className="popup-candidate-description hebrew">
+              <div style={{color: '#90278e', fontSize: '1.15em', lineHeight: '1.15em'}}>כמה מילים על המועמד/ת بعض الكلمات عن المرشّح/ة</div>
               {focusedCandidate.text1
                 ? focusedCandidate.text1
+                    .split("\n")
+                    .map((paragraph, i) => (
+                      <p key={"paragraph_" + i}>{paragraph}</p>
+                    ))
+                : ""}
+                <div style={{color: '#90278e', fontSize: '1.15em'}}>חזון פוליטי الرؤوية السياسية</div>
+              {focusedCandidate.text2
+                ? focusedCandidate.text2
                     .split("\n")
                     .map((paragraph, i) => (
                       <p key={"paragraph_" + i}>{paragraph}</p>

@@ -49,8 +49,6 @@
         margin-right: auto;
         margin-left: auto;
         padding-top: 20px;
-        text-align: right;
-        direction: rtl;
     }
 
     .code_validation {
@@ -327,8 +325,6 @@
         padding: 0 2em;
         box-sizing: border-box;
         overflow: auto;
-        direction: rtl;
-        text-align: right;
         margin-top: 2em;
     }
 
@@ -407,7 +403,6 @@
         .popup-candidate-description {
             max-height: calc(((100vh - 220px) - 20vw) - 4em);
             padding: 0 0.5em;
-            direction: rtl;
             font-size: 1.15em;
         }
     };
