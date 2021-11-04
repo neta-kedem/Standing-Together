@@ -1,3 +1,5 @@
+const shuffler = require('shuffle-seed')
+
 const indexByField = function(array, indexBy){
     const dict = {};
     for(let i = 0; i < array.length; i++){
@@ -39,5 +41,6 @@ const shuffle = (array) => {
 export default {
     indexByField,
     toDict,
-    shuffle
+    shuffle,
+    seedShuffle: shuffler.shuffle
 }
