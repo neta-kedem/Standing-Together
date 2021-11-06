@@ -8,10 +8,11 @@ import logo from "../static/logo_purple.svg"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import cookie from 'js-cookie';
+
 library.add(faTimes);
 
-
-const MAX_VOTES = 6;
+const MAX_VOTES = 2;
 
 export default class Voting extends React.Component {
   constructor(props) {
@@ -28,12 +29,15 @@ export default class Voting extends React.Component {
 
     server.get("candidates/fetchCandidates", {}).then(candidates => {
       if (candidates.length){
-          this.setState({ candidates: af.shuffle(candidates) });
+          let seed = cookie.get('seed')
+          if(!seed) {
+              seed = String(Date.now())
+              cookie.set('seed', seed)
+          }
+          this.setState({ candidates: af.seedShuffle(candidates, seed) });
       }
     });
 
-    // this.selectCandidate = this.selectCandidate.bind(this);
-    this.generateCandidate = this.generateCandidate.bind(this);
     this.validateCode = this.validateCode.bind(this);
     //used to auto-scroll back to the voting code input
     this.codeFormRef = React.createRef();
@@ -146,7 +150,9 @@ export default class Voting extends React.Component {
                 backgroundImage: `url(${photo})`,
                 backgroundPosition: photoAlign
             }}
-            onClick={this.selectCandidate.bind(this, candidate._id)}
+            onClick={() => {
+                this.handleCandidatePopupToggle(index);
+            }}
           />
         </div>
         <div className="candidate-details-wrap">
@@ -201,19 +207,37 @@ export default class Voting extends React.Component {
             className={"voting-logo"}
         />
           <div className={"introduction-wrap"}>
-            <h1 className="voting-title">
-            </h1>
-            <h1 className="voting-title">
-            </h1>
-            <h3 className="introduction-paragraph">
-            </h3>
-            <h3>
-                لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع. يمكن التصويت لمرة واحدة فقط، ل-٦ مرشحين/ات على الأكثر. بعد انتخاب المرشحين.ات يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام عملية الانتخاب. كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.
-            </h3>
-            <h3>
-                על מנת להצביע יש להזין את הקוד שקיבלתם. ניתן להצביע רק פעם אחת, עבור 6 מועמדים/ות לכל היותר. לאחר בחירת המועמדים/ות יש לאשר את הבחירה על ידי לחיצה ״סיימתי״, על מנת להשלים את תהליך הבחירה. הקוד הוא אקראי ואינו מאפשר את זיהוי הבוחר/ת.
-            </h3>
-        </div>
+              <h1 className="voting-title">
+                  {"בחירות לצוות התיאום הארצי של תנועת עומדים ביחד"}
+              </h1>
+              <h1 className="voting-title">
+                  {"انتخابات لطاقم التنسيق القطريّ لحراك نقف معًا"}
+              </h1>
+              <h3 className="introduction-paragraph hebrew">
+                  צוות התיאום הארצי של התנועה – המהווה את הנהגת התנועה – נבחר באופן דמוקרטי ובבחירות חשאיות וישירות בידי חברות וחברי התנועה. באסיפה הארצית תוכל כל חברה לבחור 15 מועמדות ומועמדים לכל היותר, כאשר לבסוף יבחרו 25 חברות וחברים לצוות התיאום הארצי. בחודש שלאחר האסיפה הארצית יתקיימו בחירות גם במעגלים המקומיים, וייבחרו לצוות התיאום הארצי חברות וחברים נוספים, כנציגי המעגלים.
+              </h3>
+              <h3>
+                  על מנת להצביע יש להזין את הקוד שקיבלתם בדוכן ההרשמה. ניתן להצביע רק פעם אחת, עבור 15 מתמודדים/ות לכל היותר. לאחר בחירת המועמדים/ות יש לאשר את הבחירה על ידי לחיצה ״סיימתי״, על מנת להשלים את תהליך הבחירה.
+              </h3>
+              <h3>
+                  הקוד הוא אקראי ואינו מאפשר את זיהוי הבוחר/ת.
+              </h3>
+              <h3>
+                  אם אתן/ם נתקלים/ות בקשיים בבקשה פנו לעזרה מאחד הפעילים/ות בעמדת ההצבעה.
+              </h3>
+              <h3 className="introduction-paragraph hebrew">
+                  طاقم التنسيق القطري للحراك - الذي يمثل قيادة الحراك - يُنتخَب بشكلٍ ديمقراطيّ وبانتخاباتٍ سرية ومباشرة على يد عضوات وأعضاء الحراك. في الاجتماع القطريّ سيكون بإمكان كل عضوة انتخاب ١٥ مرشحة ومرشح على الأكثر، بحيث أنه بنهاية المطاف سيتم انتخاب ٢٥ عضوة وعضو لطاقم التنسيق القطري. بالشهر الذي سيلي الاجتماع القطري ستقام انتخابات أيضًا في الحلقات المحلية، وسيُنتخَب لطاقم التنسيق القطري عضوات وأعضاء إضافيين، كمندوبين عن الحلقات.
+              </h3>
+              <h3>
+                  لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع بكشك التسجيل. يمكن التصويت لمرة واحدة فقط، ل-١٥ مرشح/ة على الأكثر. بعد انتخاب المرشحين يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام عملية الانتخاب.
+              </h3>
+              <h3>
+                  كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.
+              </h3>
+              <h3>
+                  بحال واجهتم/ن مشاكل أو صعوبات اطلبوا المساعدة من أحد الناشطين/ات بزاوية التصويت.
+              </h3>
+          </div>
         <div className="code_validation" ref={this.codeFormRef}>
           <form className="form">
             <div className="code-input-wrap">
@@ -314,7 +338,7 @@ export default class Voting extends React.Component {
               backgroundColor: "rgba(60,60,60,0.8)"
             },
             content: {
-              height: "calc(100vh - 120px)"
+              height: "calc(100vh - 120px)", direction: 'rtl'
             }
           }}
         >
@@ -332,9 +356,18 @@ export default class Voting extends React.Component {
                   backgroundPosition: focusedCandidatePhotoAlign
               }}
             />
-            <div className="popup-candidate-description">
+            <div className="popup-candidate-description hebrew">
+              <div style={{color: '#90278e', fontSize: '1.15em', lineHeight: '1.15em'}}>כמה מילים על המועמד/ת بعض الكلمات عن المرشّح/ة</div>
               {focusedCandidate.text1
                 ? focusedCandidate.text1
+                    .split("\n")
+                    .map((paragraph, i) => (
+                      <p key={"paragraph_" + i}>{paragraph}</p>
+                    ))
+                : ""}
+                <div style={{color: '#90278e', fontSize: '1.15em'}}>חזון פוליטי الرؤوية السياسية</div>
+              {focusedCandidate.text2
+                ? focusedCandidate.text2
                     .split("\n")
                     .map((paragraph, i) => (
                       <p key={"paragraph_" + i}>{paragraph}</p>
