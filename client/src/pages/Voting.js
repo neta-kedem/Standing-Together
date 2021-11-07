@@ -7,12 +7,12 @@ import Modal from "react-modal";
 import logo from "../static/logo_purple.svg"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import {faTimes, faInfoCircle, faInfo, faCircle} from '@fortawesome/free-solid-svg-icons'
 import cookie from 'js-cookie';
 
-library.add(faTimes);
+library.add(faTimes, faInfoCircle, faInfo, faCircle);
 
-const MAX_VOTES = 2;
+const MAX_VOTES = 15;
 
 export default class Voting extends React.Component {
   constructor(props) {
@@ -144,7 +144,12 @@ export default class Voting extends React.Component {
         key={candidate._id}
       >
         <div className="candidate-picture-wrap">
-          <div
+            <div className="fa-stack candidate-picture-info">
+            <FontAwesomeIcon icon={faCircle} className="fa-stack-2x" style={{fontSize: 11, color:'black'}}/>
+            <FontAwesomeIcon icon={faInfoCircle} className="fa-stack-2x" style={{fontSize: 10, color:'darkGrey'}}/>
+            <FontAwesomeIcon icon={faInfo} className="fa-stack-1x" style={{fontSize: 10, color:'white'}} />
+            </div>
+            <div
             className="candidate_picture"
             style={{
                 backgroundImage: `url(${photo})`,
@@ -212,8 +217,8 @@ export default class Voting extends React.Component {
               </h1>
               <h1 className="voting-title">
                   {"انتخابات لطاقم التنسيق القطريّ لحراك نقف معًا"}
-              </h1>
-              <h3 className="introduction-paragraph hebrew">
+              {"انتخابات لطاقم التنسيق القطريّ لحراك نقف معًا"}</h1>
+              <h3 className="introduction-paragraphhebrew">
                   צוות התיאום הארצי של התנועה – המהווה את הנהגת התנועה – נבחר באופן דמוקרטי ובבחירות חשאיות וישירות בידי חברות וחברי התנועה. באסיפה הארצית תוכל כל חברה לבחור 15 מועמדות ומועמדים לכל היותר, כאשר לבסוף יבחרו 25 חברות וחברים לצוות התיאום הארצי. בחודש שלאחר האסיפה הארצית יתקיימו בחירות גם במעגלים המקומיים, וייבחרו לצוות התיאום הארצי חברות וחברים נוספים, כנציגי המעגלים.
               </h3>
               <h3>
@@ -227,14 +232,17 @@ export default class Voting extends React.Component {
               </h3>
               <h3 className="introduction-paragraph hebrew">
                   طاقم التنسيق القطري للحراك - الذي يمثل قيادة الحراك - يُنتخَب بشكلٍ ديمقراطيّ وبانتخاباتٍ سرية ومباشرة على يد عضوات وأعضاء الحراك. في الاجتماع القطريّ سيكون بإمكان كل عضوة انتخاب ١٥ مرشحة ومرشح على الأكثر، بحيث أنه بنهاية المطاف سيتم انتخاب ٢٥ عضوة وعضو لطاقم التنسيق القطري. بالشهر الذي سيلي الاجتماع القطري ستقام انتخابات أيضًا في الحلقات المحلية، وسيُنتخَب لطاقم التنسيق القطري عضوات وأعضاء إضافيين، كمندوبين عن الحلقات.
+                  על מנת להצביע יש להזין את הקוד שקיבלתם בדוכן ההרשמה. ניתן להצביע רק פעם אחת, עבור 15 מתמודדים/ות לכל היותר. לאחר בחירת המועמדים/ות יש לאשר את הבחירה על ידי לחיצה ״סיימתי״, על מנת להשלים את תהליך הבחירה. הקוד הוא אקראי ואינו מאפשר את זיהוי הבוחר/ת.
               </h3>
-              <h3>
+              <h3 className="introduction-paragraph">
+                  אם אתן/ם נתקלים/ות בקשיים בבקשה פנו לעזרה מאחד הפעילים/ות בעמדת ההצבעה.
+              </h3>
+                <h3 className="introduction-paragraph">
                   لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع بكشك التسجيل. يمكن التصويت لمرة واحدة فقط، ل-١٥ مرشح/ة على الأكثر. بعد انتخاب المرشحين يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام عملية الانتخاب.
               </h3>
-              <h3>
-                  كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.
+              <h3> كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.
               </h3>
-              <h3>
+              <h3 className="introduction-paragraph">
                   بحال واجهتم/ن مشاكل أو صعوبات اطلبوا المساعدة من أحد الناشطين/ات بزاوية التصويت.
               </h3>
           </div>
