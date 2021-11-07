@@ -46,9 +46,7 @@
     }
 
     .introduction-paragraph {
-        margin-right: auto;
-        margin-left: auto;
-        padding-top: 20px;
+        line-height: 1.5rem;
     }
 
     .code_validation {
@@ -153,6 +151,7 @@
         width: 10em;
         height: 10em;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .candidate_picture {
@@ -165,6 +164,12 @@
         background-origin: border-box;
         transition: transform 0.25s ease-out;
         -webkit-tap-highlight-color: transparent;
+    }
+    .candidate-picture-info {
+        position: absolute;
+        padding-right: 5px;
+        padding-top: 5px;
+        z-index: 1;
     }
 
     .candidate_picture:hover {
