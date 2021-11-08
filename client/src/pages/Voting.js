@@ -306,7 +306,7 @@ export default class Voting extends React.Component {
           ariaHideApp={false}
           style={{
             overlay: {
-                backgroundColor: "rgba(60,60,60,0.8)"
+                backgroundColor: "rgba(60,60,60,0.8)", zIndex: 2
             },
             content: {
                 height: "fit-content",
@@ -343,7 +343,7 @@ export default class Voting extends React.Component {
           ariaHideApp={false}
           style={{
             overlay: {
-              backgroundColor: "rgba(60,60,60,0.8)"
+              backgroundColor: "rgba(60,60,60,0.8)", zIndex: 2
             },
             content: {
               height: "calc(100vh - 120px)", direction: 'rtl'
