@@ -1,5 +1,5 @@
 .page-wrap-voting {
-    font-family: Assistant, Cairo, Rubik, sans-serif;
+    font-family: wfont_7ff315_8e295637f9d9487582bdde8b625315ff, wf_8e295637f9d9487582bdde8b6, orig_abraham_trial_bold, sans-serif;
     width: 85%;
     margin: 0 auto;
     direction: rtl;
@@ -39,7 +39,7 @@
 
     .voting-title {
         margin: auto auto 10px;
-        color: #242424;
+        color: rgb(143,40,140);
         line-height: 32px;
         font-weight: 600;
         text-align: center;
@@ -47,6 +47,7 @@
 
     .introduction-paragraph {
         line-height: 1.5rem;
+        font-weight: normal;
     }
 
     .code_validation {
@@ -131,6 +132,7 @@
         border: none;
         border-bottom: 2px solid #90278e;
         transition: background-color 0.2s, box-shadow 0.5s;
+        font-family:wfont_7ff315_d52a3cce82764b208a8c8446659114e3,wf_d52a3cce82764b208a8c84466,orig_abraham_trial_regular, sans-serif;
     }
 
     .candidate.selected {
@@ -207,6 +209,7 @@
         margin-right: auto;
         width: 100%;
         justify-content: center;
+        font-family:wfont_7ff315_d52a3cce82764b208a8c8446659114e3,wf_d52a3cce82764b208a8c84466,orig_abraham_trial_regular, sans-serif;
     }
 
     .candidate-selection-label {
