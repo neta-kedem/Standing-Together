@@ -193,6 +193,19 @@ export default class Voting extends React.Component {
   }
 
   render() {
+      return (
+        <div style={{display:"flex", alignItems: "center", flexDirection:"column"}}>
+          <img
+            alt={"logo"}
+            src={logo}
+            width={250}
+            className={"voting-logo"}
+          />
+          <h1 style={{ color: "#90278e", paddingTop: 50 }}>
+            Voting Is Closed
+          </h1>
+        </div>
+      );
     const candidates = this.state.candidates.slice();
     const focusedCandidateIndex = this.state.focusedCandidate;
     const focusedCandidate = candidates[focusedCandidateIndex]
