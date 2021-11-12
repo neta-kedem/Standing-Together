@@ -59,14 +59,14 @@ export default class VotingResults extends React.Component {
 
   render() {
     return (
-      <div className={" page page-wrap-voting-results"}>
+      <div className={"page page-wrap-voting-results"}>
         <Meta />
         <BarChart
           lables={this.state.candidateNames}
           data={this.state.votingSet}
           votesTotal={this.state.votesTotal}
         />
-        <div>
+        <div style={{direction: 'rtl'}}>
           {
             this.state.candidateNames.map((candidate, i) => {
               return <div>{candidate},{((this.state.votingSet[0] || {data:[0]})).data[i]}</div>
