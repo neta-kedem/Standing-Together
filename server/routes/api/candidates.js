@@ -16,6 +16,6 @@ module.exports = (app) => {
 			if (result.error)
 				return res.json({error: result.error});
 			voteManager.fetchAllVotes(req, res)
-		}
+		})
 	});
 };
