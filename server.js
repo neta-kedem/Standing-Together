@@ -15,7 +15,7 @@ const winston = require('winston');
 const { createLogger, format, transports } = winston;
 const { combine, timestamp, printf } = format;
 require('winston-mongodb');
-const expressWinston = require('express-winston')
+const expressWinston = require('express-winston');
 
 const myFormat = printf(({ level, message, timestamp }) => {
 	return `{ "timestamp": "${timestamp}", "level": "${level}", "message": "${message}" }`;
@@ -44,7 +44,7 @@ const options = {
 	level: 'info',
 	storeHost: true,
 	capped: true
-}
+};
 
 const logger = createLogger({
 	format: combine(
@@ -53,17 +53,17 @@ const logger = createLogger({
 	),
 	transports: [transport, new transports.Console(), errorTransport, new winston.transports.MongoDB(options)]
 });
-
-console.log = (...args) => logger.info(args)
-console.warn = (...args) => logger.warn(args)
-console.error = (...args) => logger.error(args)
-
+if(!dev){
+	console.warn = (...args) => logger.warn(args);
+	console.log = (...args) => logger.info(args);
+	console.error = (...args) => logger.error(args);
+}
 const init = (logger) => expressWinston.logger({
 	winstonInstance: logger, // a winston logger instance. If this is provided the transports option is ignored.
 	msg: 'HTTP {{res.statusCode}} {{req.method}} {{req.url}} {{res.responseTime}}ms {{JSON.stringify(req.body)}}', // customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}", "HTTP {{req.method}} {{req.url}}".
 	expressFormat: false, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors when colorize set to true
 	bodyWhitelist: ["body"] // Array of body properties to log. Overrides global bodyWhitelist for this instance
-})
+});
 
 if(dev){
 	mongoose.set('debug', true);
