@@ -7,22 +7,23 @@ import QueryString from 'query-string';
 import FormSegment from './activist/formSegment'
 import LoadSpinner from "../UIComponents/LoadSpinner/LoadSpinner";
 import TopNavBar from '../UIComponents/TopNavBar/TopNavBar'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSave, faLock, faLockOpen} from '@fortawesome/free-solid-svg-icons'
+
 library.add(faSave, faLock, faLockOpen);
 
 export default class Activist extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            _id: QueryString.parse(props.location.search, { ignoreQueryPrefix: true }).id,
+            _id: QueryString.parse(props.location.search, {ignoreQueryPrefix: true}).id,
             activist: {},
             savingInProcess: false,
             loadingDetails: false,
             profileDataLists: {
-                residency:{field:"residency", data:[]},
-                circle:{field:"circle", data:[]},
+                residency: {field: "residency", data: []},
+                circle: {field: "circle", data: []},
             },
             profileFields: [
                 {
@@ -101,7 +102,10 @@ export default class Activist extends React.Component {
                 cleaned: {
                     name: "מייל לא תקין",
                     actions: [
-                        {label: "תיקון", color: "#973", func: ()=>{}},
+                        {
+                            label: "תיקון", color: "#973", func: () => {
+                            }
+                        },
                     ]
                 },
                 pending: {
@@ -122,100 +126,131 @@ export default class Activist extends React.Component {
             unsaved: false
         };
     }
+
     componentDidMount() {
         this.fetchCities();
         this.fetchCircles();
         this.fetchMailchimpLists();
-        if(this.state["_id"]){
+        if (this.state["_id"]) {
             this.fetchActivist();
+        } else {
+            this.initActivist();
         }
         //confirm exit without saving
         window.onbeforeunload = this.refreshHandler;
     }
-    refreshHandler = function() {
-        if(this.state.unsaved)
+
+    refreshHandler = function () {
+        if (this.state.unsaved)
             return "You Have Unsaved Data - Are You Sure You Want To Quit?";
     }.bind(this);
 
-    fetchActivist(){
+    initActivist() {
+        const activist = {profile: {}, role: {}};
+        this.state.profileFields.forEach(x => {
+            activist.profile[x.name] = "";
+        });
+        this.state.roleFields.forEach(x => {
+            activist.role[x.name] = false;
+        });
+        this.setState({activist: activist});
+    }
+
+    fetchActivist() {
         this.setState({loadingDetails: true});
-        server.get('activists/'+this.state._id)
+        server.get('activists/' + this.state._id)
             .then(activist => {
-                if(!activist || activist.error)
+                if (!activist || activist.error)
                     return;
                 this.setState({
                     activist: activist,
                     loadingDetails: false
                 });
-                if(activist && activist.profile && activist.profile.email && activist.profile.email.length){
+                if (activist && activist.profile && activist.profile.email && activist.profile.email.length) {
                     this.fetchMailchimpData(activist.profile.email);
                 }
             });
     }
 
-    fetchCities(){
+    fetchCities() {
         server.get('cities/', {})
             .then(json => {
                 let dataLists = this.state.profileDataLists;
-                dataLists.residency.data = json.map((city)=>{
+                dataLists.residency.data = json.map((city) => {
                     return city.name;
                 });
                 this.setState({profileDataLists: dataLists})
             });
     }
 
-    fetchCircles(){
+    fetchCircles() {
         server.get('circles/', {})
             .then(json => {
                 let dataLists = this.state.profileDataLists;
-                dataLists.circle.data = json.map((circle)=>{
+                dataLists.circle.data = json.map((circle) => {
                     return circle.name;
                 });
                 this.setState({profileDataLists: dataLists})
             });
     }
 
-    fetchMailchimpLists(){
+    fetchMailchimpLists() {
         server.get('mailchimp/lists/', {})
-        .then(lists => {
-            if(lists && lists.lists){
-                const mailchimpLists = lists.lists.sort((a, b) => b.stats.member_count - a.stats.member_count);
-                this.setState({mailchimpLists});
-            }
-        });
+            .then(lists => {
+                if (lists && lists.lists) {
+                    const mailchimpLists = lists.lists.sort((a, b) => b.stats.member_count - a.stats.member_count);
+                    this.setState({mailchimpLists});
+                }
+            });
     }
 
-    fetchMailchimpData(email){
+    fetchMailchimpData(email) {
         server.get('mailchimp/search?email=' + email)
-        .then(mailchimpData => {
-            this.setState({mailchimpData: arrayFunctions.indexByField(mailchimpData, "list_id")});
-        });
+            .then(mailchimpData => {
+                this.setState({mailchimpData: arrayFunctions.indexByField(mailchimpData, "list_id")});
+            });
     }
 
-    enrollActivist(activist, list){
+    enrollActivist(activist, list) {
         server.post('mailchimp/enroll/', {activist: activist, listId: list}).then(res => {
             alert("ההרשמה התבצעה בהצלחה")
         })
     }
 
-    unenrollActivist(activist, list){
+    unenrollActivist(activist, list) {
         server.post('mailchimp/unenroll/', {activist: activist, listId: list}).then(res => {
             alert("ביטול ההרשמה התבצע בהצלחה")
         })
     }
 
-    handleTypedInput = function (name, value, form){
+    addActivist() {
+        server.post('activists', {'activists': [this.state.activist]})
+            .then(() => {
+                alert("saved");
+                this.props.history.push('/Organizer');
+            });
+    }
+
+    updateActivist() {
+        server.post('activists', {'activists': [this.state.activist]})
+            .then(() => {
+                alert("saved");
+                this.props.history.push('/Organizer');
+            });
+    }
+
+    handleTypedInput = function (name, value, form) {
         let activist = this.state.activist;
-        if(form === "profile")
+        if (form === "profile")
             activist.profile[name] = value;
-        if(form === "role")
+        if (form === "role")
             activist.role[name] = value;
-        if(form === "membership")
+        if (form === "membership")
             activist.membership[name] = value;
         this.setState({activist: activist, unsaved: true});
     }.bind(this);
 
-    lockUser = function() {
+    lockUser = function () {
         server.post('lock/user', {'userId': this.state._id})
             .then(() => {
                 const activist = this.state.activist;
@@ -225,7 +260,7 @@ export default class Activist extends React.Component {
             });
     }.bind(this);
 
-    unlockUser = function() {
+    unlockUser = function () {
         server.post('unlock/user', {'userId': this.state._id})
             .then(() => {
                 const activist = this.state.activist;
@@ -235,18 +270,18 @@ export default class Activist extends React.Component {
             });
     }.bind(this);
 
-    saveActivist = function() {
-        if(this.state.savingInProcess)
+    saveActivist = function () {
+        if (this.state.savingInProcess)
             return;
         this.setState({savingInProcess: true});
-        server.post('activists', {'activists': [this.state.activist]})
-            .then(() => {
-                alert("saved");
-                this.props.history.push('/Organizer');
-            });
+        if (this.state.activist._id) {
+            this.updateActivist();
+        } else {
+            this.addActivist();
+        }
     }.bind(this);
 
-    updateMembership = function() {
+    updateMembership = function () {
         const today = new Date().toISOString().split('Z')[0];
         let updatedActivist = this.state.activist;
         updatedActivist.profile.isMember = true;
@@ -254,7 +289,7 @@ export default class Activist extends React.Component {
         this.setState({activist: updatedActivist});
     }.bind(this);
 
-    removeMembership = function() {
+    removeMembership = function () {
         let updatedActivist = this.state.activist;
         updatedActivist.profile.isMember = false;
         this.setState({activist: updatedActivist});
@@ -275,9 +310,9 @@ export default class Activist extends React.Component {
                 <TopNavBar>
                     <div className="title-wrap">
                         {
-                            activist.profile
-                                ? activist.profile.firstName + " " + activist.profile.lastName
-                                :"Loading..."
+                            activist._id?
+                                (activist.profile ? activist.profile.firstName + " " + activist.profile.lastName
+                                : "Loading...") : "הוספת איש קשר"
                         }
                     </div>
                 </TopNavBar>
@@ -286,8 +321,10 @@ export default class Activist extends React.Component {
                         ? <div className={"loader-wrap"}><LoadSpinner visibility={true}/></div>
                         : <div dir="rtl" className="content-wrap">
                             <h2>פרטי קשר</h2>
-                            {activist.profile ? <p>במערכת מאז {activist.metadata.creationDate}</p> : ""}
-                            {activist.profile ? <p>עדכון אחרון ב- {activist.metadata.lastUpdate}</p> : ""}
+                            {(activist.profile && activist._id) ? <div>
+                                <p>במערכת מאז {activist.metadata.creationDate}</p>
+                                <p>עדכון אחרון ב- {activist.metadata.lastUpdate}</p>
+                            </div> : ""}
                             {
                                 activist.profile ?
                                     <FormSegment
@@ -309,42 +346,60 @@ export default class Activist extends React.Component {
                                         handleChange={this.handleTypedInput}
                                     /> : null
                             }
-                            <h2>חברות בתנועה</h2>
-                            {activist.profile && activist.profile.isMember ?
-                                <p>חברה בתנועה מאז {activist.membership? activist.membership.joiningDate : '[אין תאריך]'}</p> :
-                                <>
-                                    <h4>לא בתנועה</h4>
-                                    <button type="button" className="update-membership-button" onClick={this.updateMembership}>לעדכן חברות</button>
-                                </>
-                            }
                             {
-                                activist.profile && activist.profile.isMember ?
+                                activist.profile && activist._id ?
                                     <div>
-                                        <button type="button" className="update-membership-button" onClick={this.removeMembership}>להסיר חברות</button>
-                                        <FormSegment
-                                            segmentName={"membership"}
-                                            dataLists={this.state.profileDataLists}
-                                            fields={memberFields}
-                                            values={activist.membership || {}}
-                                            handleChange={this.handleTypedInput}
-                                        />
-                                    </div> : null
+                                        <h2>חברות בתנועה</h2>
+                                        {
+                                            activist.profile.isMember ?
+                                                <p>חברה בתנועה
+                                                    מאז {activist.membership ? activist.membership.joiningDate : '[אין תאריך]'}</p> :
+                                                <>
+                                                    <h4>לא בתנועה</h4>
+                                                    <button type="button" className="update-membership-button"
+                                                            onClick={this.updateMembership}>לעדכן חברות
+                                                    </button>
+                                                </>
+                                        }
+                                        {
+                                            activist.profile.isMember ?
+                                                <div>
+                                                    <button type="button" className="update-membership-button"
+                                                            onClick={this.removeMembership}>להסיר חברות
+                                                    </button>
+                                                    <FormSegment
+                                                        segmentName={"membership"}
+                                                        dataLists={this.state.profileDataLists}
+                                                        fields={memberFields}
+                                                        values={activist.membership || {}}
+                                                        handleChange={this.handleTypedInput}
+                                                    />
+                                                </div> : null
+                                        }
+                                    </div>
+                                    : null
                             }
-                            <h2>השתתפות באירועים</h2>
                             {
-                                (activist.participatedEvents && activist.participatedEvents.length)
-                                    ? <p>השתתפו באירועים:</p>
-                                    : <h4>לא השתתפו באירועים במערכת</h4>
-                            }
-                            {
-                                (activist.participatedEvents)
-                                    ? activist.participatedEvents.map(e =>
-                                        <div key={e._id}>
-                                            <Link to={`/eventCreation?id=${e._id}`}>
-                                                {e.eventDetails.name + ", " + e.eventDetails.date}
-                                            </Link>
-                                        </div>
-                                    )
+                                activist.profile && activist._id ?
+                                    <div>
+                                        <h2>השתתפות באירועים</h2>
+                                        {
+                                            (activist.participatedEvents && activist.participatedEvents.length)
+                                                ? <p>השתתפו באירועים:</p>
+                                                : <h4>לא השתתפו באירועים במערכת</h4>
+                                        }
+                                        {
+                                            (activist.participatedEvents)
+                                                ? activist.participatedEvents.map(e =>
+                                                    <div key={e._id}>
+                                                        <Link to={`/eventCreation?id=${e._id}`}>
+                                                            {e.eventDetails.name + ", " + e.eventDetails.date}
+                                                        </Link>
+                                                    </div>
+                                                )
+                                                : null
+                                        }
+                                    </div>
                                     : null
                             }
                             {
@@ -363,7 +418,9 @@ export default class Activist extends React.Component {
                                                                 return (
                                                                     <button
                                                                         type={"button"} style={{backgroundColor: a.color}}
-                                                                        onClick={() => {a.func(activist, l.id)}}
+                                                                        onClick={() => {
+                                                                            a.func(activist, l.id)
+                                                                        }}
                                                                     >
                                                                         {a.label}
                                                                     </button>
@@ -378,8 +435,9 @@ export default class Activist extends React.Component {
                                     : null
                             }
                             {
-                                activist.login && !activist.login.locked
-                                    ? <button type={"button"} onClick={this.lockUser.bind(this)} className="lock-activist-button">
+                                activist.login && activist._id && !activist.login.locked
+                                    ? <button type={"button"} onClick={this.lockUser.bind(this)}
+                                              className="lock-activist-button">
                                         <div className="lock-activist-button-label">
                                             <div>ניתוק ונעילה</div>
                                             <div>ניתוק ונעילה</div>
@@ -391,8 +449,9 @@ export default class Activist extends React.Component {
                                     : null
                             }
                             {
-                                activist.profile && activist.login.locked
-                                    ? <button type={"button"} onClick={this.unlockUser.bind(this)} className="lock-activist-button">
+                                activist.profile && activist._id && activist.login.locked
+                                    ? <button type={"button"} onClick={this.unlockUser.bind(this)}
+                                              className="lock-activist-button">
                                         <div className="lock-activist-button-label">
                                             <div>ביטול נעילה</div>
                                             <div>ביטול נעילה</div>
@@ -406,8 +465,9 @@ export default class Activist extends React.Component {
                             {
                                 savingInProcess
                                     ? <LoadSpinner visibility={true}/>
-                                    :(
-                                        <button type={"button"} onClick={this.saveActivist.bind(this)} className="save-activist-button">
+                                    : (
+                                        <button type={"button"} onClick={this.saveActivist.bind(this)}
+                                                className="save-activist-button">
                                             <div className="save-activist-button-label">
                                                 <div>حفظ</div>
                                                 <div>שמירה</div>
