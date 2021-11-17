@@ -57,6 +57,7 @@ const getContactScan = function(req, res){
         ContactScan.findOneAndUpdate(
             query,
             {"$set": {"lastPing": now, "typerId": typerId}},
+            {"sort":{"priority": -1, "metadata.creationDate": 1}},
             (err, scanData) => {
                 if (err) return res.json({success: false, error: err});
                 if (!scanData)

@@ -59,6 +59,7 @@ const contactScanSchema = new mongoose.Schema({
 		ref: 'event',
 		required: true
 	},
+	priority: {type: Number, default:1},
 });
 
 module.exports = mongoose.model('contactScan',contactScanSchema);
