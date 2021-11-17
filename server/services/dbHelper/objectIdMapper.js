@@ -5,10 +5,9 @@ const idifyObject = function(query){
         if(typeof val === 'object') {
             Object.keys(val).forEach(key => {
                 if (typeof val[key] === 'string') {
-                    val[key] = mongoose.Types.ObjectId(val[key]);
+                    val = mongoose.Types.ObjectId(val[key]);
                 }
             });
-            delete val.castToId;
             return val;
         }
         return val;

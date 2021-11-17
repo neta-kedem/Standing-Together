@@ -115,16 +115,17 @@ const filterableFields = {
         labelAr: "حدث",
         labelHe: "אירוע",
         icon: <FontAwesomeIcon icon="peace"/>,
-        fieldName: "linked.participatedEvents",
+        fieldName: "profile.participatedEvents",
         options: {
             participated: {labelAr: 'شاركوا بالحدث', labelHe: 'השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
-                valueMapper:v => {return {"_id":{"$eq": v._id, "castToId": true}}},
+                valueMapper:v => {return {"$eq":{"$eq": v._id, "castToId": true}}},
             },
             notParticipated: {labelAr: 'مش شاركوا بالحدث', labelHe: 'לא השתתפו באירוע', sortPosition: 0, acceptMultiple: false, operator: "$elemMatch", inputType: "eventSelector",
-                valueMapper:v => {return {"_id":{"$ne": v._id, "castToId": true}}},
+                valueMapper:v => {return {"$ne":{"$ne": v._id, "castToId": true}}},
             }
         }
     },
+    /*
     eventCategory:{
         sortPosition: 9,
         labelAr: "نوعية الحدث",
@@ -138,6 +139,7 @@ const filterableFields = {
             },
         }
     }
+    */
 };
 
 const getCities = function() {
