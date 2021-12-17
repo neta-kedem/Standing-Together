@@ -12,7 +12,7 @@ import cookie from 'js-cookie';
 
 library.add(faTimes, faInfoCircle, faInfo, faCircle);
 
-const MAX_VOTES = 15;
+const MAX_VOTES = 13;
 
 export default class Voting extends React.Component {
   constructor(props) {
