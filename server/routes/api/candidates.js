@@ -11,6 +11,11 @@ module.exports = (app) => {
 		voteManager.validateCode(req, res)
 	});
 	app.get('/api/votes/fetchAllVotes', (req, res) => {
-		voteManager.fetchAllVotes(req, res)
+
+		Authentication.hasRole(req, "isOrganizer").then(result=> {
+			if (result.error)
+				return res.json({error: result.error});
+			voteManager.fetchAllVotes(req, res)
+		})
 	});
 };
