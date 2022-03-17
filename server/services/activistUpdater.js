@@ -39,6 +39,35 @@ const updateActivists = async (activists) => {
 };
 
 /**
+ * @param activists
+ * gets an array of activist objects, complete without an _id field, checks whether they appear in the db, if not - adds them
+ * @returns the ids of the newly added activists / the pre-existing duplicates
+ */
+const insertActivists = async (activists) => {
+    let updateQueries = [];
+
+    let now = new Date();
+    for(let i = 0; i < activists.length; i++)
+    {
+        let a = activists[i];
+        if(a._id){
+            updateQueries.push(Activist.updateOne(
+                {_id: mongoose.Types.ObjectId(a._id)},
+                {role: a.role, profile: a.profile, membership: a.membership, "metadata.lastUpdate": now}
+            ).exec());
+        }
+        else{
+            updateQueries.push(Activist.insertOne({
+                "_id": mongoose.Types.ObjectId(),
+                "metadata": {"creationDate": now, "lastUpdate": now, "joiningMethod": "manuallyAdded"},
+                "profile": a.profile, "role": a.role,
+            }).exec())
+        }
+    }
+    return Promise.all(updateQueries);
+};
+
+/**
  * @param typerId - the _id of the activist who typed in the data from some contact page scan
  * @param scanId - the _id of the scanned contact page
  * @param activists - the list of all activists whose data has been typed in according to that scanned contact page
@@ -378,5 +407,6 @@ const uploadTypedActivists = async function (typedRows, scanId, markedDone) {
 
 module.exports = {
     uploadTypedActivists,
-    updateActivists
+    updateActivists,
+    insertActivists
 };
