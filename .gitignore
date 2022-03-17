@@ -28,6 +28,9 @@ yarn-error.log*
 # local config
 /services/config.js
 
+# bat files for locally executing server and connecting to remote db
+/exec_scripts/
+
 # logs
 /logs
 

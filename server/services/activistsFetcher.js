@@ -56,7 +56,7 @@ const queryActivists = function(query, sortBy, page, callback){
         },
         {$match: query},
     ]);
-    return Activist.aggregatePaginate(aggregation, {
+    return Activist.paginate(query, {
             page: page + 1, limit: PAGE_SIZE,
             sort: sortBy ? sortBy : "profile.firstName",
         }
@@ -72,11 +72,10 @@ const queryActivists = function(query, sortBy, page, callback){
                 "name":activist.profile.firstName+" "+activist.profile.lastName,
                 "city":activist.profile.residency,
                 "isCaller":activist.role.isCaller,
-                "participatedEvents":activist.linked.participatedEvents,
                 "memberSince": activist.membership ? activist.membership.joiningDate : "",
             });
         }
-        return callback({activists: activistsList, pageCount: result.totalPages, activistCount: result.totalDocs});
+        return callback({activists: activistsList, pageCount: result.pages, activistCount: result.total});
     });
 };
 const downloadActivistsByQuery = function(query, sortBy, callback){
@@ -97,18 +96,7 @@ const downloadActivistsByQuery = function(query, sortBy, callback){
     }
     objectIdMapper.idifyObject(query);
     objectDateMapper.castDates(query);
-    Activist.aggregate([
-        {
-            $lookup: {
-                from: 'events',
-                localField: "profile.participatedEvents",
-                foreignField: "_id",
-                as: "linked.participatedEvents"
-            }
-        },
-        {$match: query},
-        {$sort : sort}
-    ]).exec().then((activists) => {
+    Activist.find(query).sort(sort).exec().then((activists) => {
         let activistsList = [];
         for(let activist of activists)
         {
