@@ -75,24 +75,27 @@ const getContactScan = function(req, res){
 };
 const debug = (x) => {console.log('!!! ' + x); return x};
 
-const list = (req, res) => {
-    Authentication.hasRole(req, ["isTyper", "isOrganizer"]).then(result => {
-        if (result.error)
-            return res.json({"error": result.error});
-        let query = {};
-        if (req.query.eventId) {
-            let eventId;
-            try {
-                eventId = mongoose.Types.ObjectId(req.query.eventId);
-            } catch {
-                return {error: "incorrect id supplied"};
-            }
-            query.eventId = eventId;
+const list = async (eventId) => {
+        try {
+            eventId = mongoose.Types.ObjectId(eventId);
+        } catch {
+            return {error: "incorrect id supplied"};
         }
+        let query = {eventId: eventId};
         return ContactScan.find(query).exec()
-            .then(scans => res.json({scans}))
-            .catch(err => res.json({success: false, error: err}));
-    });
+            .then( scans => {
+                let activistQueries = scans.map( (s, i)=>{
+                     let scan = s.toObject();
+                     return getAssociatedActivists(s).then((data)=>{
+                         scan.activists = data;
+                         return scan;
+                     });
+                });
+                return Promise.all(activistQueries).then(scans=>{
+                    return {scans};
+                });
+            })
+            .catch(err => {return {success: false, error: err.toString()}});
 };
 
 const getContactScanById = async function(scanId){
