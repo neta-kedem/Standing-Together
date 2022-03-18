@@ -4,7 +4,15 @@ const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
 	app.get('/api/contactScan', ContactScanFetcher.getContactScan);
-	app.get('/api/contactScan/list', ContactScanFetcher.list);
+	app.get('/api/contactScan/list',(req, res) => {
+		Authentication.hasRole(req, ["isOrganizer", "isTyper"]).then(result => {
+			if (result.error)
+				return res.json({"error": result.error});
+			ContactScanFetcher.list(req.query.eventId).then((result) => {
+				res.json(result);
+			});
+		});
+	});
 	app.post('/api/contactScan/delete', (req, res) => {
 		Authentication.hasRole(req, ["isOrganizer"]).then(result => {
 			if (result.error)

@@ -26,25 +26,24 @@ constructor(props) {
 		scans: [],
 		activists : [],
 		tableFields:[
-			{title: ["اسم", "שם"],  visibility: true, key: "name", icon:"user", type:"text", width:"15em"},
-			{title: ["البلد", "עיר"],  visibility: true, key: "city", icon:"building", type:"text", width:"12em"},
+			{title: ["الاسم الشخصي", "שם פרטי"],  visibility: true, key: "firstName", icon:"user", type:"text", width:"10em"},
+			{title: ["اسم العائلة", "שם משפחה"],  visibility: true, key: "lastName", icon:"user", type:"text", width:"10em"},
+			{title: ["البلد", "עיר"],  visibility: true, key: "residency", icon:"building", type:"text", width:"12em"},
 			{title: ["رقم الهاتف", "טלפון"],  visibility: true, key: "phone", icon:"phone", type:"text", width:"12em"},
 			{title: ["البريد الإلكتروني", "אימייל"],  visibility: true, key: "email", icon:"envelope-open", type:"text", width:"15em"},
-			{title: ["اخر ظهور", "נראתה לאחרונה"],  visibility: false, key: "lastSeen", icon:"calendar", type:"text", width:"12em"},
-			{title: ["اخر حدث", "אירוע אחרון"],  visibility: false, key: "lastEvent", icon:"calendar-check", type:"text", width:"8em"},
+			{title: ["ملاحظات", "הערות"],  visibility: true, key: "comments", icon:"user", type:"text", width:"16em"},
 		],
 		page: 0,
 		pageCount: 1,
-		activistCount: 0,
 		loadingActivists: false,
 	};
 	if(this.state["_id"]){
 		this.fetchEventDetails();
-		this.fetchActivists();
+		// this.fetchActivists();
+		this.fetchScans();
 	}
 	this.fetchCategories();
 	this.fetchCities();
-	this.fetchScans();
 }
 fetchEventDetails(){
 	server.get('events/eventById/'+this.state._id)
@@ -62,7 +61,7 @@ fetchEventDetails(){
 		});
 }
 fetchActivists(){
-	this.setState({loadingActivists : true})
+	this.setState({loadingActivists : true});
 	server.post('activists/events/', {id : this.state._id, page : this.state.page})
 		.then(json => {
 			this.setState({
@@ -87,7 +86,14 @@ fetchCities(){
 }
 fetchScans() {
 	server.get(`contactScan/list/?eventId=${this.state._id}`)
-		.then(scans=>this.setState({scans: scans.scans}));
+		.then(res=>{
+			this.setState({scans: res.scans});
+			let activists = [];
+			res.scans.forEach((s)=>{
+				activists = activists.concat(s.activists)
+			});
+			this.setState({activists})
+		});
 }
 handleInputChange(event) {
 	const target = event.target;
@@ -257,11 +263,11 @@ render() {
 					</div>
 					<div>
 						<div>
-							<h3>{activistCount} נכחו באירוע:</h3>
-							<h3>{activistCount} נכחו באירוע:</h3>
+							<h3>{this.state.activists.length} נכחו באירוע:</h3>
+							<h3>{this.state.activists.length} נכחו באירוע:</h3>
 						</div>
 						<div className="query-results">
-							<SelectableTable rows={this.state.activists} rowKey="_id" header={this.state.tableFields} onDoubleClick={this.goToActivistPage.bind(this)}/>
+							<SelectableTable rows={this.state.activists} rowKey="activistId" header={this.state.tableFields} onDoubleClick={this.goToActivistPage.bind(this)}/>
 							<div className="loading-query-wrap">
 								<LoadSpinner visibility={this.state.loadingActivists}/>
 							</div>
