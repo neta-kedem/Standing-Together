@@ -151,7 +151,7 @@
 
     .candidate-picture-wrap {
         width: 10em;
-        height: 10em;
+        height: 8em;
         overflow: hidden;
         cursor: pointer;
     }
@@ -367,7 +367,8 @@
             flex-direction: row;
             justify-content: flex-start;
             width: 100%;
-            padding-bottom: 0;
+            padding-bottom: 10px;
+            padding-top: 10px;
         }
         .candidate-member {
             flex: 0 0 100%;
