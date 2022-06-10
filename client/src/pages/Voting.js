@@ -34,9 +34,10 @@ export default class Voting extends React.Component {
               seed = String(Date.now())
               cookie.set('seed', seed)
           }
+          console.log(candidates)
           this.setState({ candidates: af.seedShuffle(candidates, seed) });
       }
-    });
+    })
 
     this.validateCode = this.validateCode.bind(this);
     //used to auto-scroll back to the voting code input
@@ -88,11 +89,11 @@ export default class Voting extends React.Component {
   }
 
   handleCandidatePopupToggle = function(focusedCandidate) {
-    let openPopup = this.state.openCandidateDetails;
-    this.setState({
-      openCandidateDetails: !openPopup,
-      focusedCandidate: focusedCandidate ? focusedCandidate : 0
-    });
+    // let openPopup = this.state.openCandidateDetails;
+    // this.setState({
+    //   openCandidateDetails: !openPopup,
+    //   focusedCandidate: focusedCandidate ? focusedCandidate : 0
+    // });
   }.bind(this);
 
   sendVote() {
@@ -144,11 +145,11 @@ export default class Voting extends React.Component {
         key={candidate._id}
       >
         <div className="candidate-picture-wrap">
-            <div className="fa-stack candidate-picture-info">
+            {/*<div className="fa-stack candidate-picture-info">
             <FontAwesomeIcon icon={faCircle} className="fa-stack-2x" style={{fontSize: 11, color:'black'}}/>
             <FontAwesomeIcon icon={faInfoCircle} className="fa-stack-2x" style={{fontSize: 10, color:'darkGrey'}}/>
             <FontAwesomeIcon icon={faInfo} className="fa-stack-1x" style={{fontSize: 10, color:'white'}} />
-            </div>
+            </div>*/}
             <div
             className="candidate_picture"
             style={{
@@ -201,8 +202,11 @@ export default class Voting extends React.Component {
             width={250}
             className={"voting-logo"}
           />
-          <h1 style={{ color: "#90278e", paddingTop: 50 }}>
-            Voting Is Closed
+          <h1 style={{ color: "#90278e", paddingTop: 50, textAlign: "center" }}>
+              ההצבעה עוד לא התחילה
+              التصويت لم يبدأ بعد
+          {/!*    ההצבעה נגמרה
+انتهى التصويت*!/}
           </h1>
         </div>
       );*/
@@ -229,8 +233,18 @@ export default class Voting extends React.Component {
                   {"בחירות למזכירות עומדים ביחד"}
               </h1>
               <h3 className="introduction-paragraph hebrew">
-                  ניתן להצביע ל13 מועמדות ומועמדים לכל היותר
+                  על מנת להצביע יש להזין את הקוד שקיבלתם בדוכן ההרשמה. ניתן להצביע רק עבור מאבק מפתח אחד. לאחר ההצבעה יש לאשר את הבחירה על ידי לחיצה על ״סיימתי״ על מנת להשלים את תהליך הבחירה.
               </h3>
+              <h3 className="introduction-paragraph hebrew">
+                  הקוד הוא אקראי ואינו מאפשר את זיהוי הבוחר/ת.
+              </h3>
+              <h3 className="introduction-paragraph hebrew ">
+                  لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع بكشك التسجيل. يمكن التصويت لمرة واحدة فقط، ل-١٥ مرشح/ة على الأكثر. بعد انتخاب المرشحين يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام عملية الانتخاب.
+              </h3>
+              <h3 className="introduction-paragraph hebrew">
+                  كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.
+              </h3>
+
           </div>
         <div className="code_validation" ref={this.codeFormRef}>
           <form className="form">

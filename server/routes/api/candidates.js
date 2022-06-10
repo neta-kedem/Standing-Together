@@ -1,4 +1,5 @@
 const voteManager = require('../../services/voteManager');
+const Authentication = require('../../services/authentication');
 
 module.exports = (app) => {
 	app.get('/api/candidates/fetchCandidates', (req, res) => {
@@ -11,7 +12,6 @@ module.exports = (app) => {
 		voteManager.validateCode(req, res)
 	});
 	app.get('/api/votes/fetchAllVotes', (req, res) => {
-
 		Authentication.hasRole(req, "isOrganizer").then(result=> {
 			if (result.error)
 				return res.json({error: result.error});
