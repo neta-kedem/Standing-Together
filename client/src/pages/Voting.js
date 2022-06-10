@@ -12,7 +12,7 @@ import cookie from 'js-cookie';
 
 library.add(faTimes, faInfoCircle, faInfo, faCircle);
 
-const MAX_VOTES = 13;
+const MAX_VOTES = 1;
 
 export default class Voting extends React.Component {
   constructor(props) {
@@ -34,7 +34,6 @@ export default class Voting extends React.Component {
               seed = String(Date.now())
               cookie.set('seed', seed)
           }
-          console.log(candidates)
           this.setState({ candidates: af.seedShuffle(candidates, seed) });
       }
     })
