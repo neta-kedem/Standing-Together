@@ -22,6 +22,10 @@ export default class Voting extends React.Component {
       selected: [],
       finishedSelecting: false,
       code: "",
+      tz: "",
+      name: "",
+      phone: "",
+      email: "",
       openPopup: false,
       openCandidateDetails: false,
       focusedCandidate: 0
@@ -36,7 +40,7 @@ export default class Voting extends React.Component {
           }
           this.setState({ candidates: af.seedShuffle(candidates, seed) });
       }
-    })
+    });
 
     this.validateCode = this.validateCode.bind(this);
     //used to auto-scroll back to the voting code input
@@ -63,7 +67,15 @@ export default class Voting extends React.Component {
       })
       .then(isValid => {
         if (isValid) {
-          alert("כן! אפשר להצביע\n نعم! يمكنك التصويت");
+          if(this.isIsraeliIdValid()) {
+            alert("כן! אפשר להצביע\n نعم! يمكنك التصويت");
+          }
+          else {
+            alert(
+                "תעודת הזהות לא תקינה\n" +
+                "تمّ تلقّي التصويت الخاص بهذا الكود"
+            );
+          }
         } else {
           alert(
             "הקוד שגוי, או כבר משומש\n" +
@@ -71,6 +83,16 @@ export default class Voting extends React.Component {
           );
         }
       });
+  }
+
+  isIsraeliIdValid() {
+    let id = String(this.state.tz).trim();
+    if (id.length > 9 || isNaN(id) || Number(id) === 0) return false;
+    id = id.length < 9 ? ("00000000" + id).slice(-9) : id;
+    return Array.from(id, Number).reduce((counter, digit, i) => {
+        const step = digit * ((i % 2) + 1);
+        return counter + (step > 9 ? step - 9 : step);
+    }) % 10 === 0;
   }
 
   handleSubmitVote() {
@@ -101,7 +123,11 @@ export default class Voting extends React.Component {
       server
         .post("candidates/placeVote", {
           votes: this.state.selected,
-          code: this.state.code.trim()
+          code: this.state.code.trim(),
+          name: this.state.name.trim(),
+          tz: this.state.tz.trim(),
+          phone: this.state.phone.trim(),
+          email: this.state.email.trim(),
         })
         .then(res => {
           if (res) {
@@ -110,12 +136,17 @@ export default class Voting extends React.Component {
                 selected: [],
                 finishedSelecting: false,
                 code: "",
+                tz: "",
+                name: "",
+                phone: "",
+                email: "",
                 openPopup: false,
                 attemptedPost: false
             });
           } else {
             alert(
               "הקוד שגוי, או כבר אינו תקף.\n" +
+              "או שאחד הפרטים האישיים לא תקינים.\n" +
                 " ההצבעה לא נקלטה\n" +
                 "ألكود الذي بحوزتك ليس صالح الفعالية.\n" +
                 "لم يتمّ استيعاب التصويت"
@@ -229,13 +260,13 @@ export default class Voting extends React.Component {
         />
           <div className={"introduction-wrap"}>
               <h1 className="voting-title">
-                  {"בחירות למזכירות עומדים ביחד"}
+                  {"בחירות למאבק המפתח הבא!"}
               </h1>
               <h3 className="introduction-paragraph hebrew">
-                  על מנת להצביע יש להזין את הקוד שקיבלתם בדוכן ההרשמה. ניתן להצביע רק עבור מאבק מפתח אחד. לאחר ההצבעה יש לאשר את הבחירה על ידי לחיצה על ״סיימתי״ על מנת להשלים את תהליך הבחירה.
+                  על מנת להצביע מלאו בתשומת לב את הפרטים האישיים, ואת הקוד שקיבלתם בדוכן ההרשמה. ניתן להצביע רק עבור מאבק מפתח אחד. לאחר ההצבעה יש לאשר את הבחירה על ידי לחיצה על ״סיימתי״ על מנת להשלים את תהליך הבחירה.
               </h3>
               <h3 className="introduction-paragraph hebrew">
-                  הקוד הוא אקראי ואינו מאפשר את זיהוי הבוחר/ת.
+                  הצביעו למאבק מפתח שמלהיב ומרגש אתכם. נפנה אליכם לגבי פעילות בנושא שבחרתם
               </h3>
               <h3 className="introduction-paragraph hebrew ">
                   لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع بكشك التسجيل. يمكن التصويت لمرة واحدة فقط، ل-١٥ مرشح/ة على الأكثر. بعد انتخاب المرشحين يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام عملية الانتخاب.
@@ -248,25 +279,24 @@ export default class Voting extends React.Component {
         <div className="code_validation" ref={this.codeFormRef}>
           <form className="form">
             <div className="code-input-wrap">
-              <label htmlFor="code-input" className="code-input-label">
+              <label htmlFor="name-input" className="code-input-label">
                   <div>
                       كلمة السر للتصويت:
                   </div>
                   <div>
-                      קוד הצבעה:
+                      שם מלא:
                   </div>
               </label>
               <input
                 type="text"
                 name="code"
-                placeholder={"إدخال الرمز هنا • להזין קוד פה"}
+                placeholder={"إدخال الرمز هنا • שם מלא"}
                 className="code_input"
-                id="code-input"
-                maxLength="6"
+                id="name-input"
                 size="25"
-                value={this.state.code}
+                value={this.state.name}
                 onChange={e => {
-                  this.setState({ code: e.target.value });
+                  this.setState({ name: e.target.value });
                 }}
                 onKeyDown={e => {
                   if (e.key === "Enter") {
@@ -275,6 +305,114 @@ export default class Voting extends React.Component {
                     return false;
                   }
                 }}
+              />
+              <label htmlFor="tz-input" className="code-input-label">
+                <div>
+                  كلمة السر للتصويت:
+                </div>
+                <div>
+                  תעודת זהות:
+                </div>
+              </label>
+              <input
+                type="number"
+                name="tz"
+                placeholder={"إدخال الرمز هنا • תעודת זהות"}
+                className="code_input"
+                id="tz-input"
+                maxLength="9"
+                size="25"
+                value={this.state.tz}
+                onChange={e => {
+                  this.setState({ tz: e.target.value });
+                }}
+                onKeyDown={e => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    return false;
+                  }
+                }}
+              />
+              <label htmlFor="פיםמק-input" className="code-input-label">
+                <div>
+                  كلمة السر للتصويت:
+                </div>
+                <div>
+                  מספר טלפון:
+                </div>
+              </label>
+              <input
+                type="number"
+                name="phone"
+                placeholder={"إدخال الرمز هنا • טלפון"}
+                className="code_input"
+                id="phone-input"
+                maxLength="12"
+                size="25"
+                value={this.state.phone}
+                onChange={e => {
+                  this.setState({ phone: e.target.value });
+                }}
+                onKeyDown={e => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    return false;
+                  }
+                }}
+              />
+              <label htmlFor="email-input" className="code-input-label">
+                <div>
+                  كلمة السر للتصويت:
+                </div>
+                <div>
+                  אימייל:
+                </div>
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder={"إدخال الرمز هنا • אימייל"}
+                className="code_input"
+                id="email-input"
+                size="25"
+                value={this.state.email}
+                onChange={e => {
+                  this.setState({ email: e.target.value });
+                }}
+                onKeyDown={e => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    return false;
+                  }
+                }}
+              />
+              <label htmlFor="code-input" className="code-input-label">
+                <div>
+                  كلمة السر للتصويت:
+                </div>
+                <div>
+                  קוד הצבעה:
+                </div>
+              </label>
+              <input
+                  type="text"
+                  name="code"
+                  placeholder={"إدخال الرمز هنا • להזין קוד פה"}
+                  className="code_input"
+                  id="code-input"
+                  maxLength="6"
+                  size="25"
+                  value={this.state.code}
+                  onChange={e => {
+                    this.setState({ code: e.target.value });
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === "Enter") {
+                      this.validateCode();
+                      e.preventDefault();
+                      return false;
+                    }
+                  }}
               />
             </div>
             <input
