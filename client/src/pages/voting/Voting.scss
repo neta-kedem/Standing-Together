@@ -55,8 +55,10 @@
     }
 
     .code-input-wrap {
-        display: block;
+        display: flex;
+        flex-direction: column;
         text-align: center;
+        width: fit-content;
         color: #90278e;
         margin-top: 10px;
         margin-bottom: 10px;

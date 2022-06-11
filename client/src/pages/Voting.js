@@ -276,7 +276,7 @@ export default class Voting extends React.Component {
               </h3>
 
           </div>
-        <div className="code_validation" ref={this.codeFormRef}>
+        <div className="code_validation">
           <form className="form">
             <div className="code-input-wrap">
               <label htmlFor="name-input" className="code-input-label">
@@ -386,7 +386,7 @@ export default class Voting extends React.Component {
                   }
                 }}
               />
-              <label htmlFor="code-input" className="code-input-label">
+              <label htmlFor="code-input" className="code-input-label"  ref={this.codeFormRef}>
                 <div>
                   كلمة السر للتصويت:
                 </div>
