@@ -20,7 +20,6 @@ export default class Voting extends React.Component {
     this.state = {
       candidates: [],
       selected: [],
-      finishedSelecting: false,
       code: "",
       tz: "",
       name: "",
@@ -50,14 +49,12 @@ export default class Voting extends React.Component {
 
   selectCandidate(id) {
     let selected = this.state.selected;
-    let finishedSelecting = selected.length === MAX_VOTES;
     if (selected.includes(id)) {
-      selected = selected.filter(index => index !== id);
-    } else if (!finishedSelecting) {
-      selected.push(id);
+      selected = [];
+    } else {
+      selected = [id];
     }
-    finishedSelecting = selected.length === MAX_VOTES;
-    this.setState({ selected, finishedSelecting });
+    this.setState({ selected });
   }
 
   validateCode() {
@@ -164,30 +161,20 @@ export default class Voting extends React.Component {
   generateCandidate(candidate, index) {
     const isSelected = this.state.selected.includes(candidate._id);
     const selectedClass = isSelected ? "selected" : "";
-    const finishedSelecting = this.state.finishedSelecting;
-    const isDisabled = finishedSelecting && !isSelected;
-    const disabledClass = isDisabled ? "disabled" : "";
     const photo = candidate.photo ? candidate.photo.replace(" ", "%20") : "";
     const photoAlign = candidate.photoAlign;
     return (
       <div
-        className={"candidate " + selectedClass + disabledClass}
+        className={"candidate " + selectedClass}
         key={candidate._id}
+        onClick={this.selectCandidate.bind(this, candidate._id)}
       >
         <div className="candidate-picture-wrap">
-            {/*<div className="fa-stack candidate-picture-info">
-            <FontAwesomeIcon icon={faCircle} className="fa-stack-2x" style={{fontSize: 11, color:'black'}}/>
-            <FontAwesomeIcon icon={faInfoCircle} className="fa-stack-2x" style={{fontSize: 10, color:'darkGrey'}}/>
-            <FontAwesomeIcon icon={faInfo} className="fa-stack-1x" style={{fontSize: 10, color:'white'}} />
-            </div>*/}
             <div
             className="candidate_picture"
             style={{
                 backgroundImage: `url(${photo})`,
                 backgroundPosition: photoAlign
-            }}
-            onClick={() => {
-                this.handleCandidatePopupToggle(index);
             }}
           />
         </div>
@@ -202,7 +189,7 @@ export default class Voting extends React.Component {
             </div>
             <div className={"candidate-selection-wrap"}>
                 <label
-                    htmlFor={"select-candidate-" + candidate._id}
+                    // htmlFor={"select-candidate-" + candidate._id}
                     className="candidate-selection-label"
                 >
                     <div>تصويت</div>
@@ -211,11 +198,10 @@ export default class Voting extends React.Component {
                 <input
                     type="button"
                     className={
-                        "candidate-selection-button " + selectedClass + disabledClass
+                        "candidate-selection-button " + selectedClass
                     }
                     id={"select-candidate-" + candidate._id}
                     value={isSelected ? "✔" : ""}
-                    onClick={this.selectCandidate.bind(this, candidate._id)}
                 />
             </div>
         </div>
