@@ -179,7 +179,18 @@ class SingleCondition extends React.Component {
           <DatePicker
               dir = "ltr"
               value={condition.value}
-              onChange = {(date) => {this.setConditionValue(date)}}
+              onChange = {(date) => {
+                if(date?.target?.value && date?.target?.name) {
+                  if(date.target.name === 'day') {
+                    this.setConditionValue(new Date(condition.value).setDate(date.target.value))
+                  }
+                  if(date.target.name === 'month') {
+                    this.setConditionValue(new Date(condition.value).setMonth(date.target.value - 1))
+                  }
+                  if(date.target.name === 'year') {
+                    this.setConditionValue(new Date(condition.value).setFullYear(date.target.value))
+                  }
+                }}}
               disableCalendar = {true}
               clearIcon = {null}
               maxDate = {new Date()}
