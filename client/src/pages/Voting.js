@@ -211,7 +211,7 @@ export default class Voting extends React.Component {
   }
 
   render() {
-      /*return (
+      return (
         <div style={{display:"flex", alignItems: "center", flexDirection:"column"}}>
           <img
             alt={"logo"}
@@ -220,13 +220,11 @@ export default class Voting extends React.Component {
             className={"voting-logo"}
           />
           <h1 style={{ color: "#90278e", paddingTop: 50, textAlign: "center" }}>
-              ההצבעה עוד לא התחילה
-              التصويت لم يبدأ بعد
-          {/!*    ההצבעה נגמרה
-انتهى التصويت*!/}
+             ההצבעה נגמרה
+انتهى التصويت
           </h1>
         </div>
-      );*/
+      );
     const candidates = this.state.candidates.slice();
     const focusedCandidateIndex = this.state.focusedCandidate;
     const focusedCandidate = candidates[focusedCandidateIndex]
