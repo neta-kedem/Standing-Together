@@ -69,8 +69,8 @@ export default class Voting extends React.Component {
           }
           else {
             alert(
-                "תעודת הזהות לא תקינה\n" +
-                "الانتخابات للنضال المركزي القادم!"
+                "תעודת הזהות לא תקינה" +
+                "رقم الهويه غير صحيح"
             );
           }
         } else {
@@ -280,7 +280,7 @@ export default class Voting extends React.Component {
               <input
                 type="text"
                 name="code"
-                placeholder={"إدخال الرمز هنا • שם מלא"}
+                placeholder={"الاسم الكامل • שם מלא"}
                 className="code_input"
                 id="name-input"
                 size="25"
@@ -307,7 +307,7 @@ export default class Voting extends React.Component {
               <input
                 type="number"
                 name="tz"
-                placeholder={"إدخال الرمز هنا • תעודת זהות"}
+                placeholder={"رقم بطاقة الهوية • תעודת זהות"}
                 className="code_input"
                 id="tz-input"
                 maxLength="9"
@@ -323,7 +323,7 @@ export default class Voting extends React.Component {
                   }
                 }}
               />
-              <label htmlFor="פיםמק-input" className="code-input-label">
+              <label htmlFor="phone-input" className="code-input-label">
                 <div>
                   رقم الهاتف:
                 </div>
@@ -334,7 +334,7 @@ export default class Voting extends React.Component {
               <input
                 type="number"
                 name="phone"
-                placeholder={"إدخال الرمز هنا • טלפון"}
+                placeholder={"رقم الهاتف • טלפון"}
                 className="code_input"
                 id="phone-input"
                 maxLength="12"
@@ -361,7 +361,7 @@ export default class Voting extends React.Component {
               <input
                 type="email"
                 name="email"
-                placeholder={"إدخال الرمز هنا • אימייל"}
+                placeholder={"لبريد الالكتروني • אימייל"}
                 className="code_input"
                 id="email-input"
                 size="25"
