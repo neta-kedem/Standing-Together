@@ -70,7 +70,7 @@ export default class Voting extends React.Component {
           else {
             alert(
                 "תעודת הזהות לא תקינה\n" +
-                "تمّ تلقّي التصويت الخاص بهذا الكود"
+                "الانتخابات للنضال المركزي القادم!"
             );
           }
         } else {
@@ -146,6 +146,7 @@ export default class Voting extends React.Component {
               "או שאחד הפרטים האישיים לא תקינים.\n" +
                 " ההצבעה לא נקלטה\n" +
                 "ألكود الذي بحوزتك ليس صالح الفعالية.\n" +
+                "أو رقم بطاقة هوية غير صحيح.\n" +
                 "لم يتمّ استيعاب التصويت"
             );
             this.setState({
@@ -248,6 +249,9 @@ export default class Voting extends React.Component {
               <h1 className="voting-title">
                   {"בחירות למאבק המפתח הבא!"}
               </h1>
+            <h1 className="voting-title">
+                  {"الانتخابات للنضال المركزي القادم!"}
+              </h1>
               <h3 className="introduction-paragraph hebrew">
                   על מנת להצביע מלאו בתשומת לב את הפרטים האישיים, ואת הקוד שקיבלתם בדוכן ההרשמה. ניתן להצביע רק עבור מאבק מפתח אחד. לאחר ההצבעה יש לאשר את הבחירה על ידי לחיצה על ״סיימתי״ על מנת להשלים את תהליך הבחירה.
               </h3>
@@ -255,10 +259,10 @@ export default class Voting extends React.Component {
                   הצביעו למאבק מפתח שמלהיב ומרגש אתכם. נפנה אליכם לגבי פעילות בנושא שבחרתם
               </h3>
               <h3 className="introduction-paragraph hebrew ">
-                  لكي يتسنى للجميع التصويت يجب إدخال كلمة السر التي ستُوزَع بكشك التسجيل. يمكن التصويت لمرة واحدة فقط، ل-١٥ مرشح/ة على الأكثر. بعد انتخاب المرشحين يجب تأكيد الاختيار عبر الضغط على "أنهيت"، من أجل إتمام عملية الانتخاب.
+                من أجل التصويت، املأوا بانتباه تفاصيلكم الشخصية، والرمز الذي تلقيتموه عند التسجيل.  لا يمكنك التصويت إلا لنضال مركزي واحد. بعد التصويت، يجب تأكيد الاختيار بالنقر فوق" انتهى " لإكمال عملية الانتخاب.
               </h3>
               <h3 className="introduction-paragraph hebrew">
-                  كلمة السر هي عشوائية ولا يمكنها الكشف عن هوية الناخب/ة.
+                صوّتوا للنضال المركزي الذي يثير اهتمامك وحماسك، وسنتوجه إليه بخصوص الأنشطة لمتعلقة بالموضوع الذي اخترتموه.
               </h3>
 
           </div>
@@ -267,7 +271,7 @@ export default class Voting extends React.Component {
             <div className="code-input-wrap">
               <label htmlFor="name-input" className="code-input-label">
                   <div>
-                      كلمة السر للتصويت:
+                    الاسم الكامل:
                   </div>
                   <div>
                       שם מלא:
@@ -294,7 +298,7 @@ export default class Voting extends React.Component {
               />
               <label htmlFor="tz-input" className="code-input-label">
                 <div>
-                  كلمة السر للتصويت:
+                  رقم بطاقة الهوية:
                 </div>
                 <div>
                   תעודת זהות:
@@ -321,7 +325,7 @@ export default class Voting extends React.Component {
               />
               <label htmlFor="פיםמק-input" className="code-input-label">
                 <div>
-                  كلمة السر للتصويت:
+                  رقم الهاتف:
                 </div>
                 <div>
                   מספר טלפון:
@@ -348,7 +352,7 @@ export default class Voting extends React.Component {
               />
               <label htmlFor="email-input" className="code-input-label">
                 <div>
-                  كلمة السر للتصويت:
+                  البريد الالكتروني:
                 </div>
                 <div>
                   אימייל:
