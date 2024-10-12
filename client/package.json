@@ -17,7 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "body-parser": "latest",
     "chart.js": "^2.8.0",
-    "cookie-parser": "^1.4.3",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^8.0.0",
     "file-loader": "^1.1.11",
     "file-saver": "^2.0.2",
@@ -37,7 +37,7 @@
     "react-modal": "^3.8.1",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^5.0.0",
     "react-time-input": "^0.0.19",
     "shuffle-seed": "^1.1.6",
     "styled-jsx": "latest"
